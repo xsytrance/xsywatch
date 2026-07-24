@@ -1,6 +1,6 @@
 # ADR-005 — AGENOR-Horology stays a sibling repository; no empty engine/ scaffold
 
-**Status:** Accepted (Phase 1, 2026-07-24) — requires owner ratification
+**Status:** Accepted — RATIFIED by owner (Phase-1 review, 2026-07-24)
 **Context:** The 3D asset pipeline (Blender/Material Maker library, render &
 sprite tooling, AlienMilitary spec) already exists as the pushed repository
 `xsytrance/AGENOR-Horology`. The architecture ledger and Phase-1 brief both

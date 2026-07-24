@@ -16,3 +16,14 @@ requires binaries in Releases or LFS "before history grows".
    Releases-only and the manifest keeps checksums.
 **Consequences:** Full traceability now; history stays clone-friendly; no
 force-push ever required.
+
+## Amendment (Phase-1 review corrections, 2026-07-24)
+
+The flat `releases` manifest list keyed by slug was replaced by **schema 2**:
+nested `faces → <slug> → channels → <current|vX.Y.Z>`; identity is the
+(slug, channel) pair and duplicates are rejected. `package_release.py`
+(replacing `package_release.sh`) archives the previous `current` under its
+immutable version directory before replacement and never overwrites an
+existing archive without an explicit destructive flag. Validation reads APK
+metadata directly via aapt2. Proven by tools/test_release_workflow.py (10
+fixtures).

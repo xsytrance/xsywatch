@@ -15,6 +15,15 @@ through with a pointer to the fixing commit.
   exact build dates are file-mtime approximations and the producing source
   commit predates this repository's source import (fields marked accordingly
   in each `RELEASE.md`).
+- ~~Phase-1 claim that no TTF/OTF fonts are embedded~~ — **superseded
+  (Phase-1 review):** 27 OFL-1.1 font files + 1 CC0 HDRI are tracked; full
+  audit in `docs/asset-licenses.json` + `docs/LICENSING.md`. Validation now
+  enforces the inventory.
+- AI-model license check for commercial sale of generated artwork remains an
+  open owner action (docs/LICENSING.md).
+- CI workflow (.github/workflows/validate.yml) is committed but its first
+  GitHub Actions run has not yet been observed — treat as unverified until
+  green.
 
 ## Source projects
 
@@ -22,13 +31,15 @@ through with a pointer to the fixing commit.
   (AI-generation intermediates under `~/AI/ComfyUI/output/`, not in the repo).
   Committed drawables are canonical; regeneration requires those local files.
   Provenance is documented per-face.
-- Some generator scripts remain hard-coded to absolute paths (documented
-  per-face); only the project-ROOT paths were normalized in Phase 1.
+- All project-internal absolute paths in generator scripts were normalized
+  to repo-relative; only external donor references (see above) remain, by
+  design (ADR-007).
 - No automated visual regression or on-device test harness yet.
-- `bone-watch` was creatively **rejected** by the owner; source retained for
-  parts reuse.
-- Unreleased faces (`arcwright`, `chronova`, `tripface`) are experimental;
-  they build, but have had no recent design attention.
+- `bone-watch`: **archived/creative-rejected** (owner decision, Phase-1
+  review); buildable, excluded from the commercial roadmap.
+- `tripface`: **frozen** legacy WFF v2 (owner decision, Phase-1 review).
+- `arcwright`, `chronova` remain experimental; they build, but have had no
+  recent design attention.
 
 ## Engine
 

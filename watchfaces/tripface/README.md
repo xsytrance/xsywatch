@@ -1,4 +1,8 @@
-# XSYTRANCE Trip (`com.xsytrance.tripface`, **WFF v2**) — unreleased
+# XSYTRANCE Trip (`com.xsytrance.tripface`, **WFF v2**) — FROZEN legacy experimental
+
+> **Status (owner decision, Phase-1 review):** frozen as a legacy WFF v2
+> project. No Phase-2 engine time will be spent upgrading it unless it is
+> deliberately revived.
 
 Psychedelic artwork face: xsytrance character background, digital clock,
 13 sine-driven EQ bars, counter-rotating rings, AMOLED-safe ambient. Built

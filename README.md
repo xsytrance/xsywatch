@@ -2,7 +2,8 @@
 
 Canonical source repository for the **AGENOR watchface ecosystem**: premium
 watch faces for **Samsung Galaxy Watch7 (44 mm, 480×480 round AMOLED)** built
-on the Wear OS **Watch Face Format (WFF) v4** with a fully Linux-native, free
+primarily on the Wear OS **Watch Face Format (WFF) v4** (one legacy
+WFF v2 face: tripface) with a fully Linux-native, free
 toolchain.
 
 > Architecture ledger (authoritative): [`docs/CHATGPT_ARCHITECT.md`](docs/CHATGPT_ARCHITECT.md)
@@ -15,13 +16,13 @@ toolchain.
 | BUSHIDO | `bushido` | com.xsytrance.bushido | cyberpunk-samurai | ✔ | ✔ |
 | ARES War God | `ares-wargod` | com.xsytrance.ares | mythological (carved marble) | ✔ | ✔ |
 | Aurelius "Field Tourbillon" | `aurelius` | com.xsytrance.aurelius | military skeleton horology | ✔ | ✔ |
-| Bone Watch | `bone-watch` | com.xsytrance.bonewatch | gothic memento-mori | ✔ | ✔ |
+| Bone Watch (archived) | `bone-watch` | com.xsytrance.bonewatch | gothic memento-mori | ✔ | ✔ |
 | HellForge | `hellforge` | com.xsytrance.hellforge | war/occult demon-forge | ✔ | ✔ |
 | Pinball | `pinball` | com.xsytrance.pinball | retro-arcade 3D pinball | ✔ | ✔ |
 | PulseFace | `pulseface` | com.xsytrance.pulseface | (see face README) | ✔ | ✔ |
 | Arcwright | `arcwright` | com.xsytrance.arcwright | experimental (v0.0.1) | — | ✔ |
 | Chronova | `chronova` | com.xsytrance.xenochronengine | experimental (v0.1) | — | ✔ |
-| TripFace | `tripface` | com.xsytrance.tripface | experimental | — | ✔ |
+| TripFace (frozen, WFF v2) | `tripface` | com.xsytrance.tripface | legacy experimental | — | ✔ |
 
 Full inventory with status detail: [`docs/WATCHFACE_INVENTORY.md`](docs/WATCHFACE_INVENTORY.md)
 
@@ -60,7 +61,7 @@ XML. This is a deliberate, documented decision (ledger ADR-004).
 tools/check_prereqs.sh              # verify JDK/SDK/python are usable
 tools/build_face.sh bushido         # build one face  -> app/build/outputs/apk/debug/
 tools/build_all.sh                  # build every face, summary table at the end
-python3 tools/validate.py           # repo-wide validation (source, releases, metadata)
+python3 tools/validate.py           # repo-wide validation (source, releases, APK metadata via aapt2, licenses)
 ```
 
 ## Install on Galaxy Watch7

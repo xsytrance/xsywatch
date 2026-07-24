@@ -12,7 +12,7 @@ All faces: WFF v4 (exception: `tripface` is WFF v2), target Galaxy Watch7
 | `bushido` | X1c7 BUSHIDO | com.xsytrance.bushido | 1.0 | ✔ (jpg) | cyberpunk-samurai; wrist-raise reveal |
 | `ares-wargod` | ARES | com.xsytrance.ares | 1.0 | — | mythological; carved-marble god of war |
 | `aurelius` | AURELIUS | com.xsytrance.aurelius | 1.0 | ✔ | military skeleton "Field Tourbillon"; cage = seconds, HR balance, battery reserve |
-| `bone-watch` | BONE | com.xsytrance.bonewatch | 1.0 | — | gothic memento-mori skull; HR-pulsing eye ember |
+| `bone-watch` | BONE | com.xsytrance.bonewatch | 1.0 | — | gothic memento-mori skull; HR-pulsing eye ember — **ARCHIVED/creative-rejected (owner decision)** |
 | `hellforge` | HELLFORGE | com.xsytrance.hellforge | 1.0 | — | war/occult demon-skull forge, heavily animated |
 | `pinball` | PINBALL | com.xsytrance.pinball | 1.0 | — | 3D pinball; DMD score-display time, ricocheting ball |
 | `pulseface` | XSY PULSE | com.xsytrance.pulseface | 1.0 | ✔ | pulse/heart-rate–centric (see face README) |
@@ -23,7 +23,7 @@ All faces: WFF v4 (exception: `tripface` is WFF v2), target Galaxy Watch7
 |------|--------------|---------|------------|--------|
 | `arcwright` | ARCWRIGHT | com.xsytrance.arcwright | 0.0.1 | early experimental |
 | `chronova` | CHRONOVA | com.xsytrance.xenochronengine | 0.1 | experimental ("xenochron engine") |
-| `tripface` | XSYTRANCE Trip | com.xsytrance.tripface | 1.0 | built locally, never released to repo |
+| `tripface` | XSYTRANCE Trip | com.xsytrance.tripface | 1.0 | **FROZEN** legacy experimental (WFF v2, owner decision) |
 
 ## The "eighth face" discrepancy — resolved
 

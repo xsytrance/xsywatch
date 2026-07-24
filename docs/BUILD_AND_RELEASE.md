@@ -60,6 +60,12 @@ duplicate package IDs, oversized assets, absolute paths, secrets):
 python3 tools/validate.py          # exit 0 = clean; issues listed with severity
 ```
 
+`validate.py` reads real APK metadata through `aapt2` (package, versionCode,
+versionName, targetSdk) and compares it against both `MANIFEST.json` and the
+source project's Gradle metadata; it also enforces the third-party asset
+license inventory (`docs/asset-licenses.json`). aapt2 is therefore a hard
+prerequisite (`tools/check_prereqs.sh` verifies it).
+
 ## Installing on Galaxy Watch7
 
 ```bash
@@ -79,12 +85,27 @@ health data (HR), grant Sensors permission on first run.
 2. `tools/build_face.sh <slug>` — build must succeed from clean source.
 3. Validate: WFF validator + `tools/validate.py` + on-device sanity
    (normal mode, AOD, complications, one full minute-sweep).
-4. `tools/package_release.sh <slug>` — copies the APK + preview into
-   `releases/<slug>/current/`, writes `RELEASE.md` metadata (checksum, date,
-   source commit), regenerates `releases/MANIFEST.json`.
-5. Commit with `release(<slug>): vX.Y.Z (versionCode N)`.
-6. Optionally attach the APK to a versioned GitHub Release (preferred for
+4. `python3 tools/package_release.py <slug>` — safe by construction:
+   - refuses if the built APK's package/version don't match source Gradle
+     metadata (verified via aapt2);
+   - **archives the existing `current` to `releases/<slug>/v<oldVersion>/`
+     before replacing it** — immutable archives are never overwritten
+     (`--force-rearchive` exists, is destructive, and prints loudly);
+   - refuses to re-release the same versionName (`--force-same-version` is
+     dev-only and skips archiving);
+   - discovers the preview across `res/drawable*/`; zero candidates or
+     multiple distinct candidates abort (no stale preview is ever reused);
+   - regenerates `releases/MANIFEST.json` (schema 2 — nested
+     face → channels, identity = (slug, channel)).
+5. Record the producing commit in the manifest's `source_commit_of_build`.
+6. Commit with `release(<slug>): vX.Y.Z (versionCode N)`.
+7. Optionally attach the APK to a versioned GitHub Release (preferred for
    large/history-heavy artifacts — ledger §5 release policy).
+
+The whole workflow (archive, channel-safe manifest, tamper detection,
+license enforcement, preview ambiguity) is covered by
+`python3 tools/test_release_workflow.py` — 10 fixtures, run before touching
+release tooling.
 
 ### Versioning rules
 

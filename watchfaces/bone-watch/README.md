@@ -1,4 +1,7 @@
-# BONE (`com.xsytrance.bonewatch`, WFF v4)
+# BONE (`com.xsytrance.bonewatch`, WFF v4) — ARCHIVED / creative-rejected
+
+> **Status (owner decision, Phase-1 review):** archived. Kept buildable for
+> parts reuse; excluded from the active commercial roadmap.
 
 Gothic memento-mori skull dial (ComfyUI-generated), heart-rate-pulsing eye
 ember. **Creatively rejected by the owner** — source retained for parts

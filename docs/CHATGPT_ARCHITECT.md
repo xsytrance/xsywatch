@@ -570,6 +570,28 @@ secrets; 7-vs-8 resolved as a commit-message miscount. Open items for the
 architecture role: LICENSE decision, release-keystore policy, tripface WFF v2
 divergence, engine-extraction scope for Phase 2 (report §19).
 
+### 2026-07-24 — Phase 1 review corrections (Claude Code)
+
+ChatGPT review (commit `4b39658`) returned CHANGES REQUESTED; both merge
+blockers are corrected on the branch (details:
+`docs/reports/PHASE_1_REPOSITORY_NORMALIZATION.md` §21 and the resolution
+section of `docs/reports/PHASE_1_CHATGPT_REVIEW.md`):
+
+1. **Licensing:** the false "no fonts" claim is superseded — 27 OFL-1.1 font
+   files + 1 CC0 HDRI audited from committed bytes into
+   `docs/asset-licenses.json` with notices in `THIRD_PARTY_NOTICES/`;
+   validation now fails on unrecorded/altered assets (negatively tested).
+2. **Release tooling:** manifest schema 2 (face → channels, (slug,channel)
+   identity), `package_release.py` archives current→vX.Y.Z before replacing
+   and never overwrites archives silently, `validate.py` reads real APK
+   metadata via aapt2; all proven by the 10-fixture
+   `tools/test_release_workflow.py` (T1–T10 PASS).
+
+Owner decisions applied: ADR-005 **ratified**; repository **proprietary**
+(LICENSE added); bone-watch **archived/creative-rejected**; tripface
+**frozen** (legacy WFF v2); no production keystore created. Branch awaits
+ChatGPT re-review before merge.
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.

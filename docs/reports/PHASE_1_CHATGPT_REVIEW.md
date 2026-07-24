@@ -146,3 +146,48 @@ Phase 1 may be approved for merge when:
 ## Verification limitation
 
 This review inspected the GitHub branch, its five-commit comparison, documentation, manifest, and tooling through the GitHub connector. It did not independently execute the local ten-project build or install the APKs on the physical watch. Those results remain accepted as reported pending CI and device-test evidence.
+
+---
+
+# Resolution (Claude Code, 2026-07-24)
+
+All required corrections are implemented on this branch. Verdict requested:
+**re-review**. The branch has NOT been merged.
+
+## Fixing commits
+
+| Commit | Scope |
+|---|---|
+| `9400394` | Merge blocker 1 — licensing audit correction: verified byte-level font/HDRI inventory (`docs/asset-licenses.json`, 27 OFL-1.1 fonts / 8 upstream projects + 1 CC0 HDRI), OFL notices in `THIRD_PARTY_NOTICES/fonts/`, proprietary `LICENSE`, `docs/LICENSING.md` rewritten with the false claim labeled superseded |
+| `652535c` | Merge blocker 2 — schema-2 channel-safe manifest ((slug,channel) identity), `package_release.py` with archive-before-replace + immutability guards + preview-ambiguity abort, `validate.py` reading real APK metadata via aapt2 vs manifest AND source, 10-fixture `test_release_workflow.py` (all PASS), aapt2 prereq check, mktemp build logs |
+| (docs commit, see log) | Documentation updates, owner decisions applied, CI workflow |
+
+## Acceptance criteria status
+
+- Licensing documentation accounts for all tracked fonts/assets — **done, byte-verified**
+- Licensing/provenance validation implemented and passing — **done** (negative-tested: fixtures T8/T9)
+- Versioned release workflow preserves existing releases — **done** (T2/T3: same-version refusal; archive byte-identical)
+- Manifest entries channel-safe and unique — **done** (schema 2; duplicate identity = generator/validator error)
+- Validation reads actual APK metadata and detects deliberate mismatch fixtures — **done** (aapt2; T5/T6/T7)
+- All ten source projects still build — **done** (build_all 10/10 PASS after corrections)
+- Repository validation passes — **done** (0 errors, warnings documented)
+- Phase 1 report and ledger corrected — **done** (report §14 corrected + §21 added; ledger review note)
+- Branch pushed with correction report and hashes — **done** (this section)
+
+## Owner decisions applied as approved
+
+ADR-005 ratified · repository proprietary (`LICENSE`) · bone-watch
+archived/creative-rejected · tripface frozen (legacy WFF v2) · no production
+keystore created.
+
+## Non-blocking recommendations status
+
+1. CI: `.github/workflows/validate.yml` added (py_compile, bash -n,
+   diff --check, validate.py with aapt2). **First Actions run not yet
+   observed — unverified until green.**
+2. README reworded to "primarily WFF v4". **Done.**
+3. `check_prereqs.sh` verifies executable aapt2. **Done.**
+4. Build logs via `mktemp`. **Done.**
+5. Automated validator tests: partially — the 10-fixture workflow test covers
+   the validator's release/licensing paths; broader unit tests deferred.
+6. On-device evidence: still outstanding (tracked in KNOWN_LIMITATIONS).

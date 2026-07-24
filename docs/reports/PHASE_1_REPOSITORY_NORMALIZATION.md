@@ -39,8 +39,8 @@ docs/
   decisions/ADR-005..007        reports/PHASE_1_REPOSITORY_NORMALIZATION.md
 watchfaces/<slug>/              ×10 complete Gradle+WFF projects w/ gradlew + README
 tools/
-  check_prereqs.sh  build_face.sh  build_all.sh  package_release.sh
-  gen_release_manifest.py  validate.py
+  check_prereqs.sh  build_face.sh  build_all.sh  package_release.py
+  gen_release_manifest.py  validate.py  test_release_workflow.py
 releases/
   MANIFEST.json                 (machine-readable, SHA-256)
   <slug>/current/{<slug>.apk, preview.*, RELEASE.md}   ×7
@@ -94,7 +94,7 @@ tools/check_prereqs.sh          # environment gate
 tools/build_face.sh <slug>      # one face
 tools/build_all.sh              # all faces, PASS/FAIL table
 python3 tools/validate.py       # repo-wide validation
-tools/package_release.sh <slug> # stage a release + regenerate manifests
+python3 tools/package_release.py <slug>  # stage a release safely (see §21)
 ```
 
 ## 10. Build results per watchface (from imported source, this machine)
@@ -127,10 +127,14 @@ blocks key formats going forward; validate.py enforces on every run.
 
 ## 14. Licensing / attribution findings
 
-No LICENSE file exists (all-rights-reserved by default) — **owner decision
-needed.** Art is locally AI-generated from owner prompts/donors; model-license
-check flagged before commercial sale. No embedded TTF/OTF found. Details:
-`docs/LICENSING.md`.
+**Corrected in the review pass (see §21):** the original claim here that no
+embedded TTF/OTF fonts existed was wrong. The verified audit found **27
+tracked OFL-1.1 font files (8 upstream font projects) + 1 CC0 HDRI**, all now
+inventoried in `docs/asset-licenses.json` with per-file SHA-256 and embedded
+copyright metadata, with OFL notice texts in `THIRD_PARTY_NOTICES/fonts/`.
+The repository now carries a proprietary `LICENSE` (owner decision). Art is
+locally AI-generated from owner prompts/donors; model-license check remains
+flagged before commercial sale. Details: `docs/LICENSING.md`.
 
 ## 15. Decisions made (ADRs)
 
@@ -185,3 +189,41 @@ Branch `phase-1/repository-normalization` off `main` (`b740207`):
 3. `be4f8ea` — import editable source for all 10 watchfaces
 4. `aa2beba` — build and validation tooling
 5. (this commit) — documentation and architecture-ledger update
+
+---
+
+## 21. Review corrections (post-review pass, 2026-07-24)
+
+ChatGPT review (`PHASE_1_CHATGPT_REVIEW.md`, commit `4b39658`) returned
+CHANGES REQUESTED with two merge blockers. Both are corrected on this branch:
+
+**Blocker 1 — licensing.** The §14 "no fonts" claim was false: 27 OFL-1.1
+font files across 8 upstream projects (Orbitron, Marcellus, Marcellus SC,
+Rajdhani, Chakra Petch, Metamorphous, Pirata One, UnifrakturCook) plus the
+Poly Haven `studio_small_08` CC0 HDRI are tracked. Every file's embedded
+name-table copyright/license metadata was parsed from the committed bytes and
+recorded in `docs/asset-licenses.json` (SHA-256 per file); canonical OFL.txt
+notices fetched per family into `THIRD_PARTY_NOTICES/fonts/`. `validate.py`
+now ERRORs on any tracked font/HDRI/EXR without a byte-matching inventory
+entry, on missing license ids/permission flags, on missing required notices,
+and on stale entries — negatively tested (fixtures T8/T9).
+
+**Blocker 2 — release tooling.** `MANIFEST.json` moved to schema 2 (nested
+face → channels; identity = (slug, channel), duplicates rejected).
+`package_release.py` replaces `package_release.sh`: archives `current` to the
+immutable `v<old>` before replacement, refuses same-version and
+archive-overwrite without explicit destructive flags, verifies built-APK
+metadata against source Gradle via aapt2, and fails on zero or ambiguous
+previews across `drawable*`. `validate.py` now inspects every released APK
+directly with aapt2 (package/versionCode/versionName/targetSdk) against both
+manifest and source. Proven end-to-end by `tools/test_release_workflow.py`
+(10 fixtures: T1–T10, all PASS — including a real sandboxed Gradle rebuild at
+a bumped version and byte-identical archive verification).
+
+Owner decisions applied: ADR-005 ratified; repository proprietary (LICENSE);
+bone-watch archived/creative-rejected; tripface frozen (legacy WFF v2);
+no keystore created. Non-blocking recommendations implemented: CI workflow
+(first Actions run pending), README "primarily WFF v4" wording, aapt2 in
+check_prereqs, mktemp build logs. Re-verification: all 10 faces rebuilt PASS;
+validate.py 0 errors. Correction commits are listed in the review file's
+resolution section.
