@@ -1,0 +1,178 @@
+# AURELIUS "Field Tourbillon" — authoritative engine face specification.
+# Regenerate committed XML:  python3 tools/generate_face.py aurelius
+# Verify (CI gate):          python3 tools/generate_face.py aurelius --check
+#
+# Phase 2 rules: this spec reproduces the Phase-1 released behavior exactly
+# (component parameters transcribed from the baseline watchface.xml,
+# SHA a8ce33ac..., see docs/reports/evidence/phase-2/aurelius/baseline/).
+# The only intentional delta is renaming the AOD background layer
+# z00_aod -> z01_aod for the engine's strict z-order naming convention;
+# element names are identifiers and have no runtime behavior.
+
+[face]
+slug = "aurelius"
+width = 480
+height = 480
+wff_version = 4
+clock_type = "ANALOG"
+preview_time = "10:09:35"
+background_color = "#FF060403"
+
+[identity]
+package = "com.xsytrance.aurelius"
+version_code = 1
+version_name = "1.0"
+
+[[fonts]]
+name = "aur"
+height = 40
+[fonts.characters]
+"0" = ["g_0", 28]
+"1" = ["g_1", 22]
+"2" = ["g_2", 27]
+"3" = ["g_3", 27]
+"4" = ["g_4", 28]
+"5" = ["g_5", 27]
+"6" = ["g_6", 28]
+"7" = ["g_7", 25]
+"8" = ["g_8", 28]
+"9" = ["g_9", 28]
+"%" = ["g_pct", 34]
+":" = ["g_colon", 18]
+" " = ["g_space", 12]
+"A" = ["g_a", 29]
+"B" = ["g_b", 29]
+"C" = ["g_c", 28]
+"D" = ["g_d", 29]
+"E" = ["g_e", 26]
+"F" = ["g_f", 26]
+"G" = ["g_g", 28]
+"H" = ["g_h", 29]
+"I" = ["g_i", 20]
+"J" = ["g_j", 28]
+"K" = ["g_k", 29]
+"L" = ["g_l", 26]
+"M" = ["g_m", 34]
+"N" = ["g_n", 30]
+"O" = ["g_o", 29]
+"P" = ["g_p", 28]
+"Q" = ["g_q", 29]
+"R" = ["g_r", 28]
+"S" = ["g_s", 28]
+"T" = ["g_t", 25]
+"U" = ["g_u", 29]
+"V" = ["g_v", 28]
+"W" = ["g_w", 36]
+"X" = ["g_x", 28]
+"Y" = ["g_y", 28]
+"Z" = ["g_z", 28]
+
+# ---- scene components, document order = z-order -----------------------------
+
+# Olive-drab dial plate w/ subtle wrist parallax; crossfades to the AOD plate.
+[[components]]
+type = "background_pair"
+normal = "bg"
+aod_resource = "bg_aod"
+parallax = [3, 3]
+fade = 0.6
+
+# Left drive gear: 40°/s clockwise (fast train side).
+# Mechanical ratio note: meshes visually with z11_gr at 40:24 (5:3).
+[[components]]
+type = "rotating_image"
+name = "z10_gl"
+resource = "gear_l"
+box = {x = 78, y = 208, width = 120, height = 120}
+speed = 40
+aod = {alpha = 90, duration = 0.4, offset = 0.1}
+ratio_note = "meshes with z11_gr, ratio 5:3"
+
+# Right gear: 24°/s counter-clockwise (reverse of z10_gl, ratio 5:3).
+[[components]]
+type = "rotating_image"
+name = "z11_gr"
+resource = "gear_r"
+box = {x = 291, y = 167, width = 102, height = 102}
+speed = 24
+reverse = true
+aod = {alpha = 90, duration = 0.4, offset = 0.12}
+ratio_note = "driven by z10_gl, ratio 5:3, opposite direction"
+
+# Balance wheel oscillating at live heart-rate frequency (fallback 70 bpm,
+# clamp 40..200), ±35° around 180°; 0.10472 rad = 2*pi/60 (one cycle/beat).
+[[components]]
+type = "hr_balance"
+name = "z21_bal"
+resource = "balance"
+box = {x = 194, y = 316, width = 92, height = 92}
+center = 180
+amplitude = 35
+fallback = 70
+clamp_lo = 40
+clamp_hi = 200
+rad_per_beat = 0.10472
+aod = {alpha = 100, duration = 0.4, offset = 0.16}
+
+# Tourbillon cage: one full rotation per minute = the seconds display.
+[[components]]
+type = "seconds_rotor"
+name = "z22_cage"
+resource = "cage"
+box = {x = 179, y = 301, width = 122, height = 122}
+aod = {alpha = 130, duration = 0.4, offset = 0.16}
+
+# Date aperture (bitmap font).
+[[components]]
+type = "date_text"
+name = "z30_date"
+box = {x = 292, y = 286, width = 60, height = 28}
+font = "aur"
+size = 24
+color = "#FFFFFF"
+template = "%d"
+expression = "[DAY]"
+aod = {alpha = 140, duration = 0.4, offset = 0.2}
+
+# Battery power-reserve needle: 292.5° + 45° sweep over 0..100%.
+[[components]]
+type = "battery_needle"
+name = "z31_resv"
+resource = "resv_needle"
+start_deg = 292.5
+sweep_deg = 45.0
+aod = {alpha = 120, duration = 0.4, offset = 0.2}
+
+# Crystal sheen: breathing alpha 150±60 at 0.45 rad/s + strong parallax;
+# fully hidden in AOD.
+[[components]]
+type = "sheen"
+name = "z40_sheen"
+resource = "sheen"
+alpha_base = 150
+alpha_amp = 60
+alpha_rad_per_sec = 0.45
+parallax = [40, 14]
+aod = {alpha = 0, duration = 0.5, offset = 0.1, interpolation = "EASE_OUT"}
+
+# Analog hands (fullscreen pre-centered art) + hub cap.
+[[components]]
+type = "analog_hand"
+name = "z50_hour"
+resource = "hour_hand"
+which = "hour"
+aod = {alpha = 190, duration = 0.5, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "analog_hand"
+name = "z51_min"
+resource = "min_hand"
+which = "minute"
+aod = {alpha = 190, duration = 0.5, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "static_image"
+name = "z52_hub"
+resource = "hub"
+box = {x = 226, y = 226, width = 28, height = 28}
+aod = {alpha = 200, duration = 0.4, offset = 0.0}

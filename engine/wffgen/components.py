@@ -71,7 +71,7 @@ def background_pair(normal_res: str, aod_res: str,
         normal.child(_transform("y", X.parallax_offset(0, ay, "Y")))
     normal.child(Elem("Image", {"resource": normal_res}))
 
-    aod = _part_image("z00_aod", FULLSCREEN, aod_res, alpha=0)
+    aod = _part_image("z01_aod", FULLSCREEN, aod_res, alpha=0)
     aod.child(AmbientPolicy(255, fade, 0.0, "EASE_IN").variant())
     aod.child(Elem("Image", {"resource": aod_res}))
 
@@ -79,7 +79,7 @@ def background_pair(normal_res: str, aod_res: str,
         Component("z00_bg", "background", MotionClass.AMBIENT_MOTION,
                   AmbientPolicy(0, fade, 0.0, "EASE_OUT"), [normal],
                   [normal_res], "normal-mode background w/ parallax"),
-        Component("z00_aod", "background-aod", MotionClass.STATIC,
+        Component("z01_aod", "background-aod", MotionClass.STATIC,
                   AmbientPolicy(255, fade, 0.0, "EASE_IN"), [aod],
                   [aod_res], "ambient background revealed in AOD"),
     ]

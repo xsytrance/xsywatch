@@ -83,7 +83,7 @@ class TestRender(unittest.TestCase):
         self.assertEqual(root.tag, "WatchFace")
         names = [e.get("name") for e in root.iter()
                  if e.tag == "PartImage"]
-        self.assertEqual(names, ["z00_bg", "z00_aod", "z10_gear", "z50_hour"])
+        self.assertEqual(names, ["z00_bg", "z01_aod", "z10_gear", "z50_hour"])
         chars = root.findall(".//Character")
         self.assertEqual(len(chars), 2)
 
