@@ -1,0 +1,65 @@
+# Engine generality fixture 2 — minimal DIGITAL/data face.
+# Proves: AOD, battery, heart-rate, and parallax components with NO Aurelius
+# resources or naming. Text uses a synthetic 3-glyph bitmap font.
+
+[face]
+slug = "fixture-digital"
+width = 480
+height = 480
+wff_version = 4
+clock_type = "DIGITAL"
+preview_time = "10:09:35"
+background_color = "#FF000000"
+
+[identity]
+package = "com.example.fixture.digital"
+version_code = 1
+version_name = "0.0.1"
+
+[[fonts]]
+name = "fxd"
+height = 48
+[fonts.characters]
+"0" = ["fxg_0", 30]
+"1" = ["fxg_1", 24]
+":" = ["fxg_colon", 16]
+
+[[components]]
+type = "background_pair"
+normal = "fx_bgd"
+aod_resource = "fx_bgd_aod"
+parallax = [6, 6]
+fade = 0.6
+
+[[components]]
+type = "text_line"
+name = "z20_clock"
+box = {x = 90, y = 190, width = 300, height = 60}
+font = "fxd"
+size = 48
+color = "#E0E0E0"
+template = "%02d:%02d"
+expressions = ["[HOUR_0_23]", "[MINUTE]"]
+aod = {alpha = 160, duration = 0.4, offset = 0.0}
+
+[[components]]
+type = "text_line"
+name = "z21_batt"
+box = {x = 140, y = 300, width = 200, height = 40}
+font = "fxd"
+size = 24
+color = "#80FF80"
+template = "%d"
+expressions = ["clamp([BATTERY_PERCENT], 0, 100)"]
+aod = {alpha = 90, duration = 0.4, offset = 0.1}
+
+[[components]]
+type = "text_line"
+name = "z22_hr"
+box = {x = 140, y = 120, width = 200, height = 40}
+font = "fxd"
+size = 24
+color = "#FF8080"
+template = "%d"
+expressions = ["clamp(([HEART_RATE] < 30 ? 70 : [HEART_RATE]), 40, 200)"]
+aod = {alpha = 0, duration = 0.4, offset = 0.0}

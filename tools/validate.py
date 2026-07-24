@@ -238,6 +238,107 @@ def check_asset_licenses(root: Path, files: list[Path]) -> None:
                 "(file not tracked) — remove or fix the entry")
 
 
+def check_engine(root: Path) -> None:
+    """Engine-managed faces: generated-XML drift, determinism, fixtures,
+    and immutable-release pins."""
+    import subprocess as sp
+
+    engine_dir = root / "engine"
+    for spec in sorted(root.glob("watchfaces/*/engine/face.toml")):
+        slug = spec.parents[1].name
+        if not engine_dir.is_dir():
+            err(f"engine[{slug}]: face.toml exists but engine/ is missing")
+            continue
+        r = sp.run([sys.executable, str(root / "tools/generate_face.py"),
+                    slug, "--check", "--repo-root", str(root)],
+                   capture_output=True, text=True)
+        if r.returncode != 0:
+            msg = (r.stdout + r.stderr).strip().splitlines()
+            err(f"engine[{slug}]: {msg[0] if msg else 'generation check failed'}")
+
+    fixtures = root / "tests/engine/fixtures"
+    if engine_dir.is_dir() and fixtures.is_dir():
+        sys.path.insert(0, str(engine_dir))
+        try:
+            from wffgen.render import render_face
+            from wffgen.spec import load_spec
+            from wffgen.validation import SpecError, validate_face
+            import xml.etree.ElementTree as _ET
+            for f in sorted(fixtures.glob("fixture_*.toml")):
+                try:
+                    spec = load_spec(f)
+                    a, b = render_face(spec), render_face(spec)
+                    if a != b:
+                        err(f"engine fixture {f.name}: nondeterministic generation")
+                    res = {e.get("resource") for e in _ET.fromstring(a).iter()
+                           if e.get("resource")}
+                    validate_face(spec, a, res)
+                except SpecError as e:
+                    err(f"engine fixture {f.name}: {e.problems[0]}")
+                except Exception as e:  # noqa: BLE001 — report, don't crash
+                    err(f"engine fixture {f.name}: {e}")
+        finally:
+            sys.path.remove(str(engine_dir))
+
+    for pin in sorted(root.glob("releases/*/*/.immutable")):
+        chan_dir = pin.parent
+        apks = sorted(chan_dir.glob("*.apk"))
+        if len(apks) != 1:
+            err(f"immutable[{chan_dir.relative_to(root)}]: expected 1 APK")
+            continue
+        if sha256(apks[0]) != pin.read_text().strip():
+            err(f"immutable[{chan_dir.relative_to(root)}]: {apks[0].name} bytes "
+                "changed but this release is pinned immutable")
+
+
+HANDOFF_EXPORT_TYPES = {"static-image", "sprite-strip", "sprite-grid",
+                        "mask", "font-glyphs"}
+HANDOFF_LIFECYCLES = {"experimental", "candidate", "approved", "deprecated"}
+HANDOFF_REQUIRED = ("asset_id", "source_repo", "source_commit", "source_paths",
+                    "spec_path", "export_type", "destination", "dimensions",
+                    "color_space", "alpha", "pivot", "frames", "frame_seconds",
+                    "loop", "aod_safe", "license", "sha256", "lifecycle",
+                    "consumer_component", "regenerate")
+
+
+def check_handoff(root: Path) -> None:
+    """Asset-handoff manifests (docs/ASSET_HANDOFF_CONTRACT.md)."""
+    for man_path in sorted(root.glob("watchfaces/*/engine/handoff.json")):
+        rel = man_path.relative_to(root)
+        try:
+            man = json.loads(man_path.read_text())
+        except json.JSONDecodeError as e:
+            err(f"handoff[{rel}]: invalid JSON: {e}")
+            continue
+        if man.get("contract") != "docs/ASSET_HANDOFF_CONTRACT.md":
+            err(f"handoff[{rel}]: missing/wrong contract reference")
+        for a in man.get("assets", []):
+            aid = a.get("asset_id", "<missing asset_id>")
+            for key in HANDOFF_REQUIRED:
+                if key not in a:
+                    err(f"handoff[{rel}] {aid}: missing field {key}")
+            if a.get("source_repo") != "xsytrance/AGENOR-Horology":
+                err(f"handoff[{rel}] {aid}: unexpected source_repo")
+            if not re.fullmatch(r"[0-9a-f]{40}", str(a.get("source_commit", ""))):
+                err(f"handoff[{rel}] {aid}: source_commit is not a full 40-char SHA")
+            if a.get("export_type") not in HANDOFF_EXPORT_TYPES:
+                err(f"handoff[{rel}] {aid}: bad export_type {a.get('export_type')!r}")
+            if a.get("lifecycle") not in HANDOFF_LIFECYCLES:
+                err(f"handoff[{rel}] {aid}: bad lifecycle {a.get('lifecycle')!r}")
+            dest = a.get("destination")
+            if dest is None:
+                if not a.get("example"):
+                    err(f"handoff[{rel}] {aid}: null destination on a "
+                        "non-example entry")
+                continue
+            dest_path = root / dest
+            if not dest_path.exists():
+                err(f"handoff[{rel}] {aid}: destination {dest} does not exist")
+            elif a.get("sha256") and sha256(dest_path) != a["sha256"]:
+                err(f"handoff[{rel}] {aid}: sha256 mismatch for {dest} — "
+                    "bytes changed without a manifest update")
+
+
 SECRET_PATTERNS = re.compile(r"\.(jks|keystore|p12|pepk|pem)$|keystore\.properties$")
 TEXT_EXT = {".py", ".kts", ".xml", ".gradle", ".properties", ".sh", ".md"}
 
@@ -288,6 +389,8 @@ def main() -> None:
     check_releases(root, faces, aapt2)
     check_asset_licenses(root, files)
     check_files(root, files)
+    check_engine(root)
+    check_handoff(root)
 
     errors = [m for s, m in issues if s == "ERROR"]
     warns = [m for s, m in issues if s == "WARN"]

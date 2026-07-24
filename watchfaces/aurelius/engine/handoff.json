@@ -1,0 +1,31 @@
+{
+  "contract": "docs/ASSET_HANDOFF_CONTRACT.md",
+  "assets": [
+    {
+      "asset_id": "tourbillons/TourbillonOneMinute",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "2376d686d6af5933fec13fa48487fa52fb035b36",
+      "source_paths": [
+        "assets/models/tourbillons/TourbillonOneMinute/TourbillonOneMinute.blend"
+      ],
+      "spec_path": "assets/models/tourbillons/TourbillonOneMinute/SPEC.md",
+      "export_type": "sprite-strip",
+      "destination": null,
+      "dimensions": [220, 220],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [0.5, 0.5],
+      "frames": 60,
+      "frame_seconds": 1.0,
+      "loop": "perfect",
+      "aod_safe": false,
+      "license": "original",
+      "sha256": null,
+      "lifecycle": "experimental",
+      "consumer_component": "z22_cage",
+      "regenerate": "blender -b assets/models/tourbillons/TourbillonOneMinute/TourbillonOneMinute.blend -P scripts/render_presets.py -- sprite --frames 60 && scripts/spritepack.py renders/tourbillon exports/spriteSheets/tourbillon_60f.png --cols 60 --size 220x220",
+      "example": true,
+      "_note": "SYNTHETIC EXAMPLE, NOT APPROVED, no real export yet (destination/sha256 null). The .blend does not exist yet — the referenced source_commit contains the SPEC only. Exercises schema+validator ahead of the first real Phase-3 studio import; the Phase-2 tourbillon cage still uses the legacy face-owned art (res/drawable-nodpi/cage.png)."
+    }
+  ]
+}
