@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+  <Scene backgroundColor="#FF05070C">
+    <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.45" startOffset="0.0" interpolation="EASE_OUT" />
+      <Transform target="x" value="0 + 6 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 6 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="bg" />
+    </PartImage>
+    <PartImage name="z00_bg_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.45" startOffset="0.0" interpolation="EASE_IN" />
+      <Image resource="bg_aod" />
+    </PartImage>
+    <PartImage name="z01_moon" x="90" y="100" width="300" height="300" alpha="0" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.05" interpolation="LINEAR" />
+      <Transform target="alpha" value="150 + 70 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 0.6))" />
+      <Transform target="scaleX" value="1 + 0.05 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 0.6))" />
+      <Transform target="scaleY" value="1 + 0.05 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 0.6))" />
+      <Image resource="moonglow" />
+    </PartImage>
+    <PartImage name="z02_rim" x="0" y="0" width="480" height="480" alpha="200">
+      <Variant mode="AMBIENT" target="alpha" value="70" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="x" value="0 + 3 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 3 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="rim" />
+    </PartImage>
+    <PartImage name="z03_rain" x="0" y="-240" width="480" height="960" alpha="150">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.12" interpolation="LINEAR" />
+      <Transform target="y" value="-480 + ((([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 190) % 480)" />
+      <Transform target="x" value="0 - 3 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Image resource="rain" />
+    </PartImage>
+    <PartImage name="z04_batt_track" x="0" y="0" width="480" height="480" alpha="130">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.18" interpolation="LINEAR" />
+      <Image resource="batt_track" />
+    </PartImage>
+    <PartDraw name="z04_batt" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.2" interpolation="OVERSHOOT" />
+      <Arc centerX="240" centerY="240" width="412" height="412" startAngle="232" endAngle="304" direction="CLOCKWISE">
+        <Transform target="endAngle" value="232 + 72 * [BATTERY_PERCENT] / 100" />
+        <Stroke color="#FF2E7A" thickness="13" cap="ROUND" />
+      </Arc>
+    </PartDraw>
+    <PartImage name="z04_step_track" x="0" y="0" width="480" height="480" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.22" interpolation="LINEAR" />
+      <Image resource="step_track" />
+    </PartImage>
+    <PartDraw name="z04_step" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.24" interpolation="OVERSHOOT" />
+      <Arc centerX="240" centerY="240" width="412" height="412" startAngle="318" endAngle="402" direction="CLOCKWISE">
+        <Transform target="endAngle" value="318 + 84 * clamp([STEP_PERCENT], 0, 100) / 100" />
+        <Stroke color="#37E3FF" thickness="6" cap="ROUND" />
+      </Arc>
+    </PartDraw>
+    <PartImage name="z05_hglow" x="28" y="90" width="260" height="200" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Image resource="glow_cyan" />
+    </PartImage>
+    <PartImage name="z05_mglow" x="192" y="90" width="260" height="200" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.12" interpolation="LINEAR" />
+      <Image resource="glow_mag" />
+    </PartImage>
+    <Group name="z06_hour" x="83" y="120" width="150" height="132" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.35" startOffset="0.05" interpolation="EASE_OUT" />
+      <Transform target="x" value="83 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <DigitalClock x="0" y="0" width="150" height="132">
+        <TimeText format="hh" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="0" width="150" height="132">
+          <Font family="chakra_bold" size="100" color="#EAF6FF" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <Group name="z06_min" x="247" y="120" width="150" height="132" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.35" startOffset="0.06" interpolation="EASE_OUT" />
+      <Transform target="x" value="247 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <DigitalClock x="0" y="0" width="150" height="132">
+        <TimeText format="mm" align="CENTER" x="0" y="0" width="150" height="132">
+          <Font family="chakra_bold" size="100" color="#FF2E7A" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <PartText name="z06_colon" x="220" y="120" width="40" height="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.05" interpolation="LINEAR" />
+      <Transform target="alpha" value="120 + 135 * abs(sin([SECOND] * 3.14159))" />
+      <Text align="CENTER">
+        <Font family="chakra_bold" size="88" color="#FF2E7A">:</Font>
+      </Text>
+    </PartText>
+    <PartText name="z06_ampm" x="370" y="139" width="60" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.14" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_bold" size="24" color="#FF2E7A"><Template>%s<Parameter expression="[AMPM_STRING]" /></Template></Font>
+      </Text>
+    </PartText>
+    <Group name="z06_sec" x="370" y="171" width="60" height="44" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.14" interpolation="LINEAR" />
+      <DigitalClock x="0" y="0" width="60" height="44">
+        <TimeText format="ss" align="CENTER" x="0" y="0" width="60" height="44">
+          <Font family="rajdhani_bold" size="32" color="#EAF6FF" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <PartText name="z07_x1c7" x="140" y="230" width="200" height="40">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.34" interpolation="EASE_OUT" />
+      <Text align="CENTER">
+        <Font family="chakra_bold" size="30" color="#37E3FF">X1c7</Font>
+      </Text>
+    </PartText>
+    <PartImage name="z07_kanji" x="165" y="253" width="150" height="56" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.38" interpolation="EASE_OUT" />
+      <Image resource="k_senshi" />
+    </PartImage>
+    <PartImage name="z08_mask" x="63" y="57" width="46" height="46" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.4" interpolation="LINEAR" />
+      <Image resource="mask" />
+    </PartImage>
+    <PartText name="z08_sat" x="160" y="41" width="160" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.42" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="chakra_semibold" size="26" color="#FF2E7A"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></Font>
+      </Text>
+    </PartText>
+    <PartText name="z08_date" x="140" y="75" width="200" height="30">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.44" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="23" color="#EAF6FF"><Upper><Template>%s %d<Parameter expression="[MONTH_S]" /><Parameter expression="[DAY]" /></Template></Upper></Font>
+      </Text>
+    </PartText>
+    <PartImage name="z08_moon" x="377" y="49" width="30" height="30" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.46" interpolation="LINEAR" />
+      <Image resource="moon" />
+    </PartImage>
+    <PartText name="z08_temp" x="359" y="79" width="70" height="30">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.46" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="24" color="#37E3FF"><Template>%d°<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></Font>
+      </Text>
+    </PartText>
+    <PartText name="z09_batt" x="25" y="180" width="90" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.5" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="chakra_semibold" size="24" color="#EAF6FF"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></Font>
+      </Text>
+    </PartText>
+    <PartText name="z09_batt_l" x="25" y="208" width="90" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.52" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="15" color="#FF2E7A">BATTERY</Font>
+      </Text>
+    </PartText>
+    <PartImage name="z09_heart" x="439" y="158" width="26" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.5" interpolation="LINEAR" />
+      <Transform target="alpha" value="70 + 185 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="heart" />
+    </PartImage>
+    <PartText name="z09_bpm" x="422" y="180" width="60" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.52" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="chakra_semibold" size="24" color="#FF3B5C"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></Font>
+      </Text>
+    </PartText>
+    <PartText name="z09_bpm_l" x="422" y="208" width="60" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.54" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="15" color="#FF2E7A">BPM</Font>
+      </Text>
+    </PartText>
+    <PartImage name="z09_ecg" x="392" y="238" width="64" height="30" alpha="220">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.54" interpolation="LINEAR" />
+      <Image resource="ecg" />
+    </PartImage>
+    <PartImage name="z10_shoe" x="44" y="367" width="32" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.56" interpolation="LINEAR" />
+      <Image resource="shoe" />
+    </PartImage>
+    <PartText name="z10_steps" x="67" y="355" width="90" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.56" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="chakra_semibold" size="24" color="#EAF6FF"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></Font>
+      </Text>
+    </PartText>
+    <PartText name="z10_steps_l" x="60" y="385" width="80" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.58" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="15" color="#37E3FF">STEPS</Font>
+      </Text>
+    </PartText>
+    <PartImage name="z10_fire" x="409" y="365" width="26" height="30" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.56" interpolation="LINEAR" />
+      <Image resource="fire" />
+    </PartImage>
+    <PartText name="z10_cal_l" x="354" y="385" width="60" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.58" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="15" color="#FFC24B">CAL</Font>
+      </Text>
+    </PartText>
+    <PartText name="z11_dist_l" x="175" y="413" width="130" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.6" interpolation="LINEAR" />
+      <Text align="CENTER">
+        <Font family="rajdhani_semibold" size="15" color="#7F97A6">DISTANCE</Font>
+      </Text>
+    </PartText>
+    <PartImage name="z11_torii" x="216" y="450" width="48" height="34" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.62" interpolation="OVERSHOOT" />
+      <Variant mode="AMBIENT" target="scaleX" value="0.2" duration="0.5" startOffset="0.62" interpolation="OVERSHOOT" />
+      <Variant mode="AMBIENT" target="scaleY" value="0.2" duration="0.5" startOffset="0.62" interpolation="OVERSHOOT" />
+      <Image resource="torii" />
+    </PartImage>
+    <PartImage name="z12_scan" x="0" y="0" width="480" height="480" alpha="90">
+      <Variant mode="AMBIENT" target="alpha" value="40" duration="0.3" startOffset="0.0" interpolation="LINEAR" />
+      <Image resource="scan" />
+    </PartImage>
+    <ComplicationSlot name="cal_slot" x="323" y="352" width="90" height="40" slotId="1001" supportedTypes="SHORT_TEXT">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="323" y="352" width="90" height="40" />
+      <Complication type="SHORT_TEXT" />
+    </ComplicationSlot>
+    <ComplicationSlot name="dist_slot" x="180" y="428" width="120" height="36" slotId="1002" supportedTypes="SHORT_TEXT">
+      <DefaultProviderPolicy defaultSystemProvider="STEP_COUNT" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="180" y="428" width="120" height="36" />
+      <Complication type="SHORT_TEXT" />
+    </ComplicationSlot>
+  </Scene>
+</WatchFace>

@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+  <BitmapFonts>
+    <BitmapFont name="engraved_lg">
+      <Character name="0" resource="glyph_lg_0" width="52" height="68" />
+      <Character name="1" resource="glyph_lg_1" width="52" height="68" />
+      <Character name="2" resource="glyph_lg_2" width="52" height="68" />
+      <Character name="3" resource="glyph_lg_3" width="52" height="68" />
+      <Character name="4" resource="glyph_lg_4" width="52" height="68" />
+      <Character name="5" resource="glyph_lg_5" width="52" height="68" />
+      <Character name="6" resource="glyph_lg_6" width="52" height="68" />
+      <Character name="7" resource="glyph_lg_7" width="52" height="68" />
+      <Character name="8" resource="glyph_lg_8" width="52" height="68" />
+      <Character name="9" resource="glyph_lg_9" width="52" height="68" />
+      <Character name=":" resource="glyph_lg_colon" width="52" height="68" />
+    </BitmapFont>
+    <BitmapFont name="engraved_sm">
+      <Character name="0" resource="glyph_sm_0" width="32" height="44" />
+      <Character name="1" resource="glyph_sm_1" width="32" height="44" />
+      <Character name="2" resource="glyph_sm_2" width="32" height="44" />
+      <Character name="3" resource="glyph_sm_3" width="32" height="44" />
+      <Character name="4" resource="glyph_sm_4" width="32" height="44" />
+      <Character name="5" resource="glyph_sm_5" width="32" height="44" />
+      <Character name="6" resource="glyph_sm_6" width="32" height="44" />
+      <Character name="7" resource="glyph_sm_7" width="32" height="44" />
+      <Character name="8" resource="glyph_sm_8" width="32" height="44" />
+      <Character name="9" resource="glyph_sm_9" width="32" height="44" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF000000">
+
+    <PartImage x="0" y="0" width="480" height="480" name="z00_base" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="x" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="base" />
+    </PartImage>
+
+    <PartImage x="36" y="176" width="260" height="260" name="z02_rear_gear_l" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 2.0" />
+      <Transform target="x" value="36 + 5 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="176 + 5 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="gear_rear_l" />
+    </PartImage>
+
+    <PartImage x="255" y="101" width="150" height="150" name="z02_rear_gear_m" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="360 - (([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 3.0)" />
+      <Transform target="x" value="255 + 5 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="101 + 5 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="gear_rear_m" />
+    </PartImage>
+
+    <PartImage x="114" y="114" width="252" height="252" name="z05_ring_hour" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="[HOUR_0_11] * 30" />
+      <Image resource="ring_hour" />
+    </PartImage>
+
+    <PartImage x="97" y="97" width="286" height="286" name="z05_ring_min" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="[MINUTE] * 6" />
+      <Image resource="ring_min" />
+    </PartImage>
+
+    <PartImage x="83" y="93" width="110" height="110" name="z05_nw_gear_a" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 15" />
+      <Transform target="x" value="83 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="93 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="nw_gear_a" />
+    </PartImage>
+
+    <PartImage x="174" y="166" width="60" height="60" name="z05_nw_gear_c" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="360 - (([SECOND] + [MILLISECOND] / 1000) * 27.5)" />
+      <Transform target="x" value="174 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="166 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="nw_gear_c" />
+    </PartImage>
+
+    <PartImage x="287" y="93" width="110" height="110" name="z05_ne_gear_a" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="360 - (([SECOND] + [MILLISECOND] / 1000) * 12)" />
+      <Transform target="x" value="287 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="93 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="ne_gear_a" />
+    </PartImage>
+
+    <PartImage x="246" y="166" width="60" height="60" name="z05_ne_gear_c" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 22" />
+      <Transform target="x" value="246 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="166 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="ne_gear_c" />
+    </PartImage>
+
+    <PartImage x="90" y="287" width="90" height="90" name="z05_ratchet" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="floor([SECOND]) * 18" />
+      <Image resource="ratchet" />
+    </PartImage>
+
+    <PartImage x="170" y="346" width="44" height="44" name="z05_sw_gear_d" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="360 - (([SECOND] + [MILLISECOND] / 1000) * 30)" />
+      <Transform target="x" value="170 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="346 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="sw_gear_d" />
+    </PartImage>
+
+    <PartImage x="300" y="290" width="84" height="84" name="z05_se_gear_b" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 9" />
+      <Transform target="x" value="300 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="290 + 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="se_gear_b" />
+    </PartImage>
+
+    <PartImage x="250" y="332" width="72" height="72" name="z05_se_cam" alpha="255" pivotX="0.42" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 20" />
+      <Image resource="cam" />
+    </PartImage>
+
+    <PartImage x="176" y="300" width="60" height="60" name="z07_rod_0" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="x" value="176 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="300 - 9 * sin(([SECOND] + [MILLISECOND] / 1000) * 3.1416 + 0)" />
+      <Image resource="rod_0" />
+    </PartImage>
+
+    <PartImage x="244" y="300" width="60" height="60" name="z07_rod_1" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="x" value="244 + 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="300 - 9 * sin(([SECOND] + [MILLISECOND] / 1000) * 3.1416 + 3.1416)" />
+      <Image resource="rod_1" />
+    </PartImage>
+
+    <PartImage x="198" y="46" width="84" height="84" name="z10_fan" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 72" />
+      <Transform target="x" value="198 + 8 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="46 + 8 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="fan" />
+    </PartImage>
+
+    <PartImage x="156" y="156" width="168" height="168" name="z11_ring_outer" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      <Transform target="x" value="156 + 8 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="156 + 8 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="ring_outer" />
+    </PartImage>
+
+    <PartImage x="174" y="174" width="132" height="132" name="z11_ring_inner" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="45" />
+      <Transform target="angle" value="360 - (([SECOND] + [MILLISECOND] / 1000) * 9)" />
+      <Transform target="x" value="174 + 9 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="174 + 9 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="ring_inner" />
+    </PartImage>
+
+    <DigitalClock x="44" y="206" width="88" height="56">
+      <TimeText format="hh" hourFormat="SYNC_TO_DEVICE" align="CENTER"
+                x="0" y="0" width="88" height="56">
+        <BitmapFont family="engraved_lg" size="56" color="#FFFFFF" />
+      </TimeText>
+    </DigitalClock>
+    <DigitalClock x="348" y="206" width="88" height="56">
+      <TimeText format="mm" align="CENTER" x="0" y="0" width="88" height="56">
+        <BitmapFont family="engraved_lg" size="56" color="#FFFFFF" />
+      </TimeText>
+    </DigitalClock>
+    <DigitalClock x="208" y="372" width="64" height="44">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <TimeText format="ss" align="CENTER" x="0" y="0" width="64" height="44">
+        <BitmapFont family="engraved_sm" size="44" color="#FFFFFF" />
+      </TimeText>
+    </DigitalClock>
+
+  </Scene>
+</WatchFace>

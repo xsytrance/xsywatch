@@ -2,8 +2,8 @@
 
 Verified against local source and APK metadata on 2026-07-24
 (aapt2 36.0.0 dump of each APK; Gradle config of each project).
-All faces: WFF v4, target Galaxy Watch7 44 mm (480×480), targetSdk 36,
-debug-signed, versionCode 1.
+All faces: WFF v4 (exception: `tripface` is WFF v2), target Galaxy Watch7
+44 mm (480×480), targetSdk 36, debug-signed, versionCode 1.
 
 ## Released (source + APK)
 
