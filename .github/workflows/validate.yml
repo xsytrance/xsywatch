@@ -1,8 +1,8 @@
-# Repo validation CI (Phase-1 review, non-blocking recommendation 1).
-# Runs the cheap structural checks; Android APK builds are deliberately NOT
-# run here yet (runner cost / time) — see docs/BUILD_AND_RELEASE.md.
-# NOTE: first run on GitHub Actions is pending; treat results as unverified
-# until the badge is green.
+# Repo validation CI.
+# Android APK builds are deliberately NOT run here yet (runner cost/time) —
+# see docs/BUILD_AND_RELEASE.md. The official WFF validator and
+# memory-footprint evaluator run locally (tools/wff_validate.sh) and their
+# evidence is committed; building them in CI is a candidate Phase-3 addition.
 name: validate
 on:
   push:
@@ -13,7 +13,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 2
 
@@ -26,10 +26,16 @@ jobs:
       - name: git diff --check (whitespace/conflict markers)
         run: git diff --check HEAD~1 HEAD
 
+      - name: Engine unit tests
+        run: python3 -m unittest discover -s tests/engine -v
+
+      - name: Engine generation drift check (aurelius)
+        run: python3 tools/generate_face.py aurelius --check
+
       - name: Install Android build-tools (aapt2 for validate.py)
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
             "build-tools;36.0.0" >/dev/null
 
-      - name: Repository validation
+      - name: Repository validation (incl. fixtures, handoff, immutability)
         run: python3 tools/validate.py

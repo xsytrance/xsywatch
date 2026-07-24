@@ -43,9 +43,18 @@ through with a pointer to the fixing commit.
 
 ## Engine
 
-- No shared engine layer yet — each face duplicates common patterns
-  (chapter rings, AOD handling, HR bindings). Extraction is Phase 2 (ADR-003:
-  prove one reference face first).
+- ~~No shared engine layer yet~~ — **superseded (Phase 2):** `engine/wffgen`
+  (0.1.0-experimental) generates Aurelius from `engine/face.toml` with
+  parity regression tests. Remaining: only Aurelius is engine-managed; the
+  other nine faces still hand-author XML (deliberate — ADR-008 no broad
+  migration); engine APIs are experimental and may change when a second
+  face migrates.
+- Physical Galaxy Watch7 evidence for Phase 2 (baseline AND candidate) is
+  **blocked** — no watch reachable from the build box; disclosed in
+  docs/reports/evidence/phase-2/aurelius/*/DEVICE_EVIDENCE_BLOCKER.md with
+  the exact owner steps (DEVICE_TEST_MATRIX.md) to close it.
+- The asset-handoff manifest has only a synthetic example entry; the first
+  real studio export lands in Phase 3.
 
 ## Device/test
 

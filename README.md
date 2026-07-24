@@ -30,16 +30,24 @@ Full inventory with status detail: [`docs/WATCHFACE_INVENTORY.md`](docs/WATCHFAC
 
 ```
 docs/                architecture ledger, guides, ADRs, phase reports
+engine/              wffgen — deterministic build-time WFF engine (Python stdlib)
+tests/engine/        engine unit tests + non-proprietary generality fixtures
 watchfaces/<slug>/   one complete editable WFF project per face
-                     (Gradle + app/src/main/res/raw/watchface.xml + tools/)
-tools/               cross-face build / validate / release scripts
+                     (Gradle + app/src/main/res/raw/watchface.xml + tools/;
+                      engine-managed faces add engine/face.toml)
+tools/               build / validate / release / generate scripts
 releases/<slug>/     released APK + preview + metadata (+ MANIFEST.json index)
 ```
 
-There is intentionally **no `engine/` directory yet** — shared-code extraction
-is Phase 2, and empty scaffolding is worse than none (see ADR-005). The 3D
-asset pipeline (Blender/Material Maker library) lives in the sibling repository
-[`AGENOR-Horology`](https://github.com/xsytrance/AGENOR-Horology).
+`engine/` holds **wffgen**, the deterministic build-time WFF generation
+engine (ADR-008): face specs (`watchfaces/<slug>/engine/face.toml`) generate
+the committed `watchface.xml` (`python3 tools/generate_face.py <slug>`;
+`--check` gates drift in CI). Aurelius is the reference face; other faces
+remain hand-authored until extraction is proven face-by-face. The 3D asset
+pipeline lives in the sibling repository
+[`AGENOR-Horology`](https://github.com/xsytrance/AGENOR-Horology); rendered
+exports arrive via the versioned handoff contract
+(`docs/ASSET_HANDOFF_CONTRACT.md`).
 
 ## Toolchain (Linux-native, all free)
 

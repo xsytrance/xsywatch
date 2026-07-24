@@ -592,6 +592,32 @@ Owner decisions applied: ADR-005 **ratified**; repository **proprietary**
 **frozen** (legacy WFF v2); no production keystore created. Branch awaits
 ChatGPT re-review before merge.
 
+### 2026-07-24 — Phase 2 implementation note (Claude Code)
+
+Branch `phase-2/aurelius-reference-engine` implements the approved Phase 2
+brief (evidence: `docs/reports/PHASE_2_AURELIUS_REFERENCE_ENGINE.md`):
+
+- **Engine:** `engine/wffgen` 0.1.0-experimental — deterministic build-time
+  WFF generation (stdlib only), 10-component registry grounded in the
+  reproducible ten-face audit (`PHASE_2_COMPONENT_AUDIT.{json,md}`);
+  34 unit tests.
+- **Aurelius migrated:** authoritative `engine/face.toml`; committed XML is
+  generated; `generate_face.py aurelius --check` gates drift; semantic
+  parity with the Phase-1 baseline is regression-tested element-by-element;
+  identity and versions unchanged; released APK byte-identical and now
+  pinned immutable (validation-enforced).
+- **Proof tooling:** official WFF validator rebuilt and PASSING (aurelius +
+  2 non-proprietary generality fixtures); memory-footprint evaluator PASS
+  (candidate + release); all ten faces still build; validation 0 errors.
+- **Handoff contract:** `docs/ASSET_HANDOFF_CONTRACT.md` + schema +
+  validator enforcement + synthetic non-approved example. Sibling repo
+  untouched.
+- **Open item:** physical Watch7 evidence blocked (no reachable device);
+  disclosed with closing procedure (`docs/DEVICE_TEST_MATRIX.md`,
+  DEVICE_EVIDENCE_BLOCKER files). Awaiting owner pairing session.
+
+Branch pushed for architecture review; not merged.
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.

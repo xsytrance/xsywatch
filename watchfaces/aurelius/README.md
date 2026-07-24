@@ -4,7 +4,14 @@ Cel-shaded olive-drab military skeleton with WW1 wood-propeller bridge.
 Tourbillon cage = seconds, balance wheel oscillates with live heart rate,
 battery = power-reserve gauge. Owner has flagged a future remix.
 Multiple design iterations preserved in `tools/` (cel_v3, photoreal_v2,
-warbird_v4). Released: `releases/aurelius/`.
+warbird_v4). Released: `releases/aurelius/` (current release pinned
+immutable).
+
+**Engine-managed since Phase 2:** `engine/face.toml` is the authoritative
+source; the committed `res/raw/watchface.xml` is generated
+(`python3 tools/generate_face.py aurelius`, `--check` in CI). Semantic
+parity with the Phase-1 release is regression-tested
+(tests/engine/test_aurelius_parity.py). Do not hand-edit the XML.
 
 ## Build & install
 
