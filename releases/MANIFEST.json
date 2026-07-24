@@ -1,126 +1,141 @@
 {
   "generated": "2026-07-24",
-  "device_target": "Samsung Galaxy Watch7 44mm (480x480), Wear OS, WFF v4",
+  "schema": 2,
+  "device_target": "Samsung Galaxy Watch7 44mm (480x480), Wear OS, WFF",
   "signing": "debug (sideload only)",
-  "releases": [
-    {
-      "slug": "ares-wargod",
-      "channel": "current",
-      "apk": "releases/ares-wargod/current/ares-wargod.apk",
-      "sha256": "9e643722c3294af0db5f661fec548fb822f61fa013bf45f582420f3b8d8d67fc",
-      "size_bytes": 5007070,
-      "label": "ARES",
-      "package": "com.xsytrance.ares",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-22",
-      "preview": null,
-      "original_filename": "ares-wargod.apk",
-      "source_dir": "watchfaces/ares-wargod",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+  "faces": {
+    "ares-wargod": {
+      "channels": {
+        "current": {
+          "apk": "releases/ares-wargod/current/ares-wargod.apk",
+          "sha256": "9e643722c3294af0db5f661fec548fb822f61fa013bf45f582420f3b8d8d67fc",
+          "size_bytes": 5007070,
+          "label": "ARES",
+          "package": "com.xsytrance.ares",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": null,
+          "source_dir": "watchfaces/ares-wargod",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "ares-wargod.apk",
+          "build_date_approx_file_mtime": "2026-07-22"
+        }
+      }
     },
-    {
-      "slug": "aurelius",
-      "channel": "current",
-      "apk": "releases/aurelius/current/aurelius.apk",
-      "sha256": "844b9c430f65e0dfaec88604175f1345b4173d647496de4b4ed74359ccfdbcc2",
-      "size_bytes": 3664664,
-      "label": "AURELIUS",
-      "package": "com.xsytrance.aurelius",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-24",
-      "preview": "preview.png",
-      "original_filename": "aurelius.apk",
-      "source_dir": "watchfaces/aurelius",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "aurelius": {
+      "channels": {
+        "current": {
+          "apk": "releases/aurelius/current/aurelius.apk",
+          "sha256": "844b9c430f65e0dfaec88604175f1345b4173d647496de4b4ed74359ccfdbcc2",
+          "size_bytes": 3664664,
+          "label": "AURELIUS",
+          "package": "com.xsytrance.aurelius",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": "preview.png",
+          "source_dir": "watchfaces/aurelius",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "aurelius.apk",
+          "build_date_approx_file_mtime": "2026-07-24"
+        }
+      }
     },
-    {
-      "slug": "bone-watch",
-      "channel": "current",
-      "apk": "releases/bone-watch/current/bone-watch.apk",
-      "sha256": "485eadf1c7aebe0d0bc49435c534e442f5b14f3310b85a5442e72a007b7eafe1",
-      "size_bytes": 4157811,
-      "label": "BONE",
-      "package": "com.xsytrance.bonewatch",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-22",
-      "preview": null,
-      "original_filename": "bone-watch.apk",
-      "source_dir": "watchfaces/bone-watch",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "bone-watch": {
+      "channels": {
+        "current": {
+          "apk": "releases/bone-watch/current/bone-watch.apk",
+          "sha256": "485eadf1c7aebe0d0bc49435c534e442f5b14f3310b85a5442e72a007b7eafe1",
+          "size_bytes": 4157811,
+          "label": "BONE",
+          "package": "com.xsytrance.bonewatch",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": null,
+          "source_dir": "watchfaces/bone-watch",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "bone-watch.apk",
+          "build_date_approx_file_mtime": "2026-07-22"
+        }
+      }
     },
-    {
-      "slug": "bushido",
-      "channel": "current",
-      "apk": "releases/bushido/current/bushido.apk",
-      "sha256": "70157efd18da2a4235253b81078026876fa686d236590b97bcfbf4c8ae8a8cd7",
-      "size_bytes": 3561530,
-      "label": "X1c7 BUSHIDO",
-      "package": "com.xsytrance.bushido",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-21",
-      "preview": "preview.jpg",
-      "original_filename": "xsywatch-bushido.apk",
-      "source_dir": "watchfaces/bushido",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "bushido": {
+      "channels": {
+        "current": {
+          "apk": "releases/bushido/current/bushido.apk",
+          "sha256": "70157efd18da2a4235253b81078026876fa686d236590b97bcfbf4c8ae8a8cd7",
+          "size_bytes": 3561530,
+          "label": "X1c7 BUSHIDO",
+          "package": "com.xsytrance.bushido",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": "preview.jpg",
+          "source_dir": "watchfaces/bushido",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "xsywatch-bushido.apk",
+          "build_date_approx_file_mtime": "2026-07-21"
+        }
+      }
     },
-    {
-      "slug": "hellforge",
-      "channel": "current",
-      "apk": "releases/hellforge/current/hellforge.apk",
-      "sha256": "cd51a747931f5fb038ddd7560b4199981be1200af4bc0cf426a5e9ba4edc17e0",
-      "size_bytes": 4304555,
-      "label": "HELLFORGE",
-      "package": "com.xsytrance.hellforge",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-22",
-      "preview": null,
-      "original_filename": "hellforge.apk",
-      "source_dir": "watchfaces/hellforge",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "hellforge": {
+      "channels": {
+        "current": {
+          "apk": "releases/hellforge/current/hellforge.apk",
+          "sha256": "cd51a747931f5fb038ddd7560b4199981be1200af4bc0cf426a5e9ba4edc17e0",
+          "size_bytes": 4304555,
+          "label": "HELLFORGE",
+          "package": "com.xsytrance.hellforge",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": null,
+          "source_dir": "watchfaces/hellforge",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "hellforge.apk",
+          "build_date_approx_file_mtime": "2026-07-22"
+        }
+      }
     },
-    {
-      "slug": "pinball",
-      "channel": "current",
-      "apk": "releases/pinball/current/pinball.apk",
-      "sha256": "5abef419c40ce3a5f24bd134eb7eec8621ec4eb49d540672bf1f7c290e0cfbca",
-      "size_bytes": 3491260,
-      "label": "PINBALL",
-      "package": "com.xsytrance.pinball",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-22",
-      "preview": null,
-      "original_filename": "pinball.apk",
-      "source_dir": "watchfaces/pinball",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "pinball": {
+      "channels": {
+        "current": {
+          "apk": "releases/pinball/current/pinball.apk",
+          "sha256": "5abef419c40ce3a5f24bd134eb7eec8621ec4eb49d540672bf1f7c290e0cfbca",
+          "size_bytes": 3491260,
+          "label": "PINBALL",
+          "package": "com.xsytrance.pinball",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": null,
+          "source_dir": "watchfaces/pinball",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "pinball.apk",
+          "build_date_approx_file_mtime": "2026-07-22"
+        }
+      }
     },
-    {
-      "slug": "pulseface",
-      "channel": "current",
-      "apk": "releases/pulseface/current/pulseface.apk",
-      "sha256": "44709eb5f3f5360872c383720c017ff702b31fff256b046d125640f131d203dc",
-      "size_bytes": 3320055,
-      "label": "XSY PULSE",
-      "package": "com.xsytrance.pulseface",
-      "versionCode": 1,
-      "versionName": "1.0",
-      "targetSdk": 36,
-      "build_date_approx_file_mtime": "2026-07-23",
-      "preview": "preview.png",
-      "original_filename": "pulseface.apk",
-      "source_dir": "watchfaces/pulseface",
-      "source_commit_of_build": "unknown \u2014 not recorded at build time"
+    "pulseface": {
+      "channels": {
+        "current": {
+          "apk": "releases/pulseface/current/pulseface.apk",
+          "sha256": "44709eb5f3f5360872c383720c017ff702b31fff256b046d125640f131d203dc",
+          "size_bytes": 3320055,
+          "label": "XSY PULSE",
+          "package": "com.xsytrance.pulseface",
+          "versionCode": 1,
+          "versionName": "1.0",
+          "targetSdk": 36,
+          "preview": "preview.png",
+          "source_dir": "watchfaces/pulseface",
+          "source_commit_of_build": "unknown \u2014 not recorded at build time",
+          "original_filename": "pulseface.apk",
+          "build_date_approx_file_mtime": "2026-07-23"
+        }
+      }
     }
-  ]
+  }
 }

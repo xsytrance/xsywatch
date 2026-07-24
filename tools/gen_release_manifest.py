@@ -1,8 +1,23 @@
 #!/usr/bin/env python3
-"""Regenerate releases/MANIFEST.json and each releases/<slug>/*/RELEASE.md.
+"""Regenerate releases/MANIFEST.json and per-channel RELEASE.md files.
 
-Reads real APK metadata via aapt2 (never invents values). Fields that cannot
-be determined are emitted as explicit "unknown" markers.
+Manifest schema (channel-safe, ADR-006 as amended by the Phase-1 review):
+
+    {
+      "generated": "...", "device_target": "...", "signing": "...",
+      "faces": {
+        "<slug>": { "channels": {
+            "current":  { ...release entry... },
+            "v1.0":     { ...release entry... }
+        }}
+      }
+    }
+
+Identity is (slug, channel). Each releases/<slug>/<channel>/ directory must
+contain exactly one APK. Real APK metadata is read via aapt2 — never invented;
+fields that cannot be determined are explicit "unknown" markers. Per-channel
+provenance fields (source_commit_of_build, provenance_note, archived_on) are
+carried over from the existing manifest when present.
 
 Usage: python3 tools/gen_release_manifest.py [--repo-root PATH]
 """
@@ -19,6 +34,8 @@ import sys
 from pathlib import Path
 
 UNKNOWN = "unknown — not recorded at build time"
+CARRIED_FIELDS = ("source_commit_of_build", "provenance_note", "archived_on",
+                  "original_filename", "build_date_approx_file_mtime")
 
 
 def find_aapt2() -> str | None:
@@ -50,25 +67,23 @@ def sha256(p: Path) -> str:
     return h.hexdigest()
 
 
-# Facts established during the Phase-1 audit; edit when new releases are cut.
-PROVENANCE = {
-    "introduced_commit": "d8ed43bfefe2eaf947b3f3993bc8aa15ebe90534",
-    "introduced_note": ("APK first committed 2026-07-24 (repo commit d8ed43b). "
-                        "Producing source predates the repo's source import; "
-                        "build date below is the file mtime (approximate)."),
-    "original_filenames": {
-        "bushido": "xsywatch-bushido.apk", "ares-wargod": "ares-wargod.apk",
-        "aurelius": "aurelius.apk", "bone-watch": "bone-watch.apk",
-        "hellforge": "hellforge.apk", "pinball": "pinball.apk",
-        "pulseface": "pulseface.apk",
-    },
-    "source_dirs": {
-        "bushido": "watchfaces/bushido", "ares-wargod": "watchfaces/ares-wargod",
-        "aurelius": "watchfaces/aurelius", "bone-watch": "watchfaces/bone-watch",
-        "hellforge": "watchfaces/hellforge", "pinball": "watchfaces/pinball",
-        "pulseface": "watchfaces/pulseface",
-    },
-}
+def load_previous(rel_root: Path) -> dict:
+    man = rel_root / "MANIFEST.json"
+    if not man.exists():
+        return {}
+    try:
+        data = json.loads(man.read_text())
+    except json.JSONDecodeError:
+        return {}
+    carried: dict[tuple, dict] = {}
+    if "faces" in data:  # current schema
+        for slug, face in data["faces"].items():
+            for channel, e in face.get("channels", {}).items():
+                carried[(slug, channel)] = e
+    elif "releases" in data:  # legacy flat schema (pre-review)
+        for e in data["releases"]:
+            carried[(e["slug"], e.get("channel", "current"))] = e
+    return carried
 
 
 def main() -> None:
@@ -81,63 +96,76 @@ def main() -> None:
     if not aapt2:
         sys.exit("aapt2 not found — set ANDROID_HOME (need build-tools)")
 
-    manifest = {
-        "generated": dt.date.today().isoformat(),
-        "device_target": "Samsung Galaxy Watch7 44mm (480x480), Wear OS, WFF v4",
-        "signing": "debug (sideload only)",
-        "releases": [],
-    }
+    previous = load_previous(rel_root)
+    faces: dict[str, dict] = {}
 
-    for apk in sorted(rel_root.glob("*/*/*.apk")):
-        slug = apk.parent.parent.name
-        channel = apk.parent.name  # current or vX.Y.Z
-        meta = apk_badging(aapt2, apk)
-        previews = [p.name for p in apk.parent.glob("preview.*")]
-        mtime = dt.datetime.fromtimestamp(apk.stat().st_mtime).date().isoformat()
-        entry = {
-            "slug": slug,
-            "channel": channel,
-            "apk": str(apk.relative_to(root)),
-            "sha256": sha256(apk),
-            "size_bytes": apk.stat().st_size,
-            "label": meta["label"],
-            "package": meta["package"],
-            "versionCode": meta["versionCode"],
-            "versionName": meta["versionName"],
-            "targetSdk": meta["targetSdk"],
-            "build_date_approx_file_mtime": mtime,
-            "preview": previews[0] if previews else None,
-            "original_filename": PROVENANCE["original_filenames"].get(slug, UNKNOWN),
-            "source_dir": PROVENANCE["source_dirs"].get(slug, UNKNOWN),
-            "source_commit_of_build": UNKNOWN,
-        }
-        manifest["releases"].append(entry)
+    for face_dir in sorted(d for d in rel_root.iterdir() if d.is_dir()):
+        slug = face_dir.name
+        for chan_dir in sorted(d for d in face_dir.iterdir() if d.is_dir()):
+            channel = chan_dir.name
+            apks = sorted(chan_dir.glob("*.apk"))
+            if len(apks) != 1:
+                sys.exit(f"releases/{slug}/{channel}: expected exactly 1 APK, "
+                         f"found {len(apks)} — fix before regenerating")
+            apk = apks[0]
+            meta = apk_badging(aapt2, apk)
+            previews = sorted(p.name for p in chan_dir.glob("preview.*"))
+            old = previous.get((slug, channel), {})
+            entry = {
+                "apk": str(apk.relative_to(root)),
+                "sha256": sha256(apk),
+                "size_bytes": apk.stat().st_size,
+                "label": meta["label"],
+                "package": meta["package"],
+                "versionCode": meta["versionCode"],
+                "versionName": meta["versionName"],
+                "targetSdk": meta["targetSdk"],
+                "preview": previews[0] if previews else None,
+                "source_dir": f"watchfaces/{slug}",
+            }
+            for k in CARRIED_FIELDS:
+                entry[k] = old.get(k, UNKNOWN if k == "source_commit_of_build" else old.get(k))
+            stamp = chan_dir / ".archived_on"
+            if stamp.exists():
+                entry["archived_on"] = stamp.read_text().strip()
+            entry = {k: v for k, v in entry.items() if v is not None or k in
+                     ("preview", "versionCode", "targetSdk")}
+            # Versioned channels must be named after the APK inside them.
+            if channel != "current" and channel != f"v{meta['versionName']}":
+                sys.exit(f"releases/{slug}/{channel}: directory name does not match "
+                         f"APK versionName '{meta['versionName']}'")
+            faces.setdefault(slug, {"channels": {}})["channels"][channel] = entry
 
-        release_md = apk.parent / "RELEASE.md"
-        release_md.write_text(f"""# {meta['label']} — release metadata ({channel})
+            (chan_dir / "RELEASE.md").write_text(
+f"""# {meta['label']} — release metadata ({channel})
 
 | Field | Value |
 |---|---|
-| Slug | {slug} |
-| APK | {apk.name} (original name: {entry['original_filename']}) |
+| Slug / channel | {slug} / {channel} |
+| APK | {apk.name} |
 | SHA-256 | `{entry['sha256']}` |
 | Size | {entry['size_bytes']:,} bytes |
 | Package | {meta['package']} |
 | Version | {meta['versionName']} (versionCode {meta['versionCode']}) |
-| Target | Galaxy Watch7 44mm, WFF v4, targetSdk {meta['targetSdk']} |
+| Target | Galaxy Watch7 44mm, targetSdk {meta['targetSdk']} |
 | Signing | debug (sideload only) |
-| Build date | {mtime} (file mtime — approximate) |
-| Source project | {entry['source_dir']} |
-| Source commit of this build | {entry['source_commit_of_build']} |
-| Preview | {entry['preview'] or 'MISSING — regenerate at next release'} |
-| Introduced to repo | commit `{PROVENANCE['introduced_commit'][:7]}` |
-
+| Source project | watchfaces/{slug} |
+| Source commit of this build | {entry.get('source_commit_of_build', UNKNOWN)} |
+| Preview | {entry.get('preview') or 'MISSING — regenerate at next release'} |
+{f"| Archived on | {entry['archived_on']} |" if entry.get('archived_on') else ''}
 Known limitations: see `docs/KNOWN_LIMITATIONS.md`.
 """)
 
+    manifest = {
+        "generated": dt.date.today().isoformat(),
+        "schema": 2,
+        "device_target": "Samsung Galaxy Watch7 44mm (480x480), Wear OS, WFF",
+        "signing": "debug (sideload only)",
+        "faces": faces,
+    }
     (rel_root / "MANIFEST.json").write_text(json.dumps(manifest, indent=2) + "\n")
-    print(f"wrote {rel_root/'MANIFEST.json'} ({len(manifest['releases'])} releases) "
-          f"and per-release RELEASE.md files")
+    n = sum(len(f["channels"]) for f in faces.values())
+    print(f"wrote MANIFEST.json (schema 2): {len(faces)} faces, {n} (slug,channel) entries")
 
 
 if __name__ == "__main__":

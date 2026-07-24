@@ -19,6 +19,12 @@ if [ -d "$SDK/platforms" ] && ls "$SDK/build-tools" >/dev/null 2>&1; then
 else
   say "Android SDK" "MISSING — install SDK w/ platform 36 + build-tools, set ANDROID_HOME"; fail=1
 fi
+AAPT2=$(ls "$SDK"/build-tools/*/aapt2 2>/dev/null | sort -V | tail -1)
+if [ -n "$AAPT2" ] && [ -x "$AAPT2" ] && "$AAPT2" version >/dev/null 2>&1; then
+  say "aapt2" "OK ($AAPT2)"
+else
+  say "aapt2" "MISSING/not executable — required by validate.py and release tooling"; fail=1
+fi
 [ -x "$SDK/platform-tools/adb" ] && say "adb" "OK" || { say "adb" "MISSING (platform-tools)"; fail=1; }
 
 # Python + Pillow (asset tools only — not needed for plain builds)
