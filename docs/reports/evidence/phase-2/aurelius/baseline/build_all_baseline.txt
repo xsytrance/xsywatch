@@ -1,0 +1,10 @@
+arcwright      PASS
+ares-wargod    PASS
+aurelius       PASS
+bone-watch     PASS
+bushido        PASS
+chronova       PASS
+hellforge      PASS
+pinball        PASS
+pulseface      PASS
+tripface       PASS
