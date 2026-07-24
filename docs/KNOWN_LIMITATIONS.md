@@ -50,9 +50,11 @@ through with a pointer to the fixing commit.
   migration); engine APIs are experimental and may change when a second
   face migrates.
 - Physical Galaxy Watch7 evidence for Phase 2 (baseline AND candidate) is
-  **blocked** — no watch reachable from the build box; disclosed in
+  **blocked** — no watch reachable from the build box (re-verified during
+  the review-correction pass); disclosed in
   docs/reports/evidence/phase-2/aurelius/*/DEVICE_EVIDENCE_BLOCKER.md with
-  the exact owner steps (DEVICE_TEST_MATRIX.md) to close it.
+  the exact owner steps (DEVICE_TEST_MATRIX.md) to close it. This is
+  Phase-2 re-review blocker 1 and the ONLY remaining blocker.
 - The asset-handoff manifest has only a synthetic example entry; the first
   real studio export lands in Phase 3.
 

@@ -13,7 +13,13 @@ Every engine-managed face that consumes studio exports keeps a manifest at:
 watchfaces/<slug>/engine/handoff.json
 ```
 
-validated by `tools/validate.py` against `docs/asset-handoff.schema.json`.
+validated by `tools/validate.py`, which implements the complete schema
+contract of `docs/asset-handoff.schema.json` as standard-library checks
+(field presence/types, asset-id pattern, source-SHA format, dimension/pivot/
+frame rules, enums, sha256 format + requiredness, and destination
+containment under the consuming face's `app/src/main/res/`). The schema file
+is the documented reference shape; enforcement is negatively tested in
+`tests/engine/test_handoff_validation.py` (26 cases).
 One entry per imported export:
 
 | Field | Meaning |

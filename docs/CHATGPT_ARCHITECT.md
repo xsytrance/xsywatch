@@ -618,6 +618,19 @@ brief (evidence: `docs/reports/PHASE_2_AURELIUS_REFERENCE_ENGINE.md`):
 
 Branch pushed for architecture review; not merged.
 
+### 2026-07-24 — Phase 2 review corrections (Claude Code)
+
+Phase-2 review (commit `973d30a`) blockers 2/3/4 are fixed in `cb10ddb`
+(ratio() normalization + tests; complete stdlib enforcement of the
+asset-handoff schema + 26 negative tests; WFF-version cross-check incl.
+@integer resolution + deliberate-mismatch test). Baseline-lineage wording
+corrected repo-wide (frozen imported source baseline, not APK-extracted).
+Re-verified: 68 engine tests, 10/10 release fixtures, 10/10 builds, WFF
+validator + memory evaluator re-PASS, validation 0 errors, immutable APK
+unchanged. **Blocker 1 (physical Watch7 evidence) remains open** — device
+still unreachable; execution procedure staged in DEVICE_TEST_MATRIX.md
+awaiting owner pairing credentials. Branch returned for final review.
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.

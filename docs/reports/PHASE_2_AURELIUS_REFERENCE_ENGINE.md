@@ -91,7 +91,8 @@ XML is now a validation failure.
 ## 9. XML parity and deterministic-generation evidence
 
 `tests/engine/test_aurelius_parity.py`: flattened element sequence of the
-generated document equals the frozen baseline snapshot — same tags, same
+generated document equals the frozen imported Phase-1 source baseline
+(not claimed as byte-extracted APK content — see §15) — same tags, same
 attributes (numeric attrs compared numerically, e.g. `0` ≡ `0.0`; all
 expression strings compared **exactly**), comments ignored, one documented
 identifier rename (`z00_aod`→`z01_aod`) via an explicit map. Determinism:
@@ -100,7 +101,7 @@ byte-identical across runs; `--check` passes against the committed file.
 
 ## 10. Test inventory and results
 
-`tests/engine/`: **34 tests, all passing** — `test_expressions` (11:
+`tests/engine/`: **68 tests, all passing** (34 at initial submission) — `test_expressions` (11:
 baseline-string parity + safety), `test_components` (13: metadata contract,
 direction metadata, pivots, validation failures incl. duplicate names,
 z-order, canvas bounds, naming, missing resources, AOD bounds),
@@ -214,3 +215,49 @@ CI additions: build the WFF validator in CI, run it on all engine outputs.
 3. `9873405` — migrate Aurelius to engine-generated XML
 4. `399ef23` — add fixtures, validation, and asset handoff contract
 5. (final commit) — device evidence disclosure, CI, docs, this report
+
+---
+
+## 23. Review corrections (post-review pass, 2026-07-24)
+
+ChatGPT review (`PHASE_2_CHATGPT_REVIEW.md`, commit `973d30a`) returned
+CHANGES REQUESTED with four blockers. Status:
+
+**Blocker 2 — ratio() (FIXED, `cb10ddb`).** General normalization is now
+`(clamp(e, lo, hi) - lo) / (hi - lo)`; the zero-based fast path emits the
+exact device-proven battery string so Aurelius parity is untouched;
+`hi <= lo` raises. Positive/negative tests added (zero-based, nonzero-based,
+negative-based, invalid ranges, gauge parity).
+
+**Blocker 3 — handoff schema enforcement (FIXED, `cb10ddb`).**
+`check_handoff` now implements the complete schema contract in stdlib
+checks — including asset-id pattern, type checks, dimension/pivot/frame
+rules, all enums, sha256 format AND requiredness for real destinations,
+path-traversal rejection, and destination containment under the consuming
+face's `app/src/main/res/`. 26-case test suite
+(`tests/engine/test_handoff_validation.py`). The contract doc now describes
+the mechanism literally.
+
+**Blocker 4 — WFF-version cross-check (FIXED, `cb10ddb`).**
+`generate_face.py` resolves the manifest format version through
+`@integer/wff_version` and refuses generation/check on mismatch or when
+unresolvable; deliberate-mismatch and unresolvable tests added
+(`test_generate_face_checks.py`). Aurelius stays WFF v4.
+
+**Blocker 1 — physical Watch7 evidence (STILL BLOCKED).** Re-attempted at
+correction time: `adb devices` and `adb mdns services` remain empty; no
+stored pairing exists, and wireless-debug pairing requires owner-held
+credentials (IP:port + code shown on the watch). The review's full
+procedure — baseline matrix on the immutable APK, candidate build +
+`install -r` upgrade-continuity check (with signature-mismatch fallback),
+candidate matrix, explicit regression comparison — is ready to execute the
+moment pairing is available (`docs/DEVICE_TEST_MATRIX.md`). Baseline-lineage
+wording corrected everywhere: `watchface_baseline.xml` is the frozen
+imported Phase-1 source baseline, not proven APK-extracted content; the
+preserved APK + physical test are the authoritative release-behavior
+evidence.
+
+Re-verification after corrections: 68 engine tests OK; release-workflow
+fixtures 10/10; build_all 10/10; official WFF validator PASS ×3 (re-run);
+memory evaluator PASS ×2 (re-run); `tools/validate.py` 0 errors; immutable
+release checksum unchanged (`844b9c43…`); CI green on the branch.

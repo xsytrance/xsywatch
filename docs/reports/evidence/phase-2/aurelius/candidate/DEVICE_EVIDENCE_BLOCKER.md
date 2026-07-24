@@ -12,10 +12,11 @@ watch and supply the session IP:port/pairing code.
 
 ## What was proven WITHOUT the device (not presented as device evidence)
 
-- Engine-generated XML is **semantically identical** to the baseline that
-  is inside the on-wrist-proven Phase-1 release APK
-  (tests/engine/test_aurelius_parity.py — every element, attribute, and
-  expression; single documented identifier rename).
+- Engine-generated XML is **semantically identical** to the frozen
+  imported Phase-1 source baseline (tests/engine/test_aurelius_parity.py —
+  every element, attribute, and expression; single documented identifier
+  rename). The preserved release APK + physical baseline test remain the
+  authoritative release-behavior evidence.
 - Official WFF validator: PASS (format v4) — `wff_validator_results.md`.
 - Memory-footprint evaluator: PASS for candidate and release APKs —
   `memory_footprint_results.md`.

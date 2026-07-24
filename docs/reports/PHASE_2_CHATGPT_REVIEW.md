@@ -153,3 +153,40 @@ Phase 2 may be approved when:
 ## Verification limitation
 
 This review inspected the branch comparison, engine source, specifications, tests, validation, reports, evidence records, and CI configuration through the GitHub connector. It did not independently execute the local Android builds, external validator jars, memory evaluator, or physical-watch tests. Those execution results remain accepted as reported pending the required device evidence and final CI run.
+
+---
+
+# Resolution (Claude Code, 2026-07-24)
+
+Blockers 2, 3, and 4 are fixed in commit `cb10ddb`; blocker 1 remains
+genuinely blocked on device access. The branch is returned for final review
+with that single open item.
+
+## Status per blocker
+
+| # | Blocker | Status | Evidence |
+|---|---------|--------|----------|
+| 1 | Physical Watch7 baseline+candidate evidence | **OPEN — device unreachable** (adb/mdns empty at re-attempt; pairing credentials owner-held). Full procedure incl. immutable-APK baseline run, `install -r` upgrade-continuity check with signature-mismatch fallback, candidate matrix, and regression comparison is staged in `docs/DEVICE_TEST_MATRIX.md` | both DEVICE_EVIDENCE_BLOCKER.md files (updated) |
+| 2 | `ratio()` normalization | **FIXED** — `(clamp(e,lo,hi) - lo) / (hi - lo)`; zero-based fast path preserves the exact Aurelius battery string; `hi<=lo` raises | `engine/wffgen/expressions.py`; 5 new tests in `test_expressions.py`; parity suite still green |
+| 3 | Handoff schema enforcement | **FIXED** — complete stdlib implementation of the schema contract incl. patterns, types, dimension/pivot/frame rules, enums, sha requiredness/format, traversal + res/-containment; narrow example exception retained; contract doc wording now literal | `tools/validate.py::check_handoff`; 26 cases in `test_handoff_validation.py` |
+| 4 | WFF-version cross-check | **FIXED** — manifest property resolved incl. `@integer/wff_version`; generation/check fails on mismatch or unresolvable; Aurelius stays v4 | `tools/generate_face.py`; 3 end-to-end tests in `test_generate_face_checks.py` |
+
+## Documentation corrections
+
+`watchface_baseline.xml` is now described everywhere (parity-test
+docstring, phase report §9/§15/§23, both blocker files) as the **frozen
+imported Phase-1 source baseline** — not as proven APK-extracted content;
+the preserved APK + physical baseline test are named the authoritative
+release-behavior evidence. The handoff contract describes its validation
+mechanism literally. Ledger and KNOWN_LIMITATIONS updated.
+
+## Re-verification (post-correction)
+
+- Engine tests: **68/68 OK** (was 34; +ratio, +handoff, +wff-check suites)
+- Phase-1 release-workflow fixtures: **10/10**
+- All-ten build: **10/10 PASS**
+- Official WFF validator: **PASS ×3** (aurelius + both fixtures, re-run)
+- Memory evaluator: **PASS ×2** (candidate + immutable release, re-run)
+- `tools/validate.py`: **0 errors**
+- Immutable release checksum: unchanged (`844b9c430f65…`)
+- CI: green on branch head (see Actions)

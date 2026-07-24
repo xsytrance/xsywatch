@@ -30,8 +30,9 @@ this machine (`adb devices` empty).
 - The immutable Phase-1 release APK
   (`releases/aurelius/current/aurelius.apk`, SHA-256 recorded in
   BASELINE_CAPTURE.md) is the behavioral reference artifact.
-- The pre-migration `watchface.xml` SHA-256 is recorded, and migration
-  parity is enforced by semantic XML equivalence checking
+- The pre-migration `watchface.xml` (frozen imported Phase-1 source
+  baseline; not byte-extracted from the APK) SHA-256 is recorded, and
+  migration parity is enforced by semantic XML equivalence checking
   (`tools/generate_face.py aurelius --check` + the parity section of the
   phase report) rather than by visual re-comparison alone.
 - The candidate-evidence directory documents the same blocker; the full
