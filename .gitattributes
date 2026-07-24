@@ -1,0 +1,10 @@
+# Whitespace policy for git diff --check (CI gate).
+# Markdown uses trailing double-space as a hard line break — legitimate.
+*.md whitespace=-blank-at-eol
+
+# Third-party license texts are committed verbatim from upstream; never
+# flag or "fix" their whitespace.
+THIRD_PARTY_NOTICES/** -whitespace
+
+# Windows gradle wrapper scripts keep CRLF.
+gradlew.bat -text
