@@ -302,9 +302,16 @@ HANDOFF_REQUIRED = ("asset_id", "source_repo", "source_commit", "source_paths",
 
 
 def check_handoff(root: Path) -> None:
-    """Asset-handoff manifests (docs/ASSET_HANDOFF_CONTRACT.md)."""
+    """Asset-handoff manifests: complete stdlib enforcement of the schema
+    contract in docs/asset-handoff.schema.json (docs/ASSET_HANDOFF_CONTRACT.md).
+
+    The synthetic-example exception is narrow: entries with "example": true
+    may have destination == null and sha256 == null; every other constraint
+    still applies to them.
+    """
     for man_path in sorted(root.glob("watchfaces/*/engine/handoff.json")):
         rel = man_path.relative_to(root)
+        slug = man_path.parents[1].name
         try:
             man = json.loads(man_path.read_text())
         except json.JSONDecodeError as e:
@@ -314,29 +321,97 @@ def check_handoff(root: Path) -> None:
             err(f"handoff[{rel}]: missing/wrong contract reference")
         for a in man.get("assets", []):
             aid = a.get("asset_id", "<missing asset_id>")
+
+            def bad(msg: str) -> None:
+                err(f"handoff[{rel}] {aid}: {msg}")
+
             for key in HANDOFF_REQUIRED:
                 if key not in a:
-                    err(f"handoff[{rel}] {aid}: missing field {key}")
+                    bad(f"missing field {key}")
+            if not re.fullmatch(r"[a-z0-9-]+/[A-Za-z0-9_]+",
+                                str(a.get("asset_id", ""))):
+                bad(f"asset_id {a.get('asset_id')!r} violates pattern "
+                    "<class>/<PartName>")
             if a.get("source_repo") != "xsytrance/AGENOR-Horology":
-                err(f"handoff[{rel}] {aid}: unexpected source_repo")
+                bad("unexpected source_repo")
             if not re.fullmatch(r"[0-9a-f]{40}", str(a.get("source_commit", ""))):
-                err(f"handoff[{rel}] {aid}: source_commit is not a full 40-char SHA")
+                bad("source_commit is not a full 40-char SHA")
+            sp = a.get("source_paths")
+            if (not isinstance(sp, list) or not sp
+                    or not all(isinstance(s, str) and s for s in sp)):
+                bad("source_paths must be a nonempty list of nonempty strings")
+            if not (isinstance(a.get("spec_path"), str) and a.get("spec_path")):
+                bad("spec_path must be a nonempty string")
             if a.get("export_type") not in HANDOFF_EXPORT_TYPES:
-                err(f"handoff[{rel}] {aid}: bad export_type {a.get('export_type')!r}")
+                bad(f"bad export_type {a.get('export_type')!r}")
+            dims = a.get("dimensions")
+            if (not isinstance(dims, list) or len(dims) != 2
+                    or not all(isinstance(d, int) and not isinstance(d, bool)
+                               and d >= 1 for d in dims)):
+                bad(f"dimensions {dims!r} must be [w, h] positive integers")
+            if a.get("color_space") != "srgb":
+                bad(f"bad color_space {a.get('color_space')!r} (allowed: srgb)")
+            if a.get("alpha") not in ("straight", "premultiplied", "none"):
+                bad(f"bad alpha {a.get('alpha')!r}")
+            piv = a.get("pivot")
+            if (not isinstance(piv, list) or len(piv) != 2
+                    or not all(isinstance(p, (int, float))
+                               and not isinstance(p, bool)
+                               and 0 <= p <= 1 for p in piv)):
+                bad(f"pivot {piv!r} must be [x, y] numbers in 0..1")
+            frames = a.get("frames")
+            if (not isinstance(frames, int) or isinstance(frames, bool)
+                    or frames < 1):
+                bad(f"frames {frames!r} must be an integer >= 1")
+            fs = a.get("frame_seconds")
+            if fs is not None and (not isinstance(fs, (int, float))
+                                   or isinstance(fs, bool) or fs <= 0):
+                bad(f"frame_seconds {fs!r} must be a positive number or null")
+            if isinstance(frames, int) and frames > 1 and fs is None:
+                bad("animated export (frames > 1) requires frame_seconds")
+            if a.get("loop") not in ("perfect", "pingpong", "none"):
+                bad(f"bad loop {a.get('loop')!r}")
+            if not isinstance(a.get("aod_safe"), bool):
+                bad("aod_safe must be a boolean")
+            if not (isinstance(a.get("license"), str) and a.get("license")):
+                bad("license must be a nonempty provenance string")
             if a.get("lifecycle") not in HANDOFF_LIFECYCLES:
-                err(f"handoff[{rel}] {aid}: bad lifecycle {a.get('lifecycle')!r}")
+                bad(f"bad lifecycle {a.get('lifecycle')!r}")
+            if not (isinstance(a.get("consumer_component"), str)
+                    and a.get("consumer_component")):
+                bad("consumer_component must be a nonempty string")
+            if not (isinstance(a.get("regenerate"), str) and a.get("regenerate")):
+                bad("regenerate must be a nonempty command string")
+
+            is_example = a.get("example") is True
             dest = a.get("destination")
+            sha = a.get("sha256")
+            if sha is not None and not re.fullmatch(r"[0-9a-f]{64}", str(sha)):
+                bad("sha256 is not 64 lowercase hex chars")
             if dest is None:
-                if not a.get("example"):
-                    err(f"handoff[{rel}] {aid}: null destination on a "
-                        "non-example entry")
+                if not is_example:
+                    bad("null destination on a non-example entry")
                 continue
+            if not isinstance(dest, str):
+                bad(f"destination {dest!r} must be a string path")
+                continue
+            # Containment: inside THIS face's res/ tree, no traversal.
+            required_prefix = f"watchfaces/{slug}/app/src/main/res/"
+            norm = str(Path(dest).as_posix())
+            if ".." in Path(dest).parts or Path(dest).is_absolute():
+                bad(f"destination {dest} uses path traversal / absolute path")
+            elif not norm.startswith(required_prefix):
+                bad(f"destination {dest} is outside {required_prefix}")
             dest_path = root / dest
             if not dest_path.exists():
-                err(f"handoff[{rel}] {aid}: destination {dest} does not exist")
-            elif a.get("sha256") and sha256(dest_path) != a["sha256"]:
-                err(f"handoff[{rel}] {aid}: sha256 mismatch for {dest} — "
-                    "bytes changed without a manifest update")
+                bad(f"destination {dest} does not exist")
+                continue
+            if sha is None:
+                bad("real destination requires a sha256 (null allowed only "
+                    "with a null-destination example entry)")
+            elif sha256(dest_path) != sha:
+                bad(f"sha256 mismatch for {dest} — bytes changed without a "
+                    "manifest update")
 
 
 SECRET_PATTERNS = re.compile(r"\.(jks|keystore|p12|pepk|pem)$|keystore\.properties$")

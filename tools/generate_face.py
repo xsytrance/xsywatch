@@ -38,6 +38,28 @@ def gradle_identity(face_dir: Path) -> dict:
     return out
 
 
+def manifest_wff_version(face_dir: Path) -> str | None:
+    """Resolve the manifest's watch-face format version, following the
+    @integer/<name> resource indirection used by all current faces."""
+    man = face_dir / "app/src/main/AndroidManifest.xml"
+    if not man.exists():
+        return None
+    m = re.search(r'watchface\.format\.version"\s*android:value="([^"]+)"',
+                  man.read_text())
+    if not m:
+        return None
+    val = m.group(1)
+    ref = re.match(r"@integer/(\w+)", val)
+    if not ref:
+        return val
+    for values in sorted(face_dir.glob("app/src/main/res/values*/*.xml")):
+        i = re.search(rf'<integer name="{ref.group(1)}">(\d+)</integer>',
+                      values.read_text())
+        if i:
+            return i.group(1)
+    return None
+
+
 def available_resources(face_dir: Path) -> set[str]:
     return {p.stem for d in face_dir.glob("app/src/main/res/drawable*")
             for p in d.iterdir() if p.is_file()}
@@ -67,6 +89,16 @@ def main() -> None:
         if want != got:
             sys.exit(f"ERROR: spec identity {key}={want} does not match "
                      f"Gradle {got} — refusing to generate")
+
+    manifest_ver = manifest_wff_version(face_dir)
+    if manifest_ver is None:
+        sys.exit("ERROR: could not resolve the manifest watch-face format "
+                 "version (com.google.wear.watchface.format.version, incl. "
+                 "@integer indirection) — refusing to generate")
+    if str(spec.wff_version) != manifest_ver:
+        sys.exit(f"ERROR: spec wff_version={spec.wff_version} does not match "
+                 f"the Android manifest/resource value {manifest_ver} — "
+                 "refusing to generate")
 
     xml_a = render_face(spec)
     xml_b = render_face(spec)

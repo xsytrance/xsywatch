@@ -1,8 +1,13 @@
 """Semantic parity: engine-generated Aurelius vs the Phase-1 baseline XML.
 
 The baseline snapshot (docs/reports/evidence/.../watchface_baseline.xml,
-SHA-256 a8ce33ac...) is the exact file inside the immutable Phase-1 release.
-Generation must be semantically identical:
+SHA-256 a8ce33ac...) is the FROZEN IMPORTED PHASE-1 SOURCE BASELINE — the
+watchface.xml as imported from the local Aurelius project in Phase 1. It is
+NOT claimed to be byte-extracted from the released APK (resource XML is
+compiled at packaging; the producing source commit of the historical APK
+predates the source import). The preserved APK plus the physical-device
+baseline test are the authoritative release-behavior evidence.
+Generation must be semantically identical to this source baseline:
 
   * same element sequence (document order = z-order);
   * same attributes, with numeric attributes compared numerically

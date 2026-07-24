@@ -75,5 +75,35 @@ class TestExpressionSafety(unittest.TestCase):
         self.assertEqual(X.num("45.0"), "45.0")
 
 
+class TestRatioNormalization(unittest.TestCase):
+    """Merge blocker 2 (Phase-2 review): ratio() over arbitrary [lo, hi]."""
+
+    def test_zero_based_fast_path_is_aurelius_battery_string(self):
+        self.assertEqual(X.ratio("[BATTERY_PERCENT]", 0, 100),
+                         "clamp([BATTERY_PERCENT], 0, 100) / 100")
+
+    def test_nonzero_based_normalizes_correctly(self):
+        # 40..200: value 40 must map to 0, 200 to 1.
+        self.assertEqual(
+            X.ratio("[HEART_RATE]", 40, 200),
+            "(clamp([HEART_RATE], 40, 200) - 40) / 160")
+
+    def test_nonzero_float_range(self):
+        self.assertEqual(
+            X.ratio("[ACCELEROMETER_ANGLE_X]", -45, 45),
+            "(clamp([ACCELEROMETER_ANGLE_X], -45, 45) - -45) / 90")
+
+    def test_invalid_ranges_rejected(self):
+        with self.assertRaises(ValueError):
+            X.ratio("[HEART_RATE]", 200, 40)
+        with self.assertRaises(ValueError):
+            X.ratio("[HEART_RATE]", 100, 100)
+
+    def test_battery_gauge_parity_preserved(self):
+        self.assertEqual(
+            X.gauge_angle(292.5, 45.0),
+            "292.5 + 45.0 * clamp([BATTERY_PERCENT], 0, 100) / 100")
+
+
 if __name__ == "__main__":
     unittest.main()

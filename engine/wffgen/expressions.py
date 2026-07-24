@@ -53,8 +53,20 @@ def clamp(expr: str, lo: float | int, hi: float | int) -> str:
 
 
 def ratio(expr: str, lo: float | int, hi: float | int) -> str:
-    """Clamped 0..1 ratio of a data source over [lo, hi]."""
-    return f"{clamp(expr, lo, hi)} / {num(hi)}"
+    """Clamped 0..1 normalization of a data source over [lo, hi].
+
+    General form: (clamp(expr, lo, hi) - lo) / (hi - lo).
+    Zero-based fast path: when lo == 0 the algebraically identical short
+    form clamp(expr, 0, hi) / hi is emitted (this is also the exact
+    device-proven Aurelius battery expression).
+    Rejects hi <= lo.
+    """
+    if float(hi) <= float(lo):
+        raise ValueError(f"ratio(): hi ({hi}) must be greater than lo ({lo})")
+    if float(lo) == 0:
+        return f"{clamp(expr, lo, hi)} / {num(hi)}"
+    span = hi - lo
+    return f"({clamp(expr, lo, hi)} - {num(lo)}) / {num(span)}"
 
 
 def rotation_continuous(speed_deg_per_sec: float | int,
