@@ -14,6 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
 
       - name: Python syntax (all tracked .py)
         run: git ls-files '*.py' | xargs -r python3 -m py_compile
@@ -22,7 +24,7 @@ jobs:
         run: git ls-files '*.sh' | xargs -r -n1 bash -n
 
       - name: git diff --check (whitespace/conflict markers)
-        run: git diff --check HEAD~1 HEAD || true
+        run: git diff --check HEAD~1 HEAD
 
       - name: Install Android build-tools (aapt2 for validate.py)
         run: |
