@@ -1,0 +1,34 @@
+# Machine-specific Android config (each dev generates their own)
+local.properties
+
+# Gradle build output & caches
+.gradle/
+build/
+**/build/
+.kotlin/
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Signing material — must NEVER be committed
+*.jks
+*.keystore
+*.p12
+*.pepk
+keystore.properties
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Generated intermediates from asset tools (regenerate via tools/build.py)
+watchfaces/*/tools/_work/
+watchfaces/*/tools/out/
+
+# OS / editor noise
+*.swp
+*~
+Thumbs.db

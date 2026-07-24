@@ -1,0 +1,35 @@
+# Repo validation CI (Phase-1 review, non-blocking recommendation 1).
+# Runs the cheap structural checks; Android APK builds are deliberately NOT
+# run here yet (runner cost / time) — see docs/BUILD_AND_RELEASE.md.
+# NOTE: first run on GitHub Actions is pending; treat results as unverified
+# until the badge is green.
+name: validate
+on:
+  push:
+    branches: ["main", "phase-*/**"]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Python syntax (all tracked .py)
+        run: git ls-files '*.py' | xargs -r python3 -m py_compile
+
+      - name: Shell syntax (all tracked .sh)
+        run: git ls-files '*.sh' | xargs -r -n1 bash -n
+
+      - name: git diff --check (whitespace/conflict markers)
+        run: git diff --check HEAD~1 HEAD
+
+      - name: Install Android build-tools (aapt2 for validate.py)
+        run: |
+          yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
+            "build-tools;36.0.0" >/dev/null
+
+      - name: Repository validation
+        run: python3 tools/validate.py

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:34" />
+  <BitmapFonts>
+    <BitmapFont name="hell">
+      <Character name="0" resource="g_0" width="56" height="76" />
+      <Character name="1" resource="g_1" width="26" height="76" />
+      <Character name="2" resource="g_2" width="40" height="76" />
+      <Character name="3" resource="g_3" width="38" height="76" />
+      <Character name="4" resource="g_4" width="42" height="76" />
+      <Character name="5" resource="g_5" width="36" height="76" />
+      <Character name="6" resource="g_6" width="41" height="76" />
+      <Character name="7" resource="g_7" width="37" height="76" />
+      <Character name="8" resource="g_8" width="40" height="76" />
+      <Character name="9" resource="g_9" width="41" height="76" />
+      <Character name=":" resource="g_colon" width="22" height="76" />
+      <Character name="%" resource="g_pct" width="60" height="76" />
+      <Character name="." resource="g_dot" width="20" height="76" />
+      <Character name=" " resource="g_space" width="16" height="76" />
+      <Character name="A" resource="g_a" width="49" height="76" />
+      <Character name="B" resource="g_b" width="42" height="76" />
+      <Character name="C" resource="g_c" width="49" height="76" />
+      <Character name="D" resource="g_d" width="51" height="76" />
+      <Character name="E" resource="g_e" width="37" height="76" />
+      <Character name="F" resource="g_f" width="36" height="76" />
+      <Character name="G" resource="g_g" width="53" height="76" />
+      <Character name="H" resource="g_h" width="52" height="76" />
+      <Character name="I" resource="g_i" width="24" height="76" />
+      <Character name="J" resource="g_j" width="23" height="76" />
+      <Character name="K" resource="g_k" width="47" height="76" />
+      <Character name="L" resource="g_l" width="36" height="76" />
+      <Character name="M" resource="g_m" width="69" height="76" />
+      <Character name="N" resource="g_n" width="52" height="76" />
+      <Character name="O" resource="g_o" width="56" height="76" />
+      <Character name="P" resource="g_p" width="39" height="76" />
+      <Character name="Q" resource="g_q" width="56" height="76" />
+      <Character name="R" resource="g_r" width="43" height="76" />
+      <Character name="S" resource="g_s" width="35" height="76" />
+      <Character name="T" resource="g_t" width="44" height="76" />
+      <Character name="U" resource="g_u" width="51" height="76" />
+      <Character name="V" resource="g_v" width="48" height="76" />
+      <Character name="W" resource="g_w" width="69" height="76" />
+      <Character name="X" resource="g_x" width="50" height="76" />
+      <Character name="Y" resource="g_y" width="45" height="76" />
+      <Character name="Z" resource="g_z" width="47" height="76" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF040201">
+    <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0" interpolation="EASE_OUT" />
+      <Transform target="x" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="bg" />
+    </PartImage>
+    <PartImage name="z00_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.5" startOffset="0" interpolation="EASE_IN" />
+      <Image resource="bg_aod" />
+    </PartImage>
+    <PartImage name="z02_sigil" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="alpha" value="70 + 60*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="sigil" />
+    </PartImage>
+    <PartImage name="z03_fire" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.05" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="clamp(120 + 50*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*9) + 35*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*15.7 + 1.3) + 25*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*23 + 2) + clamp(([HEART_RATE]-70)*1.5,0,60), 60, 245)" />
+      <Image resource="fireglow" />
+    </PartImage>
+    <PartImage name="z04_embers" x="0" y="-240" width="480" height="960" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.12" interpolation="LINEAR" />
+      <Transform target="alpha" value="110 + 40*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*4)" />
+      <Transform target="y" value="-480 + ((480 - ((([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 150) % 480)))" />
+      <Image resource="embers" />
+    </PartImage>
+    <PartImage name="z04b_num" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="80" duration="0.45" startOffset="0.14" interpolation="EASE_OUT" />
+      <Transform target="x" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="numerals" />
+    </PartImage>
+    <PartImage name="z05_eye0" x="165" y="169" width="80" height="80" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.18" interpolation="LINEAR" />
+      <Transform target="alpha" value="(90 + clamp(([HEART_RATE]-55)*2,0,150)) * (0.55 + 0.45*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236)))" />
+      <Transform target="scaleX" value="0.8+0.35*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Transform target="scaleY" value="0.8+0.35*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="eye" />
+    </PartImage>
+    <PartImage name="z05_eye1" x="236" y="169" width="80" height="80" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.18" interpolation="LINEAR" />
+      <Transform target="alpha" value="(90 + clamp(([HEART_RATE]-55)*2,0,150)) * (0.55 + 0.45*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236)))" />
+      <Transform target="scaleX" value="0.8+0.35*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Transform target="scaleY" value="0.8+0.35*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="eye" />
+    </PartImage>
+    <PartImage name="z06_sheen" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="70 + 40*abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*0.6))" />
+      <Transform target="x" value="0 + 55 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Image resource="sheen" />
+    </PartImage>
+    <PartText name="z10_date" x="165" y="339" width="150" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.3" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hell" size="18" color="#FFFFFF"><Upper><Template>%s %d<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z11_hr" x="168" y="341" width="56" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.28" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hell" size="15" color="#FFFFFF"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z12_batt" x="258" y="341" width="56" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.32" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hell" size="15" color="#FFFFFF"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z40_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="200" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="hour_hand" />
+    </PartImage>
+    <PartImage name="z41_min" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="200" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="([MINUTE] + [SECOND] / 60) * 6" />
+      <Image resource="min_hand" />
+    </PartImage>
+    <PartImage name="z42_sec" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) % 60) * 6" />
+      <Image resource="sec_hand" />
+    </PartImage>
+    <PartImage name="z43_hub" x="210" y="210" width="60" height="60" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="210" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Image resource="hub" />
+    </PartImage>
+  </Scene>
+</WatchFace>

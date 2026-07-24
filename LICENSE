@@ -1,0 +1,19 @@
+AGENOR Horology Engine — xsywatch
+Copyright (c) 2026 AGENOR / xsytrance. All rights reserved.
+
+This repository is PROPRIETARY. No permission is granted to use, copy,
+modify, distribute, or sell any part of this repository's original content
+(watchface designs, artwork, source code, tooling, and documentation)
+without explicit written permission from the owner.
+
+Owner decision (Phase 1 review, 2026-07-24): the repository remains
+proprietary/all-rights-reserved for now. This may be revisited per-component
+later; any change requires an ADR.
+
+THIRD-PARTY MATERIALS are the exception: assets listed in
+docs/asset-licenses.json (fonts under SIL OFL 1.1, HDRI under CC0 1.0)
+remain under their own licenses. Their license texts and attribution
+notices are in THIRD_PARTY_NOTICES/. The SIL OFL 1.1 fonts embedded in
+release APKs are redistributed under the terms of the OFL, whose notices
+accompany this repository; the OFL applies only to those fonts, not to any
+other part of this work.

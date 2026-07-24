@@ -1,0 +1,960 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:08:32" />
+  <Scene backgroundColor="#ff000000">
+
+    <!-- Artwork background; dims heavily in ambient to stay AMOLED-friendly -->
+    <PartImage x="0" y="0" width="480" height="480" name="bg" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="60" />
+      <Image resource="bg" />
+    </PartImage>
+
+    <!-- Counter-rotating psychedelic rings -->
+    <PartImage x="0" y="0" width="480" height="480" name="ring_outer" alpha="210"
+               pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      <Image resource="ring" />
+    </PartImage>
+    <PartImage x="30" y="30" width="420" height="420" name="ring_inner" alpha="90"
+               pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Transform target="angle" value="360 - ([SECOND] + [MILLISECOND] / 1000) * 9" />
+      <Image resource="ring" />
+    </PartImage>
+
+    <!-- Fake-EQ bars: sine-driven, each with its own frequency and phase -->
+    <Group x="0" y="0" width="480" height="480" name="eq" alpha="235">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <PartDraw x="126" y="380" width="12" height="70" name="bar0">
+        <Transform target="height" value="(44 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 3.01 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.48))))" />
+        <Transform target="y" value="432 - (44 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 3.01 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.48))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#9BE821" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="144" y="380" width="12" height="70" name="bar1">
+        <Transform target="height" value="(35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.43 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.37))))" />
+        <Transform target="y" value="432 - (35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.43 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.37))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#C6FF4A" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="162" y="380" width="12" height="70" name="bar2">
+        <Transform target="height" value="(45 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.35 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.71))))" />
+        <Transform target="y" value="432 - (45 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.35 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.71))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#5A8C12" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="180" y="380" width="12" height="70" name="bar3">
+        <Transform target="height" value="(40 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.37 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.72))))" />
+        <Transform target="y" value="432 - (40 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.37 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.72))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#9BE821" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="198" y="380" width="12" height="70" name="bar4">
+        <Transform target="height" value="(36 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.73 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.46))))" />
+        <Transform target="y" value="432 - (36 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.73 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.46))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#C6FF4A" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="216" y="380" width="12" height="70" name="bar5">
+        <Transform target="height" value="(35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.79 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 0.78))))" />
+        <Transform target="y" value="432 - (35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.79 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 0.78))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#5A8C12" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="234" y="380" width="12" height="70" name="bar6">
+        <Transform target="height" value="(41 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.44 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.66))))" />
+        <Transform target="y" value="432 - (41 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.44 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.66))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#9BE821" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="252" y="380" width="12" height="70" name="bar7">
+        <Transform target="height" value="(35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.34 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.49))))" />
+        <Transform target="y" value="432 - (35 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.34 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 2.49))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#C6FF4A" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="270" y="380" width="12" height="70" name="bar8">
+        <Transform target="height" value="(41 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.38 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.39))))" />
+        <Transform target="y" value="432 - (41 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.38 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.39))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#5A8C12" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="288" y="380" width="12" height="70" name="bar9">
+        <Transform target="height" value="(43 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.05 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.4))))" />
+        <Transform target="y" value="432 - (43 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.05 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.4))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#9BE821" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="306" y="380" width="12" height="70" name="bar10">
+        <Transform target="height" value="(52 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.86 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.13))))" />
+        <Transform target="y" value="432 - (52 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.86 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 5.13))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#C6FF4A" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="324" y="380" width="12" height="70" name="bar11">
+        <Transform target="height" value="(39 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.49 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.59))))" />
+        <Transform target="y" value="432 - (39 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.49 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.59))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#5A8C12" />
+        </Rectangle>
+      </PartDraw>
+      <PartDraw x="342" y="380" width="12" height="70" name="bar12">
+        <Transform target="height" value="(40 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.97 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.44))))" />
+        <Transform target="y" value="432 - (40 * (0.18 + 0.82 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.97 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) / 70) + 3.44))))" />
+        <Rectangle x="0" y="0" width="12" height="70">
+          <Fill color="#9BE821" />
+        </Rectangle>
+      </PartDraw>
+    </Group>
+
+    <!-- Soft shadow pad so the digits pop over the art -->
+    <PartImage x="50" y="278" width="380" height="124" name="clockpad" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Image resource="clockpad" />
+    </PartImage>
+
+    <!-- EQ-bar digit clock -->
+    <Group x="56" y="288" width="80" height="104" name="slot_ht" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.7 + 0.4))" />
+      <Condition>
+        <Expressions>
+          <Expression name="ht_is_0"><![CDATA[(floor([HOUR_1_12] / 10)) == 0]]></Expression>
+          <Expression name="ht_is_1"><![CDATA[(floor([HOUR_1_12] / 10)) == 1]]></Expression>
+        </Expressions>
+        <Compare expression="ht_is_0">
+          <PartImage x="0" y="0" width="80" height="104" name="ht_0">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ht_is_1">
+          <PartImage x="0" y="0" width="80" height="104" name="ht_1">
+            <Image resource="eqd1" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="80" height="104" name="ht_def">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="140" y="288" width="80" height="104" name="slot_ho" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.1 + 2.2))" />
+      <Condition>
+        <Expressions>
+          <Expression name="ho_is_0"><![CDATA[(([HOUR_1_12] % 10)) == 0]]></Expression>
+          <Expression name="ho_is_1"><![CDATA[(([HOUR_1_12] % 10)) == 1]]></Expression>
+          <Expression name="ho_is_2"><![CDATA[(([HOUR_1_12] % 10)) == 2]]></Expression>
+          <Expression name="ho_is_3"><![CDATA[(([HOUR_1_12] % 10)) == 3]]></Expression>
+          <Expression name="ho_is_4"><![CDATA[(([HOUR_1_12] % 10)) == 4]]></Expression>
+          <Expression name="ho_is_5"><![CDATA[(([HOUR_1_12] % 10)) == 5]]></Expression>
+          <Expression name="ho_is_6"><![CDATA[(([HOUR_1_12] % 10)) == 6]]></Expression>
+          <Expression name="ho_is_7"><![CDATA[(([HOUR_1_12] % 10)) == 7]]></Expression>
+          <Expression name="ho_is_8"><![CDATA[(([HOUR_1_12] % 10)) == 8]]></Expression>
+          <Expression name="ho_is_9"><![CDATA[(([HOUR_1_12] % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="ho_is_0">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_0">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_1">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_1">
+            <Image resource="eqd1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_2">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_2">
+            <Image resource="eqd2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_3">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_3">
+            <Image resource="eqd3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_4">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_4">
+            <Image resource="eqd4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_5">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_5">
+            <Image resource="eqd5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_6">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_6">
+            <Image resource="eqd6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_7">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_7">
+            <Image resource="eqd7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_8">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_8">
+            <Image resource="eqd8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="ho_is_9">
+          <PartImage x="0" y="0" width="80" height="104" name="ho_9">
+            <Image resource="eqd9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="80" height="104" name="ho_def">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="246" y="288" width="80" height="104" name="slot_mt" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.9 + 4.1))" />
+      <Condition>
+        <Expressions>
+          <Expression name="mt_is_0"><![CDATA[(floor([MINUTE] / 10)) == 0]]></Expression>
+          <Expression name="mt_is_1"><![CDATA[(floor([MINUTE] / 10)) == 1]]></Expression>
+          <Expression name="mt_is_2"><![CDATA[(floor([MINUTE] / 10)) == 2]]></Expression>
+          <Expression name="mt_is_3"><![CDATA[(floor([MINUTE] / 10)) == 3]]></Expression>
+          <Expression name="mt_is_4"><![CDATA[(floor([MINUTE] / 10)) == 4]]></Expression>
+          <Expression name="mt_is_5"><![CDATA[(floor([MINUTE] / 10)) == 5]]></Expression>
+        </Expressions>
+        <Compare expression="mt_is_0">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_0">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mt_is_1">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_1">
+            <Image resource="eqd1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mt_is_2">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_2">
+            <Image resource="eqd2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mt_is_3">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_3">
+            <Image resource="eqd3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mt_is_4">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_4">
+            <Image resource="eqd4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mt_is_5">
+          <PartImage x="0" y="0" width="80" height="104" name="mt_5">
+            <Image resource="eqd5" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="80" height="104" name="mt_def">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="330" y="288" width="80" height="104" name="slot_mo" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 2.4 + 5.3))" />
+      <Condition>
+        <Expressions>
+          <Expression name="mo_is_0"><![CDATA[(([MINUTE] % 10)) == 0]]></Expression>
+          <Expression name="mo_is_1"><![CDATA[(([MINUTE] % 10)) == 1]]></Expression>
+          <Expression name="mo_is_2"><![CDATA[(([MINUTE] % 10)) == 2]]></Expression>
+          <Expression name="mo_is_3"><![CDATA[(([MINUTE] % 10)) == 3]]></Expression>
+          <Expression name="mo_is_4"><![CDATA[(([MINUTE] % 10)) == 4]]></Expression>
+          <Expression name="mo_is_5"><![CDATA[(([MINUTE] % 10)) == 5]]></Expression>
+          <Expression name="mo_is_6"><![CDATA[(([MINUTE] % 10)) == 6]]></Expression>
+          <Expression name="mo_is_7"><![CDATA[(([MINUTE] % 10)) == 7]]></Expression>
+          <Expression name="mo_is_8"><![CDATA[(([MINUTE] % 10)) == 8]]></Expression>
+          <Expression name="mo_is_9"><![CDATA[(([MINUTE] % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="mo_is_0">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_0">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_1">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_1">
+            <Image resource="eqd1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_2">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_2">
+            <Image resource="eqd2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_3">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_3">
+            <Image resource="eqd3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_4">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_4">
+            <Image resource="eqd4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_5">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_5">
+            <Image resource="eqd5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_6">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_6">
+            <Image resource="eqd6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_7">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_7">
+            <Image resource="eqd7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_8">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_8">
+            <Image resource="eqd8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="mo_is_9">
+          <PartImage x="0" y="0" width="80" height="104" name="mo_9">
+            <Image resource="eqd9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="80" height="104" name="mo_def">
+            <Image resource="eqd0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+
+    <!-- Heart rate: pixel heart beating at the live BPM + mini readout -->
+    <PartImage x="60" y="231" width="150" height="48" name="hr_pad" alpha="220">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Image resource="padsmall" />
+    </PartImage>
+    <PartImage x="76" y="242" width="28" height="24" name="hr_heart" alpha="255">
+      <Transform target="alpha" value="90 + 165 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="ledheart" />
+    </PartImage>
+    <Group x="112" y="240" width="22" height="30" name="slot_hr0" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.5 + 0.9))" />
+      <Condition>
+        <Expressions>
+          <Expression name="hr0_is_0"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 0]]></Expression>
+          <Expression name="hr0_is_1"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 1]]></Expression>
+          <Expression name="hr0_is_2"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 2]]></Expression>
+          <Expression name="hr0_is_3"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 3]]></Expression>
+          <Expression name="hr0_is_4"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 4]]></Expression>
+          <Expression name="hr0_is_5"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 5]]></Expression>
+          <Expression name="hr0_is_6"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 6]]></Expression>
+          <Expression name="hr0_is_7"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 7]]></Expression>
+          <Expression name="hr0_is_8"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 8]]></Expression>
+          <Expression name="hr0_is_9"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 100) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="hr0_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_0">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_1">
+            <Image resource="mdr1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_2">
+            <Image resource="mdr2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_3">
+            <Image resource="mdr3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_4">
+            <Image resource="mdr4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_5">
+            <Image resource="mdr5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_6">
+            <Image resource="mdr6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_7">
+            <Image resource="mdr7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_8">
+            <Image resource="mdr8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr0_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_9">
+            <Image resource="mdr9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="hr0_def">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="136" y="240" width="22" height="30" name="slot_hr1" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.5 + 0.9))" />
+      <Condition>
+        <Expressions>
+          <Expression name="hr1_is_0"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 0]]></Expression>
+          <Expression name="hr1_is_1"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 1]]></Expression>
+          <Expression name="hr1_is_2"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 2]]></Expression>
+          <Expression name="hr1_is_3"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 3]]></Expression>
+          <Expression name="hr1_is_4"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 4]]></Expression>
+          <Expression name="hr1_is_5"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 5]]></Expression>
+          <Expression name="hr1_is_6"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 6]]></Expression>
+          <Expression name="hr1_is_7"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 7]]></Expression>
+          <Expression name="hr1_is_8"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 8]]></Expression>
+          <Expression name="hr1_is_9"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 10) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="hr1_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_0">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_1">
+            <Image resource="mdr1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_2">
+            <Image resource="mdr2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_3">
+            <Image resource="mdr3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_4">
+            <Image resource="mdr4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_5">
+            <Image resource="mdr5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_6">
+            <Image resource="mdr6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_7">
+            <Image resource="mdr7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_8">
+            <Image resource="mdr8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr1_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_9">
+            <Image resource="mdr9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="hr1_def">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="160" y="240" width="22" height="30" name="slot_hr2" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.5 + 0.9))" />
+      <Condition>
+        <Expressions>
+          <Expression name="hr2_is_0"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 0]]></Expression>
+          <Expression name="hr2_is_1"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 1]]></Expression>
+          <Expression name="hr2_is_2"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 2]]></Expression>
+          <Expression name="hr2_is_3"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 3]]></Expression>
+          <Expression name="hr2_is_4"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 4]]></Expression>
+          <Expression name="hr2_is_5"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 5]]></Expression>
+          <Expression name="hr2_is_6"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 6]]></Expression>
+          <Expression name="hr2_is_7"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 7]]></Expression>
+          <Expression name="hr2_is_8"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 8]]></Expression>
+          <Expression name="hr2_is_9"><![CDATA[((floor((clamp([HEART_RATE], 0, 999)) / 1) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="hr2_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_0">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_1">
+            <Image resource="mdr1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_2">
+            <Image resource="mdr2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_3">
+            <Image resource="mdr3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_4">
+            <Image resource="mdr4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_5">
+            <Image resource="mdr5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_6">
+            <Image resource="mdr6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_7">
+            <Image resource="mdr7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_8">
+            <Image resource="mdr8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="hr2_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_9">
+            <Image resource="mdr9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="hr2_def">
+            <Image resource="mdr0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+
+    <!-- Steps: LED odometer + goal arc charging the rim -->
+    <PartImage x="252" y="231" width="170" height="48" name="st_pad" alpha="220">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Image resource="padsmall" />
+    </PartImage>
+    <PartImage x="266" y="243" width="28" height="24" name="st_feet" alpha="235">
+      <Image resource="ledfeet" />
+    </PartImage>
+    <Group x="300" y="240" width="22" height="30" name="slot_st0" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.2 + 3.7))" />
+      <Condition>
+        <Expressions>
+          <Expression name="st0_is_0"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 0]]></Expression>
+          <Expression name="st0_is_1"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 1]]></Expression>
+          <Expression name="st0_is_2"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 2]]></Expression>
+          <Expression name="st0_is_3"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 3]]></Expression>
+          <Expression name="st0_is_4"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 4]]></Expression>
+          <Expression name="st0_is_5"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 5]]></Expression>
+          <Expression name="st0_is_6"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 6]]></Expression>
+          <Expression name="st0_is_7"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 7]]></Expression>
+          <Expression name="st0_is_8"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 8]]></Expression>
+          <Expression name="st0_is_9"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10000) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="st0_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_0">
+            <Image resource="mda0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_1">
+            <Image resource="mda1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_2">
+            <Image resource="mda2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_3">
+            <Image resource="mda3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_4">
+            <Image resource="mda4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_5">
+            <Image resource="mda5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_6">
+            <Image resource="mda6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_7">
+            <Image resource="mda7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_8">
+            <Image resource="mda8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st0_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="st0_9">
+            <Image resource="mda9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="st0_def">
+            <Image resource="mda0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="324" y="240" width="22" height="30" name="slot_st1" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.2 + 3.7))" />
+      <Condition>
+        <Expressions>
+          <Expression name="st1_is_0"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 0]]></Expression>
+          <Expression name="st1_is_1"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 1]]></Expression>
+          <Expression name="st1_is_2"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 2]]></Expression>
+          <Expression name="st1_is_3"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 3]]></Expression>
+          <Expression name="st1_is_4"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 4]]></Expression>
+          <Expression name="st1_is_5"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 5]]></Expression>
+          <Expression name="st1_is_6"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 6]]></Expression>
+          <Expression name="st1_is_7"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 7]]></Expression>
+          <Expression name="st1_is_8"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 8]]></Expression>
+          <Expression name="st1_is_9"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1000) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="st1_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_0">
+            <Image resource="mda0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_1">
+            <Image resource="mda1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_2">
+            <Image resource="mda2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_3">
+            <Image resource="mda3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_4">
+            <Image resource="mda4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_5">
+            <Image resource="mda5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_6">
+            <Image resource="mda6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_7">
+            <Image resource="mda7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_8">
+            <Image resource="mda8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st1_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="st1_9">
+            <Image resource="mda9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="st1_def">
+            <Image resource="mda0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="348" y="240" width="22" height="30" name="slot_st2" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.2 + 3.7))" />
+      <Condition>
+        <Expressions>
+          <Expression name="st2_is_0"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 0]]></Expression>
+          <Expression name="st2_is_1"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 1]]></Expression>
+          <Expression name="st2_is_2"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 2]]></Expression>
+          <Expression name="st2_is_3"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 3]]></Expression>
+          <Expression name="st2_is_4"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 4]]></Expression>
+          <Expression name="st2_is_5"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 5]]></Expression>
+          <Expression name="st2_is_6"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 6]]></Expression>
+          <Expression name="st2_is_7"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 7]]></Expression>
+          <Expression name="st2_is_8"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 8]]></Expression>
+          <Expression name="st2_is_9"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 100) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="st2_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_0">
+            <Image resource="mda0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_1">
+            <Image resource="mda1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_2">
+            <Image resource="mda2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_3">
+            <Image resource="mda3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_4">
+            <Image resource="mda4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_5">
+            <Image resource="mda5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_6">
+            <Image resource="mda6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_7">
+            <Image resource="mda7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_8">
+            <Image resource="mda8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st2_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="st2_9">
+            <Image resource="mda9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="st2_def">
+            <Image resource="mda0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="372" y="240" width="22" height="30" name="slot_st3" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.2 + 3.7))" />
+      <Condition>
+        <Expressions>
+          <Expression name="st3_is_0"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 0]]></Expression>
+          <Expression name="st3_is_1"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 1]]></Expression>
+          <Expression name="st3_is_2"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 2]]></Expression>
+          <Expression name="st3_is_3"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 3]]></Expression>
+          <Expression name="st3_is_4"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 4]]></Expression>
+          <Expression name="st3_is_5"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 5]]></Expression>
+          <Expression name="st3_is_6"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 6]]></Expression>
+          <Expression name="st3_is_7"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 7]]></Expression>
+          <Expression name="st3_is_8"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 8]]></Expression>
+          <Expression name="st3_is_9"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 10) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="st3_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_0">
+            <Image resource="mda0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_1">
+            <Image resource="mda1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_2">
+            <Image resource="mda2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_3">
+            <Image resource="mda3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_4">
+            <Image resource="mda4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_5">
+            <Image resource="mda5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_6">
+            <Image resource="mda6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_7">
+            <Image resource="mda7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_8">
+            <Image resource="mda8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st3_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="st3_9">
+            <Image resource="mda9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="st3_def">
+            <Image resource="mda0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <Group x="396" y="240" width="22" height="30" name="slot_st4" alpha="255">
+      <Transform target="alpha" value="200 + 55 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 1.2 + 3.7))" />
+      <Condition>
+        <Expressions>
+          <Expression name="st4_is_0"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 0]]></Expression>
+          <Expression name="st4_is_1"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 1]]></Expression>
+          <Expression name="st4_is_2"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 2]]></Expression>
+          <Expression name="st4_is_3"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 3]]></Expression>
+          <Expression name="st4_is_4"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 4]]></Expression>
+          <Expression name="st4_is_5"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 5]]></Expression>
+          <Expression name="st4_is_6"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 6]]></Expression>
+          <Expression name="st4_is_7"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 7]]></Expression>
+          <Expression name="st4_is_8"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 8]]></Expression>
+          <Expression name="st4_is_9"><![CDATA[((floor((clamp([STEP_COUNT], 0, 99999)) / 1) % 10)) == 9]]></Expression>
+        </Expressions>
+        <Compare expression="st4_is_0">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_0">
+            <Image resource="mda0" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_1">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_1">
+            <Image resource="mda1" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_2">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_2">
+            <Image resource="mda2" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_3">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_3">
+            <Image resource="mda3" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_4">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_4">
+            <Image resource="mda4" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_5">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_5">
+            <Image resource="mda5" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_6">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_6">
+            <Image resource="mda6" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_7">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_7">
+            <Image resource="mda7" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_8">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_8">
+            <Image resource="mda8" />
+          </PartImage>
+        </Compare>
+        <Compare expression="st4_is_9">
+          <PartImage x="0" y="0" width="22" height="30" name="st4_9">
+            <Image resource="mda9" />
+          </PartImage>
+        </Compare>
+        <Default>
+          <PartImage x="0" y="0" width="22" height="30" name="st4_def">
+            <Image resource="mda0" />
+          </PartImage>
+        </Default>
+      </Condition>
+    </Group>
+    <PartDraw x="0" y="0" width="480" height="480" name="step_arc" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Arc centerX="240" centerY="240" width="462" height="462" startAngle="0" endAngle="360">
+        <Stroke color="#33502A08" thickness="7" cap="ROUND" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="462" height="462" startAngle="0" endAngle="0">
+        <Transform target="endAngle" value="clamp([STEP_PERCENT], 0, 100) * 3.6" />
+        <Stroke color="#FFA528" thickness="7" cap="ROUND" />
+      </Arc>
+    </PartDraw>
+
+
+    <!-- Pulsing colon -->
+    <PartImage x="224" y="288" width="18" height="104" name="colon" alpha="255">
+      <Transform target="alpha" value="120 + 135 * abs(sin(([SECOND] + [MILLISECOND] / 1000) * 3.1416))" />
+      <Image resource="eqcolon" />
+    </PartImage>
+
+  </Scene>
+</WatchFace>

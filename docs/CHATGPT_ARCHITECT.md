@@ -22,7 +22,30 @@ This is not a generic roadmap. It is the control document for building a reusabl
 
 ## 2. Current repository reality
 
-### Verified state on 2026-07-24
+### Verified state after Phase 1 (2026-07-24, branch `phase-1/repository-normalization`)
+
+Phase 1 (repository normalization) is complete. Evidence:
+`docs/reports/PHASE_1_REPOSITORY_NORMALIZATION.md`.
+
+- **Source imported:** `watchfaces/<slug>/` holds 10 complete editable Gradle
+  + WFF projects (7 released + arcwright, chronova, tripface source-only),
+  each with committed Gradle 9.6.1 wrapper and README. All WFF v4 except
+  `tripface` (WFF v2).
+- **Builds reproduced:** `tools/build_all.sh` → 10/10 PASS on the reference
+  Linux machine; rebuilt package/version metadata matches all 7 released APKs.
+- **Releases normalized:** `releases/<slug>/current/` with per-release
+  `RELEASE.md` + machine-readable `releases/MANIFEST.json` (SHA-256,
+  package, versions, provenance; unknown fields explicitly marked).
+- **Eighth-face discrepancy resolved:** commit `d8ed43b`'s message miscounted
+  (says eight, lists seven); all seven APKs map 1:1 to source. Nothing missing.
+- **Validation:** `python3 tools/validate.py` → 0 errors, 12 documented
+  warnings. No secrets/keystores anywhere (verified); debug signing only.
+- **Toolchain (verified):** JDK 21.0.10, Gradle 9.6.1 (wrapper), SDK 36 /
+  build-tools 36.0.0, Python3+Pillow. Watch Face Studio not used — no Linux
+  build exists (Win/macOS only); Linux workflow is hand-authored WFF XML.
+- New ADRs: ADR-005/006/007 in `docs/decisions/`.
+
+### Historical: verified state on 2026-07-24 (pre-Phase 1)
 
 The repository currently contains release artifacts rather than the complete watch-engine source tree.
 
@@ -401,22 +424,22 @@ A release candidate must pass the following gates.
 
 ## 13. Immediate prioritized backlog
 
-### P0 — Repository integrity
+### P0 — Repository integrity — ✅ completed in Phase 1
 
-- [ ] Push the complete source project and build tooling, not only APKs.
-- [ ] Reconcile the stated eight-face release with the seven APK files currently present.
-- [ ] Add a root `README.md` explaining the project, installation, and source/build status.
-- [ ] Decide whether APKs belong in GitHub Releases, Git LFS, or the tracked repository.
-- [ ] Add checksums and a release manifest for existing APKs.
-- [ ] Confirm that signing keys and credentials are excluded.
+- [x] Push the complete source project and build tooling, not only APKs.
+- [x] Reconcile the stated eight-face release with the seven APK files currently present. *(commit-message miscount; nothing missing)*
+- [x] Add a root `README.md` explaining the project, installation, and source/build status.
+- [x] Decide whether APKs belong in GitHub Releases, Git LFS, or the tracked repository. *(ADR-006)*
+- [x] Add checksums and a release manifest for existing APKs. *(releases/MANIFEST.json)*
+- [x] Confirm that signing keys and credentials are excluded. *(verified; validate.py enforces)*
 
-### P1 — Reproducible build foundation
+### P1 — Reproducible build foundation — ✅ completed in Phase 1
 
-- [ ] Document exact Linux toolchain versions.
-- [ ] Add one canonical build command per face.
-- [ ] Add validation scripts for WFF/XML structure and package metadata.
-- [ ] Add a device installation/test script or checklist.
-- [ ] Establish naming and semantic-versioning rules.
+- [x] Document exact Linux toolchain versions. *(docs/BUILD_AND_RELEASE.md)*
+- [x] Add one canonical build command per face. *(tools/build_face.sh)*
+- [x] Add validation scripts for WFF/XML structure and package metadata. *(tools/validate.py; external WFF validator documented)*
+- [x] Add a device installation/test script or checklist. *(docs/BUILD_AND_RELEASE.md §Installing)*
+- [x] Establish naming and semantic-versioning rules. *(docs/BUILD_AND_RELEASE.md §Versioning)*
 
 ### P2 — Engine extraction
 
@@ -437,7 +460,12 @@ A release candidate must pass the following gates.
 
 ## 14. Recommended next implementation phase
 
-### Phase 1: Repository normalization and reproducible source import
+### Phase 1: Repository normalization and reproducible source import — ✅ COMPLETE (2026-07-24)
+
+All acceptance criteria met (evidence: `docs/reports/PHASE_1_REPOSITORY_NORMALIZATION.md`);
+exceeded on source: **all ten** faces' source imported and building, not just one.
+Recommended Phase 2: see report §19 — reference-face engine extraction against
+`aurelius`, plus owner decisions (license, keystore, bone-watch fate).
 
 **Goal:** Transform `xsywatch` from an artifact-only repository into a reproducible engineering repository without breaking the existing APK distribution.
 
@@ -485,6 +513,27 @@ A release candidate must pass the following gates.
 **Decision:** Prefer Blender, GIMP, Inkscape, Krita, Material Maker, Android Studio, command-line validation, and WFF/XML workflows that function on Linux. Samsung Watch Face Studio may be used only through a separately documented supported environment when necessary.  
 **Reason:** The primary workstation is Linux-based, and the project must remain automatable by Claude Code.
 
+### ADR-005 — Sibling asset repository; no empty engine scaffold (Phase 1)
+
+**Status:** Accepted — pending owner ratification
+**Decision:** The 3D asset pipeline stays in `xsytrance/AGENOR-Horology`;
+`xsywatch` gains no `engine/` directory until Phase 2 extracts real shared
+code. Full text: `docs/decisions/ADR-005-sibling-asset-repo.md`.
+
+### ADR-006 — Release layout and binary policy (Phase 1)
+
+**Status:** Accepted
+**Decision:** `releases/<slug>/current|vX.Y.Z/` + `MANIFEST.json` checksums;
+existing 7 APKs remain git-tracked (no history rewrite); future releases also
+attach to GitHub Releases. Full text: `docs/decisions/ADR-006-release-layout.md`.
+
+### ADR-007 — Gradle wrappers committed; conservative path normalization (Phase 1)
+
+**Status:** Accepted
+**Decision:** Per-face Gradle 9.6.1 wrapper committed; only project-internal
+absolute paths normalized (py_compile-verified); external AI donor paths kept
+as documented provenance. Full text: `docs/decisions/ADR-007-gradle-wrapper-and-paths.md`.
+
 ---
 
 ## 16. Review notes
@@ -511,6 +560,37 @@ A release candidate must pass the following gates.
 The project has valid released artifacts but is not yet in a maintainable engineering state. Repository normalization is the correct next phase before expanding the asset generator or creating more products.
 
 ---
+
+### 2026-07-24 — Phase 1 completion note (Claude Code)
+
+Repository normalized on branch `phase-1/repository-normalization` in five
+reviewable commits (hygiene → releases → source import → tooling → docs).
+Highlights: 10/10 faces build from imported source; 0 validation errors; no
+secrets; 7-vs-8 resolved as a commit-message miscount. Open items for the
+architecture role: LICENSE decision, release-keystore policy, tripface WFF v2
+divergence, engine-extraction scope for Phase 2 (report §19).
+
+### 2026-07-24 — Phase 1 review corrections (Claude Code)
+
+ChatGPT review (commit `4b39658`) returned CHANGES REQUESTED; both merge
+blockers are corrected on the branch (details:
+`docs/reports/PHASE_1_REPOSITORY_NORMALIZATION.md` §21 and the resolution
+section of `docs/reports/PHASE_1_CHATGPT_REVIEW.md`):
+
+1. **Licensing:** the false "no fonts" claim is superseded — 27 OFL-1.1 font
+   files + 1 CC0 HDRI audited from committed bytes into
+   `docs/asset-licenses.json` with notices in `THIRD_PARTY_NOTICES/`;
+   validation now fails on unrecorded/altered assets (negatively tested).
+2. **Release tooling:** manifest schema 2 (face → channels, (slug,channel)
+   identity), `package_release.py` archives current→vX.Y.Z before replacing
+   and never overwrites archives silently, `validate.py` reads real APK
+   metadata via aapt2; all proven by the 10-fixture
+   `tools/test_release_workflow.py` (T1–T10 PASS).
+
+Owner decisions applied: ADR-005 **ratified**; repository **proprietary**
+(LICENSE added); bone-watch **archived/creative-rejected**; tripface
+**frozen** (legacy WFF v2); no production keystore created. Branch awaits
+ChatGPT re-review before merge.
 
 ## 17. Update discipline
 

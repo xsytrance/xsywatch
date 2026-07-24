@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <BitmapFonts>
+    <BitmapFont name="neo">
+      <Character name="0" resource="g_n_0" width="100" height="130" />
+      <Character name="1" resource="g_n_1" width="58" height="130" />
+      <Character name="2" resource="g_n_2" width="100" height="130" />
+      <Character name="3" resource="g_n_3" width="99" height="130" />
+      <Character name="4" resource="g_n_4" width="90" height="130" />
+      <Character name="5" resource="g_n_5" width="100" height="130" />
+      <Character name="6" resource="g_n_6" width="99" height="130" />
+      <Character name="7" resource="g_n_7" width="83" height="130" />
+      <Character name="8" resource="g_n_8" width="100" height="130" />
+      <Character name="9" resource="g_n_9" width="99" height="130" />
+      <Character name="A" resource="g_n_a" width="100" height="130" />
+      <Character name="B" resource="g_n_b" width="100" height="130" />
+      <Character name="C" resource="g_n_c" width="99" height="130" />
+      <Character name="D" resource="g_n_d" width="100" height="130" />
+      <Character name="E" resource="g_n_e" width="94" height="130" />
+      <Character name="F" resource="g_n_f" width="89" height="130" />
+      <Character name="G" resource="g_n_g" width="100" height="130" />
+      <Character name="H" resource="g_n_h" width="102" height="130" />
+      <Character name="I" resource="g_n_i" width="41" height="130" />
+      <Character name="J" resource="g_n_j" width="95" height="130" />
+      <Character name="K" resource="g_n_k" width="97" height="130" />
+      <Character name="L" resource="g_n_l" width="95" height="130" />
+      <Character name="M" resource="g_n_m" width="109" height="130" />
+      <Character name="N" resource="g_n_n" width="100" height="130" />
+      <Character name="O" resource="g_n_o" width="99" height="130" />
+      <Character name="P" resource="g_n_p" width="96" height="130" />
+      <Character name="Q" resource="g_n_q" width="105" height="130" />
+      <Character name="R" resource="g_n_r" width="99" height="130" />
+      <Character name="S" resource="g_n_s" width="99" height="130" />
+      <Character name="T" resource="g_n_t" width="93" height="130" />
+      <Character name="U" resource="g_n_u" width="99" height="130" />
+      <Character name="V" resource="g_n_v" width="116" height="130" />
+      <Character name="W" resource="g_n_w" width="133" height="130" />
+      <Character name="X" resource="g_n_x" width="98" height="130" />
+      <Character name="Y" resource="g_n_y" width="97" height="130" />
+      <Character name="Z" resource="g_n_z" width="99" height="130" />
+      <Character name=":" resource="g_n_colon" width="41" height="130" />
+      <Character name="%" resource="g_n_pct" width="113" height="130" />
+      <Character name="." resource="g_n_dot" width="41" height="130" />
+      <Character name=" " resource="g_n_space" width="48" height="130" />
+    </BitmapFont>
+    <BitmapFont name="hot">
+      <Character name="0" resource="g_h_0" width="100" height="130" />
+      <Character name="1" resource="g_h_1" width="58" height="130" />
+      <Character name="2" resource="g_h_2" width="100" height="130" />
+      <Character name="3" resource="g_h_3" width="99" height="130" />
+      <Character name="4" resource="g_h_4" width="90" height="130" />
+      <Character name="5" resource="g_h_5" width="100" height="130" />
+      <Character name="6" resource="g_h_6" width="99" height="130" />
+      <Character name="7" resource="g_h_7" width="83" height="130" />
+      <Character name="8" resource="g_h_8" width="100" height="130" />
+      <Character name="9" resource="g_h_9" width="99" height="130" />
+      <Character name="B" resource="g_h_b" width="100" height="130" />
+      <Character name="P" resource="g_h_p" width="96" height="130" />
+      <Character name="M" resource="g_h_m" width="109" height="130" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF07070D">
+    <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.45" startOffset="0.0" interpolation="EASE_OUT" />
+      <Transform target="x" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 + 4 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="bg" />
+    </PartImage>
+    <PartImage name="z00_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.45" startOffset="0.0" interpolation="EASE_IN" />
+      <Image resource="bg_aod" />
+    </PartImage>
+    <PartImage name="z01_grid" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.05" interpolation="EASE_OUT" />
+      <Transform target="x" value="0 - 7 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="0 - 7 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
+      <Image resource="grid" />
+    </PartImage>
+    <PartImage name="z02_heat" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="clamp(([HEART_RATE] - 78) * 2.2, 0, 95)" />
+      <Image resource="heat" />
+    </PartImage>
+    <PartImage name="z03_aura" x="90" y="76" width="300" height="300" alpha="0" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.08" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="70 + 185 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Transform target="scaleX" value="1 + 0.06 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Transform target="scaleY" value="1 + 0.06 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="aura" />
+    </PartImage>
+    <PartImage name="z04_track" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.15" interpolation="EASE_OUT" />
+      <Image resource="arc_track" />
+    </PartImage>
+    <PartDraw name="z04_hr_arc" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.18" interpolation="OVERSHOOT" />
+      <Arc centerX="240" centerY="240" width="444" height="444" startAngle="225.0" endAngle="285.0" direction="CLOCKWISE">
+        <Transform target="endAngle" value="225.0 + 270.0 * ((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 200)) - 40) / 160" />
+        <Stroke color="#00E5FF" thickness="6" cap="ROUND" />
+      </Arc>
+    </PartDraw>
+    <PartImage name="z05_ecg" x="0" y="312" width="960" height="72" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.22" interpolation="EASE_OUT" />
+      <Transform target="x" value="-480 + ((([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 130) % 480)" />
+      <Image resource="ecg" />
+    </PartImage>
+    <PartImage name="z06_sheen" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.5" startOffset="0.3" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="40 + 30 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 0.5))" />
+      <Transform target="x" value="0 + 55 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Image resource="sheen" />
+    </PartImage>
+    <PartText name="z07_brand" x="155" y="26" width="170" height="20">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.5" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="12" color="#FFFFFF">XSY PULSE</BitmapFont></Text>
+    </PartText>
+    <PartText name="z07_date" x="130" y="48" width="220" height="28">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.12" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="18" color="#FFFFFF"><Upper><Template>%s %d<Parameter expression="[DAY_OF_WEEK_S]" /><Parameter expression="[DAY]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <Group name="z08_time" x="120" y="79" width="240" height="66" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.35" startOffset="0.04" interpolation="EASE_OUT" />
+      <DigitalClock x="0" y="0" width="240" height="66">
+        <TimeText format="hh:mm" hourFormat="SYNC_TO_DEVICE" align="CENTER" x="0" y="0" width="240" height="66">
+          <BitmapFont family="neo" size="48" color="#FFFFFF" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <Group name="z08_secs" x="334" y="104" width="56" height="44" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" startOffset="0.1" interpolation="EASE_OUT" />
+      <DigitalClock x="0" y="0" width="56" height="44">
+        <TimeText format="ss" align="CENTER" x="0" y="0" width="56" height="44">
+          <BitmapFont family="neo" size="22" color="#FFFFFF" />
+        </TimeText>
+      </DigitalClock>
+    </Group>
+    <PartText name="z09_hr" x="90" y="160" width="300" height="124">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.35" startOffset="0.06" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="205 + 50 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Text align="CENTER"><BitmapFont family="hot" size="100" color="#FFFFFF"><Template>%d<Parameter expression="(clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220))" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z09_heart" x="156" y="278" width="24" height="24" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.14" interpolation="EASE_OUT" />
+      <Transform target="alpha" value="70 + 185 * abs(sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 0.05236))" />
+      <Image resource="heart" />
+    </PartImage>
+    <PartText name="z09_bpm" x="178" y="278" width="64" height="24">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.14" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="hot" size="18" color="#FFFFFF">BPM</BitmapFont></Text>
+    </PartText>
+    <PartText name="z09_pmax" x="260" y="278" width="56" height="24">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="18" color="#FFFFFF"><Template>%d<Parameter expression="round((clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) * 100 / 178)" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z09_pmax_l" x="311" y="282" width="66" height="18">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.18" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="13" color="#FFFFFF">%MAX</BitmapFont></Text>
+    </PartText>
+    <Condition>
+      <Expressions>
+        <Expression name="z_rest">(clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) &lt; 65</Expression>
+        <Expression name="z_calm">(clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) &lt; 95</Expression>
+        <Expression name="z_active">(clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) &lt; 135</Expression>
+        <Expression name="z_push">(clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 220)) &lt; 165</Expression>
+      </Expressions>
+      <Compare expression="z_rest">
+        <PartImage name="z09_zone_rest" x="193" y="289" width="95" height="34" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+          <Image resource="zone_rest" />
+        </PartImage>
+      </Compare>
+      <Compare expression="z_calm">
+        <PartImage name="z09_zone_calm" x="191" y="289" width="99" height="34" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+          <Image resource="zone_calm" />
+        </PartImage>
+      </Compare>
+      <Compare expression="z_active">
+        <PartImage name="z09_zone_active" x="180" y="289" width="120" height="34" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+          <Image resource="zone_active" />
+        </PartImage>
+      </Compare>
+      <Compare expression="z_push">
+        <PartImage name="z09_zone_push" x="192" y="289" width="97" height="34" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+          <Image resource="zone_push" />
+        </PartImage>
+      </Compare>
+      <Default>
+        <PartImage name="z09_zone_max" x="199" y="289" width="83" height="34" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.16" interpolation="EASE_OUT" />
+          <Image resource="zone_max" />
+        </PartImage>
+      </Default>
+    </Condition>
+    <PartImage name="z10_shoe" x="89" y="392" width="30" height="24" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.28" interpolation="EASE_OUT" />
+      <Image resource="shoe" />
+    </PartImage>
+    <PartText name="z10_steps" x="113" y="390" width="110" height="28">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.28" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="20" color="#FFFFFF"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z10_bolt" x="365" y="392" width="22" height="24" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.32" interpolation="EASE_OUT" />
+      <Image resource="bolt" />
+    </PartImage>
+    <PartText name="z10_batt" x="262" y="390" width="100" height="28">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.35" startOffset="0.32" interpolation="EASE_OUT" />
+      <Text align="CENTER"><BitmapFont family="neo" size="20" color="#FFFFFF"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z11_compframe" x="172" y="390" width="136" height="58" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.38" interpolation="OVERSHOOT" />
+      <Image resource="compframe" />
+    </PartImage>
+    <ComplicationSlot name="hermes_slot" x="180" y="395" width="120" height="44" slotId="1001" supportedTypes="SHORT_TEXT">
+      <DefaultProviderPolicy primaryProvider="com.xsyprime.primebeaconwear/com.xsyprime.primebeaconwear.PulseComplicationService" primaryProviderType="SHORT_TEXT" defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="SHORT_TEXT" />
+      <BoundingBox x="0" y="0" width="120" height="44" />
+      <Complication type="SHORT_TEXT" />
+    </ComplicationSlot>
+  </Scene>
+</WatchFace>
