@@ -4,7 +4,7 @@ _ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 import math
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter
 
-SRC = '/home/xsyprime/.claude/uploads/488e9176-64d2-4e5d-9692-f5484f5fb667/d7e1ddb3-10289.jpg'
+SRC = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), 'xsytrance_character.jpg')  # donor preserved in-repo (was a session-upload path)
 OUT = _ROOT + '/app/src/main/res/drawable-nodpi'
 SIZE = 480
 

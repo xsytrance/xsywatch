@@ -4,7 +4,7 @@ _ROOT = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 import math, random
 from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageChops
 
-SRC = '/home/xsyprime/xsywatch/xsywatch-bushido.jpg'
+SRC = _os.path.join(_os.path.dirname(_os.path.dirname(_ROOT)), 'releases', 'bushido', 'current', 'preview.jpg')  # concept art = release preview
 OUT = _ROOT + '/app/src/main/res/drawable-nodpi'
 S = 480
 rnd = random.Random(7)
