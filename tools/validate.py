@@ -449,6 +449,134 @@ def check_files(root: Path, files: list[Path]) -> None:
             err(f"hygiene: binary at repo root: {f.name} (belongs in releases/)")
 
 
+def check_visual(root: Path) -> None:
+    """Visual-lineage gate, stdlib portion (ADR-009).
+
+    Hash-level enforcement: approved goldens may only exist/change with a
+    matching owner-approved record; committed inventory must be covered by
+    an approval record; record schema completeness. Pixel-level checks
+    (deterministic re-render, comparison, mask coverage) live in
+    tests/visual/ and CI, which have the pinned Pillow dependency.
+    """
+    import tomllib
+
+    for states_path in sorted(root.glob("watchfaces/*/visual/states.toml")):
+        vdir = states_path.parent
+        face = vdir.parent.name
+        with open(states_path, "rb") as fh:
+            contract = tomllib.load(fh)
+        approved_version = contract["goldens"]["approved_version"]
+
+        # --- load and schema-check approval records -----------------------
+        records = []
+        required = {"approval_id", "face", "visual_version",
+                    "previous_visual_version", "previous_goldens",
+                    "proposed_goldens", "inventory_sha256",
+                    "changed_resources", "handoff_asset_ids", "metrics",
+                    "previews", "rationale", "owner", "architecture_review",
+                    "device_evidence"}
+        for rp in sorted(vdir.glob("approvals/*.json")):
+            try:
+                rec = json.loads(rp.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                err(f"visual[{face}]: {rp.name}: invalid JSON ({e})")
+                continue
+            missing = required - set(rec)
+            if missing:
+                err(f"visual[{face}]: {rp.name}: missing fields "
+                    f"{sorted(missing)}")
+                continue
+            owner = rec["owner"]
+            if owner.get("status") not in ("proposed", "approved",
+                                           "rejected"):
+                err(f"visual[{face}]: {rp.name}: owner.status must be "
+                    f"proposed|approved|rejected")
+                continue
+            for kind, sha in (rec["proposed_goldens"] or {}).items():
+                if not re.fullmatch(r"[0-9a-f]{64}", sha or ""):
+                    err(f"visual[{face}]: {rp.name}: proposed_goldens."
+                        f"{kind} is not a sha256")
+            records.append(rec)
+
+        # --- approved goldens require a matching approved record ----------
+        gdir = vdir / "goldens" / approved_version
+        approved_recs = [r for r in records
+                         if r["visual_version"] == approved_version
+                         and r["owner"]["status"] == "approved"]
+        if not gdir.is_dir():
+            err(f"visual[{face}]: approved goldens missing: {gdir}")
+        elif not approved_recs:
+            err(f"visual[{face}]: goldens/{approved_version} exists with no "
+                f"owner-approved record in approvals/ (ADR-009 §5)")
+        else:
+            rec = approved_recs[-1]
+            for kind in ("normal", "aod"):
+                gp = gdir / f"{kind}.png"
+                if not gp.exists():
+                    err(f"visual[{face}]: missing golden {gp.name} in "
+                        f"{approved_version}")
+                    continue
+                actual = sha256(gp)
+                recorded = rec["proposed_goldens"].get(kind)
+                if actual != recorded:
+                    err(f"visual[{face}]: {kind} golden hash {actual[:12]}… "
+                        f"does not match approved record "
+                        f"{rec['approval_id']} ({str(recorded)[:12]}…) — "
+                        f"approved goldens may not change without a new "
+                        f"approved record")
+            meta_p = gdir / "METADATA.json"
+            if meta_p.exists():
+                meta = json.loads(meta_p.read_text(encoding="utf-8"))
+                for kind in ("normal", "aod"):
+                    mrec = meta.get("renders", {}).get(kind, {})
+                    gp = gdir / f"{kind}.png"
+                    if gp.exists() and mrec.get("sha256") != sha256(gp):
+                        err(f"visual[{face}]: METADATA.json {kind} sha "
+                            f"disagrees with the committed golden bytes")
+            else:
+                warn(f"visual[{face}]: goldens/{approved_version} has no "
+                     f"METADATA.json")
+
+        # --- committed inventory must be covered by some record -----------
+        inv_p = vdir / "inventories" / "inventory.json"
+        if not inv_p.exists():
+            err(f"visual[{face}]: no committed resource inventory "
+                f"(tools/inventory_resources.py {face})")
+        else:
+            if records:
+                inv_sha = sha256(inv_p)
+                if not any(r["inventory_sha256"] == inv_sha
+                           for r in records):
+                    err(f"visual[{face}]: committed inventory "
+                        f"({inv_sha[:12]}…) is not bound to any approval "
+                        f"record — resource changes need a proposed/"
+                        f"approved visual record (ADR-009 §5)")
+            # --- committed inventory must match the live tree bytes -------
+            # (the WARBIRD failure class: same name, wrong bytes)
+            inv = json.loads(inv_p.read_text(encoding="utf-8"))
+            face_dir = vdir.parent
+            listed = set()
+            for r in inv.get("resources", []):
+                p = face_dir / r["path"]
+                listed.add(r["path"])
+                if not p.exists():
+                    err(f"visual[{face}]: inventoried resource missing "
+                        f"from tree: {r['path']}")
+                elif sha256(p) != r["sha256"]:
+                    err(f"visual[{face}]: resource bytes drifted from "
+                        f"committed inventory: {r['path']} (same-name/"
+                        f"wrong-bytes — WARBIRD failure class, ADR-009 §3)")
+            res_root = face_dir / "app/src/main/res"
+            if res_root.is_dir():
+                for p in sorted(res_root.rglob("*")):
+                    if p.is_file():
+                        rel = str(p.relative_to(face_dir))
+                        if rel not in listed:
+                            err(f"visual[{face}]: uninventoried runtime "
+                                f"resource: {rel} (regenerate + review "
+                                f"the inventory)")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo-root", default=str(Path(__file__).resolve().parents[1]))
@@ -466,6 +594,7 @@ def main() -> None:
     check_files(root, files)
     check_engine(root)
     check_handoff(root)
+    check_visual(root)
 
     errors = [m for s, m in issues if s == "ERROR"]
     warns = [m for s, m in issues if s == "WARN"]

@@ -1,0 +1,30 @@
+{
+  "approval_id": "APPROVAL-0001",
+  "face": "aurelius",
+  "visual_version": "field-tourbillon-v1",
+  "previous_visual_version": null,
+  "previous_goldens": null,
+  "proposed_goldens": {
+    "normal": "f52b715e2c16ee0bdf0e8106e60e3b6743d65bfe4c11247f49d16d0d10b15f6d",
+    "aod": "04161e9b80de97d0bd68f2e12f56396a4360bac9a1ddfdcc2922322b259e4fd6"
+  },
+  "inventory_sha256": "fee59354a535054fc7e0c32b7ed8f16059344a83200d2c6a49688197e8cb6c03",
+  "changed_resources": [],
+  "handoff_asset_ids": [],
+  "metrics": null,
+  "previews": [
+    "watchfaces/aurelius/visual/goldens/field-tourbillon-v1/normal.png",
+    "watchfaces/aurelius/visual/goldens/field-tourbillon-v1/aod.png"
+  ],
+  "rationale": "Establishing record. Encodes the shipped Phase-1/Phase-2 Field Tourbillon visual as the first approved reference generation. The golden pixels derive deterministically from the corrected runtime resources whose bytes equal the immutable release APK (Phase-2 ASSET_DIVERGENCE_FINDING fix) and whose on-device appearance was verified in the Phase-2 physical matrix.",
+  "owner": {
+    "status": "approved",
+    "by": "AGENOR (standing approval: shipped Phase-1 release visual, re-verified on-device in the Phase-2 matrix; countersign requested at the Phase-3 concept checkpoint)",
+    "date": "2026-07-25"
+  },
+  "architecture_review": {
+    "status": "approved",
+    "ref": "docs/reports/PHASE_2_FINAL_REVIEW.md"
+  },
+  "device_evidence": "docs/reports/evidence/phase-2/aurelius/"
+}
