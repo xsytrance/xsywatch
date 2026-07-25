@@ -87,7 +87,7 @@ approved_version = "field-tourbillon-v1"
 # candidates/<proposed_version>/ bound to a `proposed` approval record;
 # approved goldens stay frozen until the record flips to approved and the
 # candidates are promoted (validated by tools/validate.py).
-proposed_version = "field-tourbillon-mk2"
+proposed_version = "field-tourbillon-mk2-r1"
 
 # ---------------------------------------------------------------------------
 # Comparison policy.

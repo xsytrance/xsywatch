@@ -282,29 +282,53 @@ class TestRealAureliusProvenance(unittest.TestCase):
     original authorship for any glyph export."""
 
     def test_committed_manifest_declares_font_provenance(self):
+        """Every glyph export and both engraved plates must reference a
+        resolvable, notice-bound provenance record — and for the CURRENT
+        generation that record must be commercially unambiguous."""
         man = json.loads((REPO / "watchfaces/aurelius/engine/handoff.json")
                          .read_text())
-        glyphs = [a for a in man["assets"]
-                  if a["export_type"] == "font-glyphs"]
-        self.assertEqual(len(glyphs), 39)
-        for a in glyphs:
-            self.assertEqual(a["license"], "derived:blender-bfont-type1",
-                             f"{a['asset_id']} must reference the font "
-                             f"provenance record")
-        plates = [a for a in man["assets"]
-                  if a["asset_id"].startswith("plates/")]
-        self.assertEqual(len(plates), 2)
-        for a in plates:
-            self.assertEqual(a["license"], "derived:blender-bfont-type1",
-                             "plates carry baked engravings from the same "
-                             "font")
         registry = json.loads((REPO / "docs/derived-asset-provenance.json")
                               .read_text())
-        ids = {r["id"] for r in registry["records"]}
-        self.assertIn("blender-bfont-type1", ids)
-        rec = next(r for r in registry["records"]
-                   if r["id"] == "blender-bfont-type1")
+        by_id = {r["id"]: r for r in registry["records"]}
+
+        glyphs = [a for a in man["assets"]
+                  if a["export_type"] == "font-glyphs"]
+        plates = [a for a in man["assets"]
+                  if a["asset_id"].startswith("plates/")]
+        self.assertEqual(len(glyphs), 39)
+        self.assertEqual(len(plates), 2)
+
+        referenced = set()
+        for a in glyphs + plates:
+            lic = a["license"]
+            self.assertTrue(lic.startswith("derived:"),
+                            f"{a['asset_id']} must not claim original "
+                            f"authorship for font-derived artwork")
+            rid = lic.split(":", 1)[1]
+            self.assertIn(rid, by_id, f"{lic} must resolve in the registry")
+            rec = by_id[rid]
+            self.assertTrue((REPO / rec["notice_file"]).exists(),
+                            f"{rid} notice must be committed")
+            referenced.add(rid)
+
+        self.assertEqual(len(referenced), 1,
+                         "all font-derived artwork should share one source")
+        current = by_id[referenced.pop()]
+        self.assertTrue(current["commercial_use_resolved"],
+                        "the current generation's typeface must be "
+                        "commercially unambiguous")
+        self.assertEqual(current["license"], "OFL-1.1")
+
+    def test_superseded_bfont_record_retained_as_evidence(self):
+        """The Bfont investigation stays committed as historical evidence
+        for revision field-tourbillon-mk2 (re-review instruction)."""
+        registry = json.loads((REPO / "docs/derived-asset-provenance.json")
+                              .read_text())
+        by_id = {r["id"]: r for r in registry["records"]}
+        self.assertIn("blender-bfont-type1", by_id)
+        rec = by_id["blender-bfont-type1"]
+        self.assertEqual(rec["status"], "superseded")
+        self.assertEqual(rec["superseded_by"], "rajdhani-bold-ofl-1.1")
         self.assertTrue((REPO / rec["notice_file"]).exists())
         self.assertFalse(rec["commercial_use_resolved"],
-                         "the GPL-font question is still open and must stay "
-                         "flagged until legally resolved")
+                         "the historical record keeps its honest posture")

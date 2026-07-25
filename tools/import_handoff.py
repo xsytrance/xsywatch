@@ -145,7 +145,37 @@ def main() -> int:
     if not meta_path.exists():
         print(f"FAIL: metadata not found: {meta_path}")
         return 1
-    meta = json.loads(meta_path.read_text(encoding="utf-8"))
+
+    # --- the COMMITTED metadata blob is authoritative -------------------
+    # Resolving metadata_commit and then parsing working-tree bytes would
+    # let an uncommitted edit (license, lifecycle, pivot, dimensions,
+    # component, regenerate, or the export set itself) enter the manifest
+    # while still being attributed to the older commit. The blob at
+    # metadata_commit is parsed instead, and any working-tree divergence
+    # is rejected outright.
+    metadata_commit = resolve_metadata_commit(studio, metadata_rel)
+    if metadata_commit is None:
+        print(f"FAIL: {metadata_rel} is not committed in {studio}; its "
+              f"stamping commit cannot be resolved")
+        return 1
+    ok, committed_blob = git(studio, "cat-file", "-p",
+                             f"{metadata_commit}:{metadata_rel}", binary=True)
+    if not ok:
+        print(f"FAIL: cannot read {metadata_rel} at "
+              f"{metadata_commit[:12]}: {committed_blob}")
+        return 1
+    worktree_blob = meta_path.read_bytes()
+    if worktree_blob != committed_blob:
+        print(f"FAIL: working-tree {metadata_rel} differs from the blob at "
+              f"its stamping commit {metadata_commit[:12]} — uncommitted "
+              f"metadata edits cannot be imported (commit them, which "
+              f"moves metadata_commit, or restore the file)")
+        return 1
+    try:
+        meta = json.loads(committed_blob.decode("utf-8"))
+    except (json.JSONDecodeError, UnicodeDecodeError) as e:
+        print(f"FAIL: committed metadata blob is not valid JSON: {e}")
+        return 1
     face_dir = REPO / "watchfaces" / a.face
     res_dir = face_dir / "app/src/main/res/drawable-nodpi"
     handoff_path = face_dir / "engine/handoff.json"
@@ -160,11 +190,6 @@ def main() -> int:
         return 1
 
     # --- commit-role resolution ---------------------------------------
-    metadata_commit = resolve_metadata_commit(studio, metadata_rel)
-    if metadata_commit is None:
-        print(f"FAIL: {metadata_rel} is not committed in {studio}; its "
-              f"stamping commit cannot be resolved")
-        return 1
     if not is_ancestor(studio, commit, metadata_commit):
         print(f"FAIL: producing commit {commit[:12]} is not an ancestor of "
               f"the metadata stamping commit {metadata_commit[:12]} — the "
@@ -199,6 +224,10 @@ def main() -> int:
         stage = Path(td)
         staged: list[tuple[Path, Path]] = []
         for exp in exports:
+            # The working tree is consulted ONLY to obtain LFS-smudged
+            # payload bytes, and only after the committed object's OID has
+            # already been verified above; the bytes must still hash to
+            # that verified value.
             src = studio / exp["export_file"]
             if not src.exists():
                 print(f"FAIL: working-tree export missing (LFS not pulled?): "

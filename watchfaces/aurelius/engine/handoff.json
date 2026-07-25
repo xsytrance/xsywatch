@@ -1,14 +1,15 @@
 {
   "contract": "docs/ASSET_HANDOFF_CONTRACT.md",
-  "generation": "field-tourbillon-mk2",
-  "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
-  "metadata_commit": "6c9afa898f9344bfaff77596565f38414d0b0090",
+  "generation": "field-tourbillon-mk2-r1",
+  "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+  "metadata_commit": "d0ef4a7871fba7591e6b2fc7ff031e7694feab70",
   "assets": [
     {
       "asset_id": "plates/AureliusMk2_PlateNormal",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -31,8 +32,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "e046fdb4348f7adf48c31b43a1f20b9379f449ef7663dd551c7896bbf7a4907a",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "66d392b13c0f2a4f152d0e835d3044e749466713d98a25e77c49b850be154596",
       "lifecycle": "candidate",
       "consumer_component": "z00_bg",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -40,8 +41,9 @@
     {
       "asset_id": "plates/AureliusMk2_PlateAOD",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -64,8 +66,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "6dc78a9dd5da67e9ad769d4e1ea9b7248544d107e63a55f3841b510753c64af1",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "603c2b2f35aea1354b900ed611ff868b6606ab18bb914cfc6cb6d0ff74edde6c",
       "lifecycle": "candidate",
       "consumer_component": "z01_aod",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -73,8 +75,9 @@
     {
       "asset_id": "gears/AureliusMk2_GearL_z24",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -106,8 +109,9 @@
     {
       "asset_id": "gears/AureliusMk2_GearR_z18",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -139,8 +143,9 @@
     {
       "asset_id": "balance-wheels/AureliusMk2_Balance",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -172,8 +177,9 @@
     {
       "asset_id": "tourbillons/AureliusMk2_Cage",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -205,8 +211,9 @@
     {
       "asset_id": "hands/AureliusMk2_NeedleReserve",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -238,8 +245,9 @@
     {
       "asset_id": "hands/AureliusMk2_HandHour",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -271,8 +279,9 @@
     {
       "asset_id": "hands/AureliusMk2_HandMinute",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -304,8 +313,9 @@
     {
       "asset_id": "hands/AureliusMk2_HubCap",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -337,8 +347,9 @@
     {
       "asset_id": "crystals/AureliusMk2_Sheen",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py",
@@ -370,8 +381,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_0",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -392,8 +404,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "bc95fcc4197a68db37f209f85720be738bd3177e25634f920ebce0f1de11c95c",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "00b081d832afeda6bf3ad43c4b60ba9b5ae481d2d41f5ba848f24be6edd61af8",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -401,8 +413,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_1",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -423,8 +436,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "b3faca93f50d918ada3e7606cdf61148d99645433ea92b20a155abf06c4ba990",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "bf048edf7da50fc1615561dd6e73948cc292bb84a9d905ea231f1feceb5a9e57",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -432,8 +445,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_2",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -454,8 +468,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "aab0c95852bed47ffc9941b44160f498d278e2e01bcd123f8fc2fffcdafef76c",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "700510dc5160470fcef26142c32ec1344cdf47fc36afd54031a5ea79785ab71f",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -463,8 +477,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_3",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -485,8 +500,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "95769be7f9158795a0ecd05e81c19ef49c948ade9d9d5aa25bd89e99e1b47049",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "1b15a4606c72597ea39a5d4d811818eb0c8519208cc2a02e4203938c0bfceba3",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -494,8 +509,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_4",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -516,8 +532,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "718d7fb224ff5451f195e12c6f55f6e09c39d0b757e6dccbb121f4596f5ba17b",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "31b405589da2199b285832328610baf14511dfe943421cfb91a3ea7a7dbb0b6a",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -525,8 +541,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_5",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -547,8 +564,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "e16820404e427aa7da95237d5ea655dbbee3194e32fe063749868cc92d59668c",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "0ffe1821d57353192a08f97459f4a4b9ed3f2628fbb36a44ad772217b2dbfe2f",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -556,8 +573,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_6",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -578,8 +596,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "a840565c5bdbfb66382542ba90b18ac2609ec058dd81ef3d9f7905fa8bbfb94b",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "436230bb5d854e4dd5ec05222e45df7b6e9cebe3aa58ae2f63f61ada655cf86d",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -587,8 +605,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_7",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -609,8 +628,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "5f581e037f1db2fabeeaed12d151f50824c23f0d0aca6696213068f321116036",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "e38e4c27a522b0b3ae332c221b9cde06155c67624e832e3aead02de74dabd0ce",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -618,8 +637,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_8",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -640,8 +660,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "0a791a95672600465018e60a970226bbb8d98a20956645db2abcfd51a42bb493",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "0be2162d27c7193f7aa0829b180050404b1ac9b19a49aa81cbf06eca6ec620ea",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -649,8 +669,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_9",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -671,8 +692,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "3a47c3be0a1ef7d1cf5ec75c3d005533effe1e0d5b09bdaae03c063d501e6113",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "b1e38ea86fc82497c290feeb11b97791475d3e090f6fe0bba0db4e7b4c9a48f5",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -680,8 +701,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_pct",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -702,8 +724,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "a9c57db65b5a57dfae09143e586dd2455b12719b499a6cbb3a252d6349303ff8",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "190749327f3e6b4d04d33bdfca8a74dd2ca910bd1cb8a3d6d5d5866e899aa286",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -711,8 +733,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_colon",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -733,8 +756,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "132480086b704558f94b4673ce947018b970045fb3d103b3f36d45fed131bfbb",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "e9a200be840462b506c80b515a899a5f54efee5dd6c43b6e896289ee794edfe5",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -742,8 +765,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_space",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -764,7 +788,7 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
+      "license": "derived:rajdhani-bold-ofl-1.1",
       "sha256": "4d5af88944009acab221f250c7b3df712159d7876eb59a85cd324f6c48e22e9a",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
@@ -773,8 +797,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_a",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -795,8 +820,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "8a8ce604566da2fa42b7dd4455fceb6f05b604b5c4992aca3d446f7ab9f36364",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "98715c0ab4feb2564b372efcea848f408588e9202aa90b8bca50b3435d219d94",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -804,8 +829,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_b",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -826,8 +852,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "285f7fe01d04ebbf97e39afe993a93f8023c1939fb871142dbdbd6c531e6dac9",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "b2a752dc12d33fbd478e4c92fd700da8970498b46054e075710fbf309ee740d9",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -835,8 +861,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_c",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -857,8 +884,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "f325c5be4d8e7ddca135cbe37874b19b689dea258557411264a4e204aa8d39be",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "841111efed8c9dce0bc02d2d8e188c96b33e85bcd76579dc5fb6722d513df5b3",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -866,8 +893,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_d",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -888,8 +916,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "d105e78030fad3efe77775984a676745a55a29fce95112cb270fb38097f9abb3",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "56a2486e417ed5d9d50bf487dc5426e04890da02e7c707f109923aa7d3d430ed",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -897,8 +925,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_e",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -919,8 +948,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "9651009beb8c8c8eff18d8a80af9a003536f32238ed5cc4f197be0e48cc23083",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "2362d1721b8f26ad4ff7e9eeb9af2791b82decd323a466bb4d9c2d112bd5be4e",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -928,8 +957,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_f",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -950,8 +980,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "cab238d75907abb7ff9a59b5acfe127e6c9ea781d4328fdd518c994eb2e74859",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "93dfddef9f3e6a8aed2783ead706e95d8d956bc04d24890ed55e0a8fe70da1a4",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -959,8 +989,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_g",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -981,8 +1012,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "988c28294a0e3875a922d3e1b31d1d9a023cfa3304d28facfde02498204d6b02",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "844a08c886c4f5c364e312c027e9f1e93101311ce0ff7d49e4bd4234a1769451",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -990,8 +1021,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_h",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1012,8 +1044,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "9dfaff285004845dad3d0d8dae8869b21f4cf7d2224876324378fb7562f59a82",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "2019f775399ef78d1586e7dd6003ad8227fccb9d5b4db64fd2557a57e17732d7",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1021,8 +1053,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_i",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1043,8 +1076,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "3207764615ab5236009714f4e9c1995b1c1eef21c7ba2a5dbc3aa5397c661f02",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "69a31c88b20abf0afd641c6c6faeb2aa3c8c17fce3c8699b907fc94712bef9f1",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1052,8 +1085,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_j",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1074,8 +1108,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "63cd3b1bc5da8726cd07630a25ff7ab8c4ba29ae82c93d17576d36dfce8f9bb3",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "db2967bfb49eb4dddd2872a803877fc16b8affd579521c02406b60d320038c7b",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1083,8 +1117,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_k",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1105,8 +1140,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "efc98ae730a71974f4811e339368d699d83ab2e76afece480221542768f08f09",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "d3881200b14243fedae193232420b383218ae2986677a5e863354172b0e962b6",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1114,8 +1149,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_l",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1136,8 +1172,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "ae0345c4652f512f870ae1d0ca1816dd8d7bc375dd115236986318b85d2c4e72",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "01e6f11e114e58f17dcf5e636a3782484423bd1db189c2e5ff7644437c75e3be",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1145,8 +1181,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_m",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1167,8 +1204,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "9ddfec89548ed937d7e8cc04639df55bad087bccf739cea96f2824ecb51575de",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "b34503b59858689c47e95e61b207a502de8de3774f0793561d8015b2a944208c",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1176,8 +1213,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_n",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1198,8 +1236,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "7192bd52755052b5c60b88f58b04b009724e88c35594f719f3aa0994dc8c7a0c",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "6a428c387cb43464b04caa2d1b7cfdb9f0cd1a59f595e5d82e300e12a3506c66",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1207,8 +1245,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_o",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1229,8 +1268,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "9d9b4a0628208fca29bfc5f14ebadba71a74e804ca17604d71dfd5a93604c43b",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "fadef7b3650b61924ab40f9bd3e58f42504a2ed3528db7891716e1acd62b7b8f",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1238,8 +1277,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_p",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1260,8 +1300,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "5543142265db5a9f16d00916232ca49cd0d4f758a4a4a6001fe37abb0cab1760",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "2687cd0735ca9f7fbc5bda2621c08de758759fa3f0e7eefe66dd894354cdddf7",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1269,8 +1309,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_q",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1291,8 +1332,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "4fb26db1f95c71b6c5144f6c21366d4529bf91e4d8a124d210dd9804980c81e5",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "d50984988e246cc156cdc617dc8bb3c29974be93c681fdf9d758477fb61231de",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1300,8 +1341,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_r",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1322,8 +1364,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "a49691ba73e26e6ed378c681fdf9f235ff7484eca13996074275eb56037c3886",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "9e15a58e861f326137714dee3407ae692eb42b7552bdc0cc741ea046bc1d84ba",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1331,8 +1373,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_s",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1353,8 +1396,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "b8f4afb9e0a806b231f40d7ad0911c25fc2b2e407746db9d0d79b535b73c8c55",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "cab32359ed32581308b8dd1c1acab26b04f64e50f9bcfd2348df999a6ccd1e9c",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1362,8 +1405,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_t",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1384,8 +1428,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "5d4ba38160c5060220461a07b2021cc33a98058a72602478bb96c81b13d10096",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "f0e6887ab8a77ee524cfc994497c56a0c6166b819ee0e6de1afd871f5f0333b2",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1393,8 +1437,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_u",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1415,8 +1460,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "863a3312048f751b3d714951c6d9c764582ca5e0e5cf33b9f48b610f0515afc0",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "003fce9b9b13413a6d01db3d94f0013a65976a562527c49c861d3e94b3d6d9a4",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1424,8 +1469,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_v",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1446,8 +1492,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "f808f57f3e17624bbf9bf3cde636c9c23ecd9ef871f516e30a418adec9a5369d",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "8976a3786395176b9c11c217b5485a5d2dd44901ef6fd84f1df77f5d73557acb",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1455,8 +1501,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_w",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1477,8 +1524,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "a91bf5ffbe02df41ef4cefa3e586a0e86995851059f06046289e2d432c750e0e",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "9a027df2982751ec5b5f10bb2d96312b189d519f90be4254ff07baa8de9fd5af",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1486,8 +1533,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_x",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1508,8 +1556,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "f6c6adf9c8e66ce5fcc8ae534bb734eddd011d185e190547ee9862a57c4c9255",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "97e2901f0d1201d6acd191f7980472e226ebe75e63f5b1a9ca6612ace4ec6ebc",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1517,8 +1565,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_y",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1539,8 +1588,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "7e2c721a5a57cd198192df1e50ce9e3220455d272d1bc5b63b7eccc84d54fe9a",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "5353e4eec64a0e2cab9dd4b672f15d876345d19926db76ed80d109480eea202a",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -1548,8 +1597,9 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_z",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
       "source_paths": [
+        "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
         "scripts/finish_mk2_exports.py"
       ],
@@ -1570,8 +1620,8 @@
       "frame_seconds": null,
       "loop": "none",
       "aod_safe": true,
-      "license": "derived:blender-bfont-type1",
-      "sha256": "df9a651a66b5993519dca11e10a6344ea72ebf7c56f3632128a97fd9f2344412",
+      "license": "derived:rajdhani-bold-ofl-1.1",
+      "sha256": "da35cdc23f39d5ea56445d57517fa5cfb419c45abef23d6c567c5150d6a7d323",
       "lifecycle": "candidate",
       "consumer_component": "z30_date (font aur)",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"

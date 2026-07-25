@@ -3,6 +3,24 @@
   "policy": "Machine-readable provenance for runtime artwork DERIVED from third-party or bundled inputs (fonts, donor images, models) rather than authored from scratch. Handoff entries reference a record here with license value 'derived:<id>'. Enforced by tools/validate.py: the id must resolve, its notice_file must exist, and an export whose class is derived (e.g. export_type font-glyphs) may not claim 'original'. Introduced by the Phase-3 review (blocker 4).",
   "records": [
     {
+      "id": "rajdhani-bold-ofl-1.1",
+      "kind": "font",
+      "name": "Rajdhani Bold",
+      "version": "Google Fonts distribution (name-table metadata verified in committed bytes)",
+      "format": "TrueType (.ttf), committed file",
+      "sha256": "691470dd3286a14e9677940d0bf75796179841ba5215cbda1a2c8910a3226afd",
+      "sha256_scope": "the committed font file; identical bytes in xsywatch watchfaces/aurelius/app/src/main/res/font/rajdhani_bold.ttf and AGENOR-Horology assets/fonts/rajdhani_bold.ttf",
+      "producer": "Indian Type Foundry",
+      "license": "OFL-1.1",
+      "author_copyright": "Copyright (c) 2014 Indian Type Foundry (info@indiantypefoundry.com)",
+      "notice_file": "THIRD_PARTY_NOTICES/fonts/rajdhani-OFL.txt",
+      "studio_record": "AGENOR-Horology docs/FONT_PROVENANCE.md",
+      "derived_artwork": "Aurelius Field Tourbillon Mk II r1 BitmapFont glyph rasters (39) and the AURELIUS / FIELD TOURBILLON Mk II engravings baked into the normal and AOD plates",
+      "commercial_use_resolved": true,
+      "open_item": null,
+      "notes": "SIL Open Font License 1.1 permits redistribution and commercial use of the font and of artwork produced with it; the reserved-font-name clause constrains redistribution of modified FONT FILES, which this project does not do. Already audited in docs/asset-licenses.json (it is also the legacy Aurelius face font). Adopted at revision field-tourbillon-mk2-r1 by owner decision, replacing derived:blender-bfont-type1."
+    },
+    {
       "id": "blender-bfont-type1",
       "kind": "font",
       "name": "Bfont",
@@ -18,7 +36,11 @@
       "studio_record": "AGENOR-Horology docs/FONT_PROVENANCE.md",
       "derived_artwork": "Aurelius Mk II BitmapFont glyph rasters (39) and the AURELIUS / FIELD TOURBILLON Mk II engravings baked into the normal and AOD plates",
       "commercial_use_resolved": false,
-      "open_item": "Bfont carries no font exception; whether GPL terms reach raster output derived from a GPL font program is unresolved, and typeface-design protection varies by jurisdiction. Must be resolved before commercial release. Recommended mitigation: re-render glyph/engraving masters with an already-audited OFL-1.1 font (e.g. rajdhani_bold.ttf). Deliberately not applied mid-owner-review because it changes candidate pixels."
+      "open_item": "Bfont carries no font exception; whether GPL terms reach raster output derived from a GPL font program is unresolved, and typeface-design protection varies by jurisdiction. Must be resolved before commercial release. Recommended mitigation: re-render glyph/engraving masters with an already-audited OFL-1.1 font (e.g. rajdhani_bold.ttf). Deliberately not applied mid-owner-review because it changes candidate pixels. RESOLVED IN PRACTICE at revision field-tourbillon-mk2-r1 by substituting the audited OFL-1.1 source; this record no longer governs any current runtime resource. Note also that Blender's manual states its GPL applies to the application rather than artwork created with it, so this record's conservative posture was never a demonstrated prohibition.",
+      "status": "superseded",
+      "superseded_by": "rajdhani-bold-ofl-1.1",
+      "superseded_at_revision": "field-tourbillon-mk2-r1",
+      "retained_reason": "Historical evidence for revision field-tourbillon-mk2, whose candidate renders, approval record (APPROVAL-0002), inventory snapshot and device evidence remain committed. Retained per the Phase-3 re-review instruction."
     }
   ]
 }

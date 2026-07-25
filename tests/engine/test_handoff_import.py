@@ -275,5 +275,93 @@ class HandoffImportLineageTests(unittest.TestCase):
         self.assertTrue(self.consumer.unchanged())
 
 
+class MetadataCommitBindingTests(unittest.TestCase):
+    """Re-review blocker: the manifest records `metadata_commit` as the
+    provenance of its metadata fields, so those bytes must actually come
+    from that commit — never from an uncommitted working-tree edit."""
+
+    def setUp(self):
+        self.studio = Studio()
+        self.consumer = Consumer()
+        self.addCleanup(self.studio.close)
+        self.addCleanup(self.consumer.close)
+        patcher = mock.patch.object(imp, "REPO", self.consumer.dir)
+        patcher.start()
+        self.addCleanup(patcher.stop)
+
+    def run_import(self):
+        argv = ["import_handoff.py", FACE, "--studio", str(self.studio.dir),
+                "--metadata", self.studio.meta_rel]
+        with mock.patch.object(sys, "argv", argv):
+            return imp.main()
+
+    def dirty_edit(self, mutate):
+        """Apply an UNCOMMITTED edit to already-committed metadata."""
+        meta = self.studio.metadata(self.studio.producing)
+        mutate(meta)
+        self.studio.write_metadata(meta, commit_it=False)
+
+    # -- committed metadata still works --------------------------------
+
+    def test_committed_metadata_imports_successfully(self):
+        self.assertEqual(self.run_import(), 0)
+        man = json.loads(self.consumer.manifest.read_text())
+        self.assertEqual(man["metadata_commit"], self.studio.metadata_commit)
+        self.assertEqual(len(man["assets"]), 2)
+
+    # -- any uncommitted metadata edit is rejected ----------------------
+
+    def test_uncommitted_metadata_edit_rejected(self):
+        self.dirty_edit(lambda m: m.update(generation="SNEAKY"))
+        self.assertEqual(self.run_import(), 1)
+        self.assertTrue(self.consumer.unchanged())
+
+    def test_dirty_license_cannot_reach_manifest(self):
+        self.dirty_edit(
+            lambda m: m["exports"][0].update(license="totally-original"))
+        self.assertEqual(self.run_import(), 1)
+        self.assertTrue(self.consumer.unchanged())
+
+    def test_dirty_lifecycle_cannot_reach_manifest(self):
+        self.dirty_edit(
+            lambda m: m["exports"][0].update(lifecycle="approved"))
+        self.assertEqual(self.run_import(), 1)
+        self.assertTrue(self.consumer.unchanged())
+        self.assertNotIn(b"approved", self.consumer.manifest.read_bytes())
+
+    def test_dirty_pivot_cannot_reach_manifest(self):
+        self.dirty_edit(lambda m: m["exports"][0].update(pivot=[0.1, 0.9]))
+        self.assertEqual(self.run_import(), 1)
+        self.assertTrue(self.consumer.unchanged())
+
+    def test_dirty_dimensions_component_regenerate_rejected(self):
+        for mutate in (lambda m: m["exports"][0].update(dimensions=[99, 99]),
+                       lambda m: m["exports"][0].update(
+                           consumer_component="z_hacked"),
+                       lambda m: m["exports"][0].update(regenerate="rm -rf")):
+            with self.subTest(mutate=mutate):
+                self.dirty_edit(mutate)
+                self.assertEqual(self.run_import(), 1)
+                self.assertTrue(self.consumer.unchanged())
+
+    def test_dirty_removal_cannot_truncate_manifest(self):
+        self.dirty_edit(lambda m: m["exports"].pop())
+        self.assertEqual(self.run_import(), 1)
+        self.assertTrue(self.consumer.unchanged())
+
+    def test_committing_the_edit_moves_metadata_commit_and_passes(self):
+        """The legitimate path: commit the change, which necessarily moves
+        metadata_commit, and the import binds to the new commit."""
+        meta = self.studio.metadata(self.studio.producing)
+        meta["exports"][0]["lifecycle"] = "approved"
+        self.studio.write_metadata(meta)          # committed this time
+        new_commit = self.studio.rev("HEAD")
+        self.assertNotEqual(new_commit, self.studio.metadata_commit)
+        self.assertEqual(self.run_import(), 0)
+        man = json.loads(self.consumer.manifest.read_text())
+        self.assertEqual(man["metadata_commit"], new_commit)
+        self.assertEqual(man["assets"][0]["lifecycle"], "approved")
+
+
 if __name__ == "__main__":
     unittest.main()
