@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AGENOR asset handoff manifest",
+  "type": "object",
+  "required": ["contract", "assets"],
+  "properties": {
+    "contract": {"const": "docs/ASSET_HANDOFF_CONTRACT.md"},
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["asset_id", "source_repo", "source_commit",
+                     "source_paths", "spec_path", "export_type",
+                     "destination", "dimensions", "color_space", "alpha",
+                     "pivot", "frames", "frame_seconds", "loop", "aod_safe",
+                     "license", "sha256", "lifecycle", "consumer_component",
+                     "regenerate"],
+        "properties": {
+          "asset_id": {"type": "string", "pattern": "^[a-z0-9-]+/[A-Za-z0-9_]+$"},
+          "source_repo": {"const": "xsytrance/AGENOR-Horology"},
+          "source_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "source_paths": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+          "spec_path": {"type": "string"},
+          "export_type": {"enum": ["static-image", "sprite-strip", "sprite-grid", "mask", "font-glyphs"]},
+          "destination": {"type": ["string", "null"]},
+          "dimensions": {"type": "array", "items": {"type": "integer", "minimum": 1}, "minItems": 2, "maxItems": 2},
+          "color_space": {"enum": ["srgb"]},
+          "alpha": {"enum": ["straight", "premultiplied", "none"]},
+          "pivot": {"type": "array", "items": {"type": "number", "minimum": 0, "maximum": 1}, "minItems": 2, "maxItems": 2},
+          "frames": {"type": "integer", "minimum": 1},
+          "frame_seconds": {"type": ["number", "null"], "exclusiveMinimum": 0},
+          "loop": {"enum": ["perfect", "pingpong", "none"]},
+          "aod_safe": {"type": "boolean"},
+          "license": {"type": "string"},
+          "sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "lifecycle": {"enum": ["experimental", "candidate", "approved", "deprecated"]},
+          "consumer_component": {"type": "string"},
+          "regenerate": {"type": "string"},
+          "example": {"type": "boolean"}
+        }
+      }
+    }
+  }
+}

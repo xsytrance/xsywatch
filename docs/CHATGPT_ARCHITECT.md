@@ -592,6 +592,67 @@ Owner decisions applied: ADR-005 **ratified**; repository **proprietary**
 **frozen** (legacy WFF v2); no production keystore created. Branch awaits
 ChatGPT re-review before merge.
 
+### 2026-07-24 — Phase 2 implementation note (Claude Code)
+
+Branch `phase-2/aurelius-reference-engine` implements the approved Phase 2
+brief (evidence: `docs/reports/PHASE_2_AURELIUS_REFERENCE_ENGINE.md`):
+
+- **Engine:** `engine/wffgen` 0.1.0-experimental — deterministic build-time
+  WFF generation (stdlib only), 10-component registry grounded in the
+  reproducible ten-face audit (`PHASE_2_COMPONENT_AUDIT.{json,md}`);
+  34 unit tests.
+- **Aurelius migrated:** authoritative `engine/face.toml`; committed XML is
+  generated; `generate_face.py aurelius --check` gates drift; semantic
+  parity with the Phase-1 baseline is regression-tested element-by-element;
+  identity and versions unchanged; released APK byte-identical and now
+  pinned immutable (validation-enforced).
+- **Proof tooling:** official WFF validator rebuilt and PASSING (aurelius +
+  2 non-proprietary generality fixtures); memory-footprint evaluator PASS
+  (candidate + release); all ten faces still build; validation 0 errors.
+- **Handoff contract:** `docs/ASSET_HANDOFF_CONTRACT.md` + schema +
+  validator enforcement + synthetic non-approved example. Sibling repo
+  untouched.
+- **Open item:** physical Watch7 evidence blocked (no reachable device);
+  disclosed with closing procedure (`docs/DEVICE_TEST_MATRIX.md`,
+  DEVICE_EVIDENCE_BLOCKER files). Awaiting owner pairing session.
+
+Branch pushed for architecture review; not merged.
+
+### 2026-07-24 — Phase 2 review corrections (Claude Code)
+
+Phase-2 review (commit `973d30a`) blockers 2/3/4 are fixed in `cb10ddb`
+(ratio() normalization + tests; complete stdlib enforcement of the
+asset-handoff schema + 26 negative tests; WFF-version cross-check incl.
+@integer resolution + deliberate-mismatch test). Baseline-lineage wording
+corrected repo-wide (frozen imported source baseline, not APK-extracted).
+Re-verified: 68 engine tests, 10/10 release fixtures, 10/10 builds, WFF
+validator + memory evaluator re-PASS, validation 0 errors, immutable APK
+unchanged. **Blocker 1 (physical Watch7 evidence) remains open** — device
+still unreachable; execution procedure staged in DEVICE_TEST_MATRIX.md
+awaiting owner pairing credentials. Branch returned for final review.
+
+### 2026-07-24 — Phase 2 blocker-1 device session (Claude Code)
+
+Owner provided wireless-debug access; the full blocker-1 procedure ran on
+the physical Watch7 (SM-L310, Android 16/API 36). Baseline matrix on the
+immutable APK: PASS. **The first candidate exposed a real regression the
+static gates could not see:** since the Phase-1 source import, 46/53
+Aurelius drawables (+preview) were unreleased WARBIRD art under Field
+Tourbillon filenames — semantic XML parity, wrong pixels. Fixed by
+restoring drawables from the immutable release APK's own bytes (also
+proving byte-for-byte XML lineage: extracted `res/raw/watchface.xml` ==
+`watchface_baseline.xml`, `a8ce33ac…`). Corrected candidate `b01015c8…`
+re-passed the full matrix; explicit no-regression conclusion vs baseline;
+`install -r` continuity held throughout (One UI deactivates the active
+face on reinstall — documented, not a failure). Evidence:
+`docs/reports/evidence/phase-2/aurelius/*/DEVICE_TEST_RESULTS.md`,
+`candidate/ASSET_DIVERGENCE_FINDING.md`. Parallax physically verified via
+owner tilt (recording committed); candidate doze screencap not obtainable
+(display pipeline), AOD behavior proven by cycling + byte-determined
+render. Full re-verification green (68 tests, 10/10 fixtures, 10/10
+builds, WFF validator, memory evaluator, validate.py, immutable checksum
+unchanged). Branch returned for final review; not merged.
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.

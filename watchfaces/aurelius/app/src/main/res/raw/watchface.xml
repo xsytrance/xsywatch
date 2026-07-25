@@ -1,4 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+GENERATED FILE - do not edit by hand.
+  Authoritative source: watchfaces/aurelius/engine/face.toml
+  Regenerate: python3 tools/generate_face.py aurelius
+  Engine: wffgen 0.1.0-experimental
+-->
 <WatchFace width="480" height="480">
   <Metadata key="CLOCK_TYPE" value="ANALOG" />
   <Metadata key="PREVIEW_TIME" value="10:09:35" />
@@ -47,13 +53,13 @@
   </BitmapFonts>
   <Scene backgroundColor="#FF060403">
     <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.6" startOffset="0" interpolation="EASE_OUT" />
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.6" startOffset="0.0" interpolation="EASE_OUT" />
       <Transform target="x" value="0 + 3 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
       <Transform target="y" value="0 + 3 * clamp([ACCELEROMETER_ANGLE_Y], -45, 45) / 45" />
       <Image resource="bg" />
     </PartImage>
-    <PartImage name="z00_aod" x="0" y="0" width="480" height="480" alpha="0">
-      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.6" startOffset="0" interpolation="EASE_IN" />
+    <PartImage name="z01_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.6" startOffset="0.0" interpolation="EASE_IN" />
       <Image resource="bg_aod" />
     </PartImage>
     <PartImage name="z10_gl" x="78" y="208" width="120" height="120" alpha="255" pivotX="0.5" pivotY="0.5">

@@ -1,0 +1,2178 @@
+{
+  "classification": {
+    "extract_now": [
+      {
+        "count": 9,
+        "faces": [
+          "arcwright",
+          "ares-wargod",
+          "aurelius",
+          "bone-watch",
+          "bushido",
+          "chronova",
+          "hellforge",
+          "pinball",
+          "pulseface"
+        ],
+        "pattern": "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N"
+      },
+      {
+        "count": 9,
+        "faces": [
+          "arcwright",
+          "ares-wargod",
+          "aurelius",
+          "bone-watch",
+          "bushido",
+          "chronova",
+          "hellforge",
+          "pinball",
+          "pulseface"
+        ],
+        "pattern": "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N"
+      },
+      {
+        "count": 7,
+        "faces": [
+          "ares-wargod",
+          "aurelius",
+          "bone-watch",
+          "bushido",
+          "hellforge",
+          "pinball",
+          "pulseface"
+        ],
+        "pattern": "[DAY]"
+      },
+      {
+        "count": 6,
+        "faces": [
+          "ares-wargod",
+          "bone-watch",
+          "bushido",
+          "hellforge",
+          "pinball",
+          "pulseface"
+        ],
+        "pattern": "[BATTERY_PERCENT]"
+      },
+      {
+        "count": 6,
+        "faces": [
+          "ares-wargod",
+          "bone-watch",
+          "bushido",
+          "hellforge",
+          "pinball",
+          "pulseface"
+        ],
+        "pattern": "[DAY_OF_WEEK_S]"
+      },
+      {
+        "count": 5,
+        "faces": [
+          "ares-wargod",
+          "aurelius",
+          "bone-watch",
+          "chronova",
+          "hellforge"
+        ],
+        "pattern": "([HOUR_0_11] + [MINUTE] / N) * N"
+      },
+      {
+        "count": 4,
+        "faces": [
+          "ares-wargod",
+          "aurelius",
+          "bone-watch",
+          "hellforge"
+        ],
+        "pattern": "([MINUTE] + [SECOND] / N) * N"
+      },
+      {
+        "count": 4,
+        "faces": [
+          "arcwright",
+          "aurelius",
+          "chronova",
+          "tripface"
+        ],
+        "pattern": "([SECOND] + [MILLISECOND] / N) * N"
+      },
+      {
+        "count": 4,
+        "faces": [
+          "ares-wargod",
+          "bone-watch",
+          "bushido",
+          "hellforge"
+        ],
+        "pattern": "[HEART_RATE]"
+      },
+      {
+        "count": 3,
+        "faces": [
+          "ares-wargod",
+          "bushido",
+          "pulseface"
+        ],
+        "pattern": "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N))"
+      },
+      {
+        "count": 3,
+        "faces": [
+          "aurelius",
+          "hellforge",
+          "pinball"
+        ],
+        "pattern": "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N)"
+      },
+      {
+        "count": 3,
+        "faces": [
+          "ares-wargod",
+          "bushido",
+          "pulseface"
+        ],
+        "pattern": "[STEP_COUNT]"
+      }
+    ],
+    "one_off_do_not_abstract": [
+      {
+        "count": 1,
+        "faces": [
+          "arcwright"
+        ],
+        "pattern": "[HOUR_0_11] * N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "aurelius"
+        ],
+        "pattern": "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "aurelius"
+        ],
+        "pattern": "N + N * clamp([BATTERY_PERCENT], N, N) / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "aurelius"
+        ],
+        "pattern": "N + N * sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "aurelius"
+        ],
+        "pattern": "N - ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bone-watch"
+        ],
+        "pattern": "(N + clamp(([HEART_RATE] - N) * N, N, N)) * (N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bone-watch"
+        ],
+        "pattern": "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*(clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N))*N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "N + N * [BATTERY_PERCENT] / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "N + N * abs(sin([SECOND] * N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "N + N * clamp([STEP_PERCENT], N, N) / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "[AMPM_STRING]"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "[MONTH_S]"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "bushido"
+        ],
+        "pattern": "round([WEATHER.TEMPERATURE])"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (((N - (floor(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) * N) % N))) * (N + rand(N, N))) : N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (((floor(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) * N) % N)) * (N + rand(N, N))) : N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (N * (N - clamp((((([SECOND] + [MILLISECOND] / N)) + N) % N) / N, N, N) * N)) : N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "(((([SECOND] + [MILLISECOND] / N)) % N) < N ? (N * (N - clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N))) : N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "(([SECOND] + [MILLISECOND] / N) < N ? (N * (N - ([SECOND] + [MILLISECOND] / N) / N)) : N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "([SECOND] + [MILLISECOND] / N) * N + N * sin(([SECOND] + [MILLISECOND] / N) * N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "N + (N - N) * clamp((((([SECOND] + [MILLISECOND] / N)) + N) % N) / N, N, N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "N + N * clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "N + N * sin(([SECOND] + [MILLISECOND] / N) * N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "N + N * sin(([SECOND] + [MILLISECOND] / N) * N) * sin(([SECOND] + [MILLISECOND] / N) * N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "chronova"
+        ],
+        "pattern": "N - (N + N * clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N)) / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "hellforge"
+        ],
+        "pattern": "(N + clamp(([HEART_RATE]-N)*N,N,N)) * (N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "hellforge"
+        ],
+        "pattern": "-N + ((N - ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "hellforge"
+        ],
+        "pattern": "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "hellforge"
+        ],
+        "pattern": "N+N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "hellforge"
+        ],
+        "pattern": "clamp(N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N) + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N) + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N) + clamp(([HEART_RATE]-N)*N,N,N), N, N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pinball"
+        ],
+        "pattern": "N + N * pow(abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N)),N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pinball"
+        ],
+        "pattern": "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pulseface"
+        ],
+        "pattern": "(clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pulseface"
+        ],
+        "pattern": "N + N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) - N) / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pulseface"
+        ],
+        "pattern": "N - N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "pulseface"
+        ],
+        "pattern": "round((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N / N)"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "(N * (N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) / N) + N))))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N + N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "N - (N * (N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) / N) + N))))"
+      },
+      {
+        "count": 1,
+        "faces": [
+          "tripface"
+        ],
+        "pattern": "clamp([STEP_PERCENT], N, N) * N"
+      }
+    ],
+    "similar_keep_face_specific": [
+      {
+        "count": 2,
+        "faces": [
+          "bone-watch",
+          "hellforge"
+        ],
+        "pattern": "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) % N) * N"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "bushido",
+          "pulseface"
+        ],
+        "pattern": "-N + ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "bushido",
+          "pulseface"
+        ],
+        "pattern": "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "bone-watch",
+          "hellforge"
+        ],
+        "pattern": "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N))"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "N - (([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N)"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "N - (([SECOND] + [MILLISECOND] / N) * N)"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "chronova",
+          "tripface"
+        ],
+        "pattern": "N - ([SECOND] + [MILLISECOND] / N) * N"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "bushido",
+          "pulseface"
+        ],
+        "pattern": "N - N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "N - N * sin(([SECOND] + [MILLISECOND] / N) * N + N)"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "[MINUTE] * N"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "ares-wargod",
+          "pulseface"
+        ],
+        "pattern": "clamp(([HEART_RATE] - N) * N, N, N)"
+      },
+      {
+        "count": 2,
+        "faces": [
+          "arcwright",
+          "chronova"
+        ],
+        "pattern": "floor([SECOND]) * N"
+      }
+    ],
+    "unsafe_needs_cleanup": [
+      {
+        "face": "ares-wargod",
+        "issues": [
+          "unclamped HEART_RATE expression: [HEART_RATE]"
+        ]
+      },
+      {
+        "face": "bone-watch",
+        "issues": [
+          "unclamped HEART_RATE expression: [HEART_RATE]"
+        ]
+      },
+      {
+        "face": "bushido",
+        "issues": [
+          "unclamped HEART_RATE expression: [HEART_RATE]"
+        ]
+      },
+      {
+        "face": "hellforge",
+        "issues": [
+          "unclamped HEART_RATE expression: [HEART_RATE]"
+        ]
+      }
+    ]
+  },
+  "cross_face": {
+    "data_source_usage": {
+      "ACCELEROMETER_ANGLE_X": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "ACCELEROMETER_ANGLE_Y": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "AMPM_STRING": [
+        "bushido"
+      ],
+      "BATTERY_PERCENT": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "DAY": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "DAY_OF_WEEK_S": [
+        "ares-wargod",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "HEART_RATE": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pulseface",
+        "tripface"
+      ],
+      "HOUR_0_11": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "chronova",
+        "hellforge"
+      ],
+      "MILLISECOND": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface",
+        "tripface"
+      ],
+      "MINUTE": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "MONTH_S": [
+        "bushido"
+      ],
+      "SECOND": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface",
+        "tripface"
+      ],
+      "STEP_COUNT": [
+        "ares-wargod",
+        "bushido",
+        "pulseface"
+      ],
+      "STEP_PERCENT": [
+        "bushido",
+        "tripface"
+      ]
+    },
+    "shared_normalized_expressions": {
+      "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) % N) * N": [
+        "bone-watch",
+        "hellforge"
+      ],
+      "([HOUR_0_11] + [MINUTE] / N) * N": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "chronova",
+        "hellforge"
+      ],
+      "([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N": [
+        "arcwright",
+        "chronova"
+      ],
+      "([MINUTE] + [SECOND] / N) * N": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "hellforge"
+      ],
+      "([SECOND] + [MILLISECOND] / N) * N": [
+        "arcwright",
+        "aurelius",
+        "chronova",
+        "tripface"
+      ],
+      "-N + ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)": [
+        "bushido",
+        "pulseface"
+      ],
+      "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": [
+        "bushido",
+        "pulseface"
+      ],
+      "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N))": [
+        "ares-wargod",
+        "bushido",
+        "pulseface"
+      ],
+      "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": [
+        "arcwright",
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "chronova",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N))": [
+        "bone-watch",
+        "hellforge"
+      ],
+      "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N)": [
+        "aurelius",
+        "hellforge",
+        "pinball"
+      ],
+      "N - (([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N)": [
+        "arcwright",
+        "chronova"
+      ],
+      "N - (([SECOND] + [MILLISECOND] / N) * N)": [
+        "arcwright",
+        "chronova"
+      ],
+      "N - ([SECOND] + [MILLISECOND] / N) * N": [
+        "chronova",
+        "tripface"
+      ],
+      "N - N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": [
+        "bushido",
+        "pulseface"
+      ],
+      "N - N * sin(([SECOND] + [MILLISECOND] / N) * N + N)": [
+        "arcwright",
+        "chronova"
+      ],
+      "[BATTERY_PERCENT]": [
+        "ares-wargod",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "[DAY]": [
+        "ares-wargod",
+        "aurelius",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "[DAY_OF_WEEK_S]": [
+        "ares-wargod",
+        "bone-watch",
+        "bushido",
+        "hellforge",
+        "pinball",
+        "pulseface"
+      ],
+      "[HEART_RATE]": [
+        "ares-wargod",
+        "bone-watch",
+        "bushido",
+        "hellforge"
+      ],
+      "[MINUTE] * N": [
+        "arcwright",
+        "chronova"
+      ],
+      "[STEP_COUNT]": [
+        "ares-wargod",
+        "bushido",
+        "pulseface"
+      ],
+      "clamp(([HEART_RATE] - N) * N, N, N)": [
+        "ares-wargod",
+        "pulseface"
+      ],
+      "floor([SECOND]) * N": [
+        "arcwright",
+        "chronova"
+      ]
+    }
+  },
+  "faces": [
+    {
+      "animation_params": {
+        "duration=None interp=None": 19
+      },
+      "bitmap_fonts": {
+        "engraved_lg": 11,
+        "engraved_sm": 10
+      },
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 135,
+      "expressions_normalized": {
+        "([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N": 1,
+        "([SECOND] + [MILLISECOND] / N) * N": 6,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 14,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 12,
+        "N - (([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N)": 1,
+        "N - (([SECOND] + [MILLISECOND] / N) * N)": 4,
+        "N - N * sin(([SECOND] + [MILLISECOND] / N) * N + N)": 2,
+        "[HOUR_0_11] * N": 1,
+        "[MINUTE] * N": 1,
+        "floor([SECOND]) * N": 1
+      },
+      "face": "arcwright",
+      "group_count": 0,
+      "named_elements": 41,
+      "path": "watchfaces/arcwright/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "base",
+        "cam",
+        "fan",
+        "gear_rear_l",
+        "gear_rear_m",
+        "glyph_lg_0",
+        "glyph_lg_1",
+        "glyph_lg_2",
+        "glyph_lg_3",
+        "glyph_lg_4",
+        "glyph_lg_5",
+        "glyph_lg_6",
+        "glyph_lg_7",
+        "glyph_lg_8",
+        "glyph_lg_9",
+        "glyph_lg_colon",
+        "glyph_sm_0",
+        "glyph_sm_1",
+        "glyph_sm_2",
+        "glyph_sm_3",
+        "glyph_sm_4",
+        "glyph_sm_5",
+        "glyph_sm_6",
+        "glyph_sm_7",
+        "glyph_sm_8",
+        "glyph_sm_9",
+        "ne_gear_a",
+        "ne_gear_c",
+        "nw_gear_a",
+        "nw_gear_c",
+        "ratchet",
+        "ring_hour",
+        "ring_inner",
+        "ring_min",
+        "ring_outer",
+        "rod_0",
+        "rod_1",
+        "se_gear_b",
+        "sw_gear_d"
+      ],
+      "resources_unused": [
+        "bezel_ring60",
+        "chamber_housing",
+        "chassis",
+        "conduit_housing",
+        "display_hrs",
+        "display_min",
+        "display_sec",
+        "gear_a",
+        "gear_b",
+        "gear_c",
+        "gear_d",
+        "glyph_sm_colon",
+        "piston_rod",
+        "piston_sleeve",
+        "plate_back",
+        "ring_inner_rot",
+        "ring_outer_rot",
+        "turbine_housing"
+      ],
+      "rotating_parts": [
+        "z02_rear_gear_l",
+        "z02_rear_gear_m",
+        "z05_ne_gear_a",
+        "z05_ne_gear_c",
+        "z05_nw_gear_a",
+        "z05_nw_gear_c",
+        "z05_ratchet",
+        "z05_ring_hour",
+        "z05_ring_min",
+        "z05_se_cam",
+        "z05_se_gear_b",
+        "z05_sw_gear_d",
+        "z10_fan",
+        "z11_ring_inner",
+        "z11_ring_outer"
+      ],
+      "tag_counts": {
+        "BitmapFont": 5,
+        "BitmapFonts": 1,
+        "Character": 21,
+        "DigitalClock": 3,
+        "Image": 18,
+        "Metadata": 2,
+        "PartImage": 18,
+        "Scene": 1,
+        "TimeText": 3,
+        "Transform": 43,
+        "Variant": 19,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 19
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 18
+    },
+    {
+      "animation_params": {
+        "duration=0.4 interp=LINEAR": 12,
+        "duration=0.5 interp=EASE_IN": 1,
+        "duration=0.5 interp=EASE_OUT": 2
+      },
+      "bitmap_fonts": {
+        "carved": 66
+      },
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "HEART_RATE",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND",
+        "STEP_COUNT"
+      ],
+      "element_count": 142,
+      "expressions_normalized": {
+        "([HOUR_0_11] + [MINUTE] / N) * N": 1,
+        "([MINUTE] + [SECOND] / N) * N": 1,
+        "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N))": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 2,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 1,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1,
+        "[HEART_RATE]": 1,
+        "[STEP_COUNT]": 1,
+        "clamp(([HEART_RATE] - N) * N, N, N)": 1
+      },
+      "face": "ares-wargod",
+      "group_count": 0,
+      "named_elements": 82,
+      "path": "watchfaces/ares-wargod/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "bg",
+        "bg_aod",
+        "g_0",
+        "g_1",
+        "g_2",
+        "g_3",
+        "g_4",
+        "g_5",
+        "g_6",
+        "g_7",
+        "g_8",
+        "g_9",
+        "g_a",
+        "g_a_",
+        "g_b",
+        "g_b_",
+        "g_c",
+        "g_c_",
+        "g_colon",
+        "g_d",
+        "g_d_",
+        "g_dot",
+        "g_e",
+        "g_e_",
+        "g_f",
+        "g_f_",
+        "g_g",
+        "g_g_",
+        "g_h",
+        "g_h_",
+        "g_i",
+        "g_i_",
+        "g_j",
+        "g_j_",
+        "g_k",
+        "g_k_",
+        "g_l",
+        "g_l_",
+        "g_m",
+        "g_m_",
+        "g_n",
+        "g_n_",
+        "g_o",
+        "g_o_",
+        "g_p",
+        "g_p_",
+        "g_pct",
+        "g_q",
+        "g_q_",
+        "g_r",
+        "g_r_",
+        "g_s",
+        "g_s_",
+        "g_space",
+        "g_t",
+        "g_t_",
+        "g_u",
+        "g_u_",
+        "g_v",
+        "g_v_",
+        "g_w",
+        "g_w_",
+        "g_x",
+        "g_x_",
+        "g_y",
+        "g_y_",
+        "g_z",
+        "g_z_",
+        "hour_hand",
+        "hub",
+        "min_hand",
+        "sheen",
+        "wrath"
+      ],
+      "resources_unused": [
+        "ares_title",
+        "cloud",
+        "ic_bolt",
+        "ic_feet",
+        "ic_flame",
+        "ic_floors",
+        "ic_heart",
+        "ic_moon",
+        "ic_pin",
+        "panel_stat",
+        "panel_time"
+      ],
+      "rotating_parts": [
+        "z40_hour",
+        "z41_min"
+      ],
+      "tag_counts": {
+        "BitmapFont": 9,
+        "BitmapFonts": 1,
+        "Character": 66,
+        "Image": 7,
+        "Metadata": 2,
+        "Parameter": 5,
+        "PartImage": 7,
+        "PartText": 8,
+        "Scene": 1,
+        "Template": 4,
+        "Text": 8,
+        "Transform": 7,
+        "Upper": 1,
+        "Variant": 15,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [
+        "unclamped HEART_RATE expression: [HEART_RATE]"
+      ],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 15
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 15
+    },
+    {
+      "animation_params": {
+        "duration=0.4 interp=LINEAR": 7,
+        "duration=0.5 interp=EASE_OUT": 3,
+        "duration=0.6 interp=EASE_IN": 1,
+        "duration=0.6 interp=EASE_OUT": 1
+      },
+      "bitmap_fonts": {
+        "aur": 39
+      },
+      "clock_type": "ANALOG",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "HEART_RATE",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 96,
+      "expressions_normalized": {
+        "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N": 1,
+        "([HOUR_0_11] + [MINUTE] / N) * N": 1,
+        "([MINUTE] + [SECOND] / N) * N": 1,
+        "([SECOND] + [MILLISECOND] / N) * N": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 2,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 2,
+        "N + N * clamp([BATTERY_PERCENT], N, N) / N": 1,
+        "N + N * sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)": 1,
+        "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N)": 1,
+        "N - ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)": 1,
+        "[DAY]": 1
+      },
+      "face": "aurelius",
+      "group_count": 0,
+      "named_elements": 52,
+      "path": "watchfaces/aurelius/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "balance",
+        "bg",
+        "bg_aod",
+        "cage",
+        "g_0",
+        "g_1",
+        "g_2",
+        "g_3",
+        "g_4",
+        "g_5",
+        "g_6",
+        "g_7",
+        "g_8",
+        "g_9",
+        "g_a",
+        "g_b",
+        "g_c",
+        "g_colon",
+        "g_d",
+        "g_e",
+        "g_f",
+        "g_g",
+        "g_h",
+        "g_i",
+        "g_j",
+        "g_k",
+        "g_l",
+        "g_m",
+        "g_n",
+        "g_o",
+        "g_p",
+        "g_pct",
+        "g_q",
+        "g_r",
+        "g_s",
+        "g_space",
+        "g_t",
+        "g_u",
+        "g_v",
+        "g_w",
+        "g_x",
+        "g_y",
+        "g_z",
+        "gear_l",
+        "gear_r",
+        "hour_hand",
+        "hub",
+        "min_hand",
+        "resv_needle",
+        "sheen"
+      ],
+      "resources_unused": [
+        "needle",
+        "prop",
+        "tourb_base",
+        "tourb_disc",
+        "tourb_rim"
+      ],
+      "rotating_parts": [
+        "z10_gl",
+        "z11_gr",
+        "z21_bal",
+        "z22_cage",
+        "z31_resv",
+        "z50_hour",
+        "z51_min"
+      ],
+      "tag_counts": {
+        "BitmapFont": 2,
+        "BitmapFonts": 1,
+        "Character": 39,
+        "Image": 11,
+        "Metadata": 2,
+        "Parameter": 1,
+        "PartImage": 11,
+        "PartText": 1,
+        "Scene": 1,
+        "Template": 1,
+        "Text": 1,
+        "Transform": 12,
+        "Variant": 12,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 12
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 12
+    },
+    {
+      "animation_params": {
+        "duration=0.3 interp=LINEAR": 1,
+        "duration=0.4 interp=LINEAR": 8,
+        "duration=0.45 interp=EASE_OUT": 1,
+        "duration=0.5 interp=EASE_IN": 1,
+        "duration=0.5 interp=EASE_OUT": 2
+      },
+      "bitmap_fonts": {
+        "bone": 66
+      },
+      "clock_type": "ANALOG",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "HEART_RATE",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 137,
+      "expressions_normalized": {
+        "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) % N) * N": 1,
+        "(N + clamp(([HEART_RATE] - N) * N, N, N)) * (N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)))": 2,
+        "([HOUR_0_11] + [MINUTE] / N) * N": 1,
+        "([MINUTE] + [SECOND] / N) * N": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 3,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 2,
+        "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*(clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N))*N))": 4,
+        "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N))": 1,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1,
+        "[HEART_RATE]": 1
+      },
+      "face": "bone-watch",
+      "group_count": 0,
+      "named_elements": 80,
+      "path": "watchfaces/bone-watch/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "bg",
+        "bg_aod",
+        "ember",
+        "g_0",
+        "g_1",
+        "g_2",
+        "g_3",
+        "g_4",
+        "g_5",
+        "g_6",
+        "g_7",
+        "g_8",
+        "g_9",
+        "g_a",
+        "g_a_",
+        "g_b",
+        "g_b_",
+        "g_c",
+        "g_c_",
+        "g_colon",
+        "g_d",
+        "g_d_",
+        "g_dot",
+        "g_e",
+        "g_e_",
+        "g_f",
+        "g_f_",
+        "g_g",
+        "g_g_",
+        "g_h",
+        "g_h_",
+        "g_i",
+        "g_i_",
+        "g_j",
+        "g_j_",
+        "g_k",
+        "g_k_",
+        "g_l",
+        "g_l_",
+        "g_m",
+        "g_m_",
+        "g_n",
+        "g_n_",
+        "g_o",
+        "g_o_",
+        "g_p",
+        "g_p_",
+        "g_pct",
+        "g_q",
+        "g_q_",
+        "g_r",
+        "g_r_",
+        "g_s",
+        "g_s_",
+        "g_space",
+        "g_t",
+        "g_t_",
+        "g_u",
+        "g_u_",
+        "g_v",
+        "g_v_",
+        "g_w",
+        "g_w_",
+        "g_x",
+        "g_x_",
+        "g_y",
+        "g_y_",
+        "g_z",
+        "g_z_",
+        "hour_hand",
+        "hub",
+        "min_hand",
+        "numerals",
+        "sec_hand",
+        "sheen"
+      ],
+      "resources_unused": [],
+      "rotating_parts": [
+        "z40_hour",
+        "z41_min",
+        "z42_sec"
+      ],
+      "tag_counts": {
+        "BitmapFont": 4,
+        "BitmapFonts": 1,
+        "Character": 66,
+        "Image": 10,
+        "Metadata": 2,
+        "Parameter": 4,
+        "PartImage": 10,
+        "PartText": 3,
+        "Scene": 1,
+        "Template": 3,
+        "Text": 3,
+        "Transform": 15,
+        "Upper": 1,
+        "Variant": 13,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [
+        "unclamped HEART_RATE expression: [HEART_RATE]"
+      ],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 13
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 13
+    },
+    {
+      "animation_params": {
+        "duration=0.3 interp=LINEAR": 7,
+        "duration=0.35 interp=EASE_OUT": 2,
+        "duration=0.35 interp=LINEAR": 17,
+        "duration=0.4 interp=EASE_OUT": 2,
+        "duration=0.4 interp=LINEAR": 4,
+        "duration=0.45 interp=EASE_IN": 1,
+        "duration=0.45 interp=EASE_OUT": 1,
+        "duration=0.5 interp=OVERSHOOT": 5
+      },
+      "bitmap_fonts": {},
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "AMPM_STRING",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "HEART_RATE",
+        "MILLISECOND",
+        "MINUTE",
+        "MONTH_S",
+        "SECOND",
+        "STEP_COUNT",
+        "STEP_PERCENT"
+      ],
+      "element_count": 179,
+      "expressions_normalized": {
+        "-N + ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)": 1,
+        "N + N * [BATTERY_PERCENT] / N": 1,
+        "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": 1,
+        "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N))": 3,
+        "N + N * abs(sin([SECOND] * N))": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 4,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 2,
+        "N + N * clamp([STEP_PERCENT], N, N) / N": 1,
+        "N - N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 1,
+        "[AMPM_STRING]": 1,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1,
+        "[HEART_RATE]": 1,
+        "[MONTH_S]": 1,
+        "[STEP_COUNT]": 1,
+        "round([WEATHER.TEMPERATURE])": 1
+      },
+      "face": "bushido",
+      "group_count": 3,
+      "named_elements": 39,
+      "path": "watchfaces/bushido/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "batt_track",
+        "bg",
+        "bg_aod",
+        "ecg",
+        "fire",
+        "glow_cyan",
+        "glow_mag",
+        "heart",
+        "k_senshi",
+        "mask",
+        "moon",
+        "moonglow",
+        "rain",
+        "rim",
+        "scan",
+        "shoe",
+        "step_track",
+        "torii"
+      ],
+      "resources_unused": [
+        "fog",
+        "k_bushido",
+        "k_mirai"
+      ],
+      "rotating_parts": [],
+      "tag_counts": {
+        "Arc": 2,
+        "BoundingBox": 2,
+        "Complication": 2,
+        "ComplicationSlot": 2,
+        "DefaultProviderPolicy": 2,
+        "DigitalClock": 3,
+        "Font": 17,
+        "Group": 3,
+        "Image": 18,
+        "Metadata": 2,
+        "Parameter": 8,
+        "PartDraw": 2,
+        "PartImage": 18,
+        "PartText": 14,
+        "Scene": 1,
+        "Stroke": 2,
+        "Template": 7,
+        "Text": 14,
+        "TimeText": 3,
+        "Transform": 15,
+        "Upper": 2,
+        "Variant": 39,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [
+        "unclamped HEART_RATE expression: [HEART_RATE]"
+      ],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 37,
+        "mode=AMBIENT target=scaleX": 1,
+        "mode=AMBIENT target=scaleY": 1
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 37
+    },
+    {
+      "animation_params": {
+        "duration=None interp=None": 63
+      },
+      "bitmap_fonts": {},
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 340,
+      "expressions_normalized": {
+        "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (((N - (floor(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) * N) % N))) * (N + rand(N, N))) : N)": 4,
+        "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (((floor(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) * N) % N)) * (N + rand(N, N))) : N)": 4,
+        "(((((([SECOND] + [MILLISECOND] / N)) + N) % N)) < N ? (N * (N - clamp((((([SECOND] + [MILLISECOND] / N)) + N) % N) / N, N, N) * N)) : N)": 8,
+        "(((([SECOND] + [MILLISECOND] / N)) % N) < N ? (N * (N - clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N))) : N)": 1,
+        "(([SECOND] + [MILLISECOND] / N) < N ? (N * (N - ([SECOND] + [MILLISECOND] / N) / N)) : N)": 1,
+        "([HOUR_0_11] + [MINUTE] / N) * N": 1,
+        "([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N": 2,
+        "([SECOND] + [MILLISECOND] / N) * N": 5,
+        "([SECOND] + [MILLISECOND] / N) * N + N * sin(([SECOND] + [MILLISECOND] / N) * N)": 1,
+        "N + (N - N) * clamp((((([SECOND] + [MILLISECOND] / N)) + N) % N) / N, N, N)": 16,
+        "N + N * clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N)": 2,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 39,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 37,
+        "N + N * sin(([SECOND] + [MILLISECOND] / N) * N)": 3,
+        "N + N * sin(([SECOND] + [MILLISECOND] / N) * N) * sin(([SECOND] + [MILLISECOND] / N) * N)": 2,
+        "N - (([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N)": 1,
+        "N - (([SECOND] + [MILLISECOND] / N) * N)": 4,
+        "N - (N + N * clamp(((([SECOND] + [MILLISECOND] / N)) % N) / N, N, N)) / N": 2,
+        "N - ([SECOND] + [MILLISECOND] / N) * N": 1,
+        "N - N * sin(([SECOND] + [MILLISECOND] / N) * N + N)": 2,
+        "[MINUTE] * N": 1,
+        "floor([SECOND]) * N": 1
+      },
+      "face": "chronova",
+      "group_count": 0,
+      "named_elements": 62,
+      "path": "watchfaces/chronova/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "arc_blue",
+        "arc_magenta",
+        "bolt_blue_a",
+        "bolt_blue_b",
+        "bolt_magenta_a",
+        "bolt_magenta_b",
+        "cam",
+        "chassis",
+        "conduit_blue",
+        "conduit_magenta",
+        "conduit_violet",
+        "core_bloom",
+        "core_glow",
+        "display_hours",
+        "display_minutes",
+        "display_sec",
+        "energy_col",
+        "fan",
+        "gear_a",
+        "gear_b",
+        "gear_c",
+        "gear_d",
+        "gear_rear_l",
+        "gear_rear_m",
+        "glints",
+        "ignite",
+        "packet_blue",
+        "packet_magenta",
+        "packet_violet",
+        "piston_rod",
+        "piston_sleeve",
+        "plate_back",
+        "pulse_ring",
+        "ratchet",
+        "reactor_housing",
+        "ring60",
+        "ring_hour",
+        "ring_inner_rot",
+        "ring_min",
+        "ring_outer_rot",
+        "surge",
+        "turbine_housing"
+      ],
+      "resources_unused": [],
+      "rotating_parts": [
+        "z02_rear_gear_l",
+        "z02_rear_gear_m",
+        "z05_ne_gear_a",
+        "z05_ne_gear_c",
+        "z05_nw_gear_a",
+        "z05_nw_gear_c",
+        "z05_ratchet",
+        "z05_ring_hour",
+        "z05_ring_min",
+        "z05_se_cam",
+        "z05_se_gear_b",
+        "z05_se_gear_d",
+        "z05_sw_gear_d",
+        "z10_fan",
+        "z11_ring_inner",
+        "z11_ring_outer",
+        "z12_core"
+      ],
+      "tag_counts": {
+        "AnimatedImage": 2,
+        "AnimationController": 2,
+        "DigitalClock": 3,
+        "Font": 3,
+        "Image": 60,
+        "Metadata": 2,
+        "PartAnimatedImage": 2,
+        "PartImage": 60,
+        "Scene": 1,
+        "TimeText": 3,
+        "Transform": 138,
+        "Variant": 63,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 63
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 62
+    },
+    {
+      "animation_params": {
+        "duration=0.3 interp=LINEAR": 1,
+        "duration=0.4 interp=LINEAR": 10,
+        "duration=0.45 interp=EASE_OUT": 1,
+        "duration=0.5 interp=EASE_IN": 1,
+        "duration=0.5 interp=EASE_OUT": 3
+      },
+      "bitmap_fonts": {
+        "hell": 40
+      },
+      "clock_type": "ANALOG",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "HEART_RATE",
+        "HOUR_0_11",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 124,
+      "expressions_normalized": {
+        "(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) % N) * N": 1,
+        "(N + clamp(([HEART_RATE]-N)*N,N,N)) * (N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N)))": 2,
+        "([HOUR_0_11] + [MINUTE] / N) * N": 1,
+        "([MINUTE] + [SECOND] / N) * N": 1,
+        "-N + ((N - ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)))": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 3,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 2,
+        "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": 1,
+        "N + N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N))": 1,
+        "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N)": 1,
+        "N+N*abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": 4,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1,
+        "[HEART_RATE]": 1,
+        "clamp(N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N) + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N) + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N) + clamp(([HEART_RATE]-N)*N,N,N), N, N)": 1
+      },
+      "face": "hellforge",
+      "group_count": 0,
+      "named_elements": 57,
+      "path": "watchfaces/hellforge/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "bg",
+        "bg_aod",
+        "embers",
+        "eye",
+        "fireglow",
+        "g_0",
+        "g_1",
+        "g_2",
+        "g_3",
+        "g_4",
+        "g_5",
+        "g_6",
+        "g_7",
+        "g_8",
+        "g_9",
+        "g_a",
+        "g_b",
+        "g_c",
+        "g_colon",
+        "g_d",
+        "g_dot",
+        "g_e",
+        "g_f",
+        "g_g",
+        "g_h",
+        "g_i",
+        "g_j",
+        "g_k",
+        "g_l",
+        "g_m",
+        "g_n",
+        "g_o",
+        "g_p",
+        "g_pct",
+        "g_q",
+        "g_r",
+        "g_s",
+        "g_space",
+        "g_t",
+        "g_u",
+        "g_v",
+        "g_w",
+        "g_x",
+        "g_y",
+        "g_z",
+        "hour_hand",
+        "hub",
+        "min_hand",
+        "numerals",
+        "sec_hand",
+        "sheen",
+        "sigil"
+      ],
+      "resources_unused": [],
+      "rotating_parts": [
+        "z40_hour",
+        "z41_min",
+        "z42_sec"
+      ],
+      "tag_counts": {
+        "BitmapFont": 4,
+        "BitmapFonts": 1,
+        "Character": 40,
+        "Image": 13,
+        "Metadata": 2,
+        "Parameter": 4,
+        "PartImage": 13,
+        "PartText": 3,
+        "Scene": 1,
+        "Template": 3,
+        "Text": 3,
+        "Transform": 19,
+        "Upper": 1,
+        "Variant": 16,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [
+        "unclamped HEART_RATE expression: [HEART_RATE]"
+      ],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 16
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 16
+    },
+    {
+      "animation_params": {
+        "duration=0.4 interp=LINEAR": 13,
+        "duration=0.5 interp=EASE_IN": 1,
+        "duration=0.5 interp=EASE_OUT": 1
+      },
+      "bitmap_fonts": {
+        "dmd": 40
+      },
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND"
+      ],
+      "element_count": 110,
+      "expressions_normalized": {
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 1,
+        "N + N * pow(abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N)),N)": 6,
+        "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N + N)": 1,
+        "N + N*sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N)*N)": 1,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1
+      },
+      "face": "pinball",
+      "group_count": 0,
+      "named_elements": 55,
+      "path": "watchfaces/pinball/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "ball",
+        "bg",
+        "bg_aod",
+        "dmd_sm",
+        "dmd_time",
+        "flash",
+        "g_0",
+        "g_1",
+        "g_2",
+        "g_3",
+        "g_4",
+        "g_5",
+        "g_6",
+        "g_7",
+        "g_8",
+        "g_9",
+        "g_a",
+        "g_b",
+        "g_c",
+        "g_colon",
+        "g_d",
+        "g_dot",
+        "g_e",
+        "g_f",
+        "g_g",
+        "g_h",
+        "g_i",
+        "g_j",
+        "g_k",
+        "g_l",
+        "g_m",
+        "g_n",
+        "g_o",
+        "g_p",
+        "g_pct",
+        "g_q",
+        "g_r",
+        "g_s",
+        "g_space",
+        "g_t",
+        "g_u",
+        "g_v",
+        "g_w",
+        "g_x",
+        "g_y",
+        "g_z"
+      ],
+      "resources_unused": [],
+      "rotating_parts": [],
+      "tag_counts": {
+        "BitmapFont": 4,
+        "BitmapFonts": 1,
+        "Character": 40,
+        "DigitalClock": 1,
+        "Image": 12,
+        "Metadata": 2,
+        "Parameter": 3,
+        "PartImage": 12,
+        "PartText": 2,
+        "Scene": 1,
+        "Template": 2,
+        "Text": 2,
+        "TimeText": 1,
+        "Transform": 10,
+        "Upper": 1,
+        "Variant": 15,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 15
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 14
+    },
+    {
+      "animation_params": {
+        "duration=0.3 interp=EASE_OUT": 1,
+        "duration=0.35 interp=EASE_OUT": 18,
+        "duration=0.4 interp=EASE_OUT": 4,
+        "duration=0.4 interp=OVERSHOOT": 1,
+        "duration=0.45 interp=EASE_IN": 1,
+        "duration=0.45 interp=EASE_OUT": 1,
+        "duration=0.5 interp=EASE_OUT": 1,
+        "duration=0.5 interp=OVERSHOOT": 1
+      },
+      "bitmap_fonts": {
+        "hot": 13,
+        "neo": 40
+      },
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "ACCELEROMETER_ANGLE_X",
+        "ACCELEROMETER_ANGLE_Y",
+        "BATTERY_PERCENT",
+        "DAY",
+        "DAY_OF_WEEK_S",
+        "HEART_RATE",
+        "MILLISECOND",
+        "MINUTE",
+        "SECOND",
+        "STEP_COUNT"
+      ],
+      "element_count": 198,
+      "expressions_normalized": {
+        "(clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N))": 1,
+        "-N + ((([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N) % N)": 1,
+        "N + N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) - N) / N": 1,
+        "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": 5,
+        "N + N * abs(sin(([MINUTE] * N + [SECOND] + [MILLISECOND] / N) * N))": 1,
+        "N + N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 2,
+        "N + N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 1,
+        "N - N * clamp([ACCELEROMETER_ANGLE_X], -N, N) / N": 1,
+        "N - N * clamp([ACCELEROMETER_ANGLE_Y], -N, N) / N": 1,
+        "[BATTERY_PERCENT]": 1,
+        "[DAY]": 1,
+        "[DAY_OF_WEEK_S]": 1,
+        "[STEP_COUNT]": 1,
+        "clamp(([HEART_RATE] - N) * N, N, N)": 1,
+        "round((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N / N)": 1
+      },
+      "face": "pulseface",
+      "group_count": 2,
+      "named_elements": 88,
+      "path": "watchfaces/pulseface/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "arc_track",
+        "aura",
+        "bg",
+        "bg_aod",
+        "bolt",
+        "compframe",
+        "ecg",
+        "g_h_0",
+        "g_h_1",
+        "g_h_2",
+        "g_h_3",
+        "g_h_4",
+        "g_h_5",
+        "g_h_6",
+        "g_h_7",
+        "g_h_8",
+        "g_h_9",
+        "g_h_b",
+        "g_h_m",
+        "g_h_p",
+        "g_n_0",
+        "g_n_1",
+        "g_n_2",
+        "g_n_3",
+        "g_n_4",
+        "g_n_5",
+        "g_n_6",
+        "g_n_7",
+        "g_n_8",
+        "g_n_9",
+        "g_n_a",
+        "g_n_b",
+        "g_n_c",
+        "g_n_colon",
+        "g_n_d",
+        "g_n_dot",
+        "g_n_e",
+        "g_n_f",
+        "g_n_g",
+        "g_n_h",
+        "g_n_i",
+        "g_n_j",
+        "g_n_k",
+        "g_n_l",
+        "g_n_m",
+        "g_n_n",
+        "g_n_o",
+        "g_n_p",
+        "g_n_pct",
+        "g_n_q",
+        "g_n_r",
+        "g_n_s",
+        "g_n_space",
+        "g_n_t",
+        "g_n_u",
+        "g_n_v",
+        "g_n_w",
+        "g_n_x",
+        "g_n_y",
+        "g_n_z",
+        "grid",
+        "heart",
+        "heat",
+        "sheen",
+        "shoe",
+        "zone_active",
+        "zone_calm",
+        "zone_max",
+        "zone_push",
+        "zone_rest"
+      ],
+      "resources_unused": [],
+      "rotating_parts": [],
+      "tag_counts": {
+        "Arc": 1,
+        "BitmapFont": 12,
+        "BitmapFonts": 1,
+        "BoundingBox": 1,
+        "Character": 53,
+        "Compare": 4,
+        "Complication": 1,
+        "ComplicationSlot": 1,
+        "Condition": 1,
+        "Default": 1,
+        "DefaultProviderPolicy": 1,
+        "DigitalClock": 2,
+        "Expression": 4,
+        "Expressions": 1,
+        "Group": 2,
+        "Image": 17,
+        "Metadata": 2,
+        "Parameter": 6,
+        "PartDraw": 1,
+        "PartImage": 17,
+        "PartText": 8,
+        "Scene": 1,
+        "Stroke": 1,
+        "Template": 5,
+        "Text": 8,
+        "TimeText": 2,
+        "Transform": 14,
+        "Upper": 1,
+        "Variant": 28,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 28
+      },
+      "wff_version": "4",
+      "z_prefixed_names": 28
+    },
+    {
+      "animation_params": {
+        "duration=None interp=None": 8
+      },
+      "bitmap_fonts": {},
+      "clock_type": "DIGITAL",
+      "data_sources": [
+        "HEART_RATE",
+        "MILLISECOND",
+        "SECOND",
+        "STEP_PERCENT"
+      ],
+      "element_count": 622,
+      "expressions_normalized": {
+        "(N * (N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) / N) + N))))": 13,
+        "([SECOND] + [MILLISECOND] / N) * N": 1,
+        "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * (clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) * N))": 1,
+        "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N + N))": 12,
+        "N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N))": 1,
+        "N - (N * (N + N * abs(sin(([SECOND] + [MILLISECOND] / N) * N * ((clamp(([HEART_RATE] < N ? N : [HEART_RATE]), N, N)) / N) + N))))": 13,
+        "N - ([SECOND] + [MILLISECOND] / N) * N": 1,
+        "clamp([STEP_PERCENT], N, N) * N": 1
+      },
+      "face": "tripface",
+      "group_count": 13,
+      "named_elements": 264,
+      "path": "watchfaces/tripface/app/src/main/res/raw/watchface.xml",
+      "reference_count": 0,
+      "resources_missing": [],
+      "resources_referenced": [
+        "bg",
+        "clockpad",
+        "eqcolon",
+        "eqd0",
+        "eqd1",
+        "eqd2",
+        "eqd3",
+        "eqd4",
+        "eqd5",
+        "eqd6",
+        "eqd7",
+        "eqd8",
+        "eqd9",
+        "ledfeet",
+        "ledheart",
+        "mda0",
+        "mda1",
+        "mda2",
+        "mda3",
+        "mda4",
+        "mda5",
+        "mda6",
+        "mda7",
+        "mda8",
+        "mda9",
+        "mdr0",
+        "mdr1",
+        "mdr2",
+        "mdr3",
+        "mdr4",
+        "mdr5",
+        "mdr6",
+        "mdr7",
+        "mdr8",
+        "mdr9",
+        "padsmall",
+        "ring"
+      ],
+      "resources_unused": [
+        "md0",
+        "md1",
+        "md2",
+        "md3",
+        "md4",
+        "md5",
+        "md6",
+        "md7",
+        "md8",
+        "md9"
+      ],
+      "rotating_parts": [
+        "ring_inner",
+        "ring_outer"
+      ],
+      "tag_counts": {
+        "Arc": 2,
+        "Compare": 108,
+        "Condition": 12,
+        "Default": 12,
+        "Expression": 108,
+        "Expressions": 12,
+        "Fill": 13,
+        "Group": 13,
+        "Image": 129,
+        "Metadata": 2,
+        "PartDraw": 14,
+        "PartImage": 129,
+        "Rectangle": 13,
+        "Scene": 1,
+        "Stroke": 2,
+        "Transform": 43,
+        "Variant": 8,
+        "WatchFace": 1
+      },
+      "unsafe_patterns": [],
+      "variant_patterns": {
+        "mode=AMBIENT target=alpha": 8
+      },
+      "wff_version": "2",
+      "z_prefixed_names": 0
+    }
+  ]
+}
