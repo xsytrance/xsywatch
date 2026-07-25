@@ -49,12 +49,20 @@ through with a pointer to the fixing commit.
   other nine faces still hand-author XML (deliberate — ADR-008 no broad
   migration); engine APIs are experimental and may change when a second
   face migrates.
-- Physical Galaxy Watch7 evidence for Phase 2 (baseline AND candidate) is
-  **blocked** — no watch reachable from the build box (re-verified during
-  the review-correction pass); disclosed in
-  docs/reports/evidence/phase-2/aurelius/*/DEVICE_EVIDENCE_BLOCKER.md with
-  the exact owner steps (DEVICE_TEST_MATRIX.md) to close it. This is
-  Phase-2 re-review blocker 1 and the ONLY remaining blocker.
+- ~~Physical Galaxy Watch7 evidence for Phase 2 (baseline AND candidate)
+  is **blocked**~~ — **superseded (2026-07-24 evening device session):**
+  both matrices executed on the physical Watch7; results in
+  docs/reports/evidence/phase-2/aurelius/*/DEVICE_TEST_RESULTS.md. The
+  run caught and fixed a repo↔release asset divergence dating to the
+  Phase-1 import (candidate/ASSET_DIVERGENCE_FINDING.md). Remaining
+  device sub-items: the 10-minute continuous smoothness row was PASSed on
+  sampled recordings (worth an owner wear-day confirmation), and no direct
+  candidate doze screencap exists (non-capturable display pipeline; AOD
+  behavior proven by cycling, render byte-determined vs baseline's capture).
+- The resource-hash list in `BASELINE_CAPTURE.md` ("All Aurelius runtime
+  resources") records the **pre-fix, warbird-contaminated** tree — it is
+  a historical point-in-time capture, not the corrected state; the
+  corrected assets byte-match the immutable release APK instead.
 - The asset-handoff manifest has only a synthetic example entry; the first
   real studio export lands in Phase 3.
 

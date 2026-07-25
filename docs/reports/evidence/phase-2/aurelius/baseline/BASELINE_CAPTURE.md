@@ -1,5 +1,13 @@
 # Phase 2 baseline capture — 2026-07-24T18:48:05-04:00
 
+> **2026-07-24 addendum:** the drawable/preview hashes below record the
+> tree as imported in Phase 1, which the same-day device session proved
+> to be WARBIRD-contaminated for 46 of 53 PNGs (+preview) — see
+> `../candidate/ASSET_DIVERGENCE_FINDING.md`. They are kept as the honest
+> point-in-time record. The corrected tree byte-matches the immutable
+> release APK instead. The `watchface.xml` hash (`a8ce33ac…`) was and
+> remains correct — now proven byte-identical to the APK's own copy.
+
 main head: a99551fa9b31282a6d404918c380e8e13e678337 (descends from 84145b2: yes)
 branch: phase-2/aurelius-reference-engine @ a99551fa9b31282a6d404918c380e8e13e678337
 

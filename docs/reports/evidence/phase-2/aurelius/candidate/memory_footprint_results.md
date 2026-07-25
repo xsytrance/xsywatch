@@ -9,3 +9,13 @@ $ java -jar memory-footprint.jar --watch-face releases/aurelius/current/aurelius
 Test report:
 [MEMORY_FOOTPRINT]: ✅PASS✅ Watch Face has passed the memory footprint test. ✅ 
 ```
+
+Re-run 2026-07-24 (device-evidence session) against the **corrected**
+candidate `b01015c87eea…` (post asset-divergence fix, see
+`ASSET_DIVERGENCE_FINDING.md`):
+
+```
+$ java -jar memory-footprint.jar --watch-face watchfaces/aurelius/app/build/outputs/apk/debug/app-debug.apk --schema-version 4 --ambient-limit-mb 10 --active-limit-mb 100
+Test report:
+[MEMORY_FOOTPRINT]: ✅PASS✅ Watch Face has passed the memory footprint test. ✅
+```

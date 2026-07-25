@@ -631,6 +631,28 @@ unchanged. **Blocker 1 (physical Watch7 evidence) remains open** — device
 still unreachable; execution procedure staged in DEVICE_TEST_MATRIX.md
 awaiting owner pairing credentials. Branch returned for final review.
 
+### 2026-07-24 — Phase 2 blocker-1 device session (Claude Code)
+
+Owner provided wireless-debug access; the full blocker-1 procedure ran on
+the physical Watch7 (SM-L310, Android 16/API 36). Baseline matrix on the
+immutable APK: PASS. **The first candidate exposed a real regression the
+static gates could not see:** since the Phase-1 source import, 46/53
+Aurelius drawables (+preview) were unreleased WARBIRD art under Field
+Tourbillon filenames — semantic XML parity, wrong pixels. Fixed by
+restoring drawables from the immutable release APK's own bytes (also
+proving byte-for-byte XML lineage: extracted `res/raw/watchface.xml` ==
+`watchface_baseline.xml`, `a8ce33ac…`). Corrected candidate `b01015c8…`
+re-passed the full matrix; explicit no-regression conclusion vs baseline;
+`install -r` continuity held throughout (One UI deactivates the active
+face on reinstall — documented, not a failure). Evidence:
+`docs/reports/evidence/phase-2/aurelius/*/DEVICE_TEST_RESULTS.md`,
+`candidate/ASSET_DIVERGENCE_FINDING.md`. Parallax physically verified via
+owner tilt (recording committed); candidate doze screencap not obtainable
+(display pipeline), AOD behavior proven by cycling + byte-determined
+render. Full re-verification green (68 tests, 10/10 fixtures, 10/10
+builds, WFF validator, memory evaluator, validate.py, immutable checksum
+unchanged). Branch returned for final review; not merged.
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.

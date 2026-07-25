@@ -158,15 +158,15 @@ This review inspected the branch comparison, engine source, specifications, test
 
 # Resolution (Claude Code, 2026-07-24)
 
-Blockers 2, 3, and 4 are fixed in commit `cb10ddb`; blocker 1 remains
-genuinely blocked on device access. The branch is returned for final review
-with that single open item.
+Blockers 2, 3, and 4 are fixed in commit `cb10ddb`; blocker 1 was closed
+in the 2026-07-24 evening device session (see below). The branch is
+returned for final review with all four blockers addressed.
 
 ## Status per blocker
 
 | # | Blocker | Status | Evidence |
 |---|---------|--------|----------|
-| 1 | Physical Watch7 baseline+candidate evidence | **OPEN — device unreachable** (adb/mdns empty at re-attempt; pairing credentials owner-held). Full procedure incl. immutable-APK baseline run, `install -r` upgrade-continuity check with signature-mismatch fallback, candidate matrix, and regression comparison is staged in `docs/DEVICE_TEST_MATRIX.md` | both DEVICE_EVIDENCE_BLOCKER.md files (updated) |
+| 1 | Physical Watch7 baseline+candidate evidence | **CLOSED — executed on-device 2026-07-24 evening.** Immutable-APK baseline matrix PASS; `install -r` upgrade continuity held at every step; candidate matrix PASS after the run **caught and fixed a real repo↔release asset divergence** (46/53 PNGs were unreleased WARBIRD art since the Phase-1 import — exactly the lineage gap this review refused to waive). Explicit regression conclusion: none, for corrected candidate `b01015c8…`. XML byte lineage now proven by APK extraction (`a8ce33ac…`). Parallax row physically verified via owner tilt (recording committed); one documented capture limitation (candidate doze screencap — display pipeline) | both `DEVICE_TEST_RESULTS.md` files; `candidate/ASSET_DIVERGENCE_FINDING.md` |
 | 2 | `ratio()` normalization | **FIXED** — `(clamp(e,lo,hi) - lo) / (hi - lo)`; zero-based fast path preserves the exact Aurelius battery string; `hi<=lo` raises | `engine/wffgen/expressions.py`; 5 new tests in `test_expressions.py`; parity suite still green |
 | 3 | Handoff schema enforcement | **FIXED** — complete stdlib implementation of the schema contract incl. patterns, types, dimension/pivot/frame rules, enums, sha requiredness/format, traversal + res/-containment; narrow example exception retained; contract doc wording now literal | `tools/validate.py::check_handoff`; 26 cases in `test_handoff_validation.py` |
 | 4 | WFF-version cross-check | **FIXED** — manifest property resolved incl. `@integer/wff_version`; generation/check fails on mismatch or unresolvable; Aurelius stays v4 | `tools/generate_face.py`; 3 end-to-end tests in `test_generate_face_checks.py` |

@@ -146,12 +146,37 @@ active, schema 4).
 
 ## 15. Physical Watch7 test matrix and evidence paths
 
-**BLOCKED — disclosed, not substituted.** No watch reachable (adb/mdns
-empty, no stored pairing; wireless-debug credentials are owner-held).
-Blocker + exact closing procedure: `baseline/DEVICE_EVIDENCE_BLOCKER.md`
-and `candidate/DEVICE_EVIDENCE_BLOCKER.md`; the runnable matrix is
-`docs/DEVICE_TEST_MATRIX.md`. No Gradle result is presented as device
-evidence. This is the single open acceptance item (§19).
+**EXECUTED 2026-07-24 (evening session)** on the physical Galaxy Watch7
+44 mm (SM-L310, Android 16 / API 36) over owner-provided wireless adb.
+Full per-row results:
+`docs/reports/evidence/phase-2/aurelius/baseline/DEVICE_TEST_RESULTS.md`
+and `candidate/DEVICE_TEST_RESULTS.md` (which supersede the two
+DEVICE_EVIDENCE_BLOCKER notes).
+
+Summary: the immutable Phase-1 APK (`844b9c43…`) was installed and the
+full baseline matrix captured (normal/AOD screenshots during verified
+Doze, transition + 60 s motion recordings, cage 6°/s timing, 5:3
+counter-rotating gears, 10× AOD cycles, touch/stability rows — all PASS).
+
+**The first candidate run caught a real regression:** the repo's Aurelius
+art assets (46 of 53 PNGs + preview) had diverged from the released APK
+since the Phase-1 source import — the candidate rendered the unreleased
+WARBIRD design. Root cause, fix, and lineage proof:
+`candidate/ASSET_DIVERGENCE_FINDING.md`. The art was restored from the
+immutable release APK's own bytes (which also **proves byte-for-byte XML
+lineage**: the APK's `res/raw/watchface.xml` extracts to exactly
+`watchface_baseline.xml`'s hash `a8ce33ac…`). The corrected candidate
+(`b01015c8…`) passes the full matrix with an explicit
+**no-regression** conclusion vs baseline. `install -r` upgrade continuity
+held at every step (one documented One UI behavior: reinstalling the
+active face deactivates it; re-select in the picker).
+
+Row-level caveats (details in the results files): parallax (row 9) was
+physically verified via owner tilt on the corrected candidate
+(recording committed); a direct candidate doze screencap was not
+obtainable (non-capturable display pipeline during that window) — AOD
+behavior is proven by the 10-cycle run and the ambient render is
+byte-determined equal to the baseline's captured AOD.
 
 ## 16. Current-release checksum preservation
 
@@ -178,9 +203,15 @@ validator enforcement + synthetic non-approved example
 
 ## 19. Deviations from the brief
 
-1. **Physical-device evidence (baseline §4.1.4 and candidate §4.9) not
-   captured** — environment blocker, disclosed with closing procedure
-   (§15). All other §4.9 tooling (WFF validator, memory evaluator) ran.
+1. ~~**Physical-device evidence (baseline §4.1.4 and candidate §4.9) not
+   captured**~~ — **resolved 2026-07-24 evening**: full baseline and
+   candidate matrices executed on the physical Watch7 (§15); the run
+   surfaced and fixed a real source-asset divergence
+   (`candidate/ASSET_DIVERGENCE_FINDING.md`). The §4.1.4 "before any
+   modification" baseline ordering could no longer be literally satisfied
+   (the branch predates the device session); the immutable APK stood in as
+   the pre-modification artifact, which is exactly its §4.1.4 role.
+   Row-level caveats documented in §15.
 2. Baseline capture happened at branch creation rather than before any
    repo activity — no Aurelius file was modified before capture.
 3. `Reference`/`Group` deliberately not adopted (audit-backed; permitted
@@ -261,3 +292,32 @@ Re-verification after corrections: 68 engine tests OK; release-workflow
 fixtures 10/10; build_all 10/10; official WFF validator PASS ×3 (re-run);
 memory evaluator PASS ×2 (re-run); `tools/validate.py` 0 errors; immutable
 release checksum unchanged (`844b9c43…`); CI green on the branch.
+
+## 24. Blocker-1 closure: device evidence session (2026-07-24 evening)
+
+The owner provided wireless-debug access to the physical Watch7 and the
+review's full blocker-1 procedure was executed end-to-end (§15 for the
+summary; per-row results in both `DEVICE_TEST_RESULTS.md` files).
+
+Two findings beyond the matrix itself:
+
+1. **The device test caught a real regression, vindicating the review's
+   refusal to waive it.** The repo's Aurelius drawables had been WARBIRD
+   art (a different, unreleased design) since the Phase-1 source import —
+   semantically-correct XML over wrong PNGs, invisible to every static
+   gate. Fixed by restoring the drawables from the immutable release
+   APK's bytes; corrected candidate `b01015c8…` re-passed the full matrix
+   with no regression vs baseline
+   (`candidate/ASSET_DIVERGENCE_FINDING.md`).
+2. **XML byte lineage is now proven, upgrading the §23 wording.** The
+   immutable APK's `res/raw/watchface.xml` (stored verbatim by AAPT2)
+   extracts to hash `a8ce33ac…` — byte-identical to
+   `watchface_baseline.xml`. The "frozen imported source baseline" is
+   therefore also the released XML, byte-for-byte; the same extraction
+   comparison is what exposed the PNG divergence.
+
+Post-fix re-verification (this session): `generate_face.py aurelius
+--check` OK; 68/68 engine tests; 10/10 release-workflow fixtures; 10/10
+all-faces build; WFF validator PASS; memory evaluator PASS (corrected
+candidate); `tools/validate.py` 0 errors; `git diff --check` clean;
+immutable release checksum unchanged (`844b9c43…`).
