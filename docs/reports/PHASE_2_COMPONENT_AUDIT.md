@@ -168,4 +168,3 @@ Machine-readable twin: `PHASE_2_COMPONENT_AUDIT.json`.
 - bitmap fonts: none
 - unused resources: md0, md1, md2, md3, md4, md5, md6, md7, md8, md9
 - missing resources: none
-
