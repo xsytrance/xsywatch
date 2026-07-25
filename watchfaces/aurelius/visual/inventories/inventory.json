@@ -1,0 +1,1225 @@
+{
+  "contract_version": 1,
+  "face": "aurelius",
+  "problems": {
+    "duplicates": [],
+    "missing": [],
+    "unreferenced": []
+  },
+  "resource_count": 60,
+  "resources": [
+    {
+      "alpha": "straight",
+      "bytes": 184833,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "dimensions": [
+        400,
+        400
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable/preview.png",
+      "referenced": true,
+      "resource_id": "preview",
+      "sha256": "3ac23f1dc01b6c59fc71516b998b5d503c77e2b118876c62e5ee2dbd9a5c300a",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 11361,
+      "classification": "legacy",
+      "consumers": [
+        "z21_bal"
+      ],
+      "dimensions": [
+        92,
+        92
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/balance.png",
+      "referenced": true,
+      "resource_id": "balance",
+      "sha256": "c01788cd20d19e3a911c05b511d2c660ac7dd9b24328219170e289a3ab5057d9",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 140538,
+      "classification": "legacy",
+      "consumers": [
+        "z00_bg"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/bg.png",
+      "referenced": true,
+      "resource_id": "bg",
+      "sha256": "6c94599467d73b420972ea26fc730e5f2c0f24f2bb37bd76f3a999d51b4e50f2",
+      "used_aod": false,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 96791,
+      "classification": "legacy",
+      "consumers": [
+        "z01_aod"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/bg_aod.png",
+      "referenced": true,
+      "resource_id": "bg_aod",
+      "sha256": "68d57a9a3fb39a285f6d428bf92f4ce804340dc7c96236b3bb21012a64c4c9b1",
+      "used_aod": true,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 17213,
+      "classification": "legacy",
+      "consumers": [
+        "z22_cage"
+      ],
+      "dimensions": [
+        122,
+        122
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/cage.png",
+      "referenced": true,
+      "resource_id": "cage",
+      "sha256": "b90ef13b8a9f24ef7051a48f2742413774fc20484f0e75241192274aba7501d7",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 711,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_0.png",
+      "referenced": true,
+      "resource_id": "g_0",
+      "sha256": "9a35212e658711099f2e6630aff43ca165c71dd5727833902f919f67141bf0ed",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 436,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        22,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_1.png",
+      "referenced": true,
+      "resource_id": "g_1",
+      "sha256": "c75f7cbc2a2a9c7d96ad763acffcc702cb307f668f77463495d26a7566dd4398",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 874,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_2.png",
+      "referenced": true,
+      "resource_id": "g_2",
+      "sha256": "0c4af69faf76787b2f54ad739b71603ab1880a0e422d6e0f963c33168a374d54",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 910,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_3.png",
+      "referenced": true,
+      "resource_id": "g_3",
+      "sha256": "af4a32476b4222b3c8dcba2175428cc6408400d4ff7a9a949605b694d8172f62",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 763,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_4.png",
+      "referenced": true,
+      "resource_id": "g_4",
+      "sha256": "b571cc3e46946a7c026c1f6fb3279bbdda2de75dbb74c4708800c4de2d0dabff",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 810,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_5.png",
+      "referenced": true,
+      "resource_id": "g_5",
+      "sha256": "f84e48dbfddd5716c67f67c7973bbbc1a0dc17a49d78195e2ab461a453192075",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 804,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_6.png",
+      "referenced": true,
+      "resource_id": "g_6",
+      "sha256": "37ae2f836e23b4232b20fce7be52b5433a7af9ec6890bf482c59fbb5f22e298b",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 725,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        25,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_7.png",
+      "referenced": true,
+      "resource_id": "g_7",
+      "sha256": "02b02a0c81b11c9bd130f246a8dc1ebba7725cd6698f0c78df8a8133b5856b9d",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 895,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_8.png",
+      "referenced": true,
+      "resource_id": "g_8",
+      "sha256": "048398ba01d7149a9073e667b7816582bc33271842a6a22080dd74448aed9391",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 804,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_9.png",
+      "referenced": true,
+      "resource_id": "g_9",
+      "sha256": "e07217459b2a5d10b0101d68d31909deaa1f75e43f34a43e35a9dc8bd56bb8a2",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 836,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_a.png",
+      "referenced": true,
+      "resource_id": "g_a",
+      "sha256": "8ba47fc68f275e231588f2482fcbd693e290f1896ce12e218eb2c0876e69a47b",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 689,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_b.png",
+      "referenced": true,
+      "resource_id": "g_b",
+      "sha256": "2b82d6dd6bc3a3c752865a7b47bc766f5a86504f9a4dba822173846510d78caf",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 793,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_c.png",
+      "referenced": true,
+      "resource_id": "g_c",
+      "sha256": "29cc483b7d17d3df979aaa352bc79309cf96d480feeef84853ad1a8630601faf",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 336,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        18,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_colon.png",
+      "referenced": true,
+      "resource_id": "g_colon",
+      "sha256": "6e2c8b1ca938328f0faafbacac9df990b4edc5d253265eded936d29a750e0ab3",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 578,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_d.png",
+      "referenced": true,
+      "resource_id": "g_d",
+      "sha256": "95b9451a66f3026a9fc1415431d187242757e846dba6d0ed8be97fd0d064d694",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 520,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_e.png",
+      "referenced": true,
+      "resource_id": "g_e",
+      "sha256": "b069205db7549773fd02f5ff501fd0cb2d91d44b5f280328666df2c5c3dbbbae",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 470,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_f.png",
+      "referenced": true,
+      "resource_id": "g_f",
+      "sha256": "12849db53bdaceb3be33c27ea853c9bf35a747744f0536b08350fab3002d08aa",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 780,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_g.png",
+      "referenced": true,
+      "resource_id": "g_g",
+      "sha256": "770d7ca88aa627ebbc04ba072ac7a3205a8897799214f81be5b3e01cc859f182",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 494,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_h.png",
+      "referenced": true,
+      "resource_id": "g_h",
+      "sha256": "51d4362545c64897cbb87c23f22f607797b4356078ab2231a612911aea149b5e",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 275,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        20,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_i.png",
+      "referenced": true,
+      "resource_id": "g_i",
+      "sha256": "1bd40080b9a18d4f4dac1f210146046219b85fcd70b2c7b2e9e38053c8affca1",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 600,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_j.png",
+      "referenced": true,
+      "resource_id": "g_j",
+      "sha256": "2f4a8676b0b70728702867f09c760115a2cfd314c7bc384fe2f7da238840a1be",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 863,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_k.png",
+      "referenced": true,
+      "resource_id": "g_k",
+      "sha256": "c5beac718a8465beb685e781c9296d8ebf313e65d785784bbe5e308d8658c241",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 410,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_l.png",
+      "referenced": true,
+      "resource_id": "g_l",
+      "sha256": "983bc66f89da5a4d4defcb5d96698b489e8414b243db702da32751123f941858",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 792,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        34,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_m.png",
+      "referenced": true,
+      "resource_id": "g_m",
+      "sha256": "d94ed77a6078a7222ac12e8cd570f91871106308293c556a92efb46820aff918",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 643,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        30,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_n.png",
+      "referenced": true,
+      "resource_id": "g_n",
+      "sha256": "aafdfcae366b91fe8ff0b7ebab781e4a296992bc4563a37a4089f5200e4cea35",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 716,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_o.png",
+      "referenced": true,
+      "resource_id": "g_o",
+      "sha256": "e31caeac26054d78167d1590c8728c5b373a93f32581b105f22cbb74b8126381",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 605,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_p.png",
+      "referenced": true,
+      "resource_id": "g_p",
+      "sha256": "bbc804efad55bfb91f568cb0794755312694c4e9f52ad6277859665b2857e4b5",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1185,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        34,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_pct.png",
+      "referenced": true,
+      "resource_id": "g_pct",
+      "sha256": "c1faf93cf85a1f451d5de8e2c70e7702c9232442ee1cc202948809c32d2b0409",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 865,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_q.png",
+      "referenced": true,
+      "resource_id": "g_q",
+      "sha256": "a1845fb5981137afa95af699a915e4055612935e5db916e5a35283da3a8e4085",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 708,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_r.png",
+      "referenced": true,
+      "resource_id": "g_r",
+      "sha256": "d369b97c5369bf1ce984c1282e31284d766eda9fe7f3065dc44e1f2182b965d0",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 991,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_s.png",
+      "referenced": true,
+      "resource_id": "g_s",
+      "sha256": "56facb1bdceb013a0014c97d47706b82196a50e73afc86e698d631640eba6cec",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 80,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        12,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_space.png",
+      "referenced": true,
+      "resource_id": "g_space",
+      "sha256": "4d5af88944009acab221f250c7b3df712159d7876eb59a85cd324f6c48e22e9a",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 426,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        25,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_t.png",
+      "referenced": true,
+      "resource_id": "g_t",
+      "sha256": "8f168eb2fb13bd79845041f29a48c96a045699c34ba347c65db9132d7ba76005",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 571,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_u.png",
+      "referenced": true,
+      "resource_id": "g_u",
+      "sha256": "55746ab2d58d97de1c44ebd2f7e2af314c1f7a8732bca84bd20e3046d98b9e97",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 840,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_v.png",
+      "referenced": true,
+      "resource_id": "g_v",
+      "sha256": "0094ac33d67050d02883ae09c4b066185b8930ceadcf2922dd45b92fde63eecf",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1132,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        36,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_w.png",
+      "referenced": true,
+      "resource_id": "g_w",
+      "sha256": "6cd8e8b49b354e3ec4f9cbe1014009bb78e9ee9835ceed22d3db02dd6bf14956",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1017,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_x.png",
+      "referenced": true,
+      "resource_id": "g_x",
+      "sha256": "0007b7436f2b0b1327bbbebb97668c84632940693b8dc51dfe159abebd618478",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 760,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_y.png",
+      "referenced": true,
+      "resource_id": "g_y",
+      "sha256": "b8cd178d4b2019e74c3f03dfe772bb341291565646fd406ff5d6fa8702657ca5",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 800,
+      "classification": "legacy",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_z.png",
+      "referenced": true,
+      "resource_id": "g_z",
+      "sha256": "ee88b9844dd848d88128d8b148be06c205d0cba0c861bc5eb892015c9b4e6c32",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 17741,
+      "classification": "legacy",
+      "consumers": [
+        "z10_gl"
+      ],
+      "dimensions": [
+        120,
+        120
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/gear_l.png",
+      "referenced": true,
+      "resource_id": "gear_l",
+      "sha256": "a818fbf31c9a0bdf605dec62815b2824cf7226d2a0f3379c3f75be10d7b421ea",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 12970,
+      "classification": "legacy",
+      "consumers": [
+        "z11_gr"
+      ],
+      "dimensions": [
+        102,
+        102
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/gear_r.png",
+      "referenced": true,
+      "resource_id": "gear_r",
+      "sha256": "88a36055bc88af2e77e4e43693fac8040e7366de88d92bd70e25287410843e65",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 5026,
+      "classification": "legacy",
+      "consumers": [
+        "z50_hour"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/hour_hand.png",
+      "referenced": true,
+      "resource_id": "hour_hand",
+      "sha256": "35ad8533ffc0b8a664dd73555c51893e1c15808cccfa59fdcbd556656384d6d6",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2036,
+      "classification": "legacy",
+      "consumers": [
+        "z52_hub"
+      ],
+      "dimensions": [
+        28,
+        28
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/hub.png",
+      "referenced": true,
+      "resource_id": "hub",
+      "sha256": "516232be63d955049f35c243e6d6572141dbb8acab7bed763e3ddba738f8b2bc",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 5163,
+      "classification": "legacy",
+      "consumers": [
+        "z51_min"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/min_hand.png",
+      "referenced": true,
+      "resource_id": "min_hand",
+      "sha256": "766d26eaae545799aea5fc6f4d686598e827ce51f6b65cdd3efb1e6bf8d16f94",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1562,
+      "classification": "legacy",
+      "consumers": [
+        "z31_resv"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/resv_needle.png",
+      "referenced": true,
+      "resource_id": "resv_needle",
+      "sha256": "30b294e060b888c9c7cff55ae541424a85d58ae2625f4df9b3cd20110c65913f",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 5493,
+      "classification": "legacy",
+      "consumers": [
+        "z40_sheen"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/sheen.png",
+      "referenced": true,
+      "resource_id": "sheen",
+      "sha256": "d02cdd0bc3b34d7136d6c119d6b73a6cd2a8ce58578da0ecef59c7c0add9488e",
+      "used_aod": false,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 4359,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        128,
+        128
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_base.png",
+      "referenced": false,
+      "resource_id": "tourb_base",
+      "sha256": "c12c70c322bb32999eadff23ca3b6f45bc43df73aeae0ad4ce56ce9cd68bd95f",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 34806,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        120,
+        120
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_disc.png",
+      "referenced": false,
+      "resource_id": "tourb_disc",
+      "sha256": "fe84f7f1ec4efb93b86d334230507efd2c5352f8b8e7f75d06769588a5fe03e9",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 19653,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        140,
+        140
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_rim.png",
+      "referenced": false,
+      "resource_id": "tourb_rim",
+      "sha256": "1f42a033a7ec2f5c533ef7a0bac94b79b5359a00487cf8dd22814adeba5079f0",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 46004,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/marcellus.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "1cf0cd10b17d35e852729962cc1ffaffed94514895972458345e2df34abb2f81",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 47888,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/marcellus_sc.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "03044ab65228b0554c9a5c1e63df29d4e58a71857e212801aaf768dfd106bdf0",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 400680,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/rajdhani_bold.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "691470dd3286a14e9677940d0bf75796179841ba5215cbda1a2c8910a3226afd",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 7625,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "raw",
+      "path": "app/src/main/res/raw/watchface.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 108,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "values",
+      "path": "app/src/main/res/values/integers.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "8f2b6bc3f8e17519814f139c51ebe831071e045635e5846221e09bfeb9d27fab",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 191,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "xml",
+      "path": "app/src/main/res/xml/watch_face_info.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "885e2dc93bba9638e025c4b57bcdb2f7cdea128db1c7c05a0b9ba0046ccf5136",
+      "used_aod": false,
+      "used_normal": false
+    }
+  ],
+  "xml_sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79"
+}
