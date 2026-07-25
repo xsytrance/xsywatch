@@ -336,3 +336,109 @@ remains `pending`, `approved_version` remains `field-tourbillon-v1`,
 | `git diff --check` | clean |
 | **Candidate APK** | **`d734abc8…` — unchanged**, so the Phase-3 device evidence still binds exactly (only manifest metadata changed; no packaged resource byte moved) |
 | Immutable Phase-1 release | `844b9c43…` unchanged |
+
+## 23. Re-review corrections and revision r1 (2026-07-25)
+
+ChatGPT's Phase-3 re-review (`PHASE_3_CHATGPT_REREVIEW.md`, consumer
+`69709e2` / studio `58cf13c`) accepted the approval-binding, source-
+snapshot, rollback and provenance work, and returned one narrow
+engineering blocker plus an owner recommendation. Both are addressed.
+
+### Metadata bytes are now bound to `metadata_commit` (FIXED)
+
+`tools/import_handoff.py` previously resolved `metadata_commit` with
+`git log -1 -- <metadata>` but parsed the **working-tree** metadata, so an
+uncommitted edit to `license`, `lifecycle`, `pivot`, `dimensions`,
+`consumer_component`, `regenerate`, generation identity, or the export set
+could enter the manifest while still being attributed to the older
+commit. The importer now reads the blob at
+`<metadata_commit>:<metadata_rel>` and parses **that** as authoritative,
+rejecting any working-tree divergence outright. The working tree is
+consulted only to obtain LFS-smudged export payloads, and only after
+their committed OIDs have been verified.
+
+8 new tests (19 total in `tests/engine/test_handoff_import.py`): an
+uncommitted edit to committed metadata is rejected; dirty licence,
+lifecycle, pivot, dimensions, component and regenerate fields cannot
+reach `engine/handoff.json`; a dirty removal cannot truncate the
+manifest; committed metadata still imports; and committing the edit —
+which necessarily moves `metadata_commit` — is accepted with the new
+commit recorded. Every failure path asserts the consumer tree and
+manifest stay byte-identical.
+
+### Owner decision: approve with changes — typeface substituted (APPLIED)
+
+The owner-selected `OliveInstrument_Restrained` design is preserved
+exactly. All 39 BitmapFont glyph masters and both baked plate engravings
+(`AURELIUS`, `FIELD TOURBILLON Mk II`) now derive from the audited
+**Rajdhani Bold, SIL OFL-1.1** source (`691470dd…`, commercial use
+permitted, already tracked in `docs/asset-licenses.json` and the legacy
+Aurelius face font) instead of Blender's GPL built-in `Bfont`. The
+licensing ambiguity is removed permanently, before this generation could
+become an approved commercial baseline.
+
+The substitution is measurably surgical: **4.24% of face pixels changed
+at mean channel delta 0.35** between `field-tourbillon-mk2` and
+`field-tourbillon-mk2-r1`, confined to glyph and engraving regions. On
+the studio side only `bg`, `bg_aod` and the 39 glyph raws were
+re-rendered; the 9 non-text layers are byte-identical.
+
+### New revision, nothing overwritten
+
+| Artefact | Value |
+|---|---|
+| Revision | `field-tourbillon-mk2-r1` (`proposed_version`) |
+| Studio producing commit | `5c44f74` |
+| Studio metadata stamping commit | `d0ef4a7` |
+| Inventory snapshot | `versions/field-tourbillon-mk2-r1.json` — `35f95830…` |
+| Candidate normal / AOD | `a766e444…` / `69a8724b…` |
+| Approval record | `APPROVAL-0003`, superseding `APPROVAL-0002` per ADR-009 |
+| Candidate APK | `57dad013…` |
+
+`APPROVAL-0003` carries the same item-level rigour: 49 exact changed
+studio resources, 50 exact handoff asset ids, `preview.png` recorded
+separately as a generated consumer resource, `g_space.png` declared under
+`unchanged_handoff_assets`, and **both** deltas measured — 78.99% versus
+the approved v1 golden (the intended generation change) and 4.24% versus
+the superseded mk2 candidate (the typeface substitution alone).
+
+Preserved as historical proposed evidence, unmodified: the
+`field-tourbillon-mk2` candidates, `APPROVAL-0002`, the mk2 inventory
+snapshot, the mk2 device evidence (bound to APK `d734abc8…`), and the
+complete Bfont provenance investigation — the registry record is retained
+and marked `superseded_by: rajdhani-bold-ofl-1.1` with its conservative
+posture intact.
+
+### Re-verification
+
+| Gate | Result |
+|---|---|
+| Engine tests | **95/95** (was 86; +8 metadata binding, +1 provenance evidence) |
+| Visual/lineage tests | 28/28 |
+| Release-workflow fixtures | 10/10 |
+| Deterministic generation | OK — zero XML delta retained |
+| Inventory `--check` | clean, 60 resources |
+| Reference render | byte-identical; bound to APPROVAL-0003 (proposed) |
+| All-ten build | 10/10 PASS |
+| Official WFF validator | PASS (v4) |
+| Memory-footprint evaluator | PASS |
+| `tools/validate.py` | 0 errors |
+| `git diff --check` | clean |
+| Immutable Phase-1 release | `844b9c43…` unchanged |
+
+Nothing promoted: `owner.status` proposed, `architecture_review` pending,
+`approved_version` still `field-tourbillon-v1`, `proposed_version` set,
+all 50 lifecycles `candidate`, `goldens/` contains only v1.
+
+### Physical-device evidence for r1 — PENDING
+
+The focused Watch7 matrix for `field-tourbillon-mk2-r1` (glyph rendering,
+date aperture, both engravings, normal legibility, AOD) has **not** yet
+been captured: the watch was off the network during this correction pass
+(Wi-Fi sleeps when undocked, and the advertised mdns endpoint was stale).
+It will be captured and bound to candidate APK `57dad013…` and inventory
+`35f95830…` before this revision is returned for final acceptance.
+
+The mk2 device evidence under `docs/reports/evidence/phase-3/aurelius/`
+remains valid for what it tested, and is retained as historical evidence
+for the superseded revision; it is **not** presented as evidence for r1.
