@@ -63,8 +63,18 @@ through with a pointer to the fixing commit.
   resources") records the **pre-fix, warbird-contaminated** tree — it is
   a historical point-in-time capture, not the corrected state; the
   corrected assets byte-match the immutable release APK instead.
-- The asset-handoff manifest has only a synthetic example entry; the first
-  real studio export lands in Phase 3.
+- ~~The asset-handoff manifest has only a synthetic example entry~~ —
+  **superseded (Phase 3):** 50 real entries (Mk II layer set + glyphs)
+  bound to AGENOR-Horology commit 1d51b58; lifecycle `candidate` until
+  owner promotion.
+- The Mk II candidate is `proposed` (APPROVAL-0002): approved goldens
+  remain field-tourbillon-v1 until the owner's final pixel acceptance;
+  the on-panel ambient frame remains uncapturable on this hardware
+  (doze display-off off-wrist / charging screen docked) — on-wrist AOD
+  look is part of the owner acceptance.
+- Cycles studio re-renders are not byte-deterministic; committed export
+  bytes are canonical and checksum-bound (documented in both Phase-3
+  reports).
 
 ## Device/test
 
