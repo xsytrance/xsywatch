@@ -154,3 +154,127 @@ Phase 3 may be approved when:
 ## Verification boundary
 
 This review inspected branch history, source diffs, approval records, visual contract, validation logic, importer logic, handoff entries, studio export commits/LFS pointers, reports, and textual device evidence through the GitHub connector. It did not independently execute Blender, Android builds, ADB commands, or replay every committed video. Product-owner pixel acceptance is intentionally outside the architecture role.
+---
+
+# Resolution (Claude Code, 2026-07-25)
+
+Engineering blockers 2, 3 and 4 are fixed. Blocker 1 is the product
+owner's decision and has been left explicitly pending, as instructed.
+Neither branch is merged; APPROVAL-0002 is not promoted.
+
+**Fixing commits** — `xsywatch`: `phase-3 review: bind approval delta,
+verify commit-snapshot lineage, correct font provenance`.
+`AGENOR-Horology`: `6c9afa8` (font provenance) and the paired report
+commit.
+
+## Blocker 1 — owner pixel acceptance: STILL OPEN BY DESIGN
+
+Verified unchanged: `owner.status = proposed`,
+`architecture_review.status = pending`,
+`approved_version = field-tourbillon-v1`, `proposed_version` still set,
+all 50 handoff lifecycles `candidate`, `goldens/` contains only
+`field-tourbillon-v1`. The owner has the candidate on the watch and the
+choice of approve-as-rendered / approve-with-changes / reject. One
+additional option is now on that table: §19 of the phase report offers
+re-rendering the glyph and engraving masters with an already-audited
+OFL-1.1 font, which would retire the open GPL-font question at the cost
+of a small pixel change.
+
+## Blocker 2 — item-level approval binding: FIXED
+
+`APPROVAL-0002` now carries **49** exact `changed_resources` paths,
+**50** exact `handoff_asset_ids`, `preview.png` separately under
+`generated_consumer_resources`, and **1** entry in a new
+`unchanged_handoff_assets` field. Per-version inventory snapshots are
+committed under `visual/inventories/versions/` (`fee59354…` for v1,
+`d64c3e95…` for mk2) so the delta is *computed*, not asserted.
+
+`tools/validate.py::check_visual_delta` computes the authoritative delta
+between the two snapshots and requires exact coverage. It rejects: prose
+or wildcard entries (including the literal pre-review strings), missing
+changed resources, resources listed but byte-identical, unknown or
+duplicated handoff ids, ids whose changed destination is unlisted,
+records whose bytes do not match their own `inventory_sha256`, and
+generated previews declared as handoff assets.
+
+Surfaced and now enforced: `g_space.png` (transparent 12×40 spacer) is
+**byte-identical between generations**, so it is a manifested asset with
+zero pixel delta. Rather than tolerate it as an "extra", any such asset
+must be declared in `unchanged_handoff_assets` with a reason.
+
+Tests: 11 new cases in `tests/visual/test_lineage_gate.py` including all
+six you specified.
+
+## Blocker 3 — commit-snapshot lineage: FIXED
+
+`tools/import_handoff.py` now reads the Git object at
+`<source_commit>:<export_path>` for every export: LFS pointers are parsed
+and their `oid sha256:` compared to the handoff hash; ordinary blobs are
+hashed directly. All `source_paths` and each `spec_path` must exist at
+that commit. Commit roles are explicit: **producing commit `1d51b58`**
+versus **metadata stamping commit `6c9afa8`** (resolved via
+`git log -1 -- <metadata>`), with an enforced ancestry relationship. The
+manifest records both.
+
+Import is two-phase and fail-safe: verify all → stage to a temp dir →
+re-verify staged bytes → replace only then, with originals held in memory
+and restored on any exception (rollback deliberately does not re-enter
+the copy path that just failed).
+
+Re-verifying the existing data: **all 50 exports match `1d51b58` at the
+LFS-pointer level** — your assessment was right that the data was sound
+and the tool's guarantee was the weak part.
+
+Tests: 11 new cases in `tests/engine/test_handoff_import.py` against a
+synthetic studio repo, covering every scenario you listed plus a
+dirty-tree-with-matching-metadata case (the exact pre-review hole) and a
+mid-replace failure proving byte-identical rollback.
+
+## Blocker 4 — glyph licensing: FIXED, and the original claim was wrong
+
+The report's "DejaVu-derived, license-compatible" was an assumption. The
+measured font is Blender's built-in **`Bfont 001.001`**, a PostScript
+Type 1 program compiled into the executable, no embedded copyright,
+SHA-256 `8bb299bd…` (reproducible via
+`AGENOR-Horology scripts/extract_builtin_font.py`). It is provably not
+DejaVu and not Inter (different outline geometry: 494 vs 1081 vs 1194
+vertices), and Blender 4.5.11 bundles no DejaVu *Sans* at all. `Bfont` is
+absent from Blender's `license.md` Fonts table because it is not a
+distributed font file, so it falls under Blender's own licence:
+**GPL-3.0-or-later**, not a permissive font licence.
+
+- 39 glyph exports + 2 engraved plates now declare
+  `derived:blender-bfont-type1`.
+- `docs/derived-asset-provenance.json` (resolvable record) and
+  `THIRD_PARTY_NOTICES/fonts/blender-bfont-NOTICE.txt` (notice) added;
+  studio counterparts are `docs/FONT_PROVENANCE.md` and
+  `THIRD_PARTY/BLENDER_BFONT_NOTICE.txt`.
+- Validation enforces both rules: `font-glyphs` may never claim
+  `original`; any `derived:<id>` must resolve to a record with an
+  existing notice.
+- 7 new tests, including the fixture you asked for and an integration
+  test asserting the committed manifest never regresses.
+
+**The provenance is now accurate, but the commercial question is open,
+not closed.** Bfont has no font exception, so GPL reach over derived
+raster artwork is unresolved and design protection varies by
+jurisdiction. The record is flagged `commercial_use_resolved: false`.
+Mitigation (re-render masters with an audited OFL-1.1 font) is documented
+and offered to the owner rather than applied unilaterally mid-review,
+because it changes candidate pixels.
+
+## Re-verification
+
+86/86 engine tests (was 68), 28/28 visual tests (was 17), 10/10 release
+fixtures, deterministic generation OK (zero XML delta), inventory clean,
+reference render byte-identical and bound to APPROVAL-0002, 10/10 builds,
+WFF validator PASS, memory evaluator PASS, `validate.py` 0 errors,
+`git diff --check` clean.
+
+**Candidate APK `d734abc8…` is unchanged** — only manifest metadata moved,
+no packaged resource byte — so the Phase-3 physical-device evidence still
+binds to exactly the tested artifact. Immutable Phase-1 release
+`844b9c43…` unchanged.
+
+Both branches are pushed and returned for final re-review. Merge order
+when approved: studio first, then consumer, non-squashed.

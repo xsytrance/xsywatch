@@ -285,6 +285,130 @@ class LineageGateTests(unittest.TestCase):
         self.sb = Sandbox()  # so addCleanup close() has something to close
 
 
+APPROVAL_2 = "visual/approvals/APPROVAL-0002-field-tourbillon-mk2.json"
+
+
+class ApprovalDeltaBindingTests(unittest.TestCase):
+    """Blocker-1 fixtures (Phase-3 review): APPROVAL-0002 must bind the
+    EXACT changed resources and handoff asset ids, and validation must
+    reject prose summaries, wildcards, omissions, duplicates, unknown ids,
+    and resources that did not actually change."""
+
+    def setUp(self):
+        self.sb = Sandbox()
+        self.addCleanup(self.sb.close)
+
+    def rec(self) -> dict:
+        return json.loads(self.sb.path(APPROVAL_2).read_text(encoding="utf-8"))
+
+    def write(self, rec: dict) -> None:
+        self.sb.path(APPROVAL_2).write_text(json.dumps(rec, indent=2),
+                                            encoding="utf-8")
+
+    def errors(self) -> list[str]:
+        VAL.issues.clear()
+        VAL.check_visual(self.sb.root)
+        errs = [m for s, m in VAL.issues if s == "ERROR"]
+        VAL.issues.clear()
+        return errs
+
+    def assert_error(self, needle: str, errs: list[str]) -> None:
+        self.assertTrue(any(needle in e for e in errs),
+                        f"expected an error containing {needle!r}; got {errs}")
+
+    # -- positive control ---------------------------------------------
+
+    def test_item_level_record_validates(self):
+        rec = self.rec()
+        self.assertEqual(len(rec["changed_resources"]), 49)
+        self.assertEqual(len(rec["handoff_asset_ids"]), 50)
+        self.assertEqual(self.errors(), [])
+
+    # -- 1. omitted handoff id ----------------------------------------
+
+    def test_omitted_handoff_id_fails(self):
+        rec = self.rec()
+        rec["handoff_asset_ids"].remove("gears/AureliusMk2_GearL_z24")
+        self.write(rec)
+        self.assert_error("is not listed in handoff_asset_ids", self.errors())
+
+    # -- 2. unknown handoff id ----------------------------------------
+
+    def test_unknown_handoff_id_fails(self):
+        rec = self.rec()
+        rec["handoff_asset_ids"].append("gears/NotARealAsset")
+        self.write(rec)
+        self.assert_error("not in engine/handoff.json", self.errors())
+
+    # -- 3. duplicate handoff id --------------------------------------
+
+    def test_duplicate_handoff_id_fails(self):
+        rec = self.rec()
+        rec["handoff_asset_ids"].append("gears/AureliusMk2_GearL_z24")
+        self.write(rec)
+        self.assert_error("duplicate entries", self.errors())
+
+    # -- 4. prose wildcard summary (the exact pre-review defect) -------
+
+    def test_prose_wildcard_ids_fail(self):
+        rec = self.rec()
+        rec["handoff_asset_ids"] = [
+            "ALL 50 entries of watchfaces/aurelius/engine/handoff.json"]
+        self.write(rec)
+        self.assert_error("wildcards are rejected", self.errors())
+
+    def test_prose_wildcard_changed_resources_fail(self):
+        rec = self.rec()
+        rec["changed_resources"] = [
+            "50 runtime resources under app/src/main/res/drawable-nodpi/"]
+        self.write(rec)
+        self.assert_error("wildcards are rejected", self.errors())
+
+    # -- 5. omitted changed resource ----------------------------------
+
+    def test_omitted_changed_resource_fails(self):
+        rec = self.rec()
+        rec["changed_resources"].remove(
+            "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg.png")
+        self.write(rec)
+        self.assert_error("not listed in the approval record", self.errors())
+
+    # -- 6. extra / unchanged resource claimed as changed --------------
+
+    def test_extra_unchanged_resource_fails(self):
+        rec = self.rec()
+        rec["changed_resources"].append(
+            "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_space.png")
+        self.write(rec)
+        self.assert_error("bytes are identical", self.errors())
+
+    # -- supporting invariants -----------------------------------------
+
+    def test_inventory_snapshot_must_match_record_hash(self):
+        snap = self.sb.path(
+            "visual/inventories/versions/field-tourbillon-mk2.json")
+        data = json.loads(snap.read_text(encoding="utf-8"))
+        data["resource_count"] = 999
+        snap.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        self.assert_error("not bound to its inventory", self.errors())
+
+    def test_generated_preview_cannot_be_a_handoff_destination(self):
+        rec = self.rec()
+        rec["generated_consumer_resources"].append({
+            "path": ("watchfaces/aurelius/app/src/main/res/drawable-nodpi/"
+                     "bg.png"),
+            "origin": "bogus"})
+        self.write(rec)
+        self.assert_error("IS a studio handoff destination", self.errors())
+
+    def test_unchanged_asset_must_be_declared(self):
+        rec = self.rec()
+        rec["unchanged_handoff_assets"] = []
+        self.write(rec)
+        self.assert_error("declare it in unchanged_handoff_assets",
+                          self.errors())
+
+
 class ExpressionEvaluatorTests(unittest.TestCase):
     ST = {"MINUTE": 9, "SECOND": 35, "MILLISECOND": 0, "HOUR_0_11": 10,
           "DAY": 24, "BATTERY_PERCENT": 80, "HEART_RATE": 72,

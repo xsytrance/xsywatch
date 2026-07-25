@@ -179,11 +179,48 @@ promoted.
 
 ## 19. Licensing / AI-donor findings
 
-All Mk II assets are original parametric/procedural studio work
-(AGENOR-Horology, Phase 3); no third-party textures/HDRIs, no
-AI-generated donors. Glyph and engraving masters use Blender's bundled
-font (DejaVu-derived, license-compatible; recorded in the studio report
-§14). No change to the existing font/HDRI audit.
+The mechanical, material, camera and lighting work is original
+parametric/procedural studio work (AGENOR-Horology, Phase 3): no
+third-party textures or HDRIs, no AI-generated donors.
+
+**Corrected after review (blocker 4).** This section previously stated
+that the glyph and engraving masters use "Blender's bundled font
+(DejaVu-derived, license-compatible)". That was an assumption and it was
+wrong. The measured font is Blender's **built-in `Bfont 001.001`**, a
+PostScript Type 1 program compiled into the executable
+(`filepath == '<builtin>'`), carrying no embedded copyright notice,
+SHA-256 `8bb299bdca151cb48bf1909eafffabe733fdd74171c11aeb72b9f09104962aed`
+(reproducible via `AGENOR-Horology scripts/extract_builtin_font.py`). It
+is provably **not** DejaVu and **not** Inter — the same string rendered
+with each yields different outline geometry — and Blender 4.5.11 bundles
+no DejaVu *Sans* at all. Because `Bfont` is absent from Blender's
+`license.md` Fonts table (which lists only separately distributed font
+files), it is covered by Blender's own licence: **GPL-3.0-or-later,
+© Blender Foundation**, not a permissive font licence.
+
+Consequences, all recorded machine-readably:
+
+- The 39 `font-glyphs` exports and the 2 plates carrying baked
+  `AURELIUS` / `FIELD TOURBILLON Mk II` engravings now declare
+  `license: "derived:blender-bfont-type1"` instead of `"original"`.
+- `docs/derived-asset-provenance.json` holds the resolvable record
+  (identity, pinned Blender binary hash, licence, notice, open item);
+  `THIRD_PARTY_NOTICES/fonts/blender-bfont-NOTICE.txt` holds the notice.
+- `tools/validate.py` enforces both directions: a `font-glyphs` export
+  may never claim `original`, and any `derived:<id>` must resolve to a
+  record whose `notice_file` exists.
+
+**OPEN owner/legal item (not a merge blocker, but a release blocker).**
+Bfont carries no font exception, so whether GPL terms reach raster
+artwork derived from a GPL font program is unresolved; typeface-design
+protection also varies by jurisdiction. The record is flagged
+`commercial_use_resolved: false`. Recommended mitigation is cheap and
+already available: re-render the glyph and engraving masters with a font
+already audited and notice-bound here (e.g. `rajdhani_bold.ttf`,
+OFL-1.1 — also the legacy Aurelius face font). It is deliberately **not**
+applied in this correction round because it would change candidate pixels
+while the owner's on-watch acceptance is pending; it is offered as an
+explicit option within that pending decision.
 
 ## 20. Deviations, risks, technical debt, next phase
 
@@ -213,3 +250,89 @@ To promote after owner acceptance: flip APPROVAL-0002 owner status to
 `field-tourbillon-mk2`, clear `proposed_version`, flip the 50 manifest
 lifecycles to `approved`, and re-run the full gate. Every step is
 validated; nothing moves silently.
+
+## 22. Review corrections (post-review pass, 2026-07-25)
+
+ChatGPT's coordinated Phase-3 review (`PHASE_3_CHATGPT_REVIEW.md`,
+consumer commit `b104845`, studio commit `644ee3e`) returned CHANGES
+REQUESTED with four blockers. Engineering blockers 2–4 are fixed; blocker
+1 is the owner's pending decision and is deliberately untouched.
+
+**Blocker 2 — APPROVAL-0002 item-level bindings (FIXED).**
+The prose summaries are replaced with exact values: **49**
+`changed_resources` repository-relative paths, **50** `handoff_asset_ids`,
+`preview.png` recorded separately under `generated_consumer_resources`
+as a generated consumer preview, and **1** `unchanged_handoff_assets`
+declaration. Per-version inventory snapshots are now committed
+(`visual/inventories/versions/field-tourbillon-{v1,mk2}.json`, hashes
+`fee59354…` / `d64c3e95…` matching the two records) so the delta is
+computable rather than asserted. `tools/validate.py::check_visual_delta`
+computes the authoritative delta between snapshots and proves exact
+coverage: unlisted changes, listed-but-unchanged resources, unknown or
+duplicate or missing handoff ids, prose/wildcard entries, records not
+bound to their inventory, and generated previews masquerading as handoff
+assets are all errors.
+A genuine subtlety surfaced and is now enforced rather than hidden: the
+transparent 12×40 spacer glyph `g_space.png` is **byte-identical** across
+both generations, so it is a manifested asset with no pixel delta. Any
+such asset must be declared in `unchanged_handoff_assets` with a reason,
+or validation fails.
+Tests: 11 new cases in `tests/visual/test_lineage_gate.py`, covering all
+six mandated fixtures (omitted id, unknown id, duplicate id, prose
+wildcard "ALL 50", omitted changed resource, extra unchanged resource)
+plus inventory-binding, generated-preview and declaration invariants.
+
+**Blocker 3 — importer verifies the declared commit snapshot (FIXED).**
+`tools/import_handoff.py` no longer trusts the studio working tree. For
+every export it reads the Git object at `<source_commit>:<export_path>`;
+Git-LFS pointers are parsed and their `oid sha256:` compared against the
+handoff hash, ordinary blobs are hashed directly. Every `source_paths`
+entry and each `spec_path` must exist at that same commit. Commit roles
+are explicit and machine-checked: the **producing commit** (`1d51b58`)
+versus the **metadata stamping commit** (`6c9afa8`, resolved with
+`git log -1 -- <metadata>`), with the producing commit required to be an
+ancestor of the stamping commit. The import is two-phase and fail-safe:
+verify the whole set → stage to a temporary directory → re-verify staged
+bytes → replace resources and manifest only then, with originals held in
+memory and restored on any exception. The manifest now records both
+commits.
+Re-verification of the existing data found it sound: all 50 exports match
+the declared commit at LFS-pointer level (the weakness was the tool's
+guarantee, exactly as the review judged).
+Tests: 11 new cases in `tests/engine/test_handoff_import.py` against a
+synthetic studio repo — dirty working tree, dirty-tree-with-matching-
+metadata (the precise pre-review hole), wrong historical commit, missing
+source path, missing spec path, LFS OID mismatch, pointer-aware
+verification, uncommitted metadata, and a mid-replace failure proving the
+consumer tree and manifest stay byte-identical.
+
+**Blocker 4 — glyph licensing and provenance (FIXED).** See §19: the
+font was misidentified as DejaVu; it is Blender's GPL-licensed built-in
+`Bfont`. Provenance record, notice, reproducible extractor, corrected
+manifest entries, validator enforcement, and 7 new tests
+(`TestDerivedFontProvenance`, `TestRealAureliusProvenance`) are in place,
+with the commercial-use question flagged as an explicit open item.
+
+**Blocker 1 — owner pixel acceptance (INTENTIONALLY OPEN).** Nothing was
+promoted: `owner.status` remains `proposed`, `architecture_review.status`
+remains `pending`, `approved_version` remains `field-tourbillon-v1`,
+`proposed_version` remains set, all 50 handoff lifecycles remain
+`candidate`, and `goldens/` still contains only `field-tourbillon-v1`.
+
+### Re-verification after corrections
+
+| Gate | Result |
+|---|---|
+| Engine tests | **86/86** (was 68; +11 importer, +7 provenance) |
+| Visual/lineage tests | **28/28** (was 17; +11 approval-delta) |
+| Release-workflow fixtures | 10/10 |
+| Deterministic generation (`--check`) | OK — zero XML delta |
+| Resource inventory `--check` | clean, 60 resources, unchanged `d64c3e95…` |
+| Reference render vs candidates | byte-identical; bound to APPROVAL-0002 |
+| All-ten build | 10/10 PASS |
+| Official WFF validator | PASS (v4) |
+| Memory-footprint evaluator | PASS |
+| `tools/validate.py` | 0 errors |
+| `git diff --check` | clean |
+| **Candidate APK** | **`d734abc8…` — unchanged**, so the Phase-3 device evidence still binds exactly (only manifest metadata changed; no packaged resource byte moved) |
+| Immutable Phase-1 release | `844b9c43…` unchanged |

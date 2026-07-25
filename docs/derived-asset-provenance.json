@@ -1,0 +1,24 @@
+{
+  "updated": "2026-07-25",
+  "policy": "Machine-readable provenance for runtime artwork DERIVED from third-party or bundled inputs (fonts, donor images, models) rather than authored from scratch. Handoff entries reference a record here with license value 'derived:<id>'. Enforced by tools/validate.py: the id must resolve, its notice_file must exist, and an export whose class is derived (e.g. export_type font-glyphs) may not claim 'original'. Introduced by the Phase-3 review (blocker 4).",
+  "records": [
+    {
+      "id": "blender-bfont-type1",
+      "kind": "font",
+      "name": "Bfont",
+      "version": "001.001",
+      "format": "PostScript Type 1 font program compiled into the Blender executable (bpy filepath '<builtin>'; no file on disk)",
+      "sha256": "8bb299bdca151cb48bf1909eafffabe733fdd74171c11aeb72b9f09104962aed",
+      "sha256_scope": "extracted font program, binary offsets 123445638-123470810 (25172 bytes); reproduce with AGENOR-Horology scripts/extract_builtin_font.py",
+      "producer": "Blender 4.5.11 LTS (build date 2026-06-23, commit date 2026-06-22)",
+      "producer_sha256": "dc72290ee8651c93c4a946c012c5f2a034946fd320e6c3ab214fa23181427428",
+      "license": "GPL-3.0-or-later",
+      "author_copyright": "Copyright (C) 2011-2025 Blender Foundation. Bfont is not among the separately distributed fonts listed in Blender's license/license.md Fonts table; it is compiled into the Blender executable as part of Blender's own source and is therefore covered by Blender's primary licence.",
+      "notice_file": "THIRD_PARTY_NOTICES/fonts/blender-bfont-NOTICE.txt",
+      "studio_record": "AGENOR-Horology docs/FONT_PROVENANCE.md",
+      "derived_artwork": "Aurelius Mk II BitmapFont glyph rasters (39) and the AURELIUS / FIELD TOURBILLON Mk II engravings baked into the normal and AOD plates",
+      "commercial_use_resolved": false,
+      "open_item": "Bfont carries no font exception; whether GPL terms reach raster output derived from a GPL font program is unresolved, and typeface-design protection varies by jurisdiction. Must be resolved before commercial release. Recommended mitigation: re-render glyph/engraving masters with an already-audited OFL-1.1 font (e.g. rajdhani_bold.ttf). Deliberately not applied mid-owner-review because it changes candidate pixels."
+    }
+  ]
+}
