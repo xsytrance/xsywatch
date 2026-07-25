@@ -225,8 +225,10 @@ Engine APIs unproven beyond one face (expected; experimental tag) ·
 WFF validator/memory tools live outside the repo (`~/Applications`) with a
 documented rebuild recipe but no CI integration yet · fixture XMLs are
 generated (not committed), so validator coverage of them is local+CI via
-engine, not via the official validator in CI · device-evidence gap until
-watch pairing is available.
+engine, not via the official validator in CI · ~~device-evidence gap until
+watch pairing is available~~ (closed — §24; remaining risk is the absence
+of an automated visual/resource-lineage gate, which the WARBIRD finding
+showed is the real exposure — mandated for Phase 3 by the final review).
 
 ## 21. Recommended Phase 3
 
@@ -235,7 +237,11 @@ integration — studio template/lighting/camera rigs and first approved
 material families in `AGENOR-Horology`; first parametric gear/tourbillon
 exports flowing through the (now-live) handoff manifest with real
 checksums; visually upgraded Aurelius candidate assembled from approved
-assets; close the device-evidence gap first (one owner pairing session);
+assets; ~~close the device-evidence gap first~~ (closed — §24; instead,
+Phase 3 must add the visual/resource-lineage gate required by
+`PHASE_2_FINAL_REVIEW.md`: golden normal/AOD renders, pixel/perceptual
+comparison with masks, resource-inventory reports, real handoff-manifest
+provenance, and device evidence for the first premium candidate);
 CI additions: build the WFF validator in CI, run it on all engine outputs.
 
 ## 22. Branch and commit hashes
