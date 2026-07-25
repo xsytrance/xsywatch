@@ -5,10 +5,10 @@ Resources: 60
 
 | path | dims | sha256 (12) | class | consumers | N | A |
 |---|---|---|---|---|---|---|
-| app/src/main/res/drawable/preview.png | 400×400 | `b4f2db290745` | structural | build/packaging |  |  |
+| app/src/main/res/drawable/preview.png | 400×400 | `988701f5425b` | structural | build/packaging |  |  |
 | app/src/main/res/drawable-nodpi/balance.png | 92×92 | `c9c5dc4ec649` | studio-handoff | z21_bal | ✓ | ✓ |
-| app/src/main/res/drawable-nodpi/bg.png | 480×480 | `66d392b13c0f` | studio-handoff | z00_bg | ✓ |  |
-| app/src/main/res/drawable-nodpi/bg_aod.png | 480×480 | `603c2b2f35ae` | studio-handoff | z01_aod |  | ✓ |
+| app/src/main/res/drawable-nodpi/bg.png | 480×480 | `f34529174d10` | studio-handoff | z00_bg | ✓ |  |
+| app/src/main/res/drawable-nodpi/bg_aod.png | 480×480 | `aafb7e044749` | studio-handoff | z01_aod |  | ✓ |
 | app/src/main/res/drawable-nodpi/cage.png | 122×122 | `3a4dcf8f2539` | studio-handoff | z22_cage | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_0.png | 28×40 | `00b081d832af` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_1.png | 22×40 | `bf048edf7da5` | studio-handoff | z30_date (font aur) | ✓ | ✓ |

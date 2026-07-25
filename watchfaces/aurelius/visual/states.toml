@@ -87,7 +87,68 @@ approved_version = "field-tourbillon-v1"
 # candidates/<proposed_version>/ bound to a `proposed` approval record;
 # approved goldens stay frozen until the record flips to approved and the
 # candidates are promoted (validated by tools/validate.py).
-proposed_version = "field-tourbillon-mk2-r1"
+proposed_version = "field-tourbillon-mk2-r2"
+
+# ---------------------------------------------------------------------------
+# Date-aperture contract (revision field-tourbillon-mk2-r2 onward).
+#
+# The plate art draws a framed window that the live BitmapFont date renders
+# into. The opening is authored in the studio from the WFF text metrics, so
+# the two must be kept in agreement: tools/date_aperture_proof.py measures
+# the rendered glyph alpha bounds for every valid day 1..31 and
+# tests/visual/test_date_aperture.py fails if any day comes within
+# min_clear_margin_px of the inner frame.
+#
+# Geometry provenance: AGENOR-Horology scripts/build_aurelius_mk2.py
+# DATE_INNER = (3.6, 2.7) mm about DATE_C = px(322, 300), converted with the
+# camera contract 43 mm / 480 px (assets/cameras/SPEC.md).
+# ---------------------------------------------------------------------------
+
+[date_aperture]
+# Single source of truth: the inner opening is centre + size; bounds are
+# derived (tools/date_aperture_proof.py), never declared twice.
+center_px = [322, 300]
+inner_size_px = [40.19, 30.14]      # 3.6 x 2.7 mm at 43 mm / 480 px
+min_clear_margin_px = 2.0
+# Tolerance for optical centring, in pixels of centre offset. The reference
+# renderer places integer glyph cells, which costs up to ~1.5 px on the
+# narrow "1", and the WFF runtime performs its own layout; this guard is
+# therefore sized to catch gross drift, with fine centring confirmed
+# visually in the committed proof sheet.
+max_center_offset_px = 2.0
+proof_days = [1, 8, 11, 22, 28, 31]
+studio_source = "AGENOR-Horology scripts/build_aurelius_mk2.py DATE_INNER/DATE_FRAME"
+
+# ---------------------------------------------------------------------------
+# Device-validation applicability (Phase-3 r1 review).
+#
+# Deterministic reference-to-committed-reference comparison stays exact and
+# mandatory (see [compare].reference_mode). A device SCREENSHOT comparison is
+# only a quantitative hard gate when every material motion phase and sensor
+# input can be controlled or safely masked. Aurelius cannot satisfy that:
+#   - z10_gl / z11_gr rotate at 40 deg/s and 24 deg/s and the cage at 6 deg/s,
+#     so the capture instant cannot be pinned to a render state;
+#   - z40_sheen is a full-screen layer parallaxed by up to +/-40 px in X and
+#     +/-14 px in Y from [ACCELEROMETER_ANGLE_*], which cannot be held at zero
+#     on a worn or docked watch.
+# Masking enough to remove both would breach [compare.mask_policy]
+# min_disc_coverage, i.e. it would hide most of the face. Measured evidence:
+# docs/reports/evidence/phase-3/aurelius/r1/DEVICE_TEST_RESULTS.md.
+# ---------------------------------------------------------------------------
+
+[device_validation]
+mode = "qualitative-behavioral-lineage"
+reason = "continuously rotating mechanical layers (up to 40 deg/s) plus accelerometer-driven full-screen sheen parallax (up to +/-40 px) make capture-time state uncontrollable; masking both would fall below the mask-coverage policy"
+required_evidence = [
+    "human visual inspection of normal and AOD at actual scale",
+    "behavioral validation (install/upgrade, picker, dynamic data, AOD cycling, stability, smoothness, touch)",
+    "exact byte lineage: studio export -> handoff manifest sha -> imported resource -> inventory -> packaged APK",
+    "documented normal/AOD evidence with explicit qualifications",
+]
+# The thresholds below remain the profile for faces that CAN be gated
+# quantitatively (static or fully controllable). They are deliberately not
+# applied to Aurelius; tools/compare_visuals.py --mode device refuses to
+# report a pass/fail verdict for a face whose mode is not threshold-gated.
 
 # ---------------------------------------------------------------------------
 # Comparison policy.

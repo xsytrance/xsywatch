@@ -134,6 +134,76 @@ The synthetic Phase 2 handoff entry is not production evidence. Phase 3 must
 exercise the contract with real exports before approving the premium Aurelius
 candidate.
 
+### 6a. Device comparison is a quantitative gate only when state is controllable
+
+*Added 2026-07-25 after the Phase-3 r1 review, on measured evidence.*
+
+Deterministic **reference-to-committed-reference** comparison remains
+exact and mandatory for every engine-managed face: a re-render must match
+the committed reference byte-for-byte.
+
+A **device screenshot** comparison is a different thing, and it is a
+quantitative hard gate **only when every material motion phase and sensor
+input can be controlled or safely masked** — "safely" meaning without
+breaching the mask-coverage policy, i.e. without hiding most of the face.
+
+Aurelius cannot satisfy that, and the r1 device evidence measured why:
+
+- `z10_gl` and `z11_gr` rotate at 40°/s and 24°/s and the seconds cage at
+  6°/s, so the capture instant cannot be pinned to any render state — a
+  one-second error rotates a gear by 40°;
+- `z40_sheen` is a full-screen layer parallaxed by up to ±40 px in X and
+  ±14 px in Y from `[ACCELEROMETER_ANGLE_*]`, which cannot be held at zero
+  on a worn or docked watch.
+
+Rendering a reference at the device's *observed* time/battery/date still
+left the **static** outer bezel annulus at mean channel delta 23.8
+(`docs/reports/evidence/phase-3/aurelius/r1/DEVICE_TEST_RESULTS.md`).
+Masking both dynamic sources would fall below `min_disc_coverage`.
+
+Each face therefore declares a machine-readable device-validation mode in
+its visual contract:
+
+```toml
+[device_validation]
+mode = "qualitative-behavioral-lineage"   # or "threshold"
+reason = "..."
+required_evidence = [...]
+```
+
+- `threshold` — the generic profile in `[compare.device_profile]` applies
+  and `compare_visuals.py --mode device` returns a pass/fail verdict.
+  Retained for static or fully controllable faces.
+- `qualitative-behavioral-lineage` — the device gate is **human visual
+  inspection + behavioural validation + exact byte lineage** (studio
+  export → handoff manifest sha → imported resource → inventory →
+  packaged APK) + documented normal/AOD evidence with explicit
+  qualifications. `compare_visuals.py --mode device` reports metrics and
+  refuses to emit a verdict, so static-face thresholds can never appear to
+  be gating a face they cannot gate.
+
+This narrows a claim; it does not weaken the gate. The pixel-level
+guarantee still comes from deterministic reference comparison and from
+byte lineage into the packaged APK, both of which remain mandatory.
+
+### 6b. Live-presentation containment must be proven, not eyeballed
+
+*Added 2026-07-25 after the Phase-3 r1 review.*
+
+Where plate artwork frames live runtime content — a date window, a gauge
+scale, any aperture — the art and the live presentation are authored in
+different repositories and can drift apart silently. Revision r1 shipped a
+date opening 14.5 px tall for a 24 px text presentation, so the digits
+overhung the frame; every static gate passed because nothing compared the
+two.
+
+Such a face must therefore declare the aperture geometry in its visual
+contract and prove containment over the **full value domain**, not a
+sample: `tools/date_aperture_proof.py` measures rendered glyph alpha
+bounds for every valid day 1..31 in normal and ambient, a committed proof
+sheet shows the contract days, and `tests/visual/test_date_aperture.py`
+fails if any value comes within the mandated clear margin of the frame.
+
 ### 7. Physical-device evidence remains mandatory
 
 The first candidate for each major visual generation must be tested on the

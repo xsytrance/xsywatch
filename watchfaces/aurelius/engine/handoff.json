@@ -1,13 +1,13 @@
 {
   "contract": "docs/ASSET_HANDOFF_CONTRACT.md",
-  "generation": "field-tourbillon-mk2-r1",
-  "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
-  "metadata_commit": "d0ef4a7871fba7591e6b2fc7ff031e7694feab70",
+  "generation": "field-tourbillon-mk2-r2",
+  "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
+  "metadata_commit": "5cf8f04465c2d875980bd4c01490887a0edf50ee",
   "assets": [
     {
       "asset_id": "plates/AureliusMk2_PlateNormal",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -33,7 +33,7 @@
       "loop": "none",
       "aod_safe": true,
       "license": "derived:rajdhani-bold-ofl-1.1",
-      "sha256": "66d392b13c0f2a4f152d0e835d3044e749466713d98a25e77c49b850be154596",
+      "sha256": "f34529174d10d8fad7fd07b1195baca28bb24302bbe74d5f1d55ea46c1153e84",
       "lifecycle": "candidate",
       "consumer_component": "z00_bg",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -41,7 +41,7 @@
     {
       "asset_id": "plates/AureliusMk2_PlateAOD",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -67,7 +67,7 @@
       "loop": "none",
       "aod_safe": true,
       "license": "derived:rajdhani-bold-ofl-1.1",
-      "sha256": "603c2b2f35aea1354b900ed611ff868b6606ab18bb914cfc6cb6d0ff74edde6c",
+      "sha256": "aafb7e044749d9bf1736897c7680bc27d0336ca9c112d1d0bb83a3013121dd9b",
       "lifecycle": "candidate",
       "consumer_component": "z01_aod",
       "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
@@ -75,7 +75,7 @@
     {
       "asset_id": "gears/AureliusMk2_GearL_z24",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -109,7 +109,7 @@
     {
       "asset_id": "gears/AureliusMk2_GearR_z18",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -143,7 +143,7 @@
     {
       "asset_id": "balance-wheels/AureliusMk2_Balance",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -177,7 +177,7 @@
     {
       "asset_id": "tourbillons/AureliusMk2_Cage",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -211,7 +211,7 @@
     {
       "asset_id": "hands/AureliusMk2_NeedleReserve",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -245,7 +245,7 @@
     {
       "asset_id": "hands/AureliusMk2_HandHour",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -279,7 +279,7 @@
     {
       "asset_id": "hands/AureliusMk2_HandMinute",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -313,7 +313,7 @@
     {
       "asset_id": "hands/AureliusMk2_HubCap",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -347,7 +347,7 @@
     {
       "asset_id": "crystals/AureliusMk2_Sheen",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/build_aurelius_mk2.py",
@@ -381,7 +381,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_0",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -413,7 +413,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_1",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -445,7 +445,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_2",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -477,7 +477,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_3",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -509,7 +509,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_4",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -541,7 +541,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_5",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -573,7 +573,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_6",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -605,7 +605,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_7",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -637,7 +637,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_8",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -669,7 +669,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_9",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -701,7 +701,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_pct",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -733,7 +733,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_colon",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -765,7 +765,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_space",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -797,7 +797,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_a",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -829,7 +829,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_b",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -861,7 +861,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_c",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -893,7 +893,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_d",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -925,7 +925,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_e",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -957,7 +957,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_f",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -989,7 +989,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_g",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1021,7 +1021,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_h",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1053,7 +1053,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_i",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1085,7 +1085,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_j",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1117,7 +1117,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_k",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1149,7 +1149,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_l",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1181,7 +1181,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_m",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1213,7 +1213,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_n",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1245,7 +1245,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_o",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1277,7 +1277,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_p",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1309,7 +1309,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_q",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1341,7 +1341,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_r",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1373,7 +1373,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_s",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1405,7 +1405,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_t",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1437,7 +1437,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_u",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1469,7 +1469,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_v",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1501,7 +1501,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_w",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1533,7 +1533,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_x",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1565,7 +1565,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_y",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",
@@ -1597,7 +1597,7 @@
     {
       "asset_id": "numerals/AureliusMk2_Glyph_z",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "5c44f7417e8460ca304225164e83b9612c71d715",
+      "source_commit": "c8c29dc6d9df9939c47ee2e8009764fcf143c9cd",
       "source_paths": [
         "assets/fonts/rajdhani_bold.ttf",
         "scripts/export_mk2_layers.py",

@@ -58,6 +58,18 @@ def compare(a_path: Path, b_path: Path, mode: str, mask_path: Path | None,
 
     contract = V.VisualContract.load(face)
     policy = contract.raw["compare"]
+    dv = contract.raw.get("device_validation", {})
+    dv_mode = dv.get("mode", "threshold")
+
+    # A device screenshot is only a quantitative hard gate when every
+    # material motion phase and sensor input can be controlled or safely
+    # masked (ADR-009). Faces that cannot satisfy that declare a
+    # non-threshold mode and get measurements without a verdict.
+    if mode == "device" and dv_mode != "threshold":
+        print(f"NOTE: {face} declares device_validation.mode="
+              f"{dv_mode!r} — reporting metrics only, no pass/fail "
+              f"verdict.\n      reason: {dv.get('reason', 'n/a')}",
+              file=sys.stderr)
 
     a = Image.open(a_path).convert("RGBA")
     b = Image.open(b_path).convert("RGBA")
@@ -122,6 +134,13 @@ def compare(a_path: Path, b_path: Path, mode: str, mask_path: Path | None,
         "mean_channel_delta": round(mean_delta, 4),
     }
 
+    if mode == "device" and dv_mode != "threshold":
+        result["device_validation_mode"] = dv_mode
+        result["verdict"] = "MEASURED-NO-VERDICT"
+        result["reason"] = dv.get("reason")
+        result["required_evidence"] = dv.get("required_evidence")
+        _emit(result, report_dir, diff)
+        return 0
     if mode == "exact":
         ok = changed == 0
         result["thresholds"] = {"mode": "exact (zero tolerance)"}
