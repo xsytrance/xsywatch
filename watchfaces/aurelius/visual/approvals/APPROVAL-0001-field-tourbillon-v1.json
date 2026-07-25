@@ -19,7 +19,7 @@
   "rationale": "Establishing record. Encodes the shipped Phase-1/Phase-2 Field Tourbillon visual as the first approved reference generation. The golden pixels derive deterministically from the corrected runtime resources whose bytes equal the immutable release APK (Phase-2 ASSET_DIVERGENCE_FINDING fix) and whose on-device appearance was verified in the Phase-2 physical matrix.",
   "owner": {
     "status": "approved",
-    "by": "AGENOR (standing approval: shipped Phase-1 release visual, re-verified on-device in the Phase-2 matrix; countersign requested at the Phase-3 concept checkpoint)",
+    "by": "AGENOR (standing approval: shipped Phase-1 release visual, re-verified on-device in the Phase-2 matrix; COUNTERSIGNED by the owner at the Phase-3 concept checkpoint — see AGENOR-Horology watchfaces/AureliusMk2/concept/OWNER_SELECTION.json)",
     "date": "2026-07-25"
   },
   "architecture_review": {

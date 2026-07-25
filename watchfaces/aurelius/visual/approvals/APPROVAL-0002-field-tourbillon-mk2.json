@@ -1,0 +1,45 @@
+{
+  "approval_id": "APPROVAL-0002",
+  "face": "aurelius",
+  "visual_version": "field-tourbillon-mk2",
+  "previous_visual_version": "field-tourbillon-v1",
+  "previous_goldens": {
+    "normal": "f52b715e2c16ee0bdf0e8106e60e3b6743d65bfe4c11247f49d16d0d10b15f6d",
+    "aod": "04161e9b80de97d0bd68f2e12f56396a4360bac9a1ddfdcc2922322b259e4fd6"
+  },
+  "proposed_goldens": {
+    "normal": "28fd289e6b4602c95b656901a1386856e3ee1cc590a1df1d79b0f8e4b8b5bc31",
+    "aod": "0d0c2070fe8d4810828cc0b751a920f46ddb0f3486c67b5908882c0c2d8e277c"
+  },
+  "inventory_sha256": "d64c3e95b229e22de3def9eaca8c0d07ca3646b124e0ea15c3962463bda6170e",
+  "changed_resources": [
+    "50 runtime resources under app/src/main/res/drawable-nodpi/ (11 layers + 39 BitmapFont glyphs) — full list = every handoff entry destination in engine/handoff.json",
+    "app/src/main/res/drawable/preview.png (regenerated 400×400 from the candidate normal render)"
+  ],
+  "handoff_asset_ids": [
+    "ALL 50 entries of watchfaces/aurelius/engine/handoff.json at source_commit 1d51b589c01b (AGENOR-Horology phase-3/aurelius-studio-slice)"
+  ],
+  "metrics": {
+    "vs_previous_normal": {
+      "changed_pixel_pct": 78.9891,
+      "max_channel_delta": 253,
+      "mean_channel_delta": 67.9123,
+      "note": "intentional generation change (Mk II premium redesign), not drift"
+    }
+  },
+  "previews": [
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2/normal.png",
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2/aod.png"
+  ],
+  "rationale": "Aurelius Field Tourbillon Mk II — owner-selected concept direction B (Olive Instrument) tuned with A (Black Titanium Command) restraint; production palette S. First real AGENOR-Horology studio handoff; zero XML/spec delta (identical boxes, pivots, glyph cell widths); pure manifested asset swap.",
+  "owner": {
+    "status": "proposed",
+    "by": "Concept direction approved by AGENOR at the Phase-3 checkpoint (OWNER_SELECTION.json); final pixel acceptance pending candidate + device review",
+    "date": "2026-07-25"
+  },
+  "architecture_review": {
+    "status": "pending",
+    "ref": "Phase-3 branch review"
+  },
+  "device_evidence": "docs/reports/evidence/phase-3/aurelius/"
+}

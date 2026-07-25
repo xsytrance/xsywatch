@@ -82,6 +82,12 @@ accelerometer_angle_y = 0
 normal_state = "normal_hero"
 aod_state = "aod"
 approved_version = "field-tourbillon-v1"
+# A proposed (not yet owner-accepted) visual generation. While set, the
+# deterministic re-render gate compares against
+# candidates/<proposed_version>/ bound to a `proposed` approval record;
+# approved goldens stay frozen until the record flips to approved and the
+# candidates are promoted (validated by tools/validate.py).
+proposed_version = "field-tourbillon-mk2"
 
 # ---------------------------------------------------------------------------
 # Comparison policy.

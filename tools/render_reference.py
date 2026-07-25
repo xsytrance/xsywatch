@@ -52,33 +52,75 @@ def render_goldens(face: str, out_dir: Path, strict: bool) -> dict:
     return result
 
 
+def _proposed_reference(face: str, contract) -> tuple[Path, str] | None:
+    """When states.toml sets goldens.proposed_version, the deterministic
+    re-render gate targets candidates/<version>/ bound to a `proposed`
+    approval record (ADR-009 candidate lifecycle). Approved goldens stay
+    frozen until promotion."""
+    version = contract.raw["goldens"].get("proposed_version")
+    if not version:
+        return None
+    cdir = (V.REPO / "watchfaces" / face / "visual" / "candidates" /
+            version)
+    return cdir, version
+
+
 def cmd_goldens(face: str, check: bool, strict: bool) -> int:
     contract = V.VisualContract.load(face)
-    version = contract.golden_states()["version"]
-    gdir = golden_dir(face, version)
+    proposed = _proposed_reference(face, contract)
+    if proposed:
+        ref_dir, version = proposed
+        label = f"proposed candidate {version}"
+    else:
+        version = contract.golden_states()["version"]
+        ref_dir = golden_dir(face, version)
+        label = f"approved golden {version}"
     if not check:
-        meta = render_goldens(face, gdir, strict)
-        V.dump_json_deterministic(meta, gdir / "METADATA.json")
-        print(f"goldens written to {gdir}")
+        meta = render_goldens(face, ref_dir, strict)
+        meta["status"] = "proposed" if proposed else "approved"
+        V.dump_json_deterministic(meta, ref_dir / "METADATA.json")
+        print(f"{label} renders written to {ref_dir}")
         return 0
-    # check mode: render to temp, byte-compare against committed goldens
+    # check mode: render to temp, byte-compare against the committed
+    # reference set (proposed candidates take precedence while declared)
+    import json
     import tempfile
     with tempfile.TemporaryDirectory() as td:
         render_goldens(face, Path(td), strict)
         ok = True
         for kind in ("normal", "aod"):
-            committed = gdir / f"{kind}.png"
+            committed = ref_dir / f"{kind}.png"
             fresh = Path(td) / f"{kind}.png"
             if not committed.exists():
-                print(f"FAIL: missing committed golden {committed}")
+                print(f"FAIL: missing committed reference {committed}")
                 ok = False
                 continue
             if committed.read_bytes() != fresh.read_bytes():
-                print(f"FAIL: {kind} golden drifted from deterministic "
+                print(f"FAIL: {kind} {label} drifted from deterministic "
                       f"re-render ({committed})")
                 ok = False
             else:
-                print(f"OK: {kind} golden reproduces byte-identically")
+                print(f"OK: {kind} reproduces byte-identically ({label})")
+        if ok and proposed:
+            # the proposed reference must be bound to a proposed record
+            recs = (V.REPO / "watchfaces" / face / "visual" /
+                    "approvals").glob("*.json")
+            bound = False
+            for rp in recs:
+                rec = json.loads(rp.read_text(encoding="utf-8"))
+                if (rec.get("visual_version") == version
+                        and rec.get("owner", {}).get("status")
+                        in ("proposed", "approved")):
+                    hashes = rec.get("proposed_goldens", {})
+                    if all(hashes.get(k) == V.sha256_file(ref_dir
+                           / f"{k}.png") for k in ("normal", "aod")):
+                        bound = True
+                        print(f"OK: candidate bound to {rec['approval_id']}"
+                              f" ({rec['owner']['status']})")
+            if not bound:
+                print(f"FAIL: proposed candidate {version} has no approval "
+                      f"record binding its exact hashes")
+                ok = False
         return 0 if ok else 1
 
 

@@ -30,6 +30,22 @@ FACE = "aurelius"
 GOLDEN_DIR = REPO / "watchfaces" / FACE / "visual/goldens"
 
 
+def reference_dir(root: Path) -> Path:
+    """Resolve the deterministic-render reference: the proposed candidate
+    set while states.toml declares one (ADR-009 candidate lifecycle),
+    otherwise the approved goldens."""
+    import tomllib
+    with open(root / "watchfaces" / FACE / "visual/states.toml",
+              "rb") as fh:
+        contract = tomllib.load(fh)
+    g = contract["goldens"]
+    if g.get("proposed_version"):
+        return (root / "watchfaces" / FACE / "visual/candidates" /
+                g["proposed_version"])
+    return (root / "watchfaces" / FACE / "visual/goldens" /
+            g["approved_version"])
+
+
 def synthetic_warbird(size: tuple[int, int]) -> Image.Image:
     """Clearly-different synthetic stand-in for the WARBIRD class: olive
     fuselage plate with a shark-mouth wedge. Deliberately NOT the
@@ -98,9 +114,8 @@ class LineageGateTests(unittest.TestCase):
         return p
 
     def compare_to_golden(self, rendered: Path, kind: str) -> int:
-        golden = (self.sb.path(f"visual/goldens/field-tourbillon-v1/"
-                               f"{kind}.png"))
-        return CV.compare(golden, rendered, "exact", None, FACE, None)
+        ref = reference_dir(self.sb.root) / f"{kind}.png"
+        return CV.compare(ref, rendered, "exact", None, FACE, None)
 
     def run_check_visual(self) -> list[str]:
         VAL.issues.clear()
@@ -253,18 +268,20 @@ class LineageGateTests(unittest.TestCase):
 
     # -- committed goldens reproduce from the real tree -------------------------
 
-    def test_committed_goldens_reproduce(self):
-        self.sb.close()  # leave sandbox: verify the REAL repo goldens
+    def test_committed_reference_reproduces(self):
+        self.sb.close()  # leave sandbox: verify the REAL repo reference set
         scene = V.Scene.load(FACE)
         contract = V.VisualContract.load(FACE)
         g = contract.golden_states()
+        ref = reference_dir(REPO)
         for kind in ("normal", "aod"):
             img = V.render_state(scene, contract, g[kind])
-            p = self.out / f"golden_{kind}.png"
+            p = self.out / f"ref_{kind}.png"
             V.save_png_deterministic(img, p)
-            committed = GOLDEN_DIR / g["version"] / f"{kind}.png"
+            committed = ref / f"{kind}.png"
             self.assertEqual(p.read_bytes(), committed.read_bytes(),
-                             f"{kind} golden must reproduce byte-identically")
+                             f"{kind} reference ({ref.name}) must "
+                             f"reproduce byte-identically")
         self.sb = Sandbox()  # so addCleanup close() has something to close
 
 

@@ -1,31 +1,1578 @@
 {
   "contract": "docs/ASSET_HANDOFF_CONTRACT.md",
+  "generation": "field-tourbillon-mk2",
   "assets": [
     {
-      "asset_id": "tourbillons/TourbillonOneMinute",
+      "asset_id": "plates/AureliusMk2_PlateNormal",
       "source_repo": "xsytrance/AGENOR-Horology",
-      "source_commit": "2376d686d6af5933fec13fa48487fa52fb035b36",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
       "source_paths": [
-        "assets/models/tourbillons/TourbillonOneMinute/TourbillonOneMinute.blend"
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
       ],
-      "spec_path": "assets/models/tourbillons/TourbillonOneMinute/SPEC.md",
-      "export_type": "sprite-strip",
-      "destination": null,
-      "dimensions": [220, 220],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg.png",
+      "dimensions": [
+        480,
+        480
+      ],
       "color_space": "srgb",
       "alpha": "straight",
-      "pivot": [0.5, 0.5],
-      "frames": 60,
-      "frame_seconds": 1.0,
-      "loop": "perfect",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "e046fdb4348f7adf48c31b43a1f20b9379f449ef7663dd551c7896bbf7a4907a",
+      "lifecycle": "candidate",
+      "consumer_component": "z00_bg",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "plates/AureliusMk2_PlateAOD",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg_aod.png",
+      "dimensions": [
+        480,
+        480
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "6dc78a9dd5da67e9ad769d4e1ea9b7248544d107e63a55f3841b510753c64af1",
+      "lifecycle": "candidate",
+      "consumer_component": "z01_aod",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "gears/AureliusMk2_GearL_z24",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_l.png",
+      "dimensions": [
+        120,
+        120
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
       "aod_safe": false,
       "license": "original",
-      "sha256": null,
-      "lifecycle": "experimental",
+      "sha256": "758e89cc6ab1c071aa2f47c88b415513d38b7ec53956d53e52286c692496cf45",
+      "lifecycle": "candidate",
+      "consumer_component": "z10_gl",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "gears/AureliusMk2_GearR_z18",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_r.png",
+      "dimensions": [
+        102,
+        102
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": false,
+      "license": "original",
+      "sha256": "db8ba3a2d17b31dd694149eb49add99f3ec64f61496c005340a44a6ba717d5ad",
+      "lifecycle": "candidate",
+      "consumer_component": "z11_gr",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "balance-wheels/AureliusMk2_Balance",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/balance.png",
+      "dimensions": [
+        92,
+        92
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "c9c5dc4ec649d3363025ca68850e9569196ada9362b4816293d7983f24073156",
+      "lifecycle": "candidate",
+      "consumer_component": "z21_bal",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "tourbillons/AureliusMk2_Cage",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/cage.png",
+      "dimensions": [
+        122,
+        122
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "3a4dcf8f25399466cfa62ed4c572ccc7b45e6d15dcec99c2501ffdc489b05144",
+      "lifecycle": "candidate",
       "consumer_component": "z22_cage",
-      "regenerate": "blender -b assets/models/tourbillons/TourbillonOneMinute/TourbillonOneMinute.blend -P scripts/render_presets.py -- sprite --frames 60 && scripts/spritepack.py renders/tourbillon exports/spriteSheets/tourbillon_60f.png --cols 60 --size 220x220",
-      "example": true,
-      "_note": "SYNTHETIC EXAMPLE, NOT APPROVED, no real export yet (destination/sha256 null). The .blend does not exist yet — the referenced source_commit contains the SPEC only. Exercises schema+validator ahead of the first real Phase-3 studio import; the Phase-2 tourbillon cage still uses the legacy face-owned art (res/drawable-nodpi/cage.png)."
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "hands/AureliusMk2_NeedleReserve",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/resv_needle.png",
+      "dimensions": [
+        480,
+        480
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "4e8043c27ec2b0755465ce8f07bb279e425951813f4ed68b9d50d0090d0cedac",
+      "lifecycle": "candidate",
+      "consumer_component": "z31_resv",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "hands/AureliusMk2_HandHour",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hour_hand.png",
+      "dimensions": [
+        480,
+        480
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "ec02496f7367931418b2744f7252c7747c3a21fff25512c2b90f0fa82e388674",
+      "lifecycle": "candidate",
+      "consumer_component": "z50_hour",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "hands/AureliusMk2_HandMinute",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/min_hand.png",
+      "dimensions": [
+        480,
+        480
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "d611003aec203f29566e57084d19200b37d6c284155c1d238b074e802c633990",
+      "lifecycle": "candidate",
+      "consumer_component": "z51_min",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "hands/AureliusMk2_HubCap",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hub.png",
+      "dimensions": [
+        28,
+        28
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "fde432b0971bee8660f88e3ceaafa2e8cf242ee329c3eea7cec1761ea413ad4d",
+      "lifecycle": "candidate",
+      "consumer_component": "z52_hub",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "crystals/AureliusMk2_Sheen",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/build_aurelius_mk2.py",
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py",
+        "watchfaces/AureliusMk2/concept/OWNER_SELECTION.json"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "static-image",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/sheen.png",
+      "dimensions": [
+        480,
+        480
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": false,
+      "license": "original",
+      "sha256": "a403e0a024a134950a028909dda7c541c6d364377abbaf6664f72fc43a38f10b",
+      "lifecycle": "candidate",
+      "consumer_component": "z40_sheen",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_0",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_0.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "bc95fcc4197a68db37f209f85720be738bd3177e25634f920ebce0f1de11c95c",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_1",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_1.png",
+      "dimensions": [
+        22,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "b3faca93f50d918ada3e7606cdf61148d99645433ea92b20a155abf06c4ba990",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_2",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_2.png",
+      "dimensions": [
+        27,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "aab0c95852bed47ffc9941b44160f498d278e2e01bcd123f8fc2fffcdafef76c",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_3",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_3.png",
+      "dimensions": [
+        27,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "95769be7f9158795a0ecd05e81c19ef49c948ade9d9d5aa25bd89e99e1b47049",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_4",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_4.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "718d7fb224ff5451f195e12c6f55f6e09c39d0b757e6dccbb121f4596f5ba17b",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_5",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_5.png",
+      "dimensions": [
+        27,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "e16820404e427aa7da95237d5ea655dbbee3194e32fe063749868cc92d59668c",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_6",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_6.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "a840565c5bdbfb66382542ba90b18ac2609ec058dd81ef3d9f7905fa8bbfb94b",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_7",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_7.png",
+      "dimensions": [
+        25,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "5f581e037f1db2fabeeaed12d151f50824c23f0d0aca6696213068f321116036",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_8",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_8.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "0a791a95672600465018e60a970226bbb8d98a20956645db2abcfd51a42bb493",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_9",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_9.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "3a47c3be0a1ef7d1cf5ec75c3d005533effe1e0d5b09bdaae03c063d501e6113",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_pct",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_pct.png",
+      "dimensions": [
+        34,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "a9c57db65b5a57dfae09143e586dd2455b12719b499a6cbb3a252d6349303ff8",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_colon",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_colon.png",
+      "dimensions": [
+        18,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "132480086b704558f94b4673ce947018b970045fb3d103b3f36d45fed131bfbb",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_space",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_space.png",
+      "dimensions": [
+        12,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "4d5af88944009acab221f250c7b3df712159d7876eb59a85cd324f6c48e22e9a",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_a",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_a.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "8a8ce604566da2fa42b7dd4455fceb6f05b604b5c4992aca3d446f7ab9f36364",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_b",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_b.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "285f7fe01d04ebbf97e39afe993a93f8023c1939fb871142dbdbd6c531e6dac9",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_c",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_c.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "f325c5be4d8e7ddca135cbe37874b19b689dea258557411264a4e204aa8d39be",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_d",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_d.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "d105e78030fad3efe77775984a676745a55a29fce95112cb270fb38097f9abb3",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_e",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_e.png",
+      "dimensions": [
+        26,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "9651009beb8c8c8eff18d8a80af9a003536f32238ed5cc4f197be0e48cc23083",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_f",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_f.png",
+      "dimensions": [
+        26,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "cab238d75907abb7ff9a59b5acfe127e6c9ea781d4328fdd518c994eb2e74859",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_g",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_g.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "988c28294a0e3875a922d3e1b31d1d9a023cfa3304d28facfde02498204d6b02",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_h",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_h.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "9dfaff285004845dad3d0d8dae8869b21f4cf7d2224876324378fb7562f59a82",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_i",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_i.png",
+      "dimensions": [
+        20,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "3207764615ab5236009714f4e9c1995b1c1eef21c7ba2a5dbc3aa5397c661f02",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_j",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_j.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "63cd3b1bc5da8726cd07630a25ff7ab8c4ba29ae82c93d17576d36dfce8f9bb3",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_k",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_k.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "efc98ae730a71974f4811e339368d699d83ab2e76afece480221542768f08f09",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_l",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_l.png",
+      "dimensions": [
+        26,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "ae0345c4652f512f870ae1d0ca1816dd8d7bc375dd115236986318b85d2c4e72",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_m",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_m.png",
+      "dimensions": [
+        34,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "9ddfec89548ed937d7e8cc04639df55bad087bccf739cea96f2824ecb51575de",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_n",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_n.png",
+      "dimensions": [
+        30,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "7192bd52755052b5c60b88f58b04b009724e88c35594f719f3aa0994dc8c7a0c",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_o",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_o.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "9d9b4a0628208fca29bfc5f14ebadba71a74e804ca17604d71dfd5a93604c43b",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_p",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_p.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "5543142265db5a9f16d00916232ca49cd0d4f758a4a4a6001fe37abb0cab1760",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_q",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_q.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "4fb26db1f95c71b6c5144f6c21366d4529bf91e4d8a124d210dd9804980c81e5",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_r",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_r.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "a49691ba73e26e6ed378c681fdf9f235ff7484eca13996074275eb56037c3886",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_s",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_s.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "b8f4afb9e0a806b231f40d7ad0911c25fc2b2e407746db9d0d79b535b73c8c55",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_t",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_t.png",
+      "dimensions": [
+        25,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "5d4ba38160c5060220461a07b2021cc33a98058a72602478bb96c81b13d10096",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_u",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_u.png",
+      "dimensions": [
+        29,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "863a3312048f751b3d714951c6d9c764582ca5e0e5cf33b9f48b610f0515afc0",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_v",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_v.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "f808f57f3e17624bbf9bf3cde636c9c23ecd9ef871f516e30a418adec9a5369d",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_w",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_w.png",
+      "dimensions": [
+        36,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "a91bf5ffbe02df41ef4cefa3e586a0e86995851059f06046289e2d432c750e0e",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_x",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_x.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "f6c6adf9c8e66ce5fcc8ae534bb734eddd011d185e190547ee9862a57c4c9255",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_y",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_y.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "7e2c721a5a57cd198192df1e50ce9e3220455d272d1bc5b63b7eccc84d54fe9a",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_z",
+      "source_repo": "xsytrance/AGENOR-Horology",
+      "source_commit": "1d51b589c01b788cfabefaf9c36ac04341e59fb8",
+      "source_paths": [
+        "scripts/export_mk2_layers.py",
+        "scripts/finish_mk2_exports.py"
+      ],
+      "spec_path": "watchfaces/AureliusMk2/concept/MECHANICAL_SLICE.md",
+      "export_type": "font-glyphs",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_z.png",
+      "dimensions": [
+        28,
+        40
+      ],
+      "color_space": "srgb",
+      "alpha": "straight",
+      "pivot": [
+        0.5,
+        0.5
+      ],
+      "frames": 1,
+      "frame_seconds": null,
+      "loop": "none",
+      "aod_safe": true,
+      "license": "original",
+      "sha256": "df9a651a66b5993519dca11e10a6344ea72ebf7c56f3632128a97fd9f2344412",
+      "lifecycle": "candidate",
+      "consumer_component": "z30_date (font aur)",
+      "regenerate": "blender -b -P scripts/export_mk2_layers.py && python3 scripts/finish_mk2_exports.py"
     }
   ]
 }
