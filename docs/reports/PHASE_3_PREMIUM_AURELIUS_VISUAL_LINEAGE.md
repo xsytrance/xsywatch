@@ -476,3 +476,121 @@ byte-chain (studio export → manifest sha → imported resource → inventory
 → packaged APK). Recommend recording this in ADR-009 rather than leaving
 the device profile implying a capability it cannot deliver for this class
 of face.
+
+## 24. Revision r2 — composition corrections (2026-07-25)
+
+ChatGPT's r1 review (`PHASE_3_CHATGPT_R1_REVIEW.md`, consumer `acf51db` /
+studio `60ab14d`) accepted the engineering architecture outright and
+withheld owner pixel approval pending one focused composition pass. Both
+required visual corrections and the device-comparison clarification are
+implemented as revision `field-tourbillon-mk2-r2`.
+
+### Correction 1 — date aperture now contains every day 1..31
+
+r1's opening was authored by eye at 31.3 × 14.5 px while the live
+presentation inks up to 33.0 × 24 px (`z30_date` is a 60×28 px box at
+BitmapFont size 24; widest day "30" = cells 27+28 at scale 24/40). The
+r2 opening is **40.2 × 30.1 px**, derived from those metrics plus the
+mandated 2 px clear margin. The date centre and WFF data behaviour are
+unchanged, so the **XML/spec delta stays zero**.
+
+Containment is proved over the full value domain rather than sampled:
+
+| | |
+|---|---|
+| Tool | `tools/date_aperture_proof.py` |
+| Renders checked | **62** (days 1..31 × normal/AOD) |
+| Required clear margin | 2.0 px |
+| **Worst margin observed** | **3.07 px** |
+| Violations | 0 |
+| Proof sheet | `visual/proofs/date_aperture_r2.png` (days 1, 8, 11, 22, 28, 31 in both treatments, inner-aperture guide overlaid) |
+| Bounds data | `visual/proofs/date_aperture_r2.json` |
+| Test | `tests/visual/test_date_aperture.py` — 9 cases |
+
+The test suite includes deliberate-failure fixtures: it reproduces the r1
+geometry and asserts every sampled day breaches the margin, and it
+simulates a 25% wider typeface to prove the check is sensitive to ink
+growth. Two things the tests themselves caught during development are
+fixed rather than papered over — a redundant second declaration of the
+aperture bounds (now derived from centre + size, single source of truth),
+and single-digit centring, which is bounded by a documented
+`max_center_offset_px` tolerance because the reference renderer places
+integer glyph cells (worst case 1.5 px on the narrow "1") while the WFF
+runtime performs its own layout.
+
+### Correction 2 — occluded lower engraving removed
+
+`FIELD TOURBILLON Mk II` is deleted from the plate artwork. Not
+repositioned, not replaced with a badge, curved label, stencil or slogan.
+The restrained `AURELIUS` signature is the only face marking; the full
+model name remains in package metadata, picker text, documentation and
+release copy.
+
+### Device-comparison architecture clarified
+
+ADR-009 gains §6a and §6b, and the face contract gains a machine-readable
+mode:
+
+- deterministic reference-to-committed-reference comparison remains
+  **exact and mandatory**;
+- a device screenshot is a quantitative hard gate **only** when every
+  material motion phase and sensor input can be controlled or safely
+  masked (without breaching the mask-coverage policy);
+- Aurelius declares `device_validation.mode = "qualitative-behavioral-
+  lineage"` with its reason and required evidence, because 40°/s gears
+  and ±40 px accelerometer sheen parallax make capture-time state
+  uncontrollable;
+- `tools/compare_visuals.py --mode device` now reports metrics and
+  **refuses to emit a verdict** for such a face, so static-face
+  thresholds can never appear to gate a face they cannot;
+- the generic `[compare.device_profile]` is preserved for faces where it
+  genuinely applies.
+
+ADR-009 §6b additionally requires live-presentation containment to be
+proved over the full value domain wherever plate art frames runtime
+content — the general rule behind correction 1.
+
+### Revision artefacts (nothing overwritten)
+
+| Artefact | Value |
+|---|---|
+| Revision | `field-tourbillon-mk2-r2` (`proposed_version`) |
+| Studio producing commit | `c8c29dc` |
+| Studio metadata stamping commit | `5cf8f04` |
+| Studio export delta | exactly `bg.png` + `bg_aod.png` |
+| Inventory snapshot | `versions/field-tourbillon-mk2-r2.json` — `b76f9ceb…` |
+| Candidate normal / AOD | `7fd2cf63…` / `2f2be0e9…` |
+| Approval record | `APPROVAL-0004`, superseding `APPROVAL-0003` |
+| Candidate APK | `5a1271ab…` |
+
+Preserved untouched: mk2 and r1 candidates, `APPROVAL-0002` and
+`APPROVAL-0003`, both earlier inventory snapshots, the mk2 and r1 device
+evidence, the complete Bfont investigation, and the immutable release.
+
+Measured deltas: **78.99%** changed pixels versus the approved v1 golden
+(the intended generation change) and **31.40% at mean channel delta 2.42**
+versus r1 — the low mean confirming the change is confined to the
+aperture and the removed engraving, consistent with a studio export delta
+of just the two plates.
+
+### Re-verification
+
+| Gate | Result |
+|---|---|
+| Engine tests | 95/95 |
+| Visual/lineage tests | **37/37** (was 28; +9 aperture) |
+| Date-aperture proof | 62 renders, 0 violations, worst margin 3.07 px |
+| Release-workflow fixtures | 10/10 |
+| Deterministic generation | OK — zero XML delta |
+| Inventory `--check` | clean, 60 resources |
+| Reference render | byte-identical; bound to APPROVAL-0004 |
+| All-ten build | 10/10 PASS |
+| Official WFF validator | PASS (v4) |
+| Memory-footprint evaluator | PASS |
+| `tools/validate.py` | 0 errors |
+| `git diff --check` | clean |
+| Immutable Phase-1 release | `844b9c43…` unchanged |
+
+Nothing promoted: `owner.status` proposed, `architecture_review` pending,
+`approved_version` still `field-tourbillon-v1`, `proposed_version` set to
+r2, all 50 lifecycles `candidate`, `goldens/` contains only v1.

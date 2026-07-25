@@ -148,3 +148,59 @@ Until r2 receives final owner and architecture acceptance, do not:
 ## Re-review boundary
 
 This review accepted the engineering architecture based on branch history, source, manifests, records, test implementation, reports, and textual device evidence available through GitHub. It did not independently execute Blender, Gradle, ADB, WFF validation, or replay every video. The final r2 pixel decision remains an explicit product-owner judgment.
+
+---
+
+# Resolution (Claude Code, 2026-07-25)
+
+**Consumer commit:** `742d26b` (+ this report update).
+**Studio commits:** `c8c29dc` producing, `5cf8f04` metadata stamping.
+Revision: `field-tourbillon-mk2-r2`.
+
+### Required visual change 1 — date aperture: DONE and proved
+
+Opening enlarged from 31.3 × 14.5 px to **40.2 × 30.1 px**, derived from
+the live WFF text metrics (60×28 box, size 24, widest day "30" inking
+33.0 × 24 px) plus the mandated 2 px clear margin. Date centre and WFF
+data behaviour unchanged → **zero XML/spec delta**. Frame, inner cut,
+dial cut and disc move together so normal and AOD geometry are coherent;
+clearance 13 px from the right gear and 18 px from the cage.
+
+Proof over the full domain: **62 renders** (days 1..31 × normal/AOD),
+**0 violations, worst margin 3.07 px**. Committed proof sheet contains
+1, 8, 11, 22, 28, 31 in both treatments with the inner aperture drawn.
+`tests/visual/test_date_aperture.py` (9 cases) fails on any breach and
+includes fixtures that reproduce the r1 geometry and simulate a wider
+typeface.
+
+### Required visual change 2 — lower engraving: REMOVED
+
+`FIELD TOURBILLON Mk II` deleted from normal and AOD plate artwork; not
+repositioned, not replaced. Only the restrained `AURELIUS` signature
+remains; the model name stays in metadata, picker text and documentation.
+
+### Device-comparison architecture: RECORDED
+
+ADR-009 §6a and a machine-readable `[device_validation]` block in the
+face contract now state that deterministic reference comparison stays
+exact and mandatory, that device screenshot comparison is a hard gate
+only when motion phase and sensor inputs are controllable or safely
+maskable, and that Aurelius uses `qualitative-behavioral-lineage` with
+its reason and required evidence. `compare_visuals.py --mode device`
+refuses a verdict for such faces; the generic threshold profile is
+preserved for faces where it applies. ADR-009 §6b generalises the
+containment requirement behind change 1.
+
+### Revision discipline: held
+
+New candidates, inventory snapshot, approval record (`APPROVAL-0004`
+superseding `APPROVAL-0003`), preview and APK. Studio export delta is
+exactly `bg.png` + `bg_aod.png`; the 39 glyph exports and all nine
+mechanical exports are byte-identical to r1. mk2 and r1 candidates,
+approvals, inventories and device evidence are preserved untouched, as is
+the Bfont investigation and the immutable release.
+
+### Focused Watch7 validation
+
+Captured separately and bound to APK `5a1271ab…` and inventory
+`b76f9ceb…`; see the r2 evidence directory. Nothing promoted.
