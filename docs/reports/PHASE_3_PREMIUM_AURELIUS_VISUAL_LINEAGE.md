@@ -430,15 +430,49 @@ Nothing promoted: `owner.status` proposed, `architecture_review` pending,
 `approved_version` still `field-tourbillon-v1`, `proposed_version` set,
 all 50 lifecycles `candidate`, `goldens/` contains only v1.
 
-### Physical-device evidence for r1 — PENDING
+### Physical-device evidence for r1 — CAPTURED
 
-The focused Watch7 matrix for `field-tourbillon-mk2-r1` (glyph rendering,
-date aperture, both engravings, normal legibility, AOD) has **not** yet
-been captured: the watch was off the network during this correction pass
-(Wi-Fi sleeps when undocked, and the advertised mdns endpoint was stale).
-It will be captured and bound to candidate APK `57dad013…` and inventory
-`35f95830…` before this revision is returned for final acceptance.
+Focused Watch7 test executed 2026-07-25 (SM-L310, Android 16/API 36),
+bound to candidate APK `57dad013…`, inventory `35f95830…` and
+`APPROVAL-0003`. Full per-row results:
+`docs/reports/evidence/phase-3/aurelius/r1/DEVICE_TEST_RESULTS.md`.
 
-The mk2 device evidence under `docs/reports/evidence/phase-3/aurelius/`
-remains valid for what it tested, and is retained as historical evidence
-for the superseded revision; it is **not** presented as evidence for r1.
+PASS: upgrade continuity from the mk2 candidate `d734abc8…`; picker;
+**Rajdhani glyphs rendering live** (date aperture shows the live day in
+the substituted typeface); dynamic date path; the `AURELIUS` engraving;
+normal legibility; 10 AOD cycles with a clean render afterwards;
+stability (crash buffers empty); 32 s smoothness recording; touch inert.
+
+AOD pixel capture remains **not obtainable** on this hardware (doze
+returns a fully black frame) — the qualification accepted in the Phase-2
+final review; the ambient composition is byte-determined by the
+CI-verified r1 AOD reference `69a8724b…` and the sha-chained `bg_aod`
+bytes.
+
+Two findings are recorded rather than silently fixed, both requiring
+owner sign-off because they change pixels:
+
+1. **Date digits overhang the drawn aperture frame.** Pre-existing —
+   verified present in the mk2 device capture too, so it is plate
+   composition, not the typeface substitution (Rajdhani Bold is chunkier,
+   so marginally more visible). The WFF text box is 60×28 at size 24
+   while the frame drawn in the art is ≈36×19 inside. One-parameter
+   studio fix when directed.
+2. **The `FIELD TOURBILLON Mk II` engraving is largely occluded** by the
+   tourbillon well ring. Also pre-existing and identical in mk2.
+
+### Methodological finding — the device profile cannot gate this face
+
+Device-vs-reference pixel comparison was attempted rigorously and does
+not work for Aurelius: even against a reference rendered at the device's
+observed state, the static bezel annulus shows mean channel delta 23.8.
+Two uncontrollable inputs cause it — mechanical layers rotate at up to
+40°/s so the capture instant cannot be pinned, and the fullscreen sheen
+is accelerometer-parallaxed by up to ±40 px while the watch sits tilted
+on its dock. The `[compare.device_profile]` thresholds are therefore
+sound for a static face but cannot gate a dynamic, parallaxed one. The
+effective device gate for this face is visual + behavioural + the
+byte-chain (studio export → manifest sha → imported resource → inventory
+→ packaged APK). Recommend recording this in ADR-009 rather than leaving
+the device profile implying a capability it cannot deliver for this class
+of face.
