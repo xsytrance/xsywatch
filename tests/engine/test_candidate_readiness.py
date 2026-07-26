@@ -297,3 +297,111 @@ class ReadinessGateTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class ProvenanceConsistencyTests(ReadinessGateTests):
+    """Blocker 3: CANDIDATE.json recorded the AI-model licence position as
+    an unresolved owner action while PROVENANCE.json concluded the
+    repository-wide warning is not applicable. A manifest cannot state
+    both."""
+
+    def prov(self) -> dict:
+        return json.loads((self.cand / "PROVENANCE.json").read_text())
+
+    def write_prov(self, d: dict) -> None:
+        (self.cand / "PROVENANCE.json").write_text(json.dumps(d, indent=2))
+
+    def cnd(self) -> dict:
+        return json.loads((self.cand / "CANDIDATE.json").read_text())
+
+    def write_cnd(self, d: dict) -> None:
+        (self.cand / "CANDIDATE.json").write_text(json.dumps(d, indent=2))
+
+    def rebind(self) -> None:
+        """Keep the candidate's provenance hash binding truthful."""
+        d = self.cnd()
+        d["provenance_sha256"] = sha256(self.cand / "PROVENANCE.json")
+        self.write_cnd(d)
+
+    # -- positive control ------------------------------------------------
+
+    def test_agreeing_records_pass(self):
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 0, out)
+
+    # -- 1. candidate says unresolved, provenance says not applicable ----
+
+    def test_candidate_unresolved_while_provenance_clean_is_rejected(self):
+        d = self.cnd()
+        d.setdefault("licensing_provenance", {})["open_owner_action"] = (
+            "AI-model licence position for commercial sale of generated "
+            "artwork remains unresolved (docs/LICENSING.md)")
+        self.write_cnd(d)
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("cannot state both", out)
+
+    # -- 2. candidate says closed while provenance is unresolved ---------
+
+    def test_candidate_closed_while_provenance_unresolved_is_rejected(self):
+        p = self.prov()
+        p["assets_with_ai_checkpoint_pixels"] = ["plates/AureliusMk2_PlateNormal"]
+        p["repository_wide_warning"]["status"] = "APPLIES to this candidate"
+        self.write_prov(p)
+        self.rebind()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("claims candidate provenance is closed", out)
+
+    def test_donor_pixels_also_block_a_closed_claim(self):
+        p = self.prov()
+        p["assets_with_donor_image_pixels"] = ["plates/AureliusMk2_PlateAOD"]
+        p["repository_wide_warning"]["status"] = "APPLIES to this candidate"
+        self.write_prov(p)
+        self.rebind()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("claims candidate provenance is closed", out)
+
+    # -- 3. mismatched provenance hash -----------------------------------
+
+    def test_mismatched_provenance_hash_is_rejected(self):
+        d = self.cnd()
+        d["provenance_sha256"] = "c" * 64
+        self.write_cnd(d)
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("binds provenance", out)
+
+    # -- 4. provenance for a different candidate version -----------------
+
+    def test_provenance_for_another_version_is_rejected(self):
+        p = self.prov()
+        p["candidate_version"] = "9.9.9"
+        self.write_prov(p)
+        self.rebind()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("PROVENANCE.json is for", out)
+
+    # -- 5. missing provenance record ------------------------------------
+
+    def test_missing_provenance_record_is_rejected(self):
+        (self.cand / "PROVENANCE.json").unlink()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("no PROVENANCE.json", out)
+
+    # -- the repository-wide warning must not be deleted -----------------
+
+    def test_repository_wide_warning_is_preserved_not_deleted(self):
+        """Scoping the legacy warning must not remove it."""
+        lic = REPO / "docs/LICENSING.md"
+        self.assertTrue(lic.exists(),
+                        "docs/LICENSING.md must not be deleted")
+        p = json.loads((LIVE / "PROVENANCE.json").read_text())
+        w = p["repository_wide_warning"]
+        self.assertEqual(w["source"], "docs/LICENSING.md")
+        self.assertIn("NOT APPLICABLE", w["status"].upper())
+        self.assertIn("not deleted or weakened", w["scope_note"].lower()
+                      .replace("is not", "not"))

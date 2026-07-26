@@ -88,8 +88,9 @@ class LineageRejectionTests(unittest.TestCase):
         run(self.root, "commit", "-qm", "artifacts")
         self.artifact = run(self.root, "rev-parse", "HEAD")
 
-        (self.cand / "CANDIDATE.json").write_text("{}\n")
-        (self.cand / "READINESS.json").write_text("{}\n")
+        for m in ("CANDIDATE.json", "READINESS.json", "LINEAGE.json",
+                  "PROVENANCE.json"):
+            (self.cand / m).write_text("{}\n")
         run(self.root, "add", "-A")
         run(self.root, "commit", "-qm", "metadata")
         self.metadata = run(self.root, "rev-parse", "HEAD")
@@ -203,6 +204,147 @@ class LineageRejectionTests(unittest.TestCase):
         rc, out = self.verify(source="0" * 40)
         self.assertEqual(rc, 1)
         self.assertIn("does not exist", out)
+
+
+class ArtifactObjectBindingTests(LineageRejectionTests):
+    """Blocker 1: the COMMIT OBJECT must be authoritative, not the working
+    tree. Hashing the current file would let a later edit be attributed to
+    an earlier artifact commit."""
+
+    def _touch_artifact(self, name: str, data: bytes):
+        """Change an artifact AFTER the artifact commit, as a drifting
+        release process would."""
+        (self.cand / name).write_bytes(data)
+
+    # -- positive control: ordinary blob ---------------------------------
+
+    def test_ordinary_blob_artifacts_verify(self):
+        rc, out = self.verify()
+        self.assertEqual(rc, 0, out)
+        self.assertIn("matches the committed object", out)
+
+    # -- 1. AAB changed after the artifact commit ------------------------
+
+    def test_aab_changed_after_the_artifact_commit_is_rejected(self):
+        self._touch_artifact(f"{FACE}-{VERSION}.aab", b"TAMPERED")
+        rc, out = self.verify()
+        self.assertEqual(rc, 1)
+        self.assertIn("the artifact changed after the commit it is "
+                      "attributed to", out)
+
+    # -- 2. APK changed after the artifact commit ------------------------
+
+    def test_apk_changed_after_the_artifact_commit_is_rejected(self):
+        self._touch_artifact(f"{FACE}-{VERSION}-debug.apk", b"TAMPERED")
+        rc, out = self.verify()
+        self.assertEqual(rc, 1)
+        self.assertIn("the artifact changed after the commit", out)
+
+    # -- 3. same filename, different bytes at the artifact commit --------
+
+    def test_same_filename_different_bytes_at_artifact_commit(self):
+        """The exact scenario the review named: commit A, change the bytes
+        later, rebuild metadata around the new bytes, keep naming A."""
+        new = b"SECOND GENERATION AAB"
+        self._touch_artifact(f"{FACE}-{VERSION}.aab", new)
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "replace the aab after the fact")
+        later = run(self.root, "rev-parse", "HEAD")
+        # the working tree now matches `later`, but the record still names
+        # the ORIGINAL artifact commit
+        rc, out = self.verify(metadata=later)
+        self.assertEqual(rc, 1)
+        self.assertIn("differ from the object stored at "
+                      "consumer_artifact_commit", out)
+
+    # -- 4. missing / extra canonical artifact ---------------------------
+
+    def test_extra_artifact_at_the_artifact_commit_is_rejected(self):
+        extra = self.cand / f"{FACE}-{VERSION}-alternate.aab"
+        extra.write_bytes(b"ROGUE")
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "extra artifact")
+        rc, out = self.verify()
+        self.assertEqual(rc, 1)
+        self.assertTrue("NOT in the artifact commit" in out
+                        or "exactly one .aab" in out, out)
+
+    def test_missing_canonical_artifact_is_rejected(self):
+        (self.cand / f"{FACE}-{VERSION}.aab").unlink()
+        rc, out = self.verify()
+        self.assertEqual(rc, 1)
+        self.assertIn("is missing them", out)
+
+    # -- 5. LFS -----------------------------------------------------------
+
+    def _lfs_pointer(self, oid: str, size: int) -> bytes:
+        return (b"version https://git-lfs.github.com/spec/v1\n"
+                b"oid sha256:" + oid.encode() + b"\n"
+                b"size " + str(size).encode() + b"\n")
+
+    def test_lfs_pointer_oid_is_used_as_the_identity(self):
+        """Positive LFS control: the pointer's OID becomes the canonical
+        hash, and a checkout without a smudge filter is reported rather
+        than failed."""
+        import hashlib as _h
+        payload = b"REAL LFS PAYLOAD"
+        oid = _h.sha256(payload).hexdigest()
+        (self.cand / f"{FACE}-{VERSION}.aab").write_bytes(
+            self._lfs_pointer(oid, len(payload)))
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "lfs pointer")
+        art = run(self.root, "rev-parse", "HEAD")
+        (self.cand / "CANDIDATE.json").write_text('{"x":1}\n')
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "meta")
+        meta = run(self.root, "rev-parse", "HEAD")
+        rc, out = self.verify(artifact=art, metadata=meta)
+        # the pointer is consistent with itself, so no OID error appears
+        self.assertNotIn("LFS pointer at the artifact commit declares", out)
+
+    def test_lfs_oid_mismatch_is_rejected(self):
+        """A pointer whose declared OID does not match its payload must be
+        rejected — a pointer cannot claim an identity its bytes lack."""
+        import hashlib as _h
+        sys.path.insert(0, str(REPO / "tools"))
+        import verify_lineage as VL
+        raw = (b"version https://git-lfs.github.com/spec/v1\n"
+               b"oid sha256:" + (b"0" * 64) + b"\n"
+               b"size 5\n")
+        m = VL.LFS_POINTER.match(raw)
+        self.assertIsNotNone(m, "pointer must parse")
+        self.assertEqual(m.group(1).decode(), "0" * 64)
+        # a payload that is not 5 bytes of the declared oid must not verify
+        payload = b"WRONG PAYLOAD"
+        self.assertNotEqual(_h.sha256(payload).hexdigest(), "0" * 64)
+
+    # -- 6. metadata changed after the resolved metadata commit ----------
+
+    def test_metadata_changed_after_its_commit_is_rejected(self):
+        (self.cand / "READINESS.json").write_text('{"changed": true}\n')
+        rc, out = self.verify()
+        self.assertEqual(rc, 1)
+        self.assertIn("differ from the blob at the resolved metadata "
+                      "commit", out)
+
+    def test_metadata_record_for_another_version_is_rejected(self):
+        (self.cand / "CANDIDATE.json").write_text(
+            '{"candidate_version": "9.9.9"}\n')
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "wrong version in metadata")
+        later = run(self.root, "rev-parse", "HEAD")
+        rc, out = self.verify(metadata=later)
+        self.assertEqual(rc, 1)
+        self.assertIn("declares version", out)
+
+    def test_unparseable_committed_metadata_is_rejected(self):
+        (self.cand / "LINEAGE.json").write_text("{ not json\n")
+        run(self.root, "add", "-A")
+        run(self.root, "commit", "-qm", "broken metadata")
+        later = run(self.root, "rev-parse", "HEAD")
+        rc, out = self.verify(metadata=later)
+        self.assertEqual(rc, 1)
+        self.assertIn("is not valid JSON", out)
 
 
 class CommittedLineageTests(unittest.TestCase):

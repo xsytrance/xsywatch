@@ -288,6 +288,49 @@ def main() -> int:
             note(f"{name}: {st}" + (f" — {entry.get('detail','')[:80]}"
                                     if entry.get("detail") else ""))
 
+    # --- candidate provenance must agree with the provenance record -----
+    # Blocker 3: CANDIDATE.json claimed the AI-model licence position was an
+    # unresolved owner action while PROVENANCE.json concluded the
+    # repository-wide warning is not applicable to this candidate. A
+    # manifest cannot state both.
+    prov_p = cand / "PROVENANCE.json"
+    cand_p = cand / "CANDIDATE.json"
+    if not prov_p.exists():
+        err("no PROVENANCE.json — candidate-specific artwork provenance "
+            "must be closed, not inherited from a repository-wide warning")
+    elif cand_p.exists():
+        prov = json.loads(prov_p.read_text(encoding="utf-8"))
+        cnd = json.loads(cand_p.read_text(encoding="utf-8"))
+        if prov.get("candidate_version") != args.version:
+            err(f"PROVENANCE.json is for "
+                f"{prov.get('candidate_version')!r}, not {args.version!r}")
+        bound = cnd.get("provenance_sha256")
+        actual = sha256(prov_p)
+        if bound is not None and bound != actual:
+            err(f"CANDIDATE.json binds provenance {str(bound)[:12]}… but "
+                f"PROVENANCE.json hashes to {actual[:12]}…")
+        prov_clean = (not prov.get("assets_with_ai_checkpoint_pixels")
+                      and not prov.get("assets_with_donor_image_pixels")
+                      and not prov.get("assets_unresolved"))
+        warn_status = str(prov.get("repository_wide_warning", {})
+                          .get("status", ""))
+        prov_says_na = "NOT APPLICABLE" in warn_status.upper()
+        claimed = str(cnd.get("artwork_provenance", {}).get("status", ""))
+        blob = json.dumps(cnd)
+        candidate_says_unresolved = (
+            "AI-model licence position for commercial sale" in blob
+            or "AI-model license position for commercial sale" in blob
+            or "unresolved" in claimed.lower())
+        if prov_clean and prov_says_na and candidate_says_unresolved:
+            err("CANDIDATE.json still records AI/artwork provenance as an "
+                "unresolved owner action while PROVENANCE.json concludes "
+                "the repository-wide warning is NOT APPLICABLE to this "
+                "candidate — the manifest cannot state both")
+        if (not prov_clean or not prov_says_na) and "closed" in claimed.lower():
+            err("CANDIDATE.json claims candidate provenance is closed while "
+                "PROVENANCE.json reports unresolved assets or an applicable "
+                "repository-wide warning")
+
     # --- publishable is the hard interlock -------------------------------
     pub = states.get("publishable", {}).get("state")
     if pub == "complete":

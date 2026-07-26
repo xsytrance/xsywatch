@@ -251,3 +251,173 @@ class CommittedDexEvidenceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class DebugApkDexClassificationTests(unittest.TestCase):
+    """Blocker 2: the debug APK used for physical testing must have every
+    dex classified, not merely named. The device gate runs against this
+    artifact, so its executable content must be understood."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        sys.path.insert(0, str(REPO / "tools"))
+
+    def make_apk(self, dexes: dict) -> Path:
+        """A minimal zip shaped like an APK, carrying the given dex files."""
+        import zipfile
+        p = self.tmp / "app.apk"
+        with zipfile.ZipFile(p, "w") as z:
+            z.writestr("AndroidManifest.xml", b"\x03\x00\x08\x00")
+            z.writestr("res/raw/watchface.xml", b"<WatchFace/>")
+            for name, payload in dexes.items():
+                z.writestr(name, payload)
+        return p
+
+    def classify(self, apk: Path):
+        """The same classification verify_candidate.py performs."""
+        import zipfile
+        import verify_candidate as VC
+        import dex_guard as DG
+        problems, report = [], []
+        with zipfile.ZipFile(apk) as z:
+            for n in sorted(x for x in z.namelist() if x.endswith(".dex")):
+                raw = z.read(n)
+                tp = self.tmp / Path(n).name
+                tp.write_bytes(raw)
+                e = {"path": n, "size": len(raw)}
+                try:
+                    classes = DG.dex_class_descriptors(tp)
+                except ValueError as ex:
+                    problems.append(f"{n}: unreadable ({ex})")
+                    report.append(e)
+                    continue
+                e["classes"] = classes
+                bad = [c for c in classes
+                       if not DG.allowed(c, PACKAGE)
+                       and c not in VC.DEBUG_TOOLCHAIN_CLASSES]
+                if bad:
+                    problems.append(f"{n}: disallowed {bad}")
+                e["disallowed"] = bad
+                report.append(e)
+        return problems, report
+
+    # -- positive control: two allowed R-only dex files ------------------
+
+    def test_two_allowed_r_only_dex_files_pass(self):
+        apk = self.make_apk({
+            "classes.dex": make_dex(R_CLASSES[:3]),
+            "classes2.dex": make_dex(R_CLASSES[3:]),
+        })
+        problems, report = self.classify(apk)
+        self.assertEqual(problems, [], problems)
+        self.assertEqual(len(report), 2)
+
+    # -- the real rc2 shape: R classes + named D8 stubs ------------------
+
+    def test_named_d8_desugaring_stubs_are_allowed(self):
+        import verify_candidate as VC
+        stubs = list(VC.DEBUG_TOOLCHAIN_CLASSES)
+        apk = self.make_apk({
+            "classes.dex": make_dex(R_CLASSES),
+            "classes2.dex": make_dex(stubs),
+        })
+        problems, _ = self.classify(apk)
+        self.assertEqual(problems, [], problems)
+
+    def test_the_allowlist_is_explicit_not_a_wildcard(self):
+        """Each permitted debug-only class is named with a justification;
+        a near-miss must NOT be allowed."""
+        import verify_candidate as VC
+        self.assertIn("Ljava/lang/invoke/VarHandle;",
+                      VC.DEBUG_TOOLCHAIN_CLASSES)
+        for c, why in VC.DEBUG_TOOLCHAIN_CLASSES.items():
+            self.assertTrue(why and len(why) > 8,
+                            f"{c} has no justification")
+        self.assertNotIn("Ljava/lang/invoke/MethodHandle;",
+                         VC.DEBUG_TOOLCHAIN_CLASSES)
+
+    # -- 1. unexpected class in classes.dex ------------------------------
+
+    def test_unexpected_class_in_classes_dex_fails(self):
+        apk = self.make_apk({
+            "classes.dex": make_dex(R_CLASSES + [
+                "Lcom/xsytrance/aurelius/SecretUploader;"]),
+            "classes2.dex": make_dex(R_CLASSES[:1]),
+        })
+        problems, _ = self.classify(apk)
+        self.assertTrue(any("classes.dex" in p and "SecretUploader" in p
+                            for p in problems), problems)
+
+    # -- 2. unexpected class in classes2.dex -----------------------------
+
+    def test_unexpected_class_in_classes2_dex_fails(self):
+        import verify_candidate as VC
+        apk = self.make_apk({
+            "classes.dex": make_dex(R_CLASSES),
+            "classes2.dex": make_dex(list(VC.DEBUG_TOOLCHAIN_CLASSES) + [
+                "Lokhttp3/OkHttpClient;"]),
+        })
+        problems, _ = self.classify(apk)
+        self.assertTrue(any("classes2.dex" in p and "OkHttpClient" in p
+                            for p in problems), problems)
+
+    # -- 3. unreadable debug dex -----------------------------------------
+
+    def test_unreadable_debug_dex_fails(self):
+        apk = self.make_apk({
+            "classes.dex": make_dex(R_CLASSES),
+            "classes2.dex": b"not a dex at all",
+        })
+        problems, _ = self.classify(apk)
+        self.assertTrue(any("unreadable" in p for p in problems), problems)
+
+    # -- 4. parser / dexdump disagreement --------------------------------
+
+    def test_parser_dexdump_disagreement_is_a_failure(self):
+        """dex_guard treats disagreement between its own parser and
+        dexdump as a failure rather than trusting either."""
+        import dex_guard as DG
+        p = self.tmp / "d.dex"
+        p.write_bytes(make_dex(R_CLASSES))
+        mine = DG.dex_class_descriptors(p)
+        cross = DG.dexdump_class_descriptors(p)
+        if cross is None:
+            self.skipTest("dexdump unavailable")
+        self.assertEqual(sorted(cross), sorted(mine),
+                         "the two parsers must agree on a real dex")
+
+    # -- 5. positive: the AAB must have no dex at all ---------------------
+
+    def test_committed_aab_contains_no_dex(self):
+        import glob, zipfile
+        aabs = glob.glob(str(REPO / "releases/aurelius/candidates/*/*.aab"))
+        if not aabs:
+            self.skipTest("no candidate bundle")
+        for a in aabs:
+            with zipfile.ZipFile(a) as z:
+                self.assertEqual(
+                    [n for n in z.namelist() if n.endswith(".dex")], [],
+                    f"{a}: a Watch Face Format bundle must contain no dex")
+
+    # -- the committed VERIFY must carry the classification --------------
+
+    def test_committed_verify_classifies_every_debug_dex(self):
+        import glob
+        found = sorted(glob.glob(str(
+            REPO / "releases/aurelius/candidates/*/VERIFY.json")))
+        checked = 0
+        for f in found:
+            v = json.loads(Path(f).read_text())
+            ds = v.get("dex_state", {})
+            cls = ds.get("apk_debug_classified")
+            if cls is None:
+                continue
+            checked += 1
+            self.assertEqual(len(cls), len(ds["apk_debug"]),
+                             f"{f}: not every APK dex is classified")
+            for e in cls:
+                self.assertIsNotNone(e.get("classes"), f"{f}: {e['path']}")
+                self.assertEqual(e.get("disallowed"), [], f"{f}: {e['path']}")
+        if checked == 0:
+            self.skipTest("no candidate carries debug-dex classification")

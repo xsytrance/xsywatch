@@ -42,6 +42,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -125,6 +126,64 @@ def tree_hash_at(sha: str, path: str) -> str | None:
     if not listing:
         return None
     return hashlib.sha256(listing.encode()).hexdigest()
+
+
+LFS_POINTER = re.compile(
+    rb"^version https://git-lfs\.github\.com/spec/v1\s+oid sha256:([0-9a-f]{64})\s+size (\d+)",
+    re.M)
+
+
+def blob_bytes(sha: str, path: str) -> bytes | None:
+    """Raw bytes of `path` as stored in commit `sha` (may be an LFS
+    pointer rather than the payload)."""
+    r = subprocess.run(["git", "show", f"{sha}:{path}"], cwd=str(REPO),
+                       capture_output=True)
+    return r.stdout if r.returncode == 0 else None
+
+
+def object_identity(sha: str, path: str) -> dict | None:
+    """The authoritative content hash of `path` AT commit `sha`.
+
+    Ordinary blob -> sha256 of the stored bytes.
+    Git-LFS pointer -> the declared `oid sha256:`, with the smudged
+    payload verified separately so a pointer cannot claim an OID its
+    payload does not have.
+    """
+    raw = blob_bytes(sha, path)
+    if raw is None:
+        return None
+    m = LFS_POINTER.match(raw)
+    if m:
+        oid = m.group(1).decode()
+        declared_size = int(m.group(2))
+        payload = None
+        r = subprocess.run(["git", "cat-file", "--filters", f"{sha}:{path}"],
+                           cwd=str(REPO), capture_output=True)
+        if r.returncode == 0:
+            payload = r.stdout
+        out = {"storage": "lfs", "sha256": oid,
+               "declared_size": declared_size,
+               "payload_verified": False}
+        if payload is not None:
+            if payload == raw:
+                # No LFS smudge filter in this checkout (e.g. a CI runner
+                # without git-lfs). The pointer's OID can still be checked
+                # against the canonical hash; the payload simply cannot be
+                # re-hashed here. Report that honestly instead of failing
+                # a correct repository.
+                out["payload_verified"] = None
+                out["payload_note"] = ("LFS smudge unavailable in this "
+                                       "checkout; OID checked, payload "
+                                       "not re-hashed")
+            else:
+                actual = hashlib.sha256(payload).hexdigest()
+                out["payload_sha256"] = actual
+                out["payload_size"] = len(payload)
+                out["payload_verified"] = (actual == oid
+                                           and len(payload) == declared_size)
+        return out
+    return {"storage": "blob", "sha256": hashlib.sha256(raw).hexdigest(),
+            "declared_size": len(raw), "payload_verified": True}
 
 
 def sha256_file(p: Path) -> str:
@@ -281,26 +340,116 @@ def main() -> int:
 
     # ---- the artifact commit must contain the artifacts ------------------
     rel = f"releases/{face}/candidates/{args.version}"
-    canonical: dict[str, str] = {}
-    for name in sorted(p.name for p in cand.glob("*.aab")) + \
-                sorted(p.name for p in cand.glob("*.apk")):
-        blob = path_at(args.artifact, f"{rel}/{name}")
-        if blob is None:
-            err(f"consumer_artifact_commit does not contain {name}")
-        else:
-            canonical[name] = sha256_file(cand / name)
-    if path_at(args.artifact, f"{rel}/VERIFY.json") is None:
-        err("consumer_artifact_commit does not contain VERIFY.json")
-    if not issues:
-        ok(f"artifact commit contains the canonical artifacts and VERIFY")
-    result["canonical_artifacts"] = canonical
 
-    # ---- the metadata commit must contain the metadata -------------------
-    for name in ("CANDIDATE.json", "READINESS.json"):
-        if path_at(args.metadata, f"{rel}/{name}") is None:
+    # The COMMIT OBJECT is authoritative, not the working tree. Hashing the
+    # current file would let a later edit be attributed to an earlier
+    # artifact commit: create commit A, change the AAB afterwards, rebuild
+    # metadata around the new bytes, keep naming A, and a tree-hashing
+    # verifier still passes.
+    canonical: dict[str, str] = {}
+    objects: dict[str, dict] = {}
+    tracked = sorted(git("ls-tree", "--name-only", args.artifact,
+                         f"{rel}/").splitlines())
+    tracked_names = {Path(t).name for t in tracked}
+    # The CANONICAL SET is defined by the artifact commit, not by whatever
+    # happens to be on disk. The working tree is then required to match it.
+    committed_arts = sorted(n for n in tracked_names
+                            if n.endswith((".aab", ".apk")))
+    on_disk = sorted({p.name for p in cand.glob("*.aab")}
+                     | {p.name for p in cand.glob("*.apk")})
+
+    for name in committed_arts:
+        ident = object_identity(args.artifact, f"{rel}/{name}")
+        if ident is None:
+            err(f"consumer_artifact_commit does not contain {name}")
+            continue
+        objects[name] = ident
+        canonical[name] = ident["sha256"]
+        if ident["storage"] == "lfs" and ident["payload_verified"] is False:
+            err(f"{name}: LFS pointer at the artifact commit declares oid "
+                f"{ident['sha256'][:12]}… but its payload hashes to "
+                f"{ident.get('payload_sha256', 'unavailable')[:12]}… "
+                f"(or the size disagrees)")
+        # the file on disk NOW must equal the object at that commit
+        disk = cand / name
+        if not disk.exists():
+            err(f"{name}: named at the artifact commit but absent from the "
+                f"candidate directory")
+        else:
+            live = sha256_file(disk)
+            if live != ident["sha256"]:
+                err(f"{name}: current bytes {live[:12]}… differ from the "
+                    f"object stored at consumer_artifact_commit "
+                    f"{ident['sha256'][:12]}… — the artifact changed after "
+                    f"the commit it is attributed to")
+
+    # exactly the canonical set, no unexpected replacement carrying the
+    # same role
+    uncommitted = sorted(set(on_disk) - set(committed_arts))
+    absent = sorted(set(committed_arts) - set(on_disk))
+    if uncommitted:
+        err(f"candidate directory holds artifact(s) {uncommitted} that are "
+            f"NOT in the artifact commit — an unexpected replacement "
+            f"carrying the same role")
+    if absent:
+        err(f"artifact commit names {absent} but the candidate directory "
+            f"is missing them")
+    n_aab = sum(1 for n in committed_arts if n.endswith(".aab"))
+    n_apk = sum(1 for n in committed_arts if n.endswith(".apk"))
+    if n_aab != 1 or n_apk != 1:
+        err(f"artifact commit must contain exactly one .aab and one .apk, "
+            f"found {n_aab} and {n_apk}")
+
+    v_ident = object_identity(args.artifact, f"{rel}/VERIFY.json")
+    if v_ident is None:
+        err("consumer_artifact_commit does not contain VERIFY.json")
+    elif (cand / "VERIFY.json").exists():
+        if sha256_file(cand / "VERIFY.json") != v_ident["sha256"]:
+            err("VERIFY.json changed after the artifact commit it is "
+                "attributed to")
+    if not issues:
+        ok(f"artifact commit holds exactly the canonical set; every byte "
+           f"matches the committed object")
+    result["canonical_artifacts"] = canonical
+    result["artifact_objects"] = objects
+
+    # ---- metadata: the COMMITTED blobs are authoritative ------------------
+    # Existence is not enough. Each record is read from the resolved
+    # metadata commit, parsed, and required to equal the current file —
+    # otherwise later or dirty metadata could be attributed to an earlier
+    # metadata commit.
+    meta_objects: dict[str, dict] = {}
+    for name in ("CANDIDATE.json", "READINESS.json", "LINEAGE.json",
+                 "PROVENANCE.json"):
+        raw = blob_bytes(args.metadata, f"{rel}/{name}")
+        if raw is None:
             err(f"candidate_metadata_commit does not contain {name}")
-    if not any("metadata_commit does not contain" in i for i in issues):
-        ok("metadata commit contains CANDIDATE and READINESS")
+            continue
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError as e:
+            err(f"{name} at the metadata commit is not valid JSON ({e})")
+            continue
+        h = hashlib.sha256(raw).hexdigest()
+        meta_objects[name] = {"sha256": h, "keys": len(parsed)}
+        disk = cand / name
+        if not disk.exists():
+            err(f"{name}: present at the metadata commit but absent from "
+                f"the candidate directory")
+        elif sha256_file(disk) != h:
+            err(f"{name}: current bytes differ from the blob at the "
+                f"resolved metadata commit — later or dirty metadata "
+                f"cannot be attributed to an earlier commit")
+        # the record must be about THIS candidate
+        ver = parsed.get("candidate_version")
+        if ver is not None and ver != args.version:
+            err(f"{name} at the metadata commit declares version {ver!r}, "
+                f"not {args.version!r}")
+    if not any(k in i for i in issues
+               for k in ("metadata commit", "metadata_commit")):
+        ok(f"metadata commit holds {len(meta_objects)} parsed records, all "
+           f"byte-identical to the working tree")
+    result["metadata_objects"] = meta_objects
 
     # ---- rebuild twice from the source commit ---------------------------
     if args.build:

@@ -24,6 +24,7 @@ import os
 import re
 import shutil
 import subprocess
+import tempfile
 import sys
 import zipfile
 from pathlib import Path
@@ -73,6 +74,29 @@ def badging(tool: str, apk: Path) -> dict | None:
             "versionName": m.group(3),
             "targetSdk": int(t.group(1)) if t else None,
             "minSdk": int(s.group(1)) if s else None}
+
+
+# Debug-only classes permitted in the DEVICE-TEST APK, each named
+# explicitly. This is NOT a wildcard and it does NOT apply to the release
+# dex gate, which stays strictly generated-R-only — the bundle Play
+# receives must contain no dex at all.
+#
+# These four are D8/R8 core-library-desugaring support stubs that the
+# toolchain emits into a secondary dex on debug builds. They are not
+# application code, nothing in this package references them (there is no
+# code to reference them), and they never reach the distributed artifact.
+# They are allowed here so the device-test APK verifies, and they are
+# recorded in VERIFY.json so the allowance is visible rather than implied.
+DEBUG_TOOLCHAIN_CLASSES = {
+    "Lcom/android/tools/r8/annotations/LambdaMethod;":
+        "R8 desugaring annotation stub",
+    "Ljava/lang/Record;":
+        "core-library desugaring stub for java.lang.Record",
+    "Ljava/lang/invoke/MethodHandles$Lookup;":
+        "core-library desugaring stub for MethodHandles.Lookup",
+    "Ljava/lang/invoke/VarHandle;":
+        "core-library desugaring stub for VarHandle",
+}
 
 
 def describe_signing(path: Path, bundle: bool = False) -> str:
@@ -316,12 +340,73 @@ def main() -> int:
                     "elevation source — a sensitive permission backing no "
                     "feature")
 
-    # ---- dex state of BOTH artifacts, explicitly ------------------------
+    # ---- dex state of BOTH artifacts, CLASSIFIED ------------------------
+    # Naming the dex files is not understanding them. The physical device
+    # gate runs against this APK, so its executable content must be known
+    # even though Play distribution uses the dex-free bundle.
+    #
+    # Policy for this android:hasCode="false" resource-only package:
+    # generated Aurelius R classes ONLY. Any other class must be
+    # identified, justified and separately approved — never silently
+    # accepted.
+    sys.path.insert(0, str(REPO / "tools"))
+    import dex_guard as DG
+    apk_dex_report = []
     with zipfile.ZipFile(apk) as z:
-        apk_dex = sorted(n for n in z.namelist() if n.endswith(".dex"))
-    ok(f"debug APK dex: {apk_dex or 'none'} — policy: the device-test APK "
-       f"MAY retain the generated R dex; only the distributed bundle must "
-       f"be dex-free")
+        apk_dex_names = sorted(n for n in z.namelist() if n.endswith(".dex"))
+        with tempfile.TemporaryDirectory() as td:
+            for n in apk_dex_names:
+                raw = z.read(n)
+                tp = Path(td) / Path(n).name
+                tp.write_bytes(raw)
+                entry = {"path": n,
+                         "sha256": hashlib.sha256(raw).hexdigest(),
+                         "size_bytes": len(raw)}
+                try:
+                    classes = DG.dex_class_descriptors(tp)
+                except ValueError as e:
+                    entry["classes"] = None
+                    entry["parse_error"] = str(e)
+                    err(f"debug APK {n} could not be parsed ({e}) — the "
+                        f"executable content of the device-test artifact "
+                        f"must be readable")
+                    apk_dex_report.append(entry)
+                    continue
+                entry["classes"] = classes
+                entry["class_count"] = len(classes)
+                cross = DG.dexdump_class_descriptors(tp)
+                entry["dexdump_agrees"] = (None if cross is None
+                                           else cross == classes)
+                if cross is not None and cross != classes:
+                    err(f"debug APK {n}: the built-in parser and dexdump "
+                        f"disagree on the class set ({classes} vs {cross})")
+                justified = [c for c in classes
+                             if not DG.allowed(c, gradle["package"])
+                             and c in DEBUG_TOOLCHAIN_CLASSES]
+                bad = [c for c in classes
+                       if not DG.allowed(c, gradle["package"])
+                       and c not in DEBUG_TOOLCHAIN_CLASSES]
+                entry["generated_r_classes"] = [
+                    c for c in classes if DG.allowed(c, gradle["package"])]
+                entry["justified_toolchain_classes"] = {
+                    c: DEBUG_TOOLCHAIN_CLASSES[c] for c in justified}
+                entry["disallowed"] = bad
+                if bad:
+                    err(f"debug APK {n} contains {len(bad)} class(es) "
+                        f"outside the generated-R allowlist: {bad}. A "
+                        f"resource-only watch face must not ship code; "
+                        f"any debug-only class must be identified and "
+                        f"approved, not silently accepted.")
+                apk_dex_report.append(entry)
+    total_classes = sorted({c for e in apk_dex_report
+                            for c in (e.get("classes") or [])})
+    n_r = len([c for c in total_classes if DG.allowed(c, gradle["package"])])
+    n_tool = len([c for c in total_classes if c in DEBUG_TOOLCHAIN_CLASSES])
+    if not any("debug APK" in i for i in issues):
+        ok(f"debug APK dex classified: {len(apk_dex_names)} file(s), "
+           f"{len(total_classes)} distinct class(es) = {n_r} generated R + "
+           f"{n_tool} named D8 desugaring stub(s); no unexplained class")
+    apk_dex = apk_dex_names
 
     # ---- signing state --------------------------------------------------
     # A v1 JAR signature lives in META-INF/*.RSA, but APK Signature Scheme
@@ -363,10 +448,20 @@ def main() -> int:
         },
         "dex_state": {
             "aab": [],
+            "aab_contains_dex": False,
             "apk_debug": apk_dex,
-            "apk_policy": ("the device-test APK may retain the generated R "
-                           "dex; only the distributed bundle must be "
-                           "dex-free"),
+            "apk_debug_classified": apk_dex_report,
+            "apk_debug_distinct_classes": total_classes,
+            "apk_debug_justified_toolchain_classes": DEBUG_TOOLCHAIN_CLASSES,
+            "apk_policy": (
+                "The distributed BUNDLE must contain no dex. The device-test "
+                "APK may retain the generated Aurelius R dex and nothing "
+                "else: this is an android:hasCode=\"false\" resource-only "
+                "package, so any other class would be unexplained. Every "
+                "APK dex is extracted, hashed, parsed for its defined class "
+                "descriptors and cross-checked with dexdump; verification "
+                "fails on an unreadable dex, parser disagreement, or any "
+                "class outside the generated-R allowlist."),
         },
         "dex_gate": dex_gate,
         "publication_status": "not published",

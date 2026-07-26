@@ -53,8 +53,11 @@ configurations.matching { it.name.endsWith("RuntimeClasspath") }
 // the difference between having a distributable artifact and not having one.
 //
 // tools/verify_candidate.py re-checks, on the produced artifacts, that the
-// only thing ever dexed was the R class and that neither the bundle nor the
-// APK contains dex.
+// only thing ever dexed for the release was the R class, that the BUNDLE
+// contains no dex at all, and that every dex inside the debug device-test
+// APK holds only generated Aurelius R classes plus a small, explicitly
+// named set of D8 desugaring stubs. The debug APK DOES contain dex — an
+// earlier version of this comment wrongly claimed neither artifact did.
 // FAIL-CLOSED. The gate inspects every class descriptor each release dex
 // DEFINES and deletes only when the complete set is inside the generated-R
 // allowlist. Anything else fails the build before packaging.
