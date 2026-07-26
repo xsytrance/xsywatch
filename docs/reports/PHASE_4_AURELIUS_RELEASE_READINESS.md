@@ -653,3 +653,171 @@ and privacy drafts. Every forbidden claim is enumerated and avoided.
 **Decisions needed:** `PHASE_4_TEST1_READINESS.md`,
 `docs/commercial/aurelius/2.0.0-rc1/COPY_DRAFT.md` (price, privacy URL,
 support address).
+
+---
+
+# Checkpoint B round 2 — rc2, answering CHANGES REQUESTED
+
+**Status:** **Checkpoint B implementation complete — acceptance blocked**
+**Date:** 2026-07-26
+**Candidate:** `com.xsytrance.aurelius` **2.0.0-rc2** (versionCode 3)
+**Visual version:** `field-tourbillon-mk2-rc1` — unchanged, APPROVAL-0005 still proposed
+
+Answers `docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md`. rc1 is
+preserved unmodified as an unapproved historical candidate.
+
+## Why rc2 exists, and why the pixels did not change
+
+Three required corrections change package bytes, so they could not be
+applied to rc1 without invalidating its recorded hashes. **No runtime
+visual resource differs between rc1 and rc2**, so the visual generation
+and APPROVAL-0005 carry forward. No visual generation was manufactured for
+a package-metadata change.
+
+## Commit roles
+
+| Role | Commit |
+|---|---|
+| `consumer_source_commit` | `a328669e487c6773b6c359d6b7ae4a5d1d5d4b49` |
+| `consumer_artifact_commit` | `ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b` |
+| `candidate_metadata_commit` | `caa7ef4e6cbbbcfbff0c17f8f7b5ce78e32149cf` |
+| studio producing | `04015886dbee5cd17b66c4627f822aef3db73d16` |
+| studio metadata | `97ba0f1ceeee721a7a2ec0521603bd61935d036d` |
+
+## rc2 artifacts
+
+| Artifact | SHA-256 | Size | Signing |
+|---|---|---|---|
+| `aurelius-2.0.0-rc2.aab` | `1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23` | 748,287 B | unsigned |
+| `aurelius-2.0.0-rc2-debug.apk` | `939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc` | 831,529 B | debug |
+
+**Both rebuilt twice from clean detached worktrees at the source commit,
+byte-identical to each other and equal to the committed artifacts.**
+
+## Blocker 1 — device and wear evidence: still BLOCKED
+
+Headline changed as required. `adb` reported zero devices throughout, and
+zero wear sessions exist. Neither can be invented.
+`docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md`.
+
+## Blocker 2 — consumer lineage: CLOSED
+
+The single `consumer_commit` is gone, replaced by three machine-checked
+roles. Ancestry alone would not have caught rc1's defect — `399ba12`
+genuinely *is* an ancestor. What catches it is requiring the source commit
+to contain every build input, to declare the candidate's own versionName,
+and to **rebuild to the canonical bytes**. 12 deliberate-failure tests,
+including a stale source commit shaped exactly like rc1's.
+
+## Blocker 3 — dex removal: now FAIL-CLOSED
+
+`tools/dex_guard.py` enumerates every release dex, records sha256 and
+size, parses every class descriptor it defines, and deletes only when the
+whole set is inside the generated-R allowlist. A self-contained DEX parser
+means the gate cannot be skipped by a missing SDK; `dexdump` runs as an
+independent cross-check and disagreement is itself a failure. An
+unparseable dex is never deleted.
+
+Recorded for rc2: 1 dex, 3,076 B, six R classes, allowlist satisfied.
+AAB contains no dex; the debug APK retains it, and that policy is stated
+explicitly rather than left implicit. 13 tests, including the three
+injections the review asked for and the R-only positive control.
+`build_candidate.sh` now runs `verify_candidate.py` and fails the build.
+
+## Blocker 4 — API-36 permissions: manifest CORRECTED, device test BLOCKED
+
+**rc2 declares no permission at all.**
+
+- `ACTIVITY_RECOGNITION` — removed. The generated WFF XML references no
+  step, distance, calorie, floor or elevation source. It backed no feature.
+- `BODY_SENSORS` — removed. Apps targeting API 36+ must use the granular
+  `android.permission.health.*` permissions; the legacy one only applies
+  with `android:maxSdkVersion="35"`, which `minSdk 36` can never reach.
+
+Whether the WFF runtime supplies `[HEART_RATE]` without a declared
+permission is **argued but unproven** — it needs the watch.
+`tools/build_permission_variant.sh` builds the granular-permission variant
+so the comparison needs only a device. `permissions-verified` is
+**blocked**, not complete. Full reasoning:
+`docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md`.
+
+## Blocker 5 — evidence validation: now CONTENT-BASED
+
+`READINESS.json` + `tools/check_candidate_readiness.py`, 13 gates with
+explicit `unknown|blocked|failed|waived|proposed|complete`. The checker
+re-derives every claim: an empty wear directory, a blocker document, a
+session bound to another APK, partial context coverage and a mismatched
+installed-APK hash are each rejected, and `publishable` cannot open while
+any predecessor is open. 15 deliberate-failure tests plus a positive
+control proving it is not unfalsifiable in the other direction.
+
+**Current state: 3 of 13 gates complete.** The record says so.
+
+## Blocker 6 — candidate provenance: CLOSED, warning scoped not deleted
+
+All 50 manifested assets plus the generated preview traced to producing
+commit and source paths, with those scripts read *at that commit*.
+
+| | |
+|---|---|
+| AI-checkpoint pixels | **0** |
+| Donor-image pixels | **0** |
+| Drifted assets | **0** |
+| Repo-wide LICENSING.md warning | **NOT APPLICABLE to this candidate** |
+
+Decisive cross-check: **zero image-ingest call sites in any studio
+script**, so no external raster can reach a render. The repository-wide
+warning remains accurate for the legacy faces it describes and is neither
+deleted nor weakened — `PROVENANCE.json` says exactly that.
+
+Two false positives were caught before this could be reported. A keyword
+scan flagged all 50 assets on the word "checkpoint" in a comment; a
+PIL-read heuristic then flagged all 50 on `Image.open(p)`. Detection is
+now mechanism-based.
+
+## Verification
+
+| Gate | Result |
+|---|---|
+| engine tests | **137 passed** (95 → 137) |
+| visual + lineage tests | **67 passed** |
+| date-aperture proof | 62 renders, 0 violations |
+| dex allowlist + deliberate failures | 13 passed |
+| consumer-lineage tests | 12 passed |
+| readiness-gate tests | 15 passed |
+| studio guards | 10 passed (both interpreters) |
+| WO-P7 | **PASS**, max 3.972% of 15% |
+| release fixtures | 10/10 |
+| deterministic generation | pass |
+| resource inventory | clean, 60 resources |
+| reference render vs proposed candidate | byte-identical |
+| all-ten Gradle builds | **10/10 PASS** |
+| two detached clean candidate builds | **byte-identical** |
+| APK + AAB build | ✅ |
+| package metadata / manifest verification | ✅ 0 problems |
+| official WFF validator | ✅ PASS (v4, XML from the rc2 APK) |
+| memory evaluator | ✅ PASS |
+| readiness checker | ✅ 0 inconsistencies |
+| provenance | ✅ clean |
+| `tools/validate.py` | **0 errors, 13 warnings** |
+| `git diff --check` | clean per commit |
+| CI | see below |
+
+`releases/aurelius/current/` untouched at `844b9c43…`.
+
+## Owner launch inputs — not invented
+
+| Item | State |
+|---|---|
+| TEST-1 account type / creation date / production access / prior app | **unresolved — four facts only AGENOR can supply** |
+| Privacy policy URL | target `https://x1c7.com/privacy/aurelius` recorded; **not hosted**, no content checksum yet |
+| Support email + response commitment | **owner to choose** |
+| Price | ChatGPT recommends **$3.99 one-time**. Recorded as a *recommendation*, **not** as the owner's decision. Initial markets to be recorded with the final decision. |
+
+## Remaining blockers to acceptance
+
+1. physical Watch7 validation of rc2;
+2. three owner wear sessions bound to APK `939d2b44…`;
+3. on-device confirmation of the permission model;
+4. owner pixel acceptance of APPROVAL-0005;
+5. the four TEST-1 facts, hosted privacy policy, support address, price.
