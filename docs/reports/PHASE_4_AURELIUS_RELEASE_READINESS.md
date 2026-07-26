@@ -84,7 +84,7 @@ deliberate change rather than environment drift.
 | memory evaluator (immutable release) | ✅ **PASS** |
 | `tools/validate.py` | **0 errors, 13 warnings** (all pre-existing, documented) |
 | `git diff --check` | clean, verified per-commit |
-| CI | ⚠️ **not yet observed** — triggers on `phase-*/**` at push |
+| CI | ✅ **green** — run `30216783275`, passed in 29 s at head `b4dd574` |
 
 Toolchain: JDK 21.0.11, Gradle 9.6.1, SDK/build-tools 36, Python 3.14.4,
 Pillow 12.1.1 (matches the `states.toml` pin), Blender 4.5.11, WFF
@@ -436,8 +436,12 @@ python3 tools/wear_log.py
 
 ## 13. Qualifications
 
-1. **CI not yet observed** for either branch; every gate CI runs was run
-   locally. Treat CI as unverified until a green run exists after push.
+1. **CI is green** on the consumer branch — run
+   [`30216783275`](https://github.com/xsytrance/xsywatch/actions/runs/30216783275),
+   29 s, at head `b4dd574`. CI deliberately does **not** build APKs, run
+   the WFF validator or run the memory evaluator (runner cost, documented
+   in the workflow header); those three were run locally and are recorded
+   in §3. `AGENOR-Horology` has no CI workflow.
 2. **No device evidence** in Checkpoint A — no Watch7 was attached.
    Physical validation belongs to Checkpoint B.
 3. **Exact APK reproduction is demonstrated on one machine.** The two

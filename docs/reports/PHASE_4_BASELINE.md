@@ -112,7 +112,7 @@ All commands run from the repository root on the reference Linux machine.
 | memory footprint (immutable release) | same, against `releases/aurelius/current/aurelius.apk` | ✅ PASS |
 | repository validation | `python3 tools/validate.py` | **0 errors, 13 warnings** |
 | whitespace / conflict markers | `git diff --check` | clean |
-| CI | `.github/workflows/validate.yml` | runs on `phase-*/**` push; **not yet observed for this branch** — see §9 |
+| CI | `.github/workflows/validate.yml` | ✅ **green** — run `30216783275`, `validate` job passed in 29 s on branch head `b4dd574` |
 
 ### The 13 validation warnings
 
@@ -247,10 +247,13 @@ touching anything.
 
 ## 9. Qualifications
 
-1. **CI not yet observed for this branch.** The workflow triggers on
-   `phase-*/**`, so it will run when the branch is pushed. Every gate CI
-   executes was run locally and is recorded above; treat the CI column as
-   unverified until a green run exists.
+1. ~~**CI not yet observed for this branch.**~~ **Resolved:** the branch
+   was pushed and GitHub Actions run
+   [`30216783275`](https://github.com/xsytrance/xsywatch/actions/runs/30216783275)
+   passed in 29 s at branch head `b4dd574`. Note CI deliberately does not
+   build APKs, run the WFF validator or run the memory evaluator (runner
+   cost; see the workflow header) — those three gates are local-only and
+   their results are recorded in §3–§4 above.
 2. **Device evidence is not part of this baseline.** No Watch7 was
    attached. Physical validation belongs to Checkpoint B and to the wear
    packet.
