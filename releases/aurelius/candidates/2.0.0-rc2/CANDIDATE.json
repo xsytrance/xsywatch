@@ -1,0 +1,172 @@
+{
+  "approval_id": "APPROVAL-0005",
+  "approval_state": {
+    "architecture_review": "pending",
+    "note": "rc1 is NOT promoted to approved goldens; field-tourbillon-mk2-r2 remains the active approved golden",
+    "owner": "proposed"
+  },
+  "artifacts": {
+    "aab": {
+      "contains_dex": false,
+      "name": "aurelius-2.0.0-rc2.aab",
+      "role": "distribution candidate (Play requires a Wear OS app bundle for watch faces)",
+      "sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "signing": "unsigned \u2014 no upload key exists (ADR-010 \u00a75)",
+      "size_bytes": 748287
+    },
+    "apk_debug": {
+      "name": "aurelius-2.0.0-rc2-debug.apk",
+      "role": "sideload / physical device testing only",
+      "sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+      "signing": "debug (C=US, O=Android, CN=Android Debug)",
+      "size_bytes": 831529
+    }
+  },
+  "build_commands": {
+    "candidate": "tools/build_candidate.sh --clean --out <dir>  (runs the dex gate and verify_candidate.py; fails the build if either fails)",
+    "provenance": "python3 tools/candidate_provenance.py aurelius --version 2.0.0-rc2",
+    "readiness": "python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2",
+    "studio_regenerate": "blender -b -P scripts/export_rc1_layers.py && python3 scripts/finish_rc1_exports.py",
+    "verify_lineage": "python3 tools/verify_lineage.py aurelius --version 2.0.0-rc2 --source a328669e487c6773b6c359d6b7ae4a5d1d5d4b49 --artifact ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b --metadata auto --build"
+  },
+  "candidate_metadata_commit": "auto \u2014 resolved by `git log -1 --format=%H -- releases/aurelius/candidates/2.0.0-rc2/CANDIDATE.json`; a metadata file cannot contain its own commit hash",
+  "channel": "candidates",
+  "compile_sdk": 36,
+  "consumer_artifact_commit": "ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b",
+  "consumer_source_commit": "a328669e487c6773b6c359d6b7ae4a5d1d5d4b49",
+  "device_evidence": {
+    "procedure": "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md",
+    "required_before_checkpoint_b_acceptance": true,
+    "status": "BLOCKED \u2014 no Galaxy Watch7 reachable"
+  },
+  "dex_gate": {
+    "evidence": "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json",
+    "passed": true,
+    "summary": "1 release dex, 3076 B, six generated R classes, allowlist satisfied, deleted only after verification"
+  },
+  "dex_state": {
+    "aab": [],
+    "apk_debug": [
+      "classes.dex",
+      "classes2.dex"
+    ],
+    "apk_policy": "the device-test APK may retain the generated R dex; only the distributed bundle must be dex-free"
+  },
+  "evidence": {
+    "aod_luminance": "docs/reports/evidence/phase-4/aurelius/aod/",
+    "approval_record": "watchfaces/aurelius/visual/approvals/APPROVAL-0005-field-tourbillon-mk2-rc1.json",
+    "baseline": "docs/reports/PHASE_4_BASELINE.md",
+    "policy_audit": "docs/reports/PHASE_4_POLICY_AUDIT.md",
+    "wear": "docs/reports/evidence/phase-4/aurelius/wear/"
+  },
+  "face": "aurelius",
+  "final_review_status": "Checkpoint B implementation complete \u2014 acceptance blocked",
+  "goldens": {
+    "previous_approved_aod": "2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936",
+    "previous_approved_normal": "7fd2cf63607e2aa6ef53d0443c44e16885284705d5f4336602aa3ce2526a556e",
+    "proposed_aod": "3e340f4379e1ca8462071761c8c46b8e0e292a7614ac9a2ccde7454a6af934aa",
+    "proposed_normal": "23e1d8e83f642d751ec3ad0c7cf1037faf8359b87ed31288a359a09d81c1d790"
+  },
+  "immutable_prior_release": {
+    "path": "releases/aurelius/current/aurelius.apk",
+    "sha256": "844b9c430f65e0dfaec88604175f1345b4173d647496de4b4ed74359ccfdbcc2",
+    "state": "untouched by this candidate",
+    "version_code": 1,
+    "version_name": "1.0"
+  },
+  "inventory_sha256": "1ec66797d1f4fdbf123e68240662ec256f056e8429941871e89cf675310359ce",
+  "inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-rc1.json",
+  "known_limitations": [
+    "no owner wear sessions recorded \u2014 three required contexts outstanding",
+    "no physical Watch7 validation of rc2 \u2014 no device was reachable",
+    "heart-rate permission model is settled statically but NOT confirmed on device",
+    "AOD panel capture remains unavailable on this hardware",
+    "battery impact is anecdotal, not measured",
+    "tested on one device model only (Galaxy Watch7 44 mm)",
+    "Cycles studio re-renders are not byte-deterministic; committed export bytes are canonical",
+    "Play developer account status (TEST-1) unresolved"
+  ],
+  "licensing_provenance": {
+    "asset_licenses": "docs/asset-licenses.json (28 audited entries)",
+    "derived_assets": "docs/derived-asset-provenance.json",
+    "notices": "THIRD_PARTY_NOTICES/",
+    "open_owner_action": "AI-model licence position for commercial sale of generated artwork remains unresolved (docs/LICENSING.md)",
+    "typeface": "Rajdhani Bold, SIL OFL-1.1"
+  },
+  "lineage": "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json",
+  "manifest_permissions": {
+    "apk": [],
+    "policy": "minimum verified set; no unqualified BODY_SENSORS on an API-36-only package and no sensitive permission without a backing feature",
+    "source": []
+  },
+  "min_sdk": 36,
+  "package": "com.xsytrance.aurelius",
+  "policy_audit": {
+    "date_checked": "2026-07-26",
+    "path": "docs/reports/PHASE_4_POLICY_AUDIT.md",
+    "unresolved": [
+      "TEST-1 Play developer account status"
+    ]
+  },
+  "product": "AURELIUS \u2014 Field Tourbillon Mk II",
+  "provenance": "releases/aurelius/candidates/2.0.0-rc2/PROVENANCE.json",
+  "publication_status": "not published",
+  "readiness": "releases/aurelius/candidates/2.0.0-rc2/READINESS.json",
+  "reproducibility": {
+    "aab_byte_identical": true,
+    "apk_byte_identical": true,
+    "equals_canonical_artifacts": true,
+    "method": "two clean DETACHED WORKTREE builds at the declared consumer source commit",
+    "note": "ancestry proves ordering; rebuilding proves the source commit actually produces these bytes"
+  },
+  "schema": "agenor.release-candidate/1",
+  "signing": {
+    "aab": "unsigned; Play App Signing would hold the app signing key and a developer-held RSA 2048+ upload key is a later, separately authorised operation",
+    "apk": "debug certificate, sideload only",
+    "policy": "ADR-010 \u00a75",
+    "state": "no production signing material exists"
+  },
+  "studio_generation": "CommandSatin_ReservePrecision",
+  "studio_metadata_commit": "97ba0f1ceeee721a7a2ec0521603bd61935d036d",
+  "studio_producing_commit": "04015886dbee5cd17b66c4627f822aef3db73d16",
+  "studio_repo": "xsytrance/AGENOR-Horology",
+  "supersedes": {
+    "preserved_at": "releases/aurelius/candidates/2.0.0-rc1/",
+    "reason": "Checkpoint B corrections change package bytes",
+    "version": "2.0.0-rc1"
+  },
+  "target_sdk": 36,
+  "toolchain": {
+    "agp": "9.2.1",
+    "android_sdk": "36",
+    "blender": "4.5.11 LTS (studio)",
+    "build_tools": "36.0.0",
+    "gradle": "9.6.1 (committed wrapper)",
+    "jdk": "Temurin 21.0.11+10 LTS",
+    "memory_footprint": "1.7.0",
+    "pillow": "12.1.1",
+    "python": "3.14.4",
+    "wff_validator": "google/watchface, max supported format 5"
+  },
+  "validation": {
+    "bundle_contains_dex": false,
+    "consumer_lineage_verified": true,
+    "dex_gate": "PASS (fail-closed allowlist)",
+    "identity_consistent_across_toml_gradle_manifest_xml_artifacts": true,
+    "memory_footprint": "PASS (ambient 10 MB / active 100 MB limits)",
+    "packaged_xml_matches_source": true,
+    "wff_validator": "PASS (v4, against the XML extracted from the APK)",
+    "wo_p7_aod_luminance": {
+      "evidence": "docs/reports/evidence/phase-4/aurelius/aod/wo_p7_luminance.json",
+      "limit_pct": 15.0,
+      "max_pct": 3.972,
+      "result": "PASS",
+      "samples": 144
+    }
+  },
+  "version_code": 3,
+  "version_name": "2.0.0-rc2",
+  "visual_version": "field-tourbillon-mk2-rc1",
+  "visual_version_note": "unchanged from rc1: no runtime visual resource differs between rc1 and rc2, so APPROVAL-0005 and field-tourbillon-mk2-rc1 carry forward. No visual generation was manufactured for a package-metadata change.",
+  "wff_version": 4
+}

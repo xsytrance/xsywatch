@@ -1,5 +1,5 @@
 {
-  "candidate_version": "2.0.0-rc1",
+  "candidate_version": "2.0.0-rc2",
   "face": "aurelius",
   "files": {
     "aod_480.png": "acf2d5ecdbc9f4ffc8f6bcdd83173687850599d2f2cfa6e98457e32cd738ddc0",
@@ -22,7 +22,7 @@
     "note": "exact icon pixel dimensions could not be confirmed from an official page; 512x512 is produced as the common convention and MUST be confirmed before submission \u2014 see PHASE_4_POLICY_AUDIT.md MEDIA-1",
     "screenshots": "WO-G6: 1:1, >=384x384, watch face only, no device frames, no added text/graphics/background"
   },
-  "reproduce": "python3 tools/build_media.py aurelius --version 2.0.0-rc1",
+  "reproduce": "python3 tools/build_media.py aurelius --version 2.0.0-rc2",
   "source": "derived from committed reference renders and runtime resources; no hand-edited artwork",
   "visual_version": "field-tourbillon-mk2-rc1"
 }

@@ -1,0 +1,57 @@
+{
+  "build_inputs_at_source": {
+    "tools/build_candidate.sh": "c2cbf9ca521fef26e24f2f0f128cdaaf8d019ef4",
+    "tools/dex_guard.py": "02686f400320fc195fa502c7581c13835eb02ab5",
+    "tools/verify_candidate.py": "2d7fd0bf55e8fc80db75f0635030ef818a223db7",
+    "tools/verify_lineage.py": "9ccb387d150a66f72fb0674374dc7c193de991a8",
+    "watchfaces/aurelius/app/build.gradle.kts": "9971bd9fd05eef1f622d675442a59f8b29275851",
+    "watchfaces/aurelius/app/src/main/AndroidManifest.xml": "fe959dccbe907a1d5ae444f56539515b602bcacb",
+    "watchfaces/aurelius/app/src/main/res/**": "29ed1bd9f38131d7d4c278d21e83acc6aee4bf161996909c4a9ac2e47ecdd9f0",
+    "watchfaces/aurelius/app/src/main/res/raw/watchface.xml": "4eade620b16c3fe738711ebdd23639d32cfa12e1",
+    "watchfaces/aurelius/build.gradle.kts": "fd4b88199ff5d5e066f958d055895f2e28196980",
+    "watchfaces/aurelius/engine/face.toml": "dca8aed88aec3254ad770c4587a51bacfc725062",
+    "watchfaces/aurelius/engine/handoff.json": "3dc75b6feb936c27254b66b6d41f5f88f12a9d30",
+    "watchfaces/aurelius/gradle/wrapper/gradle-wrapper.jar": "b1b8ef56b44f16b14dc800fa8103a6d89abb526f",
+    "watchfaces/aurelius/gradle/wrapper/gradle-wrapper.properties": "a9db11550c6202b666ed9c44cafdc6726fd5b264",
+    "watchfaces/aurelius/gradlew": "249efbb032ce46a80c687c0723eb172e85f6a136",
+    "watchfaces/aurelius/settings.gradle.kts": "d2b734d3586558fb0c929fc862295d588a1325c0"
+  },
+  "candidate_version": "2.0.0-rc2",
+  "canonical_artifacts": {
+    "aurelius-2.0.0-rc2-debug.apk": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+    "aurelius-2.0.0-rc2.aab": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23"
+  },
+  "face": "aurelius",
+  "rebuilds": {
+    "build_1": {
+      "aab_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "aab_size": 748287,
+      "apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+      "apk_size": 831529,
+      "ok": true
+    },
+    "build_2": {
+      "aab_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "aab_size": 748287,
+      "apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+      "apk_size": 831529,
+      "ok": true
+    },
+    "byte_identical_across_builds": true,
+    "equals_canonical_artifacts": true,
+    "method": "two clean detached git worktrees checked out at the consumer source commit"
+  },
+  "role_definitions": {
+    "candidate_metadata_commit": "descends from artifact; contains CANDIDATE.json, READINESS.json, LINEAGE.json, PROVENANCE.json",
+    "consumer_artifact_commit": "descends from source; contains the canonical AAB, APK and VERIFY.json",
+    "consumer_source_commit": "contains every input used to build the candidate and none of the artifacts"
+  },
+  "roles": {
+    "candidate_metadata_commit": "auto \u2014 resolved by `git log -1 --format=%H -- releases/aurelius/candidates/2.0.0-rc2/CANDIDATE.json`; a metadata file cannot contain its own commit hash",
+    "consumer_artifact_commit": "ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b",
+    "consumer_source_commit": "a328669e487c6773b6c359d6b7ae4a5d1d5d4b49"
+  },
+  "schema": "agenor.consumer-lineage/1",
+  "verify": "python3 tools/verify_lineage.py aurelius --version 2.0.0-rc2 --source a328669e487c6773b6c359d6b7ae4a5d1d5d4b49 --artifact ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b --metadata auto --build",
+  "why_this_matters": "rc1 recorded a single consumer_commit (399ba12) that PREDATED the packaging work which produced its artifacts. Ancestry alone would only prove ordering; rebuilding from the declared source commit and matching the canonical bytes proves the attribution is true."
+}

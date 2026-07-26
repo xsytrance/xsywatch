@@ -185,6 +185,22 @@ def main() -> int:
     face = args.face
     cand = REPO / "releases" / face / "candidates" / args.version
 
+    # A metadata file cannot contain its own commit hash, so the metadata
+    # commit is RESOLVED from history rather than declared — the same way
+    # tools/import_handoff.py resolves the studio metadata commit.
+    if args.metadata == "auto":
+        rel = f"releases/{face}/candidates/{args.version}/CANDIDATE.json"
+        try:
+            args.metadata = git("log", "-1", "--format=%H", "--", rel)
+        except subprocess.CalledProcessError:
+            args.metadata = ""
+        if not args.metadata:
+            print(f"ERROR could not resolve the metadata commit from "
+                  f"git log -1 -- {rel}", file=sys.stderr)
+            return 2
+        print(f"      metadata commit resolved from history: "
+              f"{args.metadata[:12]}")
+
     result: dict = {
         "face": face,
         "candidate_version": args.version,

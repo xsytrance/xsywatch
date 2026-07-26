@@ -1,0 +1,134 @@
+{
+  "approval_id": "APPROVAL-0005",
+  "artifact": {
+    "aab_name": "aurelius-2.0.0-rc2.aab",
+    "aab_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+    "apk_name": "aurelius-2.0.0-rc2-debug.apk",
+    "apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc"
+  },
+  "candidate_version": "2.0.0-rc2",
+  "checker": "python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2",
+  "face": "aurelius",
+  "note": "A passing checker means every claim here is TRUE, not that the candidate is publishable. This record honestly reports eight blocked or proposed gates.",
+  "publication_status": "not published",
+  "schema": "agenor.release-readiness/1",
+  "state_values": [
+    "unknown",
+    "blocked",
+    "failed",
+    "waived",
+    "proposed",
+    "complete"
+  ],
+  "states": {
+    "architecture-approved": {
+      "detail": "Checkpoint B returned CHANGES REQUESTED; this candidate answers those corrections and is returned for re-review",
+      "evidence": [
+        "docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md"
+      ],
+      "state": "proposed"
+    },
+    "assembled": {
+      "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "detail": "AAB and debug APK built and verified; build fails if verification fails",
+      "evidence": [
+        "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json"
+      ],
+      "state": "complete"
+    },
+    "consumer-lineage-verified": {
+      "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "detail": "source/artifact/metadata roles enforced; two clean detached-worktree rebuilds from the source commit are byte-identical and equal the canonical artifacts",
+      "evidence": [
+        "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json"
+      ],
+      "state": "complete"
+    },
+    "device-validated": {
+      "detail": "no Galaxy Watch7 reachable; adb reported zero devices throughout. The byte-lineage half of the qualitative-behavioral-lineage policy is complete; the on-panel half is not.",
+      "evidence": [
+        "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md"
+      ],
+      "state": "blocked"
+    },
+    "dex-gate-passed": {
+      "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "detail": "1 release dex, 3076 B, six generated R classes, allowlist satisfied, deleted only after verification; AAB contains no dex",
+      "evidence": [
+        "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json",
+        "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json"
+      ],
+      "state": "complete"
+    },
+    "installed-APK-hash-verified": {
+      "detail": "requires the device: the installed APK must be pulled back and hashed",
+      "state": "blocked"
+    },
+    "installed-resource-lineage-verified": {
+      "detail": "requires the device: packaged resources must be verified from the installed APK",
+      "state": "blocked"
+    },
+    "owner-pixel-approved": {
+      "detail": "APPROVAL-0005 owner.status is proposed. The craftsmanship DIRECTION was approved at Checkpoint A; final pixel acceptance requires the wear evidence the review made a condition.",
+      "evidence": [
+        "watchfaces/aurelius/visual/approvals/APPROVAL-0005-field-tourbillon-mk2-rc1.json"
+      ],
+      "state": "proposed"
+    },
+    "owner-wear-complete": {
+      "detail": "zero wear sessions recorded. Requires AGENOR to wear the watch with rc2 installed and run tools/wear_log.py; cannot be invented.",
+      "evidence": [
+        "docs/reports/evidence/phase-4/aurelius/wear/"
+      ],
+      "state": "blocked"
+    },
+    "permissions-verified": {
+      "detail": "ACTIVITY_RECOGNITION and BODY_SENSORS removed on static and documentary grounds and rc2 declares no permission, but whether the WFF runtime supplies [HEART_RATE] without one is UNPROVEN: it needs the Galaxy Watch7 and no device was reachable. Static half complete, empirical half blocked.",
+      "evidence": [
+        "docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md"
+      ],
+      "state": "blocked"
+    },
+    "policy-ready": {
+      "detail": "TEST-1 account facts unresolved; privacy policy not yet hosted at https://x1c7.com/privacy/aurelius; support email and response commitment not chosen. Depends on permissions-verified.",
+      "evidence": [
+        "docs/reports/PHASE_4_POLICY_AUDIT.md",
+        "docs/reports/PHASE_4_TEST1_READINESS.md"
+      ],
+      "state": "blocked"
+    },
+    "publishable": {
+      "detail": "interlocked: every required predecessor must be complete first. Eight are not.",
+      "state": "blocked"
+    },
+    "signing-authorized": {
+      "detail": "no production signing material exists and none is authorised (ADR-010 \u00a75)",
+      "evidence": [
+        "docs/reports/PHASE_4_SIGNING_PLAN.md"
+      ],
+      "state": "blocked"
+    }
+  },
+  "summary": {
+    "blocked": [
+      "device-validated",
+      "installed-APK-hash-verified",
+      "installed-resource-lineage-verified",
+      "owner-wear-complete",
+      "permissions-verified",
+      "policy-ready",
+      "publishable",
+      "signing-authorized"
+    ],
+    "complete": [
+      "assembled",
+      "consumer-lineage-verified",
+      "dex-gate-passed"
+    ],
+    "proposed": [
+      "architecture-approved",
+      "owner-pixel-approved"
+    ]
+  },
+  "visual_version": "field-tourbillon-mk2-rc1"
+}

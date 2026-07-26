@@ -1,4 +1,4 @@
-# AURELIUS 2.0.0-rc1 — draft listing copy
+# AURELIUS 2.0.0-rc2 — draft listing copy
 
 **Status:** DRAFT for owner review. Nothing here is published, and nothing
 here may be published until the owner approves the wording, the price and
@@ -63,7 +63,7 @@ Short form for constrained fields: **AURELIUS Field Tourbillon**.
 - Accelerometer-driven crystal sheen (parallax)
 - Restrained always-on mode
 - Watch Face Format v4
-- No network access, no data collection
+- No permissions requested, no network access, no data collection
 
 ## Compatibility
 
@@ -100,8 +100,9 @@ controlled conditions.
 
 ## Heart-rate and on-device data behaviour
 
-> AURELIUS reads your watch's heart-rate sensor only to animate the
-> balance wheel, and your battery level only to move the reserve gauge.
+> AURELIUS requests no permissions. It reads the heart-rate value your
+> watch already provides, only to animate the balance wheel, and your
+> battery level only to move the reserve gauge.
 > Both values are read on your watch, used to draw the face, and nothing
 > else. AURELIUS has no network access and sends nothing off your device.
 > It stores no history and keeps no records.
@@ -117,7 +118,7 @@ privacy policy link regardless.
 
 | Question | Draft answer | Basis |
 |---|---|---|
-| Does your app collect or share any of the required user data types? | **No** | The face is a declarative WFF package with no code (`android:hasCode="false"`), no network permission, and no network capability in the format. Nothing can leave the device. |
+| Does your app collect or share any of the required user data types? | **No** | The face is a declarative WFF package with no code (`android:hasCode="false"`), **no declared permissions at all**, no network permission, and no network capability in the format. Nothing can leave the device. |
 | Is all user data encrypted in transit? | N/A — no data in transit | as above |
 | Do you provide a way to request data deletion? | N/A — no data collected or stored | as above |
 | Health / fitness data | Heart rate is **read on-device and rendered**, never collected, stored, or transmitted | Play defines collection as transmitting data off-device; the ephemeral-processing carve-out applies |
@@ -125,12 +126,21 @@ privacy policy link regardless.
 **Before submission this must be re-verified against the final bundle, not
 assumed.** It is a legal declaration.
 
-**Open item:** the manifest currently declares `BODY_SENSORS` and
-`ACTIVITY_RECOGNITION`. It is not yet confirmed that a WFF face reading
-`[HEART_RATE]` needs either — the platform may supply the value to the
-format rather than the app reading the sensor. If they are unnecessary,
-removing them removes this entire question. See
-`docs/reports/PHASE_4_POLICY_AUDIT.md` HEALTH-1.
+**RESOLVED for 2.0.0-rc2 — the manifest declares NO permission at all.**
+
+`ACTIVITY_RECOGNITION` removed: the face references no step, distance,
+calorie, floor or elevation source, so it backed no feature.
+`BODY_SENSORS` removed: apps targeting API 36+ must use the granular
+`android.permission.health.*` permissions, and the legacy one only applies
+with `android:maxSdkVersion="35"`, which `minSdk 36` can never reach.
+
+The listing may therefore state that AURELIUS requests **no permissions**.
+See `docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md`.
+
+⚠️ Still to confirm on the device: that `[HEART_RATE]` reaches the face
+without a declared permission. If the Watch7 shows the balance wheel stuck
+at the 70 bpm fallback, `android.permission.health.READ_HEART_RATE` is
+required and this section must be rewritten before submission.
 
 ## Privacy policy — draft
 
@@ -145,8 +155,9 @@ removing them removes this entire question. See
 > These values are used only to draw what you see, moment to moment. They
 > are not recorded, not saved, and not sent anywhere.
 >
-> AURELIUS contains no code and has no network access. There are no
-> accounts, no analytics, no advertising and no third-party services.
+> AURELIUS contains no code, requests no permissions, and has no network
+> access. There are no accounts, no analytics, no advertising and no
+> third-party services.
 >
 > Questions: <SUPPORT EMAIL — owner to supply>
 >
@@ -173,9 +184,9 @@ owner is willing to keep. Do not publish a commitment that will not be met.
 
 Full audit: `docs/asset-licenses.json`, notices in `THIRD_PARTY_NOTICES/`.
 
-## Release notes — 2.0.0-rc1
+## Release notes — 2.0.0-rc2
 
-> **2.0.0-rc1**
+> **2.0.0-rc2**
 >
 > - New craftsmanship pass: darker, tighter blackened-metal bridges,
 >   refined charcoal and olive surfaces, directional satin brushing,
@@ -184,6 +195,7 @@ Full audit: `docs/asset-licenses.json`, notices in `THIRD_PARTY_NOTICES/`.
 > - Substantially smaller download.
 > - Now requires Wear OS 6 (API 36), matching the Watch Face Format
 >   version the face uses.
+> - Requests no permissions at all.
 
 ## Known limitations (to disclose)
 

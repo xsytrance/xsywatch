@@ -223,6 +223,7 @@ def main() -> int:
         err(f"READINESS.json declares unknown state(s): {sorted(extra)}")
 
     for name, entry in sorted(states.items()):
+        before = len(issues)
         st = entry.get("state")
         if st not in STATES:
             err(f"{name}: state {st!r} is not one of {STATES}")
@@ -278,7 +279,11 @@ def main() -> int:
                         "permission set")
 
         if st == "complete":
-            ok(f"{name}: complete")
+            if len(issues) == before:
+                ok(f"{name}: complete")
+            else:
+                print(f"      {name}: claimed complete but the evidence "
+                      f"does not support it (see errors above)")
         else:
             note(f"{name}: {st}" + (f" — {entry.get('detail','')[:80]}"
                                     if entry.get("detail") else ""))
@@ -306,8 +311,8 @@ def _finish(r: dict, args) -> int:
                    if v.get("state") == "complete")
     total = len(REQUIRES)
     print()
-    print(f"{complete}/{total} gates complete; {len(issues)} inconsistency"
-          f"{'' if len(issues) == 1 else 'ies'}")
+    word = "inconsistency" if len(issues) == 1 else "inconsistencies"
+    print(f"{complete}/{total} gates complete; {len(issues)} {word}")
     if not issues:
         print("READINESS record is internally honest "
               "(this does NOT mean the candidate is publishable)")

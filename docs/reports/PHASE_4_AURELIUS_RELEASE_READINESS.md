@@ -1,6 +1,6 @@
 # Phase 4 — Aurelius commercial release readiness
 
-**Status:** **Checkpoint B complete — returned unmerged for review** (Checkpoint A record retained below)
+**Status:** **Checkpoint B implementation complete — acceptance blocked** (Checkpoint A record retained below)
 **Repository:** `xsytrance/xsywatch`
 **Branch:** `phase-4/aurelius-release-readiness`
 **Branch point:** `3333d427e9c87f1c59b26d61c41f6b9ce6435152` (main)
@@ -468,7 +468,7 @@ Both branches are returned unmerged for owner and ChatGPT review.
 
 # Checkpoint B — release candidate
 
-**Status:** **complete except device and wear evidence — returned unmerged**
+**Status:** **implementation complete — ACCEPTANCE BLOCKED** (returned unmerged)
 **Date:** 2026-07-26
 **Candidate:** `com.xsytrance.aurelius` 2.0.0-rc1 (versionCode 2)
 **Visual version:** `field-tourbillon-mk2-rc1` — **proposed, NOT promoted**
