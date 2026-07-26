@@ -1,0 +1,175 @@
+{
+  "approval_id": "APPROVAL-0003",
+  "face": "aurelius",
+  "visual_version": "field-tourbillon-mk2-r1",
+  "previous_visual_version": "field-tourbillon-v1",
+  "supersedes": {
+    "approval_id": "APPROVAL-0002",
+    "visual_version": "field-tourbillon-mk2",
+    "reason": "Owner decision at the Phase-3 re-review: approve with changes. The OliveInstrument_Restrained design, mechanics, materials, camera and lighting are unchanged; only the typeface behind the 39 BitmapFont glyph masters and the two baked plate engravings is replaced \u2014 Blender's built-in GPL Bfont gives way to the audited OFL-1.1 Rajdhani Bold, removing the licensing ambiguity before this generation could become an approved commercial baseline. APPROVAL-0002 and every field-tourbillon-mk2 artefact remain committed as historical proposed evidence per ADR-009.",
+    "preserved": [
+      "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2/",
+      "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2.json",
+      "watchfaces/aurelius/visual/approvals/APPROVAL-0002-field-tourbillon-mk2.json",
+      "docs/reports/evidence/phase-3/aurelius/ (device evidence for APK d734abc8...)"
+    ]
+  },
+  "previous_goldens": {
+    "normal": "f52b715e2c16ee0bdf0e8106e60e3b6743d65bfe4c11247f49d16d0d10b15f6d",
+    "aod": "04161e9b80de97d0bd68f2e12f56396a4360bac9a1ddfdcc2922322b259e4fd6"
+  },
+  "proposed_goldens": {
+    "normal": "a766e444aab5ac4cb8b604f9b61aa7c59427ca80babac788a74f2092755db7ab",
+    "aod": "69a8724b42a0fae1d4e34b8a1cea1584ba1bb707f1fce3ecebcddd9a0d6d24a1"
+  },
+  "previous_inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-v1.json",
+  "inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-r1.json",
+  "inventory_sha256": "35f95830520757080d3d72db2c982e35e7d8f6f804533b394ee1ac98b2877d84",
+  "changed_resources": [
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/balance.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg_aod.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/cage.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_0.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_1.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_2.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_3.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_4.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_5.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_6.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_7.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_8.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_9.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_a.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_b.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_c.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_colon.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_d.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_e.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_f.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_g.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_h.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_i.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_j.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_k.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_l.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_m.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_n.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_o.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_p.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_pct.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_q.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_r.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_s.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_t.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_u.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_v.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_w.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_x.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_y.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_z.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_l.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_r.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hour_hand.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hub.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/min_hand.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/resv_needle.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/sheen.png"
+  ],
+  "generated_consumer_resources": [
+    {
+      "path": "watchfaces/aurelius/app/src/main/res/drawable/preview.png",
+      "origin": "generated consumer-side by downsampling the r1 candidate normal reference render to 400x400 (Lanczos); not a studio handoff asset"
+    }
+  ],
+  "handoff_asset_ids": [
+    "balance-wheels/AureliusMk2_Balance",
+    "crystals/AureliusMk2_Sheen",
+    "gears/AureliusMk2_GearL_z24",
+    "gears/AureliusMk2_GearR_z18",
+    "hands/AureliusMk2_HandHour",
+    "hands/AureliusMk2_HandMinute",
+    "hands/AureliusMk2_HubCap",
+    "hands/AureliusMk2_NeedleReserve",
+    "numerals/AureliusMk2_Glyph_0",
+    "numerals/AureliusMk2_Glyph_1",
+    "numerals/AureliusMk2_Glyph_2",
+    "numerals/AureliusMk2_Glyph_3",
+    "numerals/AureliusMk2_Glyph_4",
+    "numerals/AureliusMk2_Glyph_5",
+    "numerals/AureliusMk2_Glyph_6",
+    "numerals/AureliusMk2_Glyph_7",
+    "numerals/AureliusMk2_Glyph_8",
+    "numerals/AureliusMk2_Glyph_9",
+    "numerals/AureliusMk2_Glyph_a",
+    "numerals/AureliusMk2_Glyph_b",
+    "numerals/AureliusMk2_Glyph_c",
+    "numerals/AureliusMk2_Glyph_colon",
+    "numerals/AureliusMk2_Glyph_d",
+    "numerals/AureliusMk2_Glyph_e",
+    "numerals/AureliusMk2_Glyph_f",
+    "numerals/AureliusMk2_Glyph_g",
+    "numerals/AureliusMk2_Glyph_h",
+    "numerals/AureliusMk2_Glyph_i",
+    "numerals/AureliusMk2_Glyph_j",
+    "numerals/AureliusMk2_Glyph_k",
+    "numerals/AureliusMk2_Glyph_l",
+    "numerals/AureliusMk2_Glyph_m",
+    "numerals/AureliusMk2_Glyph_n",
+    "numerals/AureliusMk2_Glyph_o",
+    "numerals/AureliusMk2_Glyph_p",
+    "numerals/AureliusMk2_Glyph_pct",
+    "numerals/AureliusMk2_Glyph_q",
+    "numerals/AureliusMk2_Glyph_r",
+    "numerals/AureliusMk2_Glyph_s",
+    "numerals/AureliusMk2_Glyph_space",
+    "numerals/AureliusMk2_Glyph_t",
+    "numerals/AureliusMk2_Glyph_u",
+    "numerals/AureliusMk2_Glyph_v",
+    "numerals/AureliusMk2_Glyph_w",
+    "numerals/AureliusMk2_Glyph_x",
+    "numerals/AureliusMk2_Glyph_y",
+    "numerals/AureliusMk2_Glyph_z",
+    "plates/AureliusMk2_PlateAOD",
+    "plates/AureliusMk2_PlateNormal",
+    "tourbillons/AureliusMk2_Cage"
+  ],
+  "unchanged_handoff_assets": [
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_space",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_space.png",
+      "reason": "fully transparent 12x40 spacer glyph; byte-identical to the field-tourbillon-v1 resource (80-byte PNG) and unaffected by the typeface substitution. Manifested in this generation, no pixel delta."
+    }
+  ],
+  "metrics": {
+    "vs_previous_approved_normal": {
+      "baseline": "field-tourbillon-v1 (approved golden)",
+      "changed_pixel_pct": 78.9896,
+      "max_channel_delta": 253,
+      "mean_channel_delta": 67.8881,
+      "note": "intentional generation change (Mk II premium redesign), not drift"
+    },
+    "vs_superseded_candidate_normal": {
+      "baseline": "field-tourbillon-mk2 (superseded proposed candidate)",
+      "changed_pixel_pct": 4.2418,
+      "max_channel_delta": 202,
+      "mean_channel_delta": 0.353,
+      "note": "typeface substitution only \u2014 confined to the 39 BitmapFont glyph rasters and the two baked plate engravings; the mechanical, material, camera and lighting result is unchanged, which the 0.35 mean channel delta over the whole face confirms"
+    }
+  },
+  "previews": [
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-r1/normal.png",
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-r1/aod.png"
+  ],
+  "rationale": "Aurelius Field Tourbillon Mk II revision r1. Identical to field-tourbillon-mk2 except that all glyph and engraving artwork now derives from the audited OFL-1.1 Rajdhani Bold source instead of Blender's GPL built-in Bfont. Studio producing commit 5c44f74, metadata stamping commit d0ef4a7; 41 of 50 exports changed bytes (bg, bg_aod and the 39 glyphs), the 9 non-text layers are byte-identical. Zero XML/spec delta retained.",
+  "owner": {
+    "status": "proposed",
+    "by": "Design direction and the font substitution are owner-approved (approve with changes, Phase-3 re-review); final normal/AOD pixel acceptance of this revision is pending",
+    "date": "2026-07-25"
+  },
+  "architecture_review": {
+    "status": "pending",
+    "ref": "Phase-3 final re-review"
+  },
+  "device_evidence": "docs/reports/evidence/phase-3/aurelius/r1/"
+}

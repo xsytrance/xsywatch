@@ -2,7 +2,8 @@
 # Android APK builds are deliberately NOT run here yet (runner cost/time) —
 # see docs/BUILD_AND_RELEASE.md. The official WFF validator and
 # memory-footprint evaluator run locally (tools/wff_validate.sh) and their
-# evidence is committed; building them in CI is a candidate Phase-3 addition.
+# evidence is committed; building them in CI remains tracked in the Phase-3
+# report (unlicensed-binary + toolchain caveats documented there).
 name: validate
 on:
   push:
@@ -15,7 +16,7 @@ jobs:
     steps:
       - uses: actions/checkout@v5
         with:
-          fetch-depth: 2
+          fetch-depth: 0   # merge-aware diff --check needs real parents
 
       - name: Python syntax (all tracked .py)
         run: git ls-files '*.py' | xargs -r python3 -m py_compile
@@ -23,8 +24,20 @@ jobs:
       - name: Shell syntax (all tracked .sh)
         run: git ls-files '*.sh' | xargs -r -n1 bash -n
 
-      - name: git diff --check (whitespace/conflict markers)
-        run: git diff --check HEAD~1 HEAD
+      # Merge-aware whitespace/conflict-marker check (Phase-3 fix).
+      # On a merge commit HEAD~1..HEAD spans the entire merged branch and
+      # re-flags files no commit in the range touched against their own
+      # parent (bit us after the Phase-1 and Phase-2 merges). Diff against
+      # the FIRST parent for merges — that is the delta the merge actually
+      # lands on the target branch.
+      - name: git diff --check (whitespace/conflict markers, merge-aware)
+        run: |
+          if [ "$(git rev-list --parents -n1 HEAD | wc -w)" -gt 2 ]; then
+            echo "merge commit: checking against first parent"
+            git diff --check HEAD^1 HEAD
+          else
+            git diff --check HEAD~1 HEAD
+          fi
 
       - name: Engine unit tests
         run: python3 -m unittest discover -s tests/engine -v
@@ -32,10 +45,25 @@ jobs:
       - name: Engine generation drift check (aurelius)
         run: python3 tools/generate_face.py aurelius --check
 
+      - name: Install Pillow (pinned visual-gate dev dependency)
+        run: pip install --quiet -r tools/dev-requirements.txt
+
+      - name: Visual gate — resource inventory drift
+        run: python3 tools/inventory_resources.py aurelius --check
+
+      - name: Visual gate — deterministic reference render vs goldens
+        run: python3 tools/render_reference.py aurelius --goldens --check
+
+      - name: Visual gate — renderer determinism selftest
+        run: python3 tools/render_reference.py aurelius --selftest
+
+      - name: Visual gate — deliberate-failure fixtures + lineage tests
+        run: python3 -m unittest discover -s tests/visual
+
       - name: Install Android build-tools (aapt2 for validate.py)
         run: |
           yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" \
             "build-tools;36.0.0" >/dev/null
 
-      - name: Repository validation (incl. fixtures, handoff, immutability)
+      - name: Repository validation (incl. fixtures, handoff, visual lineage)
         run: python3 tools/validate.py

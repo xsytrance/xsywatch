@@ -172,3 +172,163 @@ class TestHandoffNegative(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# --------------------------------------------------------------------------
+# Phase-3 review blocker 4: derived-artwork provenance (fonts)
+# --------------------------------------------------------------------------
+
+BFONT_RECORD = {
+    "id": "blender-bfont-type1",
+    "kind": "font",
+    "name": "Bfont",
+    "license": "GPL-3.0-or-later",
+    "notice_file": "THIRD_PARTY_NOTICES/fonts/blender-bfont-NOTICE.txt",
+}
+
+
+def run_with_provenance(entry: dict, records=None,
+                        write_notice: bool = True) -> list[str]:
+    """check_handoff with a temp derived-asset-provenance registry."""
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        eng = root / "watchfaces/testface/engine"
+        eng.mkdir(parents=True)
+        dest = entry.get("destination")
+        if isinstance(dest, str):
+            p = root / dest
+            p.parent.mkdir(parents=True, exist_ok=True)
+            p.write_bytes(b"glyph-bytes")
+            if entry.get("sha256") == "AUTO":
+                entry["sha256"] = hashlib.sha256(b"glyph-bytes").hexdigest()
+        if records is not None:
+            (root / "docs").mkdir(parents=True, exist_ok=True)
+            (root / "docs/derived-asset-provenance.json").write_text(
+                json.dumps({"records": records}))
+        if write_notice:
+            n = root / BFONT_RECORD["notice_file"]
+            n.parent.mkdir(parents=True, exist_ok=True)
+            n.write_text("NOTICE\n")
+        (eng / "handoff.json").write_text(json.dumps(
+            {"contract": "docs/ASSET_HANDOFF_CONTRACT.md", "assets": [entry]}))
+        validate.issues.clear()
+        validate.load_derived_provenance(root)
+        validate.check_handoff(root)
+        problems = [m for s, m in validate.issues if s == "ERROR"]
+        validate.issues.clear()
+        return problems
+
+
+def glyph_entry(**overrides) -> dict:
+    e = variant(
+        asset_id="numerals/Glyph_2", export_type="font-glyphs",
+        destination=("watchfaces/testface/app/src/main/res/"
+                     "drawable-nodpi/g_2.png"),
+        dimensions=[27, 40], frames=1, frame_seconds=None, loop="none",
+        aod_safe=True, sha256="AUTO", consumer_component="z30_date")
+    e.update(overrides)
+    return e
+
+
+class TestDerivedFontProvenance(unittest.TestCase):
+    """Rasterising a third-party/bundled font is not original authorship."""
+
+    def expect(self, problems, fragment):
+        self.assertTrue(any(fragment in p for p in problems),
+                        f"expected {fragment!r} in {problems}")
+
+    def test_font_glyphs_may_not_claim_original(self):
+        problems = run_with_provenance(glyph_entry(license="original"),
+                                       records=[BFONT_RECORD])
+        self.expect(problems, "may not claim license 'original'")
+
+    def test_font_glyphs_with_resolved_derived_record_passes(self):
+        problems = run_with_provenance(
+            glyph_entry(license="derived:blender-bfont-type1"),
+            records=[BFONT_RECORD])
+        self.assertEqual(problems, [])
+
+    def test_derived_reference_must_resolve(self):
+        problems = run_with_provenance(
+            glyph_entry(license="derived:no-such-record"),
+            records=[BFONT_RECORD])
+        self.expect(problems, "does not resolve to a record")
+
+    def test_derived_record_requires_existing_notice(self):
+        problems = run_with_provenance(
+            glyph_entry(license="derived:blender-bfont-type1"),
+            records=[BFONT_RECORD], write_notice=False)
+        self.expect(problems, "notice_file")
+
+    def test_registry_record_missing_required_field(self):
+        broken = {k: v for k, v in BFONT_RECORD.items() if k != "license"}
+        problems = run_with_provenance(
+            glyph_entry(license="derived:blender-bfont-type1"),
+            records=[broken])
+        self.expect(problems, "missing license")
+
+    def test_static_image_may_still_claim_original(self):
+        """Purely modelled artwork keeps 'original' — the rule is targeted,
+        not a blanket ban."""
+        problems = run_with_provenance(
+            variant(sha256="AUTO", export_type="static-image",
+                    license="original"),
+            records=[BFONT_RECORD])
+        self.assertEqual(problems, [])
+
+
+class TestRealAureliusProvenance(unittest.TestCase):
+    """Integration: the committed Aurelius manifest must not claim
+    original authorship for any glyph export."""
+
+    def test_committed_manifest_declares_font_provenance(self):
+        """Every glyph export and both engraved plates must reference a
+        resolvable, notice-bound provenance record — and for the CURRENT
+        generation that record must be commercially unambiguous."""
+        man = json.loads((REPO / "watchfaces/aurelius/engine/handoff.json")
+                         .read_text())
+        registry = json.loads((REPO / "docs/derived-asset-provenance.json")
+                              .read_text())
+        by_id = {r["id"]: r for r in registry["records"]}
+
+        glyphs = [a for a in man["assets"]
+                  if a["export_type"] == "font-glyphs"]
+        plates = [a for a in man["assets"]
+                  if a["asset_id"].startswith("plates/")]
+        self.assertEqual(len(glyphs), 39)
+        self.assertEqual(len(plates), 2)
+
+        referenced = set()
+        for a in glyphs + plates:
+            lic = a["license"]
+            self.assertTrue(lic.startswith("derived:"),
+                            f"{a['asset_id']} must not claim original "
+                            f"authorship for font-derived artwork")
+            rid = lic.split(":", 1)[1]
+            self.assertIn(rid, by_id, f"{lic} must resolve in the registry")
+            rec = by_id[rid]
+            self.assertTrue((REPO / rec["notice_file"]).exists(),
+                            f"{rid} notice must be committed")
+            referenced.add(rid)
+
+        self.assertEqual(len(referenced), 1,
+                         "all font-derived artwork should share one source")
+        current = by_id[referenced.pop()]
+        self.assertTrue(current["commercial_use_resolved"],
+                        "the current generation's typeface must be "
+                        "commercially unambiguous")
+        self.assertEqual(current["license"], "OFL-1.1")
+
+    def test_superseded_bfont_record_retained_as_evidence(self):
+        """The Bfont investigation stays committed as historical evidence
+        for revision field-tourbillon-mk2 (re-review instruction)."""
+        registry = json.loads((REPO / "docs/derived-asset-provenance.json")
+                              .read_text())
+        by_id = {r["id"]: r for r in registry["records"]}
+        self.assertIn("blender-bfont-type1", by_id)
+        rec = by_id["blender-bfont-type1"]
+        self.assertEqual(rec["status"], "superseded")
+        self.assertEqual(rec["superseded_by"], "rajdhani-bold-ofl-1.1")
+        self.assertTrue((REPO / rec["notice_file"]).exists())
+        self.assertFalse(rec["commercial_use_resolved"],
+                         "the historical record keeps its honest posture")

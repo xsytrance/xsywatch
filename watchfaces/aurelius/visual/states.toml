@@ -1,0 +1,179 @@
+# AURELIUS visual contract — fixed render states (ADR-009, Phase 3).
+#
+# Every state pins ALL dynamic inputs the face's expressions can read, so
+# reference renders are deterministic and repeatable byte-for-byte.
+#
+# Render:   python3 tools/render_reference.py aurelius --state normal_hero
+# Compare:  python3 tools/compare_visuals.py <a.png> <b.png> [--mask m.png]
+#
+# Determinism rules (enforced by tools/render_reference.py):
+#   - ambient = true forces second = 0 and millisecond = 0, matching observed
+#     Watch7 behavior (sub-minute sources stop updating in ambient; the
+#     seconds cage parks at 12 — see Phase-2 device evidence).
+#   - Angles are WFF clockwise degrees; the renderer negates for Pillow.
+#   - All expression evaluation is double-precision IEEE 754 via Python math.
+
+[meta]
+face = "aurelius"
+contract_version = 1
+# The reference renderer consumes the COMMITTED generated XML
+# (app/src/main/res/raw/watchface.xml) plus the committed res/ bytes.
+# face.toml -> XML equivalence is separately gated by
+# `python3 tools/generate_face.py aurelius --check`; this contract closes
+# the remaining XML -> pixels gap.
+
+[render]
+# Development-dependency pin (recorded in golden metadata; the renderer
+# fails --strict runs on mismatch so goldens never silently change origin).
+pillow_version = "12.1.1"
+resample_rotate = "bicubic"
+resample_scale = "lanczos"
+
+# ---------------------------------------------------------------------------
+# States. Unspecified keys are inherited from [states.normal_hero].
+# ---------------------------------------------------------------------------
+
+[states.normal_hero]
+# Canonical hero: the face's own PREVIEW_TIME (10:09:35), the evidence date.
+hour_0_11 = 10
+minute = 9
+second = 35
+millisecond = 0
+day = 24
+battery_percent = 80
+heart_rate = 72          # valid live reading (> 30, inside clamp range)
+accelerometer_angle_x = 0
+accelerometer_angle_y = 0
+ambient = false
+
+[states.aod]
+inherit = "normal_hero"
+ambient = true           # forces second = 0, millisecond = 0
+
+[states.low_battery]
+inherit = "normal_hero"
+battery_percent = 15
+
+[states.high_battery]
+inherit = "normal_hero"
+battery_percent = 95
+
+[states.hr_valid]
+inherit = "normal_hero"
+heart_rate = 150
+
+[states.hr_fallback]
+inherit = "normal_hero"
+heart_rate = 0           # < 30 triggers the 70 bpm safe fallback path
+
+[states.parallax_neutral]
+# Explicit neutral-tilt state: parallax expressions must evaluate to their
+# base offsets. Identical to the hero pins by construction; kept as a named
+# state so parallax regressions have a dedicated fixture hook.
+inherit = "normal_hero"
+accelerometer_angle_x = 0
+accelerometer_angle_y = 0
+
+# ---------------------------------------------------------------------------
+# Goldens: which states define the approved references.
+# ---------------------------------------------------------------------------
+
+[goldens]
+normal_state = "normal_hero"
+aod_state = "aod"
+approved_version = "field-tourbillon-mk2-r2"
+# A proposed (not yet owner-accepted) visual generation. While set, the
+# deterministic re-render gate compares against
+# candidates/<proposed_version>/ bound to a `proposed` approval record;
+# approved goldens stay frozen until the record flips to approved and the
+# candidates are promoted (validated by tools/validate.py).
+#
+# Cleared 2026-07-26: field-tourbillon-mk2-r2 received final product-owner
+# pixel acceptance and final architecture approval (APPROVAL-0004,
+# docs/reports/PHASE_3_FINAL_REVIEW.md) and was promoted to the approved
+# golden above. field-tourbillon-v1 goldens, and the mk2/r1/r2 candidates
+# with APPROVAL-0001..0003, are preserved as history.
+# proposed_version = <unset — no generation currently proposed>
+
+# ---------------------------------------------------------------------------
+# Date-aperture contract (revision field-tourbillon-mk2-r2 onward).
+#
+# The plate art draws a framed window that the live BitmapFont date renders
+# into. The opening is authored in the studio from the WFF text metrics, so
+# the two must be kept in agreement: tools/date_aperture_proof.py measures
+# the rendered glyph alpha bounds for every valid day 1..31 and
+# tests/visual/test_date_aperture.py fails if any day comes within
+# min_clear_margin_px of the inner frame.
+#
+# Geometry provenance: AGENOR-Horology scripts/build_aurelius_mk2.py
+# DATE_INNER = (3.6, 2.7) mm about DATE_C = px(322, 300), converted with the
+# camera contract 43 mm / 480 px (assets/cameras/SPEC.md).
+# ---------------------------------------------------------------------------
+
+[date_aperture]
+# Single source of truth: the inner opening is centre + size; bounds are
+# derived (tools/date_aperture_proof.py), never declared twice.
+center_px = [322, 300]
+inner_size_px = [40.19, 30.14]      # 3.6 x 2.7 mm at 43 mm / 480 px
+min_clear_margin_px = 2.0
+# Tolerance for optical centring, in pixels of centre offset. The reference
+# renderer places integer glyph cells, which costs up to ~1.5 px on the
+# narrow "1", and the WFF runtime performs its own layout; this guard is
+# therefore sized to catch gross drift, with fine centring confirmed
+# visually in the committed proof sheet.
+max_center_offset_px = 2.0
+proof_days = [1, 8, 11, 22, 28, 31]
+studio_source = "AGENOR-Horology scripts/build_aurelius_mk2.py DATE_INNER/DATE_FRAME"
+
+# ---------------------------------------------------------------------------
+# Device-validation applicability (Phase-3 r1 review).
+#
+# Deterministic reference-to-committed-reference comparison stays exact and
+# mandatory (see [compare].reference_mode). A device SCREENSHOT comparison is
+# only a quantitative hard gate when every material motion phase and sensor
+# input can be controlled or safely masked. Aurelius cannot satisfy that:
+#   - z10_gl / z11_gr rotate at 40 deg/s and 24 deg/s and the cage at 6 deg/s,
+#     so the capture instant cannot be pinned to a render state;
+#   - z40_sheen is a full-screen layer parallaxed by up to +/-40 px in X and
+#     +/-14 px in Y from [ACCELEROMETER_ANGLE_*], which cannot be held at zero
+#     on a worn or docked watch.
+# Masking enough to remove both would breach [compare.mask_policy]
+# min_disc_coverage, i.e. it would hide most of the face. Measured evidence:
+# docs/reports/evidence/phase-3/aurelius/r1/DEVICE_TEST_RESULTS.md.
+# ---------------------------------------------------------------------------
+
+[device_validation]
+mode = "qualitative-behavioral-lineage"
+reason = "continuously rotating mechanical layers (up to 40 deg/s) plus accelerometer-driven full-screen sheen parallax (up to +/-40 px) make capture-time state uncontrollable; masking both would fall below the mask-coverage policy"
+required_evidence = [
+    "human visual inspection of normal and AOD at actual scale",
+    "behavioral validation (install/upgrade, picker, dynamic data, AOD cycling, stability, smoothness, touch)",
+    "exact byte lineage: studio export -> handoff manifest sha -> imported resource -> inventory -> packaged APK",
+    "documented normal/AOD evidence with explicit qualifications",
+]
+# The thresholds below remain the profile for faces that CAN be gated
+# quantitatively (static or fully controllable). They are deliberately not
+# applied to Aurelius; tools/compare_visuals.py --mode device refuses to
+# report a pass/fail verdict for a face whose mode is not threshold-gated.
+
+# ---------------------------------------------------------------------------
+# Comparison policy.
+# ---------------------------------------------------------------------------
+
+[compare]
+# Reference-render reruns are fully deterministic: exact equality required.
+reference_mode = "exact"
+
+# Device screenshots include panel/pipeline variation: perceptual profile,
+# calibrated from Phase-2 device evidence (screencap vs reference deltas).
+# A WARBIRD-style substitution changes >30% of face pixels at large deltas;
+# these thresholds sit two orders of magnitude below that.
+[compare.device_profile]
+max_changed_pixel_pct = 1.5
+max_mean_channel_delta = 3.0
+max_channel_delta = 48
+
+[compare.mask_policy]
+# Masks may exclude legitimately dynamic/non-capturable regions only.
+# Coverage = unmasked fraction of the 480x480 face disc (r=240).
+min_disc_coverage = 0.60

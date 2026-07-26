@@ -1,0 +1,5 @@
+# Development/validation dependencies (NOT runtime — WFF faces ship no code).
+# Pillow is the visual-lineage gate's compositor (ADR-009); the pin must
+# match watchfaces/*/visual/states.toml [render].pillow_version so goldens
+# never silently change rendering origin.
+Pillow==12.1.1

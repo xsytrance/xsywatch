@@ -1,0 +1,48 @@
+NOTICE — Blender built-in font "Bfont" (provenance id: blender-bfont-type1)
+===========================================================================
+
+Artwork in this repository and in the paired consumer repository
+(xsytrance/xsywatch) includes raster glyphs and engraved lettering
+rendered from the font built into the Blender executable.
+
+Font identity (measured, see docs/FONT_PROVENANCE.md):
+
+  Name              : Bfont  (datablock "Bfont Regular")
+  Version           : 001.001
+  Format            : PostScript Type 1 font program, compiled into the
+                      Blender binary (bpy filepath "<builtin>")
+  Embedded notice   : none present in the font program
+  SHA-256 (program) : 8bb299bdca151cb48bf1909eafffabe733fdd74171c11aeb
+                      72b9f09104962aed
+  Extracted by      : scripts/extract_builtin_font.py
+
+Producing toolchain:
+
+  Blender 4.5.11 LTS (build date 2026-06-23, commit date 2026-06-22)
+  Binary SHA-256: dc72290ee8651c93c4a946c012c5f2a034946fd320e6c3ab2
+                  14fa23181427428
+
+Licence:
+
+  Blender is released under the GNU General Public License version 3 or
+  later, Copyright (C) 2011-2025 Blender Foundation.
+
+  Blender's bundled third-party font files (Inter, Noto, Last Resort,
+  DejaVu Sans Mono) are listed separately in Blender's own
+  license/license.md with their own licences. "Bfont" is NOT among them:
+  it is not distributed as a font file but compiled into the Blender
+  executable as part of Blender's own source, and is therefore covered by
+  Blender's primary licence, GPL-3.0-or-later.
+
+  Full licence text: <blender-install>/license/license.md
+  https://www.gnu.org/licenses/gpl-3.0.html
+
+Open item:
+
+  Blender's Bfont carries no font exception. Whether GPL terms extend to
+  raster artwork derived from a GPL font program is an unresolved legal
+  question, and typeface-design protection varies by jurisdiction. This
+  affects commercial distribution only; see the "OPEN OWNER/LEGAL ITEM"
+  section of docs/FONT_PROVENANCE.md for the recommended mitigation
+  (re-render the glyph/engraving masters with an already-audited OFL-1.1
+  font).

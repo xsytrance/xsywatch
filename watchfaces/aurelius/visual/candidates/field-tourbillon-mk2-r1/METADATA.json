@@ -1,0 +1,17 @@
+{
+  "face": "aurelius",
+  "pillow": "12.1.1",
+  "renders": {
+    "aod": {
+      "sha256": "69a8724b42a0fae1d4e34b8a1cea1584ba1bb707f1fce3ecebcddd9a0d6d24a1",
+      "state": "aod"
+    },
+    "normal": {
+      "sha256": "a766e444aab5ac4cb8b604f9b61aa7c59427ca80babac788a74f2092755db7ab",
+      "state": "normal_hero"
+    }
+  },
+  "status": "proposed",
+  "visual_version": "field-tourbillon-v1",
+  "xml_sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79"
+}

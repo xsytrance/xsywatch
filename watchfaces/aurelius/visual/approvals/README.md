@@ -1,0 +1,28 @@
+# Intentional visual-change approval records (ADR-009 §5)
+
+One JSON record per proposed/approved visual version change. Approved
+goldens may move ONLY when a record with `owner.status == "approved"` binds
+the exact new golden hashes — enforced by `tools/validate.py` (stdlib hash
+checks) and `tests/visual/` (pixel-level checks).
+
+Required fields:
+
+| field | meaning |
+|---|---|
+| `approval_id` | `APPROVAL-<n>`, monotonically increasing |
+| `face`, `visual_version` | target face + proposed version directory name |
+| `previous_visual_version` | prior approved version (null for the first) |
+| `previous_goldens` / `proposed_goldens` | sha256 of normal/aod golden PNGs |
+| `inventory_sha256` | sha256 of `inventories/inventory.json` at record time |
+| `changed_resources` | repo-relative paths whose bytes change in this delta |
+| `handoff_asset_ids` | studio handoff entries backing the change |
+| `metrics` | compare_visuals.py metrics vs previous goldens (null for first) |
+| `previews` | committed preview/candidate image paths |
+| `rationale` | why this visual change exists |
+| `owner` | `{status: proposed\|approved\|rejected, by, date}` |
+| `architecture_review` | `{status, ref}` |
+| `device_evidence` | evidence directory (required for major generations) |
+
+Lifecycle: a record enters as `proposed` alongside candidate renders; the
+owner flips it to `approved` (or `rejected`) in a reviewed commit; only then
+may `goldens/<version>/` change to the recorded hashes.

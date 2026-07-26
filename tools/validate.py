@@ -301,6 +301,37 @@ HANDOFF_REQUIRED = ("asset_id", "source_repo", "source_commit", "source_paths",
                     "consumer_component", "regenerate")
 
 
+DERIVED_PROVENANCE: dict[str, dict] = {}
+
+
+def load_derived_provenance(root: Path) -> None:
+    """Registry of provenance records for artwork derived from
+    third-party/bundled inputs (ADR-009 + Phase-3 review blocker 4)."""
+    DERIVED_PROVENANCE.clear()
+    p = root / "docs/derived-asset-provenance.json"
+    if not p.exists():
+        return
+    try:
+        data = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        err(f"derived-provenance: invalid JSON: {e}")
+        return
+    for rec in data.get("records", []):
+        rid = rec.get("id")
+        if not rid:
+            err("derived-provenance: record without an id")
+            continue
+        if rid in DERIVED_PROVENANCE:
+            err(f"derived-provenance: duplicate record id {rid!r}")
+        for field in ("kind", "name", "license", "notice_file"):
+            if not rec.get(field):
+                err(f"derived-provenance[{rid}]: missing {field}")
+        notice = rec.get("notice_file")
+        if notice and not (root / notice).exists():
+            err(f"derived-provenance[{rid}]: notice_file {notice} missing")
+        DERIVED_PROVENANCE[rid] = rec
+
+
 def check_handoff(root: Path) -> None:
     """Asset-handoff manifests: complete stdlib enforcement of the schema
     contract in docs/asset-handoff.schema.json (docs/ASSET_HANDOFF_CONTRACT.md).
@@ -373,8 +404,28 @@ def check_handoff(root: Path) -> None:
                 bad(f"bad loop {a.get('loop')!r}")
             if not isinstance(a.get("aod_safe"), bool):
                 bad("aod_safe must be a boolean")
-            if not (isinstance(a.get("license"), str) and a.get("license")):
+            lic = a.get("license")
+            if not (isinstance(lic, str) and lic):
                 bad("license must be a nonempty provenance string")
+            else:
+                # Derived artwork must resolve to a provenance record with a
+                # committed notice (Phase-3 review blocker 4).
+                if lic.startswith("derived:"):
+                    rec = DERIVED_PROVENANCE.get(lic.split(":", 1)[1])
+                    if rec is None:
+                        bad(f"license {lic!r} does not resolve to a record in "
+                            f"docs/derived-asset-provenance.json")
+                    else:
+                        notice = rec.get("notice_file")
+                        if not notice or not (root / notice).exists():
+                            bad(f"provenance record {lic!r} has no existing "
+                                f"notice_file ({notice!r})")
+                # Rasterising a third-party/bundled font is not original
+                # authorship: glyph exports may never claim it.
+                if a.get("export_type") == "font-glyphs" and lic == "original":
+                    bad("font-glyphs exports may not claim license "
+                        "'original' — glyph rasters derive from a font "
+                        "program; reference a derived:<id> provenance record")
             if a.get("lifecycle") not in HANDOFF_LIFECYCLES:
                 bad(f"bad lifecycle {a.get('lifecycle')!r}")
             if not (isinstance(a.get("consumer_component"), str)
@@ -449,6 +500,342 @@ def check_files(root: Path, files: list[Path]) -> None:
             err(f"hygiene: binary at repo root: {f.name} (belongs in releases/)")
 
 
+_RES_PATH_RE = re.compile(
+    r"watchfaces/[a-z0-9-]+/app/src/main/res/[A-Za-z0-9._/-]+\.[A-Za-z0-9]+$")
+
+
+def _inventory_map(root: Path, snapshot_rel: str,
+                   label: str) -> dict[str, str] | None:
+    """path -> sha256 from a committed per-version inventory snapshot."""
+    p = root / snapshot_rel
+    if not p.exists():
+        err(f"visual-delta: {label} snapshot missing: {snapshot_rel}")
+        return None
+    try:
+        inv = json.loads(p.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        err(f"visual-delta: {label} snapshot invalid JSON: {e}")
+        return None
+    return {r["path"]: r["sha256"] for r in inv.get("resources", [])}
+
+
+def check_visual_delta(root: Path, face: str, records: list) -> None:
+    """Item-level enforcement of the reviewed visual delta (ADR-009 §5).
+
+    An approval record must name the EXACT resources and EXACT handoff
+    assets in its generation — prose summaries and wildcards are rejected.
+    The authoritative delta is computed from the committed per-version
+    inventory snapshots, and the record must cover it exactly: nothing
+    missing, nothing extra, nothing duplicated, nothing unknown.
+    """
+    by_version = {r["visual_version"]: r for r in records}
+    man_path = root / "watchfaces" / face / "engine" / "handoff.json"
+    manifest = []
+    if man_path.exists():
+        try:
+            manifest = json.loads(man_path.read_text(encoding="utf-8")
+                                  ).get("assets", [])
+        except json.JSONDecodeError:
+            return  # check_handoff reports the JSON error
+    id_counts: dict[str, int] = {}
+    for a in manifest:
+        id_counts[a.get("asset_id")] = id_counts.get(a.get("asset_id"), 0) + 1
+    dest_by_id = {a.get("asset_id"): a.get("destination") for a in manifest}
+
+    for rec in records:
+        rid = rec.get("approval_id", "<record>")
+        tag = f"visual-delta[{face}/{rid}]"
+
+        # --- snapshot binding -----------------------------------------
+        snap_rel = rec.get("inventory_snapshot")
+        if not isinstance(snap_rel, str) or not snap_rel:
+            err(f"{tag}: inventory_snapshot must be a repo-relative path")
+            continue
+        snap_path = root / snap_rel
+        if not snap_path.exists():
+            err(f"{tag}: inventory_snapshot missing: {snap_rel}")
+            continue
+        if sha256(snap_path) != rec.get("inventory_sha256"):
+            err(f"{tag}: inventory_snapshot bytes do not match the record's "
+                f"inventory_sha256 — the record is not bound to its "
+                f"inventory")
+            continue
+
+        # --- shape checks: no prose, no wildcards, no duplicates ------
+        changed = rec.get("changed_resources") or []
+        gen = rec.get("generated_consumer_resources") or []
+        ids = rec.get("handoff_asset_ids") or []
+        unchanged = rec.get("unchanged_handoff_assets") or []
+        gen_paths = [g.get("path") if isinstance(g, dict) else g for g in gen]
+
+        ok_shape = True
+        for label, items in (("changed_resources", changed),
+                             ("generated_consumer_resources", gen_paths)):
+            for item in items:
+                if not isinstance(item, str) or not _RES_PATH_RE.fullmatch(
+                        item):
+                    err(f"{tag}: {label} entry {item!r} is not an exact "
+                        f"repository-relative runtime-resource path "
+                        f"(prose summaries and wildcards are rejected)")
+                    ok_shape = False
+            dupes = {i for i in items if items.count(i) > 1}
+            if dupes:
+                err(f"{tag}: {label} has duplicate entries: {sorted(dupes)}")
+                ok_shape = False
+        for item in ids:
+            if not isinstance(item, str) or not re.fullmatch(
+                    r"[a-z0-9-]+/[A-Za-z0-9_]+", item):
+                err(f"{tag}: handoff_asset_ids entry {item!r} is not an exact "
+                    f"<class>/<PartName> asset id (prose summaries and "
+                    f"wildcards are rejected)")
+                ok_shape = False
+        id_dupes = {i for i in ids if ids.count(i) > 1}
+        if id_dupes:
+            err(f"{tag}: handoff_asset_ids has duplicate entries: "
+                f"{sorted(id_dupes)}")
+            ok_shape = False
+        if not ok_shape:
+            continue
+
+        # --- handoff id resolution ------------------------------------
+        for aid in ids:
+            n = id_counts.get(aid, 0)
+            if n == 0:
+                err(f"{tag}: handoff_asset_ids references {aid!r}, which is "
+                    f"not in engine/handoff.json")
+            elif n > 1:
+                err(f"{tag}: asset_id {aid!r} appears {n}× in "
+                    f"engine/handoff.json (must be exactly once)")
+
+        # --- delta coverage (needs a previous generation) --------------
+        prev_ver = rec.get("previous_visual_version")
+        prev_rel = rec.get("previous_inventory_snapshot")
+        if prev_ver is None:
+            if changed or ids:
+                err(f"{tag}: establishing record (no previous version) must "
+                    f"not claim changed resources or handoff assets")
+            continue
+        if not prev_rel:
+            err(f"{tag}: previous_inventory_snapshot is required when "
+                f"previous_visual_version is set")
+            continue
+        prev_rec = by_version.get(prev_ver)
+        if prev_rec and sha256(root / prev_rel) != prev_rec.get(
+                "inventory_sha256"):
+            err(f"{tag}: previous_inventory_snapshot does not match the "
+                f"{prev_ver} record's inventory_sha256")
+            continue
+        prev_map = _inventory_map(root, prev_rel, "previous")
+        cur_map = _inventory_map(root, snap_rel, "proposed")
+        if prev_map is None or cur_map is None:
+            continue
+
+        face_prefix = f"watchfaces/{face}/"
+        delta = {face_prefix + p for p in cur_map
+                 if prev_map.get(p) != cur_map[p]}
+        delta |= {face_prefix + p for p in prev_map if p not in cur_map}
+        listed = set(changed) | set(gen_paths)
+
+        for path in sorted(delta - listed):
+            err(f"{tag}: resource changed between {prev_ver} and "
+                f"{rec['visual_version']} but is not listed in the approval "
+                f"record: {path}")
+        for path in sorted(listed - delta):
+            err(f"{tag}: approval record lists {path} as changed, but its "
+                f"bytes are identical between {prev_ver} and "
+                f"{rec['visual_version']}")
+        for path in changed:
+            if path.removeprefix(face_prefix) not in cur_map:
+                err(f"{tag}: changed_resources path is absent from the "
+                    f"proposed inventory: {path}")
+
+        # generated consumer previews must not be studio handoff assets
+        handoff_dests = {d for d in dest_by_id.values() if d}
+        for path in gen_paths:
+            if path in handoff_dests:
+                err(f"{tag}: {path} is declared a generated consumer "
+                    f"resource but IS a studio handoff destination")
+
+        # every changed studio resource must be covered by a listed id
+        listed_ids = set(ids)
+        for aid, dest in dest_by_id.items():
+            if dest in set(changed) and aid not in listed_ids:
+                err(f"{tag}: handoff asset {aid!r} produced changed resource "
+                    f"{dest} but is not listed in handoff_asset_ids")
+        # listed ids whose destination did NOT change must be declared
+        declared_unchanged = {u.get("asset_id") for u in unchanged
+                              if isinstance(u, dict)}
+        for aid in listed_ids:
+            dest = dest_by_id.get(aid)
+            if dest and dest not in set(changed):
+                if aid not in declared_unchanged:
+                    err(f"{tag}: handoff asset {aid!r} is listed but its "
+                        f"destination {dest} did not change; declare it in "
+                        f"unchanged_handoff_assets with a reason")
+        for u in unchanged:
+            if not isinstance(u, dict) or not u.get("reason"):
+                err(f"{tag}: unchanged_handoff_assets entries need "
+                    f"asset_id, destination and reason")
+                continue
+            if u.get("asset_id") not in listed_ids:
+                err(f"{tag}: unchanged_handoff_assets declares "
+                    f"{u.get('asset_id')!r}, which is not in "
+                    f"handoff_asset_ids")
+            elif dest_by_id.get(u.get("asset_id")) != u.get("destination"):
+                err(f"{tag}: unchanged_handoff_assets destination mismatch "
+                    f"for {u.get('asset_id')!r}")
+
+
+def check_visual(root: Path) -> None:
+    """Visual-lineage gate, stdlib portion (ADR-009).
+
+    Hash-level enforcement: approved goldens may only exist/change with a
+    matching owner-approved record; committed inventory must be covered by
+    an approval record; record schema completeness. Pixel-level checks
+    (deterministic re-render, comparison, mask coverage) live in
+    tests/visual/ and CI, which have the pinned Pillow dependency.
+    """
+    import tomllib
+
+    for states_path in sorted(root.glob("watchfaces/*/visual/states.toml")):
+        vdir = states_path.parent
+        face = vdir.parent.name
+        with open(states_path, "rb") as fh:
+            contract = tomllib.load(fh)
+        approved_version = contract["goldens"]["approved_version"]
+
+        # --- load and schema-check approval records -----------------------
+        records = []
+        required = {"approval_id", "face", "visual_version",
+                    "previous_visual_version", "previous_goldens",
+                    "proposed_goldens", "inventory_sha256",
+                    "inventory_snapshot", "previous_inventory_snapshot",
+                    "changed_resources", "generated_consumer_resources",
+                    "handoff_asset_ids", "unchanged_handoff_assets",
+                    "metrics", "previews", "rationale", "owner",
+                    "architecture_review", "device_evidence"}
+        for rp in sorted(vdir.glob("approvals/*.json")):
+            try:
+                rec = json.loads(rp.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                err(f"visual[{face}]: {rp.name}: invalid JSON ({e})")
+                continue
+            missing = required - set(rec)
+            if missing:
+                err(f"visual[{face}]: {rp.name}: missing fields "
+                    f"{sorted(missing)}")
+                continue
+            owner = rec["owner"]
+            if owner.get("status") not in ("proposed", "approved",
+                                           "rejected"):
+                err(f"visual[{face}]: {rp.name}: owner.status must be "
+                    f"proposed|approved|rejected")
+                continue
+            for kind, sha in (rec["proposed_goldens"] or {}).items():
+                if not re.fullmatch(r"[0-9a-f]{64}", sha or ""):
+                    err(f"visual[{face}]: {rp.name}: proposed_goldens."
+                        f"{kind} is not a sha256")
+            records.append(rec)
+
+        check_visual_delta(root, face, records)
+
+        # --- approved goldens require a matching approved record ----------
+        # Every committed golden set is checked, not only the currently
+        # active one. Promotion supersedes a generation but does not
+        # release its bytes: superseded goldens are preserved as evidence
+        # (ADR-009 §5), so they must stay verifiable against the record
+        # that approved them. Checking only `approved_version` would leave
+        # every historical set silently mutable the moment it was
+        # superseded — the same "same name, wrong bytes" blind spot that
+        # let the WARBIRD contamination survive a whole phase.
+        gdir = vdir / "goldens" / approved_version
+        if not gdir.is_dir():
+            err(f"visual[{face}]: approved goldens missing: {gdir}")
+
+        goldens_root = vdir / "goldens"
+        golden_dirs = (sorted(p for p in goldens_root.iterdir() if p.is_dir())
+                       if goldens_root.is_dir() else [])
+        for gd in golden_dirs:
+            version = gd.name
+            active = version == approved_version
+            version_recs = [r for r in records
+                            if r["visual_version"] == version
+                            and r["owner"]["status"] == "approved"]
+            if not version_recs:
+                err(f"visual[{face}]: goldens/{version} exists with no "
+                    f"owner-approved record in approvals/ (ADR-009 §5)")
+                continue
+            rec = version_recs[-1]
+            for kind in ("normal", "aod"):
+                gp = gd / f"{kind}.png"
+                if not gp.exists():
+                    err(f"visual[{face}]: missing golden {gp.name} in "
+                        f"{version}")
+                    continue
+                actual = sha256(gp)
+                recorded = rec["proposed_goldens"].get(kind)
+                if actual != recorded:
+                    scope = ("approved goldens" if active
+                             else f"superseded goldens ({version})")
+                    err(f"visual[{face}]: {kind} golden hash {actual[:12]}… "
+                        f"does not match approved record "
+                        f"{rec['approval_id']} ({str(recorded)[:12]}…) — "
+                        f"{scope} may not change without a new "
+                        f"approved record")
+            meta_p = gd / "METADATA.json"
+            if meta_p.exists():
+                meta = json.loads(meta_p.read_text(encoding="utf-8"))
+                for kind in ("normal", "aod"):
+                    mrec = meta.get("renders", {}).get(kind, {})
+                    gp = gd / f"{kind}.png"
+                    if gp.exists() and mrec.get("sha256") != sha256(gp):
+                        err(f"visual[{face}]: METADATA.json {kind} sha "
+                            f"disagrees with the committed golden bytes "
+                            f"({version})")
+            else:
+                warn(f"visual[{face}]: goldens/{version} has no "
+                     f"METADATA.json")
+
+        # --- committed inventory must be covered by some record -----------
+        inv_p = vdir / "inventories" / "inventory.json"
+        if not inv_p.exists():
+            err(f"visual[{face}]: no committed resource inventory "
+                f"(tools/inventory_resources.py {face})")
+        else:
+            if records:
+                inv_sha = sha256(inv_p)
+                if not any(r["inventory_sha256"] == inv_sha
+                           for r in records):
+                    err(f"visual[{face}]: committed inventory "
+                        f"({inv_sha[:12]}…) is not bound to any approval "
+                        f"record — resource changes need a proposed/"
+                        f"approved visual record (ADR-009 §5)")
+            # --- committed inventory must match the live tree bytes -------
+            # (the WARBIRD failure class: same name, wrong bytes)
+            inv = json.loads(inv_p.read_text(encoding="utf-8"))
+            face_dir = vdir.parent
+            listed = set()
+            for r in inv.get("resources", []):
+                p = face_dir / r["path"]
+                listed.add(r["path"])
+                if not p.exists():
+                    err(f"visual[{face}]: inventoried resource missing "
+                        f"from tree: {r['path']}")
+                elif sha256(p) != r["sha256"]:
+                    err(f"visual[{face}]: resource bytes drifted from "
+                        f"committed inventory: {r['path']} (same-name/"
+                        f"wrong-bytes — WARBIRD failure class, ADR-009 §3)")
+            res_root = face_dir / "app/src/main/res"
+            if res_root.is_dir():
+                for p in sorted(res_root.rglob("*")):
+                    if p.is_file():
+                        rel = str(p.relative_to(face_dir))
+                        if rel not in listed:
+                            err(f"visual[{face}]: uninventoried runtime "
+                                f"resource: {rel} (regenerate + review "
+                                f"the inventory)")
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo-root", default=str(Path(__file__).resolve().parents[1]))
@@ -465,7 +852,9 @@ def main() -> None:
     check_asset_licenses(root, files)
     check_files(root, files)
     check_engine(root)
+    load_derived_provenance(root)
     check_handoff(root)
+    check_visual(root)
 
     errors = [m for s, m in issues if s == "ERROR"]
     warns = [m for s, m in issues if s == "WARN"]

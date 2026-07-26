@@ -1,0 +1,1225 @@
+{
+  "contract_version": 1,
+  "face": "aurelius",
+  "problems": {
+    "duplicates": [],
+    "missing": [],
+    "unreferenced": []
+  },
+  "resource_count": 60,
+  "resources": [
+    {
+      "alpha": "straight",
+      "bytes": 198437,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "dimensions": [
+        400,
+        400
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable/preview.png",
+      "referenced": true,
+      "resource_id": "preview",
+      "sha256": "b4f2db2907454ed96b60080e9973eea85c94129a96c7ae319338c7d85add10c7",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 10728,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z21_bal"
+      ],
+      "dimensions": [
+        92,
+        92
+      ],
+      "handoff_asset_id": "balance-wheels/AureliusMk2_Balance",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/balance.png",
+      "referenced": true,
+      "resource_id": "balance",
+      "sha256": "c9c5dc4ec649d3363025ca68850e9569196ada9362b4816293d7983f24073156",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 218954,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z00_bg"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "plates/AureliusMk2_PlateNormal",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/bg.png",
+      "referenced": true,
+      "resource_id": "bg",
+      "sha256": "66d392b13c0f2a4f152d0e835d3044e749466713d98a25e77c49b850be154596",
+      "used_aod": false,
+      "used_normal": true
+    },
+    {
+      "alpha": "none",
+      "bytes": 9741,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z01_aod"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "plates/AureliusMk2_PlateAOD",
+      "kind": "drawable-nodpi",
+      "mode": "RGB",
+      "path": "app/src/main/res/drawable-nodpi/bg_aod.png",
+      "referenced": true,
+      "resource_id": "bg_aod",
+      "sha256": "603c2b2f35aea1354b900ed611ff868b6606ab18bb914cfc6cb6d0ff74edde6c",
+      "used_aod": true,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 16081,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z22_cage"
+      ],
+      "dimensions": [
+        122,
+        122
+      ],
+      "handoff_asset_id": "tourbillons/AureliusMk2_Cage",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/cage.png",
+      "referenced": true,
+      "resource_id": "cage",
+      "sha256": "3a4dcf8f25399466cfa62ed4c572ccc7b45e6d15dcec99c2501ffdc489b05144",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1412,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_0",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_0.png",
+      "referenced": true,
+      "resource_id": "g_0",
+      "sha256": "00b081d832afeda6bf3ad43c4b60ba9b5ae481d2d41f5ba848f24be6edd61af8",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 722,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        22,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_1",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_1.png",
+      "referenced": true,
+      "resource_id": "g_1",
+      "sha256": "bf048edf7da50fc1615561dd6e73948cc292bb84a9d905ea231f1feceb5a9e57",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1815,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_2",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_2.png",
+      "referenced": true,
+      "resource_id": "g_2",
+      "sha256": "700510dc5160470fcef26142c32ec1344cdf47fc36afd54031a5ea79785ab71f",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1963,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_3",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_3.png",
+      "referenced": true,
+      "resource_id": "g_3",
+      "sha256": "1b15a4606c72597ea39a5d4d811818eb0c8519208cc2a02e4203938c0bfceba3",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1548,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_4",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_4.png",
+      "referenced": true,
+      "resource_id": "g_4",
+      "sha256": "31b405589da2199b285832328610baf14511dfe943421cfb91a3ea7a7dbb0b6a",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1691,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        27,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_5",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_5.png",
+      "referenced": true,
+      "resource_id": "g_5",
+      "sha256": "0ffe1821d57353192a08f97459f4a4b9ed3f2628fbb36a44ad772217b2dbfe2f",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1667,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_6",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_6.png",
+      "referenced": true,
+      "resource_id": "g_6",
+      "sha256": "436230bb5d854e4dd5ec05222e45df7b6e9cebe3aa58ae2f63f61ada655cf86d",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1391,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        25,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_7",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_7.png",
+      "referenced": true,
+      "resource_id": "g_7",
+      "sha256": "e38e4c27a522b0b3ae332c221b9cde06155c67624e832e3aead02de74dabd0ce",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2005,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_8",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_8.png",
+      "referenced": true,
+      "resource_id": "g_8",
+      "sha256": "0be2162d27c7193f7aa0829b180050404b1ac9b19a49aa81cbf06eca6ec620ea",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1683,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_9",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_9.png",
+      "referenced": true,
+      "resource_id": "g_9",
+      "sha256": "b1e38ea86fc82497c290feeb11b97791475d3e090f6fe0bba0db4e7b4c9a48f5",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1840,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_a",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_a.png",
+      "referenced": true,
+      "resource_id": "g_a",
+      "sha256": "98715c0ab4feb2564b372efcea848f408588e9202aa90b8bca50b3435d219d94",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1603,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_b",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_b.png",
+      "referenced": true,
+      "resource_id": "g_b",
+      "sha256": "b2a752dc12d33fbd478e4c92fd700da8970498b46054e075710fbf309ee740d9",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1608,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_c",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_c.png",
+      "referenced": true,
+      "resource_id": "g_c",
+      "sha256": "841111efed8c9dce0bc02d2d8e188c96b33e85bcd76579dc5fb6722d513df5b3",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 576,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        18,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_colon",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_colon.png",
+      "referenced": true,
+      "resource_id": "g_colon",
+      "sha256": "e9a200be840462b506c80b515a899a5f54efee5dd6c43b6e896289ee794edfe5",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1239,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_d",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_d.png",
+      "referenced": true,
+      "resource_id": "g_d",
+      "sha256": "56a2486e417ed5d9d50bf487dc5426e04890da02e7c707f109923aa7d3d430ed",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1028,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_e",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_e.png",
+      "referenced": true,
+      "resource_id": "g_e",
+      "sha256": "2362d1721b8f26ad4ff7e9eeb9af2791b82decd323a466bb4d9c2d112bd5be4e",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 862,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_f",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_f.png",
+      "referenced": true,
+      "resource_id": "g_f",
+      "sha256": "93dfddef9f3e6a8aed2783ead706e95d8d956bc04d24890ed55e0a8fe70da1a4",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1735,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_g",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_g.png",
+      "referenced": true,
+      "resource_id": "g_g",
+      "sha256": "844a08c886c4f5c364e312c027e9f1e93101311ce0ff7d49e4bd4234a1769451",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 970,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_h",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_h.png",
+      "referenced": true,
+      "resource_id": "g_h",
+      "sha256": "2019f775399ef78d1586e7dd6003ad8227fccb9d5b4db64fd2557a57e17732d7",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 354,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        20,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_i",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_i.png",
+      "referenced": true,
+      "resource_id": "g_i",
+      "sha256": "69a31c88b20abf0afd641c6c6faeb2aa3c8c17fce3c8699b907fc94712bef9f1",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1061,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_j",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_j.png",
+      "referenced": true,
+      "resource_id": "g_j",
+      "sha256": "db2967bfb49eb4dddd2872a803877fc16b8affd579521c02406b60d320038c7b",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1849,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_k",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_k.png",
+      "referenced": true,
+      "resource_id": "g_k",
+      "sha256": "d3881200b14243fedae193232420b383218ae2986677a5e863354172b0e962b6",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 615,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        26,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_l",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_l.png",
+      "referenced": true,
+      "resource_id": "g_l",
+      "sha256": "01e6f11e114e58f17dcf5e636a3782484423bd1db189c2e5ff7644437c75e3be",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1839,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        34,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_m",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_m.png",
+      "referenced": true,
+      "resource_id": "g_m",
+      "sha256": "b34503b59858689c47e95e61b207a502de8de3774f0793561d8015b2a944208c",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1567,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        30,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_n",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_n.png",
+      "referenced": true,
+      "resource_id": "g_n",
+      "sha256": "6a428c387cb43464b04caa2d1b7cfdb9f0cd1a59f595e5d82e300e12a3506c66",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1464,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_o",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_o.png",
+      "referenced": true,
+      "resource_id": "g_o",
+      "sha256": "fadef7b3650b61924ab40f9bd3e58f42504a2ed3528db7891716e1acd62b7b8f",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1265,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_p",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_p.png",
+      "referenced": true,
+      "resource_id": "g_p",
+      "sha256": "2687cd0735ca9f7fbc5bda2621c08de758759fa3f0e7eefe66dd894354cdddf7",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2414,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        34,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_pct",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_pct.png",
+      "referenced": true,
+      "resource_id": "g_pct",
+      "sha256": "190749327f3e6b4d04d33bdfca8a74dd2ca910bd1cb8a3d6d5d5866e899aa286",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1547,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_q",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_q.png",
+      "referenced": true,
+      "resource_id": "g_q",
+      "sha256": "d50984988e246cc156cdc617dc8bb3c29974be93c681fdf9d758477fb61231de",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1702,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_r",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_r.png",
+      "referenced": true,
+      "resource_id": "g_r",
+      "sha256": "9e15a58e861f326137714dee3407ae692eb42b7552bdc0cc741ea046bc1d84ba",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2166,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_s",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_s.png",
+      "referenced": true,
+      "resource_id": "g_s",
+      "sha256": "cab32359ed32581308b8dd1c1acab26b04f64e50f9bcfd2348df999a6ccd1e9c",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 80,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        12,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_space",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_space.png",
+      "referenced": true,
+      "resource_id": "g_space",
+      "sha256": "4d5af88944009acab221f250c7b3df712159d7876eb59a85cd324f6c48e22e9a",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 596,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        25,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_t",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_t.png",
+      "referenced": true,
+      "resource_id": "g_t",
+      "sha256": "f0e6887ab8a77ee524cfc994497c56a0c6166b819ee0e6de1afd871f5f0333b2",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1094,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        29,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_u",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_u.png",
+      "referenced": true,
+      "resource_id": "g_u",
+      "sha256": "003fce9b9b13413a6d01db3d94f0013a65976a562527c49c861d3e94b3d6d9a4",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1800,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_v",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_v.png",
+      "referenced": true,
+      "resource_id": "g_v",
+      "sha256": "8976a3786395176b9c11c217b5485a5d2dd44901ef6fd84f1df77f5d73557acb",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2223,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        36,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_w",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_w.png",
+      "referenced": true,
+      "resource_id": "g_w",
+      "sha256": "9a027df2982751ec5b5f10bb2d96312b189d519f90be4254ff07baa8de9fd5af",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 2145,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_x",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_x.png",
+      "referenced": true,
+      "resource_id": "g_x",
+      "sha256": "97e2901f0d1201d6acd191f7980472e226ebe75e63f5b1a9ca6612ace4ec6ebc",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1568,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_y",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_y.png",
+      "referenced": true,
+      "resource_id": "g_y",
+      "sha256": "5353e4eec64a0e2cab9dd4b672f15d876345d19926db76ed80d109480eea202a",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1572,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z30_date (font aur)"
+      ],
+      "dimensions": [
+        28,
+        40
+      ],
+      "handoff_asset_id": "numerals/AureliusMk2_Glyph_z",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/g_z.png",
+      "referenced": true,
+      "resource_id": "g_z",
+      "sha256": "da35cdc23f39d5ea56445d57517fa5cfb419c45abef23d6c567c5150d6a7d323",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 15871,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z10_gl"
+      ],
+      "dimensions": [
+        120,
+        120
+      ],
+      "handoff_asset_id": "gears/AureliusMk2_GearL_z24",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/gear_l.png",
+      "referenced": true,
+      "resource_id": "gear_l",
+      "sha256": "758e89cc6ab1c071aa2f47c88b415513d38b7ec53956d53e52286c692496cf45",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 12029,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z11_gr"
+      ],
+      "dimensions": [
+        102,
+        102
+      ],
+      "handoff_asset_id": "gears/AureliusMk2_GearR_z18",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/gear_r.png",
+      "referenced": true,
+      "resource_id": "gear_r",
+      "sha256": "db8ba3a2d17b31dd694149eb49add99f3ec64f61496c005340a44a6ba717d5ad",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 5795,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z50_hour"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "hands/AureliusMk2_HandHour",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/hour_hand.png",
+      "referenced": true,
+      "resource_id": "hour_hand",
+      "sha256": "ec02496f7367931418b2744f7252c7747c3a21fff25512c2b90f0fa82e388674",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1425,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z52_hub"
+      ],
+      "dimensions": [
+        28,
+        28
+      ],
+      "handoff_asset_id": "hands/AureliusMk2_HubCap",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/hub.png",
+      "referenced": true,
+      "resource_id": "hub",
+      "sha256": "fde432b0971bee8660f88e3ceaafa2e8cf242ee329c3eea7cec1761ea413ad4d",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 6889,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z51_min"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "hands/AureliusMk2_HandMinute",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/min_hand.png",
+      "referenced": true,
+      "resource_id": "min_hand",
+      "sha256": "d611003aec203f29566e57084d19200b37d6c284155c1d238b074e802c633990",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 1693,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z31_resv"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "hands/AureliusMk2_NeedleReserve",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/resv_needle.png",
+      "referenced": true,
+      "resource_id": "resv_needle",
+      "sha256": "4e8043c27ec2b0755465ce8f07bb279e425951813f4ed68b9d50d0090d0cedac",
+      "used_aod": true,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 16463,
+      "classification": "studio-handoff",
+      "consumers": [
+        "z40_sheen"
+      ],
+      "dimensions": [
+        480,
+        480
+      ],
+      "handoff_asset_id": "crystals/AureliusMk2_Sheen",
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/sheen.png",
+      "referenced": true,
+      "resource_id": "sheen",
+      "sha256": "a403e0a024a134950a028909dda7c541c6d364377abbaf6664f72fc43a38f10b",
+      "used_aod": false,
+      "used_normal": true
+    },
+    {
+      "alpha": "straight",
+      "bytes": 4359,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        128,
+        128
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_base.png",
+      "referenced": false,
+      "resource_id": "tourb_base",
+      "sha256": "c12c70c322bb32999eadff23ca3b6f45bc43df73aeae0ad4ce56ce9cd68bd95f",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 34806,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        120,
+        120
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_disc.png",
+      "referenced": false,
+      "resource_id": "tourb_disc",
+      "sha256": "fe84f7f1ec4efb93b86d334230507efd2c5352f8b8e7f75d06769588a5fe03e9",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "alpha": "straight",
+      "bytes": 19653,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "dimensions": [
+        140,
+        140
+      ],
+      "handoff_asset_id": null,
+      "kind": "drawable-nodpi",
+      "mode": "RGBA",
+      "path": "app/src/main/res/drawable-nodpi/tourb_rim.png",
+      "referenced": false,
+      "resource_id": "tourb_rim",
+      "sha256": "1f42a033a7ec2f5c533ef7a0bac94b79b5359a00487cf8dd22814adeba5079f0",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 46004,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/marcellus.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "1cf0cd10b17d35e852729962cc1ffaffed94514895972458345e2df34abb2f81",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 47888,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/marcellus_sc.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "03044ab65228b0554c9a5c1e63df29d4e58a71857e212801aaf768dfd106bdf0",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 400680,
+      "classification": "legacy-unreferenced-allowlisted",
+      "consumers": [],
+      "handoff_asset_id": null,
+      "kind": "font",
+      "path": "app/src/main/res/font/rajdhani_bold.ttf",
+      "referenced": false,
+      "resource_id": null,
+      "sha256": "691470dd3286a14e9677940d0bf75796179841ba5215cbda1a2c8910a3226afd",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 7625,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "raw",
+      "path": "app/src/main/res/raw/watchface.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 108,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "values",
+      "path": "app/src/main/res/values/integers.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "8f2b6bc3f8e17519814f139c51ebe831071e045635e5846221e09bfeb9d27fab",
+      "used_aod": false,
+      "used_normal": false
+    },
+    {
+      "bytes": 191,
+      "classification": "structural",
+      "consumers": [
+        "build/packaging"
+      ],
+      "handoff_asset_id": null,
+      "kind": "xml",
+      "path": "app/src/main/res/xml/watch_face_info.xml",
+      "referenced": true,
+      "resource_id": null,
+      "sha256": "885e2dc93bba9638e025c4b57bcdb2f7cdea128db1c7c05a0b9ba0046ccf5136",
+      "used_aod": false,
+      "used_normal": false
+    }
+  ],
+  "xml_sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79"
+}

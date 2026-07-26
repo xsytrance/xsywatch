@@ -653,6 +653,26 @@ render. Full re-verification green (68 tests, 10/10 fixtures, 10/10
 builds, WFF validator, memory evaluator, validate.py, immutable checksum
 unchanged). Branch returned for final review; not merged.
 
+### 2026-07-25 — Phase 3 executed to review-ready on both branches (Claude Code)
+
+Visual/resource-lineage gate built FIRST and proven (17 tests incl. the
+nine mandated deliberate failures; synthetic WARBIRD-class substitution
+fails the pixel gate at 91% AND plain validate.py). Legacy goldens
+byte-reproducible (APPROVAL-0001, owner-countersigned). Owner selected
+concept B tuned with A restraint (palette S) at the checkpoint; studio
+delivered 10 reusable LIB assets + 50 aligned exports at AGENOR commit
+1d51b58; sha-verified gated import wrote 50 real manifest entries with
+ZERO XML delta (parity gates untouched). Candidate d734abc8… bound to
+APPROVAL-0002 (proposed; goldens.proposed_version workflow keeps CI
+honest while approved v1 goldens stay frozen). Full static suite green;
+physical Watch7 matrix PASS incl. premium checks (intended pixels live,
+dynamic date via imported glyphs, concentric pivots, no fringing); AOD
+panel-capture qualification unchanged from Phase 2. Immutable release
+untouched. Branches `phase-3/premium-aurelius-visual-lineage` +
+`phase-3/aurelius-studio-slice` returned for architecture review — NOT
+merged. Owner still owes the final pixel acceptance (promotion flips
+APPROVAL-0002 + goldens; procedure in report §21).
+
 ## 17. Update discipline
 
 Whenever this document changes, preserve historical decisions unless they are explicitly superseded. Mark obsolete decisions as superseded rather than silently deleting them. Add dated review notes after major commits, and keep the immediate backlog synchronized with repository reality.
