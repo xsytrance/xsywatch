@@ -123,6 +123,8 @@ def main() -> int:
     ap.add_argument("--aab", required=True)
     ap.add_argument("--apk", required=True)
     ap.add_argument("--write-manifest", action="store_true")
+    ap.add_argument("--dex-report",
+                    help="dex_guard.py report emitted during the build")
     args = ap.parse_args()
 
     face_dir = REPO / "watchfaces" / args.face
@@ -131,6 +133,21 @@ def main() -> int:
         if not p.exists():
             print(f"ERROR missing artifact {p}", file=sys.stderr)
             return 2
+
+    dex_gate = None
+    if args.dex_report and Path(args.dex_report).exists():
+        dex_gate = json.loads(Path(args.dex_report).read_text())
+        if not dex_gate.get("passed"):
+            err(f"the dex gate did not pass: {dex_gate.get('violations')}")
+        else:
+            n = dex_gate.get("dex_files_found", 0)
+            ok(f"dex gate passed: {n} release dex file(s) inspected, all "
+               f"classes inside the generated-R allowlist, deleted only "
+               f"after verification")
+    else:
+        err("no dex-gate report supplied — the build must run "
+            "tools/dex_guard.py and pass its report to --dex-report, "
+            "otherwise nothing proves WHAT was deleted before packaging")
 
     # ---- declared identity, from every source that states it -----------
     import tomllib
@@ -260,6 +277,52 @@ def main() -> int:
         else:
             err("bundle contains no base/res/raw/watchface.xml")
 
+    # ---- manifest permissions, from the SOURCE and both artifacts ------
+    # Blocker 4: an API-36-only package must not declare unqualified
+    # BODY_SENSORS, and must not declare a sensitive permission that backs
+    # no feature. Both are checked against what the artifacts really carry,
+    # not against the source manifest alone.
+    src_perms = sorted(set(re.findall(
+        r'<uses-permission\s+android:name="([^"]+)"', man)))
+    apk_perms = []
+    if tool:
+        r = subprocess.run([tool, "dump", "permissions", str(apk)],
+                           capture_output=True, text=True)
+        if r.returncode == 0:
+            apk_perms = sorted(set(re.findall(r"uses-permission: name='([^']+)'",
+                                              r.stdout)))
+    if src_perms != apk_perms:
+        err(f"source manifest permissions {src_perms} != APK permissions "
+            f"{apk_perms}")
+    else:
+        ok(f"manifest permissions consistent: {src_perms or 'none declared'}")
+
+    min_sdk_int = int(gradle["minSdk"])
+    for perm in src_perms:
+        if perm == "android.permission.BODY_SENSORS" and min_sdk_int >= 36:
+            err("BODY_SENSORS is declared unqualified on an API-36-only "
+                "package. Apps targeting API 36+ must use the granular "
+                "android.permission.health.* permissions; the legacy one "
+                "only applies with android:maxSdkVersion=\"35\", which "
+                "minSdk 36 can never reach.")
+        if perm == "android.permission.ACTIVITY_RECOGNITION":
+            xml_txt = repo_xml.read_text()
+            uses_activity = any(t in xml_txt for t in
+                                ("[STEP_COUNT]", "[DISTANCE]", "[CALORIES]",
+                                 "[FLOORS]", "[ELEVATION_GAIN]"))
+            if not uses_activity:
+                err("ACTIVITY_RECOGNITION is declared but the generated WFF "
+                    "XML references no step, distance, calorie, floor or "
+                    "elevation source — a sensitive permission backing no "
+                    "feature")
+
+    # ---- dex state of BOTH artifacts, explicitly ------------------------
+    with zipfile.ZipFile(apk) as z:
+        apk_dex = sorted(n for n in z.namelist() if n.endswith(".dex"))
+    ok(f"debug APK dex: {apk_dex or 'none'} — policy: the device-test APK "
+       f"MAY retain the generated R dex; only the distributed bundle must "
+       f"be dex-free")
+
     # ---- signing state --------------------------------------------------
     # A v1 JAR signature lives in META-INF/*.RSA, but APK Signature Scheme
     # v2/v3 stores the block in the ZIP central directory instead, so an
@@ -291,6 +354,21 @@ def main() -> int:
                           "size_bytes": apk.stat().st_size,
                           "signing": apk_signing},
         },
+        "manifest_permissions": {
+            "source": src_perms,
+            "apk": apk_perms,
+            "policy": ("minimum verified set; no unqualified BODY_SENSORS "
+                       "on an API-36-only package and no sensitive "
+                       "permission without a backing feature"),
+        },
+        "dex_state": {
+            "aab": [],
+            "apk_debug": apk_dex,
+            "apk_policy": ("the device-test APK may retain the generated R "
+                           "dex; only the distributed bundle must be "
+                           "dex-free"),
+        },
+        "dex_gate": dex_gate,
         "publication_status": "not published",
         "consistent": not issues,
         "problems": issues,

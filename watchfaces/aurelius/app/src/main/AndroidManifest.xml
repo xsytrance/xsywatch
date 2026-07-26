@@ -5,8 +5,36 @@
         android:name="android.hardware.type.watch"
         android:required="true" />
 
-    <uses-permission android:name="android.permission.BODY_SENSORS" />
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!--
+      No sensor or health permission is declared. See
+      docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md.
+
+      ACTIVITY_RECOGNITION was removed because it backed no feature at all:
+      the face spec and the generated WFF XML reference no step, activity,
+      distance, calorie or floor source. It was declared and never used.
+
+      BODY_SENSORS was removed because an unqualified declaration is wrong
+      on an API-36-only package. Apps targeting API 36+ must declare the
+      granular android.permission.health.* permissions instead; the legacy
+      permission only applies with android:maxSdkVersion="35", and minSdk
+      is 36, so it could never take effect
+      (developer.android.com/training/wearables/versions/6/changes,
+      checked 2026-07-26).
+
+      Heart rate reaches this face only as the declarative WFF
+      [HEART_RATE] source. The package has android:hasCode="false": it
+      cannot call an API, cannot request a runtime permission, and cannot
+      handle a permission result. The face also has a documented fallback
+      (HEART_RATE < 30 -> 70 bpm), so an unavailable reading degrades into
+      an already-tested state rather than breaking.
+
+      This is the minimum declaration. Empirical confirmation on the
+      Galaxy Watch7 that live HR still drives the balance wheel with no
+      permission declared is a BLOCKED readiness gate, not a settled
+      result. A controlled variant declaring
+      android.permission.health.READ_HEART_RATE is built alongside the
+      candidate for comparison if the device shows it is required.
+    -->
 
     <application
         android:label="AURELIUS"

@@ -11,8 +11,8 @@ android {
         // render the declared format.
         minSdk = 36
         targetSdk = 36
-        versionCode = 2
-        versionName = "2.0.0-rc1"
+        versionCode = 3
+        versionName = "2.0.0-rc2"
     }
     // A declarative watch face has no code: AndroidManifest declares
     // android:hasCode="false" and there is not one .java or .kt source.
@@ -55,21 +55,31 @@ configurations.matching { it.name.endsWith("RuntimeClasspath") }
 // tools/verify_candidate.py re-checks, on the produced artifacts, that the
 // only thing ever dexed was the R class and that neither the bundle nor the
 // APK contains dex.
-val stripRClassDex = tasks.register("stripRClassDex") {
+// FAIL-CLOSED. The gate inspects every class descriptor each release dex
+// DEFINES and deletes only when the complete set is inside the generated-R
+// allowlist. Anything else fails the build before packaging.
+//
+// The previous version deleted every .dex it found and asserted in a
+// comment that the content was the R class. That was fail-open: a real
+// class or a runtime dependency entering the release graph would have been
+// silently deleted, and the bundle would still have passed the final
+// "contains no dex" check. Proving the bundle is dex-free says nothing
+// about what was removed to make it so.
+val stripRClassDex = tasks.register<Exec>("stripRClassDex") {
     val dexDir = layout.buildDirectory.dir("intermediates/dex/release")
+    val report = layout.buildDirectory.file("outputs/dex_gate.json")
+    val guard = rootProject.file("../../tools/dex_guard.py")
     outputs.upToDateWhen { false }
-    doLast {
-        val root = dexDir.get().asFile
-        if (root.exists()) {
-            root.walkTopDown()
-                .filter { it.isFile && it.extension == "dex" }
-                .forEach {
-                    logger.lifecycle("stripRClassDex: removing ${it.name} " +
-                                     "(${it.length()} bytes, R class only)")
-                    it.delete()
-                }
-        }
-    }
+    commandLine(
+        "python3", guard.absolutePath,
+        "--dex-dir", dexDir.get().asFile.absolutePath,
+        "--package", "com.xsytrance.aurelius",
+        "--delete",
+        "--report", report.get().asFile.absolutePath,
+    )
+    // Exec fails the build on a non-zero exit by default; stated explicitly
+    // because the whole point of this task is that it must not be skippable.
+    isIgnoreExitValue = false
 }
 
 tasks.matching { it.name == "packageReleaseBundle" }.configureEach {

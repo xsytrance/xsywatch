@@ -20,8 +20,8 @@ background_color = "#FF060403"
 
 [identity]
 package = "com.xsytrance.aurelius"
-version_code = 2
-version_name = "2.0.0-rc1"
+version_code = 3
+version_name = "2.0.0-rc2"
 
 [[fonts]]
 name = "aur"

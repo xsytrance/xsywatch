@@ -70,16 +70,18 @@ class TestAureliusSemanticParity(unittest.TestCase):
         """Identity may not drift silently.
 
         Phase 2 pinned this to 1 / "1.0" to prove the engine migration
-        changed no identity field. Phase 4 moves the package to the
-        2.0.0-rc1 release candidate deliberately (ADR-010 §3, minSdk
-        raised to match the WFF v4 API floor), so the pin moves with it.
-        The guard's job is unchanged: these values are edited here only
-        alongside a reviewed decision, never as a side effect.
+        changed no identity field. Phase 4 moves the package deliberately:
+        first to 2.0.0-rc1 (ADR-010 §3, minSdk raised to the WFF v4 API
+        floor), then to 2.0.0-rc2 / versionCode 3 after the Checkpoint B
+        review required packaging, dex-gate and manifest-permission
+        corrections that change package bytes. The pin moves with each
+        reviewed decision. Its job is unchanged: these values are edited
+        here only alongside such a decision, never as a side effect.
         """
         spec = load_spec(SPEC)
         self.assertEqual(spec.identity["package"], "com.xsytrance.aurelius")
-        self.assertEqual(str(spec.identity["version_code"]), "2")
-        self.assertEqual(str(spec.identity["version_name"]), "2.0.0-rc1")
+        self.assertEqual(str(spec.identity["version_code"]), "3")
+        self.assertEqual(str(spec.identity["version_name"]), "2.0.0-rc2")
         self.assertEqual(spec.wff_version, 4)
 
     def test_package_name_never_changes(self):
