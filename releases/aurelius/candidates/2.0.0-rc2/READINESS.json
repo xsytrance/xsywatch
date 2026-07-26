@@ -38,7 +38,7 @@
     },
     "consumer-lineage-verified": {
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
-      "detail": "source/artifact/metadata roles enforced; two clean detached-worktree rebuilds from the source commit are byte-identical and equal the canonical artifacts",
+      "detail": "three roles enforced against COMMIT OBJECTS (blob/LFS oid), not the working tree; two clean detached-worktree rebuilds from the source commit are byte-identical and equal the canonical artifacts",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json"
       ],
@@ -53,7 +53,7 @@
     },
     "dex-gate-passed": {
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
-      "detail": "1 release dex, 3076 B, six generated R classes, allowlist satisfied, deleted only after verification; AAB contains no dex",
+      "detail": "release dex allowlisted and deleted only after verification; every debug-APK dex classified \u2014 6 generated R classes plus 4 named D8 desugaring stubs, 0 unexplained; AAB contains no dex",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json",
         "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json"

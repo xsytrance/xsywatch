@@ -22,6 +22,15 @@
       "size_bytes": 831529
     }
   },
+  "artwork_provenance": {
+    "donor_image_pixels": 0,
+    "external_ai_checkpoint_pixels": 0,
+    "record": "releases/aurelius/candidates/2.0.0-rc2/PROVENANCE.json",
+    "repository_wide_warning": "preserved for legacy products; not applicable to rc2",
+    "status": "closed for this candidate",
+    "third_party_visual_input": "Rajdhani Bold (SIL OFL-1.1, commercially permissive)",
+    "unresolved_assets": 0
+  },
   "build_commands": {
     "candidate": "tools/build_candidate.sh --clean --out <dir>  (runs the dex gate and verify_candidate.py; fails the build if either fails)",
     "provenance": "python3 tools/candidate_provenance.py aurelius --version 2.0.0-rc2",
@@ -32,25 +41,93 @@
   "candidate_metadata_commit": "auto \u2014 resolved by `git log -1 --format=%H -- releases/aurelius/candidates/2.0.0-rc2/CANDIDATE.json`; a metadata file cannot contain its own commit hash",
   "channel": "candidates",
   "compile_sdk": 36,
-  "consumer_artifact_commit": "ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b",
-  "consumer_source_commit": "a328669e487c6773b6c359d6b7ae4a5d1d5d4b49",
+  "consumer_artifact_commit": "fa995ffad97c260ffb64a77d4f0916b593eb66a5",
+  "consumer_source_commit": "f6f00663f109490e294b0c0d60d1e224087c3dd0",
   "device_evidence": {
     "procedure": "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md",
     "required_before_checkpoint_b_acceptance": true,
     "status": "BLOCKED \u2014 no Galaxy Watch7 reachable"
   },
   "dex_gate": {
+    "debug_apk_classified": "2 dex files, 10 distinct classes = 6 generated Aurelius R + 4 named D8 desugaring stubs, 0 unexplained",
     "evidence": "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json",
     "passed": true,
     "summary": "1 release dex, 3076 B, six generated R classes, allowlist satisfied, deleted only after verification"
   },
   "dex_state": {
     "aab": [],
+    "aab_contains_dex": false,
     "apk_debug": [
       "classes.dex",
       "classes2.dex"
     ],
-    "apk_policy": "the device-test APK may retain the generated R dex; only the distributed bundle must be dex-free"
+    "apk_debug_classified": [
+      {
+        "class_count": 6,
+        "classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "dexdump_agrees": true,
+        "disallowed": [],
+        "generated_r_classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "justified_toolchain_classes": {},
+        "path": "classes.dex",
+        "sha256": "20adf4bb67a45c7b4cea5ec7ae04a63533cc664741df73aa4fae8c4dd0a4acbf",
+        "size_bytes": 3352
+      },
+      {
+        "class_count": 4,
+        "classes": [
+          "Lcom/android/tools/r8/annotations/LambdaMethod;",
+          "Ljava/lang/Record;",
+          "Ljava/lang/invoke/MethodHandles$Lookup;",
+          "Ljava/lang/invoke/VarHandle;"
+        ],
+        "dexdump_agrees": true,
+        "disallowed": [],
+        "generated_r_classes": [],
+        "justified_toolchain_classes": {
+          "Lcom/android/tools/r8/annotations/LambdaMethod;": "R8 desugaring annotation stub",
+          "Ljava/lang/Record;": "core-library desugaring stub for java.lang.Record",
+          "Ljava/lang/invoke/MethodHandles$Lookup;": "core-library desugaring stub for MethodHandles.Lookup",
+          "Ljava/lang/invoke/VarHandle;": "core-library desugaring stub for VarHandle"
+        },
+        "path": "classes2.dex",
+        "sha256": "1fa4abb8f95122d859306051a593d15a50819a275c3d1b9adcb57bd01ea93b3d",
+        "size_bytes": 12312
+      }
+    ],
+    "apk_debug_distinct_classes": [
+      "Lcom/android/tools/r8/annotations/LambdaMethod;",
+      "Lcom/xsytrance/aurelius/R$drawable;",
+      "Lcom/xsytrance/aurelius/R$font;",
+      "Lcom/xsytrance/aurelius/R$integer;",
+      "Lcom/xsytrance/aurelius/R$raw;",
+      "Lcom/xsytrance/aurelius/R$xml;",
+      "Lcom/xsytrance/aurelius/R;",
+      "Ljava/lang/Record;",
+      "Ljava/lang/invoke/MethodHandles$Lookup;",
+      "Ljava/lang/invoke/VarHandle;"
+    ],
+    "apk_debug_justified_toolchain_classes": {
+      "Lcom/android/tools/r8/annotations/LambdaMethod;": "R8 desugaring annotation stub",
+      "Ljava/lang/Record;": "core-library desugaring stub for java.lang.Record",
+      "Ljava/lang/invoke/MethodHandles$Lookup;": "core-library desugaring stub for MethodHandles.Lookup",
+      "Ljava/lang/invoke/VarHandle;": "core-library desugaring stub for VarHandle"
+    },
+    "apk_policy": "The distributed BUNDLE must contain no dex. The device-test APK may retain the generated Aurelius R dex and nothing else: this is an android:hasCode=\"false\" resource-only package, so any other class would be unexplained. Every APK dex is extracted, hashed, parsed for its defined class descriptors and cross-checked with dexdump; verification fails on an unreadable dex, parser disagreement, or any class outside the generated-R allowlist."
   },
   "evidence": {
     "aod_luminance": "docs/reports/evidence/phase-4/aurelius/aod/",
@@ -88,12 +165,14 @@
   ],
   "licensing_provenance": {
     "asset_licenses": "docs/asset-licenses.json (28 audited entries)",
+    "candidate_specific_closure": "CLOSED \u2014 see PROVENANCE.json. All 50 manifested runtime assets and the generated preview were traced to their producing commit and source paths: zero external AI-checkpoint pixels, zero donor-image pixels, zero drifted assets. Rajdhani Bold (SIL OFL-1.1) is the only third-party visual input.",
     "derived_assets": "docs/derived-asset-provenance.json",
     "notices": "THIRD_PARTY_NOTICES/",
-    "open_owner_action": "AI-model licence position for commercial sale of generated artwork remains unresolved (docs/LICENSING.md)",
+    "repository_wide_warning": "docs/LICENSING.md remains unchanged and accurate for the legacy faces it describes. It is NOT applicable to this candidate. Scoping it is not deleting or weakening it.",
     "typeface": "Rajdhani Bold, SIL OFL-1.1"
   },
   "lineage": "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json",
+  "lineage_sha256": "6caaff0a8fc678b4630829640b1378d0bdbffe421aec8aaa93cea7477327c386",
   "manifest_permissions": {
     "apk": [],
     "policy": "minimum verified set; no unqualified BODY_SENSORS on an API-36-only package and no sensitive permission without a backing feature",
@@ -110,6 +189,7 @@
   },
   "product": "AURELIUS \u2014 Field Tourbillon Mk II",
   "provenance": "releases/aurelius/candidates/2.0.0-rc2/PROVENANCE.json",
+  "provenance_sha256": "d346db26725bb0ff3af36c9c60bb5a695f357d9a6c563abea1e5b8e5cb5295e0",
   "publication_status": "not published",
   "readiness": "releases/aurelius/candidates/2.0.0-rc2/READINESS.json",
   "reproducibility": {
@@ -130,6 +210,11 @@
   "studio_metadata_commit": "97ba0f1ceeee721a7a2ec0521603bd61935d036d",
   "studio_producing_commit": "04015886dbee5cd17b66c4627f822aef3db73d16",
   "studio_repo": "xsytrance/AGENOR-Horology",
+  "superseded_commit_roles": {
+    "consumer_artifact_commit": "ea2b0e58354825890d0cf0e1ceebfdd0650b9e1b",
+    "consumer_source_commit": "a328669e487c6773b6c359d6b7ae4a5d1d5d4b49",
+    "note": "The rc2 artifacts did not change. These earlier roles are kept for history: the source commit moved when the build.gradle.kts comment was corrected and the artifact commit moved when VERIFY.json gained the debug-dex classification. A rebuild from the new source commit reproduces the identical artifact hashes."
+  },
   "supersedes": {
     "preserved_at": "releases/aurelius/candidates/2.0.0-rc1/",
     "reason": "Checkpoint B corrections change package bytes",
@@ -164,6 +249,7 @@
       "samples": 144
     }
   },
+  "verify_sha256": "3986f2dd26135e0fbcda4966e8dfd4f1ef164ebdec81f8f8fee055f2b9fe276c",
   "version_code": 3,
   "version_name": "2.0.0-rc2",
   "visual_version": "field-tourbillon-mk2-rc1",
