@@ -1,0 +1,400 @@
+{
+  "approval_id": "APPROVAL-0005",
+  "face": "aurelius",
+  "visual_version": "field-tourbillon-mk2-rc1",
+  "previous_visual_version": "field-tourbillon-mk2-r2",
+  "supersedes": {
+    "approval_id": "APPROVAL-0004",
+    "visual_version": "field-tourbillon-mk2-r2",
+    "reason": "Owner selection at the Phase-4 Checkpoint A review (2026-07-26): the approved r2 design is carried forward unchanged in geometry, layout, camera, aperture, typography, signature, hands, pivots, motion and parallax, and receives one restrained craftsmanship pass \u2014 Command Satin in full plus exactly one graft from Precision Instrument, the crisper reserve-tick material and edge treatment. Atelier Stripe and the full Precision Instrument tier hierarchy were rejected. APPROVAL-0004 and every r2 artefact remain committed, unmodified, as the approved historical golden per ADR-009 \u00a75; r2 stays the active approved golden until the owner accepts rc1 at Checkpoint B.",
+    "preserved": [
+      "watchfaces/aurelius/visual/goldens/field-tourbillon-mk2-r2/",
+      "watchfaces/aurelius/visual/goldens/field-tourbillon-v1/",
+      "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2/",
+      "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-r1/",
+      "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-r2/",
+      "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-v1.json",
+      "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2.json",
+      "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-r1.json",
+      "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-r2.json",
+      "watchfaces/aurelius/visual/approvals/APPROVAL-0001-field-tourbillon-v1.json",
+      "watchfaces/aurelius/visual/approvals/APPROVAL-0002-field-tourbillon-mk2.json",
+      "watchfaces/aurelius/visual/approvals/APPROVAL-0003-field-tourbillon-mk2-r1.json",
+      "watchfaces/aurelius/visual/approvals/APPROVAL-0004-field-tourbillon-mk2-r2.json",
+      "docs/reports/evidence/phase-3/aurelius/ (mk2, r1, r2)"
+    ]
+  },
+  "previous_goldens": {
+    "normal": "7fd2cf63607e2aa6ef53d0443c44e16885284705d5f4336602aa3ce2526a556e",
+    "aod": "2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936"
+  },
+  "proposed_goldens": {
+    "normal": "23e1d8e83f642d751ec3ad0c7cf1037faf8359b87ed31288a359a09d81c1d790",
+    "aod": "3e340f4379e1ca8462071761c8c46b8e0e292a7614ac9a2ccde7454a6af934aa"
+  },
+  "previous_inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-r2.json",
+  "inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-rc1.json",
+  "inventory_sha256": "1ec66797d1f4fdbf123e68240662ec256f056e8429941871e89cf675310359ce",
+  "changed_resources": [
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/bg_aod.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/cage.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_l.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/gear_r.png",
+    "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hub.png"
+  ],
+  "generated_consumer_resources": [
+    {
+      "path": "watchfaces/aurelius/app/src/main/res/drawable/preview.png",
+      "origin": "generated consumer-side by downsampling the rc1 candidate normal reference render to 400x400 (Lanczos); not a studio handoff asset. Regenerated for rc1 so the picker preview shows the shipped pixels rather than the superseded r2 art."
+    }
+  ],
+  "handoff_asset_ids": [
+    "balance-wheels/AureliusMk2_Balance",
+    "crystals/AureliusMk2_Sheen",
+    "gears/AureliusMk2_GearL_z24",
+    "gears/AureliusMk2_GearR_z18",
+    "hands/AureliusMk2_HandHour",
+    "hands/AureliusMk2_HandMinute",
+    "hands/AureliusMk2_HubCap",
+    "hands/AureliusMk2_NeedleReserve",
+    "numerals/AureliusMk2_Glyph_0",
+    "numerals/AureliusMk2_Glyph_1",
+    "numerals/AureliusMk2_Glyph_2",
+    "numerals/AureliusMk2_Glyph_3",
+    "numerals/AureliusMk2_Glyph_4",
+    "numerals/AureliusMk2_Glyph_5",
+    "numerals/AureliusMk2_Glyph_6",
+    "numerals/AureliusMk2_Glyph_7",
+    "numerals/AureliusMk2_Glyph_8",
+    "numerals/AureliusMk2_Glyph_9",
+    "numerals/AureliusMk2_Glyph_a",
+    "numerals/AureliusMk2_Glyph_b",
+    "numerals/AureliusMk2_Glyph_c",
+    "numerals/AureliusMk2_Glyph_colon",
+    "numerals/AureliusMk2_Glyph_d",
+    "numerals/AureliusMk2_Glyph_e",
+    "numerals/AureliusMk2_Glyph_f",
+    "numerals/AureliusMk2_Glyph_g",
+    "numerals/AureliusMk2_Glyph_h",
+    "numerals/AureliusMk2_Glyph_i",
+    "numerals/AureliusMk2_Glyph_j",
+    "numerals/AureliusMk2_Glyph_k",
+    "numerals/AureliusMk2_Glyph_l",
+    "numerals/AureliusMk2_Glyph_m",
+    "numerals/AureliusMk2_Glyph_n",
+    "numerals/AureliusMk2_Glyph_o",
+    "numerals/AureliusMk2_Glyph_p",
+    "numerals/AureliusMk2_Glyph_pct",
+    "numerals/AureliusMk2_Glyph_q",
+    "numerals/AureliusMk2_Glyph_r",
+    "numerals/AureliusMk2_Glyph_s",
+    "numerals/AureliusMk2_Glyph_space",
+    "numerals/AureliusMk2_Glyph_t",
+    "numerals/AureliusMk2_Glyph_u",
+    "numerals/AureliusMk2_Glyph_v",
+    "numerals/AureliusMk2_Glyph_w",
+    "numerals/AureliusMk2_Glyph_x",
+    "numerals/AureliusMk2_Glyph_y",
+    "numerals/AureliusMk2_Glyph_z",
+    "plates/AureliusMk2_PlateAOD",
+    "plates/AureliusMk2_PlateNormal",
+    "tourbillons/AureliusMk2_Cage"
+  ],
+  "unchanged_handoff_assets": [
+    {
+      "asset_id": "balance-wheels/AureliusMk2_Balance",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/balance.png",
+      "reason": "the CommandSatin_ReservePrecision finish provably never reaches this asset: it appears in no object group the finish touches (exports/aurelius_rc1/IMPACT.json), so its r2 export bytes were carried forward verbatim rather than re-rendered. Re-rendering an untouched asset through Cycles would introduce sampler-noise differences that would masquerade as a real change. Manifested in this generation, zero pixel delta."
+    },
+    {
+      "asset_id": "crystals/AureliusMk2_Sheen",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/sheen.png",
+      "reason": "the CommandSatin_ReservePrecision finish provably never reaches this asset: it appears in no object group the finish touches (exports/aurelius_rc1/IMPACT.json), so its r2 export bytes were carried forward verbatim rather than re-rendered. Re-rendering an untouched asset through Cycles would introduce sampler-noise differences that would masquerade as a real change. Manifested in this generation, zero pixel delta."
+    },
+    {
+      "asset_id": "hands/AureliusMk2_HandHour",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/hour_hand.png",
+      "reason": "the CommandSatin_ReservePrecision finish provably never reaches this asset: it appears in no object group the finish touches (exports/aurelius_rc1/IMPACT.json), so its r2 export bytes were carried forward verbatim rather than re-rendered. Re-rendering an untouched asset through Cycles would introduce sampler-noise differences that would masquerade as a real change. Manifested in this generation, zero pixel delta."
+    },
+    {
+      "asset_id": "hands/AureliusMk2_HandMinute",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/min_hand.png",
+      "reason": "the CommandSatin_ReservePrecision finish provably never reaches this asset: it appears in no object group the finish touches (exports/aurelius_rc1/IMPACT.json), so its r2 export bytes were carried forward verbatim rather than re-rendered. Re-rendering an untouched asset through Cycles would introduce sampler-noise differences that would masquerade as a real change. Manifested in this generation, zero pixel delta."
+    },
+    {
+      "asset_id": "hands/AureliusMk2_NeedleReserve",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/resv_needle.png",
+      "reason": "the CommandSatin_ReservePrecision finish provably never reaches this asset: it appears in no object group the finish touches (exports/aurelius_rc1/IMPACT.json), so its r2 export bytes were carried forward verbatim rather than re-rendered. Re-rendering an untouched asset through Cycles would introduce sampler-noise differences that would masquerade as a real change. Manifested in this generation, zero pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_0",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_0.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_1",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_1.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_2",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_2.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_3",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_3.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_4",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_4.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_5",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_5.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_6",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_6.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_7",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_7.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_8",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_8.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_9",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_9.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_a",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_a.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_b",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_b.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_c",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_c.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_colon",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_colon.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_d",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_d.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_e",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_e.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_f",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_f.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_g",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_g.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_h",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_h.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_i",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_i.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_j",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_j.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_k",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_k.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_l",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_l.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_m",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_m.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_n",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_n.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_o",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_o.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_p",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_p.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_pct",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_pct.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_q",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_q.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_r",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_r.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_s",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_s.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_space",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_space.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_t",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_t.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_u",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_u.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_v",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_v.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_w",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_w.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_x",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_x.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_y",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_y.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    },
+    {
+      "asset_id": "numerals/AureliusMk2_Glyph_z",
+      "destination": "watchfaces/aurelius/app/src/main/res/drawable-nodpi/g_z.png",
+      "reason": "Rajdhani glyph raster rendered in a separate flat-emission scene that the finish never enters; byte-identical to the field-tourbillon-mk2-r2 resource. Manifested, no pixel delta."
+    }
+  ],
+  "metrics": {
+    "vs_previous_approved_normal": {
+      "baseline": "field-tourbillon-mk2-r2 (approved golden)",
+      "changed_pixel_pct": 65.1745,
+      "max_channel_delta": 208,
+      "mean_channel_delta": 6.4068,
+      "note": "intentional finishing change, not drift. The changed-pixel percentage is high because satin brushing and the refined dial grain touch almost every lit surface, but the mean channel delta of 6.4 over the whole face shows the change is a restrained shift in how surfaces catch light rather than a redesign. Compare r2-vs-v1, which was a redesign at mean 68.3."
+    },
+    "vs_previous_approved_aod": {
+      "baseline": "field-tourbillon-mk2-r2 (approved golden)",
+      "changed_pixel_pct": 6.2947,
+      "max_channel_delta": 80,
+      "mean_channel_delta": 0.1251,
+      "note": "AOD barely moves: the ambient plate is already near-black and the case is blacked out, so only the darker bridges, dial and the crisper reserve ticks register."
+    },
+    "studio_export_delta": {
+      "changed": [
+        "bg",
+        "bg_aod",
+        "cage",
+        "gear_l",
+        "gear_r",
+        "hub"
+      ],
+      "unchanged_byte_identical": 44,
+      "total_manifested": 50,
+      "note": "measured from the finish's own object ledger, not predicted \u2014 exports/aurelius_rc1/IMPACT.json and DELTA.json. The Checkpoint A prediction wrongly listed balance.png as changing; the balance wheel and spokes use MAT_Gold_Warm and appear in no group the finish touches, so that layer is byte-identical to r2."
+    },
+    "xml_spec_delta": {
+      "r2_xml_sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79",
+      "rc1_xml_sha256": "6278f26c9ff394d50dc625a831f2255acf7b5a43caab6de46488862356bd3c79",
+      "equal": true,
+      "note": "zero XML/spec delta retained \u2014 pure asset swap, as in r2"
+    }
+  },
+  "studio_commits": {
+    "producing_commit": "04015886dbee5cd17b66c4627f822aef3db73d16",
+    "metadata_commit": "97ba0f1ceeee721a7a2ec0521603bd61935d036d",
+    "owner_selection_commit": "d86d94c4bd6407f396e47ba4ad5805b8a2676214",
+    "studio_generation": "CommandSatin_ReservePrecision",
+    "repo": "xsytrance/AGENOR-Horology",
+    "initial_export_commit": "542bb86540077ce20773e2c9502870fd0cdf7c04",
+    "note": "Exports were produced at 542bb86. The source commit moved to 04015886 when the handoff asset ids were corrected back to the stable AureliusMk2_* slots; 04015886 is a descendant of 542bb86 with identical export bytes, so it is the commit whose scripts regenerate what is committed."
+  },
+  "date_aperture_proof": {
+    "tool": "tools/date_aperture_proof.py",
+    "note": "re-run for rc1; see the Phase-4 report for the recorded result"
+  },
+  "previews": [
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/normal.png",
+    "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/aod.png"
+  ],
+  "comparisons": {
+    "normal_diff": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/diff/normal/",
+    "normal_heatmap": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/diff/normal/diff_heatmap.png",
+    "aod_diff": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/diff/aod/",
+    "aod_heatmap": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/diff/aod/diff_heatmap.png",
+    "closeups": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/closeups/",
+    "studio_proposal_sheets": "AGENOR-Horology@watchfaces/AureliusMk2/craftsmanship/COMPARISON_*.png"
+  },
+  "aod_luminance_evidence": "docs/reports/evidence/phase-4/aurelius/aod/",
+  "wear_evidence": "docs/reports/evidence/phase-4/aurelius/wear/",
+  "device_evidence": "docs/reports/evidence/phase-4/aurelius/rc1/",
+  "rationale": "Aurelius Field Tourbillon Mk II release candidate rc1. Applies the owner-selected CommandSatin_ReservePrecision finishing pass to the approved r2 generation: darker and glossier DLC bridges, deeper charcoal dial with a refined rather than noisier bead grain, muted-olive case with directional satin and a selectively polished bevel, tighter screw slots, deeper jewel cups, polished arbors, refined gear tooth and root response, and \u2014 grafted from Precision Instrument \u2014 a crisper reserve-tick material and edge treatment at unchanged tick count, size, position and arc geometry. No Geneva or linear striping, no coarse-blast tier hierarchy, no lighter dial, no new ornament, complication, layer or animation. Studio producing commit 04015886, metadata stamping commit 97ba0f1; export delta exactly bg, bg_aod, cage, gear_l, gear_r, hub with 44 of 50 manifested assets byte-identical to r2. Zero XML/spec delta retained.",
+  "owner": {
+    "status": "proposed",
+    "by": "Craftsmanship DIRECTION selected by AGENOR at the Phase-4 Checkpoint A review (docs/reports/PHASE_4_CHECKPOINT_A_REVIEW.md, 2026-07-26). Final PIXEL acceptance of this candidate is pending Checkpoint B, and requires the ordinary-use wear evidence the review made a condition of approval.",
+    "date": "2026-07-26"
+  },
+  "architecture_review": {
+    "status": "pending",
+    "ref": "Phase-4 Checkpoint B review",
+    "date": null
+  }
+}

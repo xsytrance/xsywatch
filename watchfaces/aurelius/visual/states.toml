@@ -93,7 +93,16 @@ approved_version = "field-tourbillon-mk2-r2"
 # docs/reports/PHASE_3_FINAL_REVIEW.md) and was promoted to the approved
 # golden above. field-tourbillon-v1 goldens, and the mk2/r1/r2 candidates
 # with APPROVAL-0001..0003, are preserved as history.
-# proposed_version = <unset — no generation currently proposed>
+#
+# Re-set 2026-07-26 (Phase 4 production leg): field-tourbillon-mk2-rc1 is
+# the owner-selected CommandSatin_ReservePrecision generation, bound to
+# APPROVAL-0005 with owner.status = "proposed" and
+# architecture_review.status = "pending". While this is set, the
+# deterministic re-render gate compares against
+# candidates/field-tourbillon-mk2-rc1/ and the approved r2 goldens above
+# stay frozen. rc1 must NOT be promoted until the owner accepts the pixels
+# at Checkpoint B.
+proposed_version = "field-tourbillon-mk2-rc1"
 
 # ---------------------------------------------------------------------------
 # Date-aperture contract (revision field-tourbillon-mk2-r2 onward).

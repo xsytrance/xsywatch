@@ -5,11 +5,11 @@ Resources: 60
 
 | path | dims | sha256 (12) | class | consumers | N | A |
 |---|---|---|---|---|---|---|
-| app/src/main/res/drawable/preview.png | 400×400 | `988701f5425b` | structural | build/packaging |  |  |
+| app/src/main/res/drawable/preview.png | 400×400 | `c78367c316fe` | structural | build/packaging |  |  |
 | app/src/main/res/drawable-nodpi/balance.png | 92×92 | `c9c5dc4ec649` | studio-handoff | z21_bal | ✓ | ✓ |
-| app/src/main/res/drawable-nodpi/bg.png | 480×480 | `f34529174d10` | studio-handoff | z00_bg | ✓ |  |
-| app/src/main/res/drawable-nodpi/bg_aod.png | 480×480 | `aafb7e044749` | studio-handoff | z01_aod |  | ✓ |
-| app/src/main/res/drawable-nodpi/cage.png | 122×122 | `3a4dcf8f2539` | studio-handoff | z22_cage | ✓ | ✓ |
+| app/src/main/res/drawable-nodpi/bg.png | 480×480 | `0b0a9bb7fb78` | studio-handoff | z00_bg | ✓ |  |
+| app/src/main/res/drawable-nodpi/bg_aod.png | 480×480 | `6d1619465c31` | studio-handoff | z01_aod |  | ✓ |
+| app/src/main/res/drawable-nodpi/cage.png | 122×122 | `a6032eb4d81c` | studio-handoff | z22_cage | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_0.png | 28×40 | `00b081d832af` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_1.png | 22×40 | `bf048edf7da5` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_2.png | 27×40 | `700510dc5160` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
@@ -49,10 +49,10 @@ Resources: 60
 | app/src/main/res/drawable-nodpi/g_x.png | 28×40 | `97e2901f0d12` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_y.png | 28×40 | `5353e4eec64a` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/g_z.png | 28×40 | `da35cdc23f39` | studio-handoff | z30_date (font aur) | ✓ | ✓ |
-| app/src/main/res/drawable-nodpi/gear_l.png | 120×120 | `758e89cc6ab1` | studio-handoff | z10_gl | ✓ | ✓ |
-| app/src/main/res/drawable-nodpi/gear_r.png | 102×102 | `db8ba3a2d17b` | studio-handoff | z11_gr | ✓ | ✓ |
+| app/src/main/res/drawable-nodpi/gear_l.png | 120×120 | `6eb594644edd` | studio-handoff | z10_gl | ✓ | ✓ |
+| app/src/main/res/drawable-nodpi/gear_r.png | 102×102 | `4b5eb7d075f0` | studio-handoff | z11_gr | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/hour_hand.png | 480×480 | `ec02496f7367` | studio-handoff | z50_hour | ✓ | ✓ |
-| app/src/main/res/drawable-nodpi/hub.png | 28×28 | `fde432b0971b` | studio-handoff | z52_hub | ✓ | ✓ |
+| app/src/main/res/drawable-nodpi/hub.png | 28×28 | `4996bbccee14` | studio-handoff | z52_hub | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/min_hand.png | 480×480 | `d611003aec20` | studio-handoff | z51_min | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/resv_needle.png | 480×480 | `4e8043c27ec2` | studio-handoff | z31_resv | ✓ | ✓ |
 | app/src/main/res/drawable-nodpi/sheen.png | 480×480 | `a403e0a024a1` | studio-handoff | z40_sheen | ✓ |  |

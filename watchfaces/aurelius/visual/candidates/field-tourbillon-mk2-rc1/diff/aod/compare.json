@@ -1,0 +1,23 @@
+{
+  "a": {
+    "path": "watchfaces/aurelius/visual/goldens/field-tourbillon-mk2-r2/aod.png",
+    "sha256": "2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936"
+  },
+  "b": {
+    "path": "watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/aod.png",
+    "sha256": "3e340f4379e1ca8462071761c8c46b8e0e292a7614ac9a2ccde7454a6af934aa"
+  },
+  "mask": null,
+  "metrics": {
+    "changed_pixel_pct": 6.2947,
+    "changed_pixels": 14503,
+    "compared_pixels": 230400,
+    "max_channel_delta": 80,
+    "mean_channel_delta": 0.1251
+  },
+  "mode": "exact",
+  "thresholds": {
+    "mode": "exact (zero tolerance)"
+  },
+  "verdict": "FAIL"
+}
