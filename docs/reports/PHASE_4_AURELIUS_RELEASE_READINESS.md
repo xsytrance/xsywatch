@@ -821,3 +821,135 @@ now mechanism-based.
 3. on-device confirmation of the permission model;
 4. owner pixel acceptance of APPROVAL-0005;
 5. the four TEST-1 facts, hosted privacy policy, support address, price.
+
+
+---
+
+# Checkpoint B rc2 re-review — three static defects closed
+
+**Date:** 2026-07-26
+**Status:** static corrections complete; **acceptance still blocked** on device, wear and owner evidence
+**Candidate:** 2.0.0-rc2 — **artifact bytes unchanged**
+
+Answers `docs/reports/PHASE_4_CHECKPOINT_B_RC2_REVIEW.md`.
+
+## Why this is still rc2 and not rc3
+
+The only source-file edit is a **comment** in `build.gradle.kts` (the stale
+claim that verification proved neither artifact contained dex). The review
+said a changed package input requires rc3, so this was **measured, not
+assumed**: rebuilding with the corrected comment produced
+
+```
+aab 1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23
+apk 939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc
+```
+
+— byte-identical to rc2. Two clean detached-worktree rebuilds from the new
+source commit reproduce them again. The corrections are therefore
+tooling/metadata-only in effect and rc2 is retained.
+
+## Commit roles (moved forward; artifacts unchanged)
+
+| Role | Commit |
+|---|---|
+| `consumer_source_commit` | `f6f00663f109490e294b0c0d60d1e224087c3dd0` |
+| `consumer_artifact_commit` | `fa995ffad97c260ffb64a77d4f0916b593eb66a5` |
+| `candidate_metadata_commit` | `61f54c465271a9115718c294a2bdca31f873a662` |
+
+Superseded roles (`a328669e` / `ea2b0e58`) are retained in `LINEAGE.json`.
+
+## Blocker 1 — commit objects are now authoritative
+
+The verifier proved the artifact commit held files with the expected
+*names*, then hashed the **working tree**. The claim it recorded was not
+the claim it checked.
+
+Artifact identity now comes from the object at
+`consumer_artifact_commit`: blobs hashed directly, LFS pointers
+contributing their `oid sha256:` with the payload verified separately (an
+un-smudged checkout is reported, not failed). The disk file must equal
+that object; the canonical set is defined *by* the commit — exactly one
+`.aab`, one `.apk`, `VERIFY.json` — so a replacement carrying the same
+role is caught. Metadata records are read, parsed and required to match
+the resolved metadata commit and to declare this version.
+
+Two bugs in my own set logic were caught by the new tests before shipping:
+the canonical set was taken from the working tree, and the extra/missing
+directions were inverted.
+
+## Blocker 2 — every debug-APK dex classified
+
+The classification immediately found what the review suspected.
+`classes2.dex` holds four non-R classes:
+
+```
+Lcom/android/tools/r8/annotations/LambdaMethod;
+Ljava/lang/Record;
+Ljava/lang/invoke/MethodHandles$Lookup;
+Ljava/lang/invoke/VarHandle;
+```
+
+D8/R8 core-library desugaring stubs, emitted into a secondary dex on debug
+builds. Not application code, nothing references them, never distributed.
+They are permitted by an **explicit, individually justified allowlist that
+applies only to the device-test APK**. The release gate stays strictly
+generated-R-only and the bundle still must contain no dex.
+
+Final classification: 2 dex, 10 distinct classes = **6 generated R + 4
+named stubs, 0 unexplained**.
+
+## Blocker 3 — provenance contradiction resolved
+
+`CANDIDATE.json` no longer claims the AI-model licence position is an
+unresolved owner action. It records candidate provenance **closed** — zero
+AI-checkpoint pixels, zero donor-image pixels, zero unresolved assets,
+Rajdhani Bold the only third-party visual input — and binds
+`PROVENANCE.json` by sha256. `docs/LICENSING.md` is unchanged and remains
+accurate for the legacy faces it describes.
+
+## Static verification
+
+| Gate | Result |
+|---|---|
+| engine tests | **189 passed** (137 → 189) |
+| visual + lineage tests | 67 passed |
+| consumer-lineage tests | 32 |
+| dex tests (release + debug) | 22 |
+| readiness tests | 38 |
+| aperture proof | 62 renders, 0 violations |
+| WO-P7 | PASS, max 3.972% of 15% |
+| release fixtures | 10/10 |
+| deterministic generation | pass |
+| resource inventory | clean, 60 resources |
+| reference render vs candidate | byte-identical |
+| all-ten builds | 10/10 PASS |
+| two detached-worktree builds | byte-identical, equal canonical |
+| AAB/APK verification | 0 problems |
+| WFF validator | PASS (v4) |
+| memory evaluator | PASS |
+| readiness checker | 0 inconsistencies, 3/13 gates complete |
+| provenance | clean |
+| `tools/validate.py` | 0 errors, 13 warnings |
+| `git diff --check` | clean |
+
+`releases/aurelius/current/` untouched at `844b9c43…`.
+
+## Device evidence gathered so far (rc2 APK `939d2b44…`)
+
+| Gate | Result |
+|---|---|
+| upgrade continuity (versionCode 1 → 3, minSdk 34 → 36) | **PASS** |
+| installed-APK pullback hash | **byte-identical** |
+| installed-resource lineage | **58 byte-identical, 0 drift** |
+| rc2 requested permissions | **none** |
+| platform HR permission mapping | confirmed `android.permission.health.READ_HEART_RATE` |
+
+Detail: `docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md`.
+
+## Still blocked
+
+The face is installed but **not yet selected in the picker**, so the
+permission A/B comparison, the visual matrix and the three wear sessions
+cannot proceed. Owner launch inputs remain unresolved and price remains a
+recommendation only.
