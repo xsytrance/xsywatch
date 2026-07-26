@@ -1,0 +1,3012 @@
+{
+  "checked": "2026-07-26",
+  "face": "aurelius",
+  "fixed_inputs": {
+    "battery_percent": 80.0,
+    "day": 24,
+    "heart_rate": 72.0,
+    "note": "second and millisecond are pinned to 0 in ambient, matching observed Watch7 behaviour; the time-dependent AOD content across a day is therefore the hour and minute hands and anything they drive"
+  },
+  "limit_pct": 15.0,
+  "max_pct": 3.9718632383280195,
+  "metric": "mean luminance across the watch-face disc; white=100%, black=0%; strictest of channel-mean-sRGB, Rec.709-sRGB and Rec.709-linear",
+  "pass": true,
+  "region": "circular display disc (r=240), corners excluded",
+  "reproduce": "python3 tools/aod_luminance.py aurelius",
+  "requirement": "WO-P7 (Wear OS app quality guidelines)",
+  "samples": [
+    {
+      "disc": {
+        "channel_mean_srgb": 3.640270770848844,
+        "max": 3.650866148731796,
+        "pixels": 180960,
+        "rec709_linear": 1.3318690079020132,
+        "rec709_srgb": 3.650866148731796
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.859129334604196,
+        "max": 2.867451120983098,
+        "pixels": 230400,
+        "rec709_linear": 1.0460721166230396,
+        "rec709_srgb": 2.867451120983098
+      },
+      "gate_value_pct": 3.650866148731796,
+      "minute_of_day": 0,
+      "pass": true,
+      "time": "00:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8592401888548014,
+        "max": 3.8740609728506676,
+        "pixels": 180960,
+        "rec709_linear": 1.4309162845378436,
+        "rec709_srgb": 3.8740609728506676
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.031111564996375,
+        "max": 3.042752055759795,
+        "pixels": 230400,
+        "rec709_linear": 1.1238654984807648,
+        "rec709_srgb": 3.042752055759795
+      },
+      "gate_value_pct": 3.8740609728506676,
+      "minute_of_day": 10,
+      "pass": true,
+      "time": "00:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9242529313523105,
+        "max": 3.939108093219654,
+        "pixels": 180960,
+        "rec709_linear": 1.4261876085291436,
+        "rec709_srgb": 3.939108093219654
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.082173656499627,
+        "max": 3.0938411482162698,
+        "pixels": 230400,
+        "rec709_linear": 1.1201515175322647,
+        "rec709_srgb": 3.0938411482162698
+      },
+      "gate_value_pct": 3.939108093219654,
+      "minute_of_day": 20,
+      "pass": true,
+      "time": "00:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8123464976913075,
+        "max": 3.8267632638997013,
+        "pixels": 180960,
+        "rec709_linear": 1.405420296037524,
+        "rec709_srgb": 3.8267632638997013
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.994280478395048,
+        "max": 3.005603646854557,
+        "pixels": 230400,
+        "rec709_linear": 1.103840524179472,
+        "rec709_srgb": 3.005603646854557
+      },
+      "gate_value_pct": 3.8267632638997013,
+      "minute_of_day": 30,
+      "pass": true,
+      "time": "00:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8631496217703094,
+        "max": 3.8779092686500345,
+        "pixels": 180960,
+        "rec709_linear": 1.4256886257973225,
+        "rec709_srgb": 3.8779092686500345
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0341820987654304,
+        "max": 3.0457745714188813,
+        "pixels": 230400,
+        "rec709_linear": 1.1197596081783139,
+        "rec709_srgb": 3.0457745714188813
+      },
+      "gate_value_pct": 3.8779092686500345,
+      "minute_of_day": 40,
+      "pass": true,
+      "time": "00:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.936944141051643,
+        "max": 3.9518752483486597,
+        "pixels": 180960,
+        "rec709_linear": 1.4260333216146186,
+        "rec709_srgb": 3.9518752483486597
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0921415441176445,
+        "max": 3.10386868464051,
+        "pixels": 230400,
+        "rec709_linear": 1.1200303380181484,
+        "rec709_srgb": 3.10386868464051
+      },
+      "gate_value_pct": 3.9518752483486597,
+      "minute_of_day": 50,
+      "pass": true,
+      "time": "00:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9074095744988417,
+        "max": 3.921751178897711,
+        "pixels": 180960,
+        "rec709_linear": 1.4096296600999325,
+        "rec709_srgb": 3.921751178897711
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0689446033042986,
+        "max": 3.0802087384259105,
+        "pixels": 230400,
+        "rec709_linear": 1.1071466288701552,
+        "rec709_srgb": 3.0802087384259105
+      },
+      "gate_value_pct": 3.921751178897711,
+      "minute_of_day": 60,
+      "pass": true,
+      "time": "01:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8240993568072805,
+        "max": 3.8384287460342073,
+        "pixels": 180960,
+        "rec709_linear": 1.4148931206902622,
+        "rec709_srgb": 3.8384287460342073
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.003511369825718,
+        "max": 3.0147659109477005,
+        "pixels": 230400,
+        "rec709_linear": 1.1112806385421434,
+        "rec709_srgb": 3.0147659109477005
+      },
+      "gate_value_pct": 3.8384287460342073,
+      "minute_of_day": 70,
+      "pass": true,
+      "time": "01:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9212370624642294,
+        "max": 3.9360157426189364,
+        "pixels": 180960,
+        "rec709_linear": 1.426417938263757,
+        "rec709_srgb": 3.9360157426189364
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.079804942810447,
+        "max": 3.0914123645152896,
+        "pixels": 230400,
+        "rec709_linear": 1.1203324223446591,
+        "rec709_srgb": 3.0914123645152896
+      },
+      "gate_value_pct": 3.9360157426189364,
+      "minute_of_day": 80,
+      "pass": true,
+      "time": "01:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.866034020445774,
+        "max": 3.881175900209749,
+        "pixels": 180960,
+        "rec709_linear": 1.4261158550678616,
+        "rec709_srgb": 3.881175900209749
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0364475535584514,
+        "max": 3.04834023828974,
+        "pixels": 230400,
+        "rec709_linear": 1.1200951611678829,
+        "rec709_srgb": 3.04834023828974
+      },
+      "gate_value_pct": 3.881175900209749,
+      "minute_of_day": 90,
+      "pass": true,
+      "time": "01:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7875708638893144,
+        "max": 3.801462389261666,
+        "pixels": 180960,
+        "rec709_linear": 1.4017999790778581,
+        "rec709_srgb": 3.801462389261666
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9748212826797324,
+        "max": 2.9857319182326,
+        "pixels": 230400,
+        "rec709_linear": 1.1009970669007345,
+        "rec709_srgb": 2.9857319182326
+      },
+      "gate_value_pct": 3.801462389261666,
+      "minute_of_day": 100,
+      "pass": true,
+      "time": "01:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.890997468837216,
+        "max": 3.9058939698513986,
+        "pixels": 180960,
+        "rec709_linear": 1.4295172822653006,
+        "rec709_srgb": 3.9058939698513986
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0560542619825637,
+        "max": 3.067754222154119,
+        "pixels": 230400,
+        "rec709_linear": 1.1227666987792049,
+        "rec709_srgb": 3.067754222154119
+      },
+      "gate_value_pct": 3.9058939698513986,
+      "minute_of_day": 110,
+      "pass": true,
+      "time": "01:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.873337840883485,
+        "max": 3.887986899065539,
+        "pixels": 180960,
+        "rec709_linear": 1.4280897623388158,
+        "rec709_srgb": 3.887986899065539
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0421840958605704,
+        "max": 3.0536897103077254,
+        "pixels": 230400,
+        "rec709_linear": 1.1216455008369448,
+        "rec709_srgb": 3.0536897103077254
+      },
+      "gate_value_pct": 3.887986899065539,
+      "minute_of_day": 120,
+      "pass": true,
+      "time": "02:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.6623230931040265,
+        "max": 3.674923363845963,
+        "pixels": 180960,
+        "rec709_linear": 1.3773434439488486,
+        "rec709_srgb": 3.674923363845963
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.876449596042121,
+        "max": 2.8863460586873497,
+        "pixels": 230400,
+        "rec709_linear": 1.0817884966014915,
+        "rec709_srgb": 2.8863460586873497
+      },
+      "gate_value_pct": 3.674923363845963,
+      "minute_of_day": 130,
+      "pass": true,
+      "time": "02:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8984761013158455,
+        "max": 3.913264765260718,
+        "pixels": 180960,
+        "rec709_linear": 1.4250712058566568,
+        "rec709_srgb": 3.913264765260718
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.061928104575154,
+        "max": 3.0735433677151893,
+        "pixels": 230400,
+        "rec709_linear": 1.1192746762665824,
+        "rec709_srgb": 3.0735433677151893
+      },
+      "gate_value_pct": 3.913264765260718,
+      "minute_of_day": 140,
+      "pass": true,
+      "time": "02:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8521653577434383,
+        "max": 3.8674233616788687,
+        "pixels": 180960,
+        "rec709_linear": 1.4361033599327162,
+        "rec709_srgb": 3.8674233616788687
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.025554874727659,
+        "max": 3.0375387653186117,
+        "pixels": 230400,
+        "rec709_linear": 1.1279395139471542,
+        "rec709_srgb": 3.0375387653186117
+      },
+      "gate_value_pct": 3.8674233616788687,
+      "minute_of_day": 150,
+      "pass": true,
+      "time": "02:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7982430667521885,
+        "max": 3.812487045560979,
+        "pixels": 180960,
+        "rec709_linear": 1.414223701376439,
+        "rec709_srgb": 3.812487045560979
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9832034086782815,
+        "max": 2.9943908670343524,
+        "pixels": 230400,
+        "rec709_linear": 1.110754865456078,
+        "rec709_srgb": 2.9943908670343524
+      },
+      "gate_value_pct": 3.812487045560979,
+      "minute_of_day": 160,
+      "pass": true,
+      "time": "02:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8889748501817496,
+        "max": 3.903680643106071,
+        "pixels": 180960,
+        "rec709_linear": 1.4194503773919307,
+        "rec709_srgb": 3.903680643106071
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0544656635802494,
+        "max": 3.06601583843956,
+        "pixels": 230400,
+        "rec709_linear": 1.1148599839099123,
+        "rec709_srgb": 3.06601583843956
+      },
+      "gate_value_pct": 3.903680643106071,
+      "minute_of_day": 170,
+      "pass": true,
+      "time": "02:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.888250319284821,
+        "max": 3.9028324638962695,
+        "pixels": 180960,
+        "rec709_linear": 1.428766456890263,
+        "rec709_srgb": 3.9028324638962695
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0538966049382865,
+        "max": 3.065349664351862,
+        "pixels": 230400,
+        "rec709_linear": 1.122176988015894,
+        "rec709_srgb": 3.065349664351862
+      },
+      "gate_value_pct": 3.9028324638962695,
+      "minute_of_day": 180,
+      "pass": true,
+      "time": "03:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7930759984512608,
+        "max": 3.8076547337945144,
+        "pixels": 180960,
+        "rec709_linear": 1.4292390950039406,
+        "rec709_srgb": 3.8076547337945144
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9791451071169277,
+        "max": 2.9905954888344413,
+        "pixels": 230400,
+        "rec709_linear": 1.1225482058676783,
+        "rec709_srgb": 2.9905954888344413
+      },
+      "gate_value_pct": 3.8076547337945144,
+      "minute_of_day": 190,
+      "pass": true,
+      "time": "03:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8292642580167944,
+        "max": 3.843439470536313,
+        "pixels": 180960,
+        "rec709_linear": 1.4097538464354726,
+        "rec709_srgb": 3.843439470536313
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0075679693173574,
+        "max": 3.0187014174837294,
+        "pixels": 230400,
+        "rec709_linear": 1.107244166887861,
+        "rec709_srgb": 3.0187014174837294
+      },
+      "gate_value_pct": 3.843439470536313,
+      "minute_of_day": 200,
+      "pass": true,
+      "time": "03:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.862200435729845,
+        "max": 3.877445891628101,
+        "pixels": 180960,
+        "rec709_linear": 1.434709717149117,
+        "rec709_srgb": 3.877445891628101
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.033436592229483,
+        "max": 3.0454106273829042,
+        "pixels": 230400,
+        "rec709_linear": 1.1268449236775355,
+        "rec709_srgb": 3.0454106273829042
+      },
+      "gate_value_pct": 3.877445891628101,
+      "minute_of_day": 210,
+      "pass": true,
+      "time": "03:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8684763324722704,
+        "max": 3.8833176843328854,
+        "pixels": 180960,
+        "rec709_linear": 1.4296866449004917,
+        "rec709_srgb": 3.8833176843328854
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0383657861292623,
+        "max": 3.050022431236454,
+        "pixels": 230400,
+        "rec709_linear": 1.1228997190155945,
+        "rec709_srgb": 3.050022431236454
+      },
+      "gate_value_pct": 3.8833176843328854,
+      "minute_of_day": 220,
+      "pass": true,
+      "time": "03:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.850596383557829,
+        "max": 3.864462690920782,
+        "pixels": 180960,
+        "rec709_linear": 1.3884545938974486,
+        "rec709_srgb": 3.864462690920782
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0243225762527115,
+        "max": 3.0352134051606976,
+        "pixels": 230400,
+        "rec709_linear": 1.0905153789569544,
+        "rec709_srgb": 3.0352134051606976
+      },
+      "gate_value_pct": 3.864462690920782,
+      "minute_of_day": 230,
+      "pass": true,
+      "time": "03:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9205298682986167,
+        "max": 3.9351322610565225,
+        "pixels": 180960,
+        "rec709_linear": 1.4223738292365236,
+        "rec709_srgb": 3.9351322610565225
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0792495007262053,
+        "max": 3.090718463371477,
+        "pixels": 230400,
+        "rec709_linear": 1.1171561117128528,
+        "rec709_srgb": 3.090718463371477
+      },
+      "gate_value_pct": 3.9351322610565225,
+      "minute_of_day": 240,
+      "pass": true,
+      "time": "04:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.829985177094697,
+        "max": 3.8444974155268232,
+        "pixels": 180960,
+        "rec709_linear": 1.4337726676136366,
+        "rec709_srgb": 3.8444974155268232
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.00813419117646,
+        "max": 3.0195323451116924,
+        "pixels": 230400,
+        "rec709_linear": 1.126108949354877,
+        "rec709_srgb": 3.0195323451116924
+      },
+      "gate_value_pct": 3.8444974155268232,
+      "minute_of_day": 250,
+      "pass": true,
+      "time": "04:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8115230029530185,
+        "max": 3.8248846474576728,
+        "pixels": 180960,
+        "rec709_linear": 1.3887041838751613,
+        "rec709_srgb": 3.8248846474576728
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.993633691902683,
+        "max": 3.0041281501907138,
+        "pixels": 230400,
+        "rec709_linear": 1.090711411085283,
+        "rec709_srgb": 3.0041281501907138
+      },
+      "gate_value_pct": 3.8248846474576728,
+      "minute_of_day": 260,
+      "pass": true,
+      "time": "04:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8559360968082834,
+        "max": 3.871009326294637,
+        "pixels": 180960,
+        "rec709_linear": 1.4271147624014038,
+        "rec709_srgb": 3.871009326294637
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0285164760348393,
+        "max": 3.040355241693913,
+        "pixels": 230400,
+        "rec709_linear": 1.1208797196361024,
+        "rec709_srgb": 3.040355241693913
+      },
+      "gate_value_pct": 3.871009326294637,
+      "minute_of_day": 270,
+      "pass": true,
+      "time": "04:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8679497292580325,
+        "max": 3.8828316755084926,
+        "pixels": 180960,
+        "rec709_linear": 1.4344256168613976,
+        "rec709_srgb": 3.8828316755084926
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0379521831880796,
+        "max": 3.0496407118056283,
+        "pixels": 230400,
+        "rec709_linear": 1.126621786576556,
+        "rec709_srgb": 3.0496407118056283
+      },
+      "gate_value_pct": 3.8828316755084926,
+      "minute_of_day": 280,
+      "pass": true,
+      "time": "04:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8987014788231518,
+        "max": 3.913140011008873,
+        "pixels": 180960,
+        "rec709_linear": 1.4066161231269154,
+        "rec709_srgb": 3.913140011008873
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.062105119825684,
+        "max": 3.0734453836465523,
+        "pixels": 230400,
+        "rec709_linear": 1.1047797467059315,
+        "rec709_srgb": 3.0734453836465523
+      },
+      "gate_value_pct": 3.913140011008873,
+      "minute_of_day": 290,
+      "pass": true,
+      "time": "04:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.899235305675465,
+        "max": 3.913720274440493,
+        "pixels": 180960,
+        "rec709_linear": 1.4114239078824387,
+        "rec709_srgb": 3.913720274440493
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0625243963326048,
+        "max": 3.073901132216804,
+        "pixels": 230400,
+        "rec709_linear": 1.1085558609826653,
+        "rec709_srgb": 3.073901132216804
+      },
+      "gate_value_pct": 3.913720274440493,
+      "minute_of_day": 300,
+      "pass": true,
+      "time": "05:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8525027016406144,
+        "max": 3.8673876536468095,
+        "pixels": 180960,
+        "rec709_linear": 1.4359347742988697,
+        "rec709_srgb": 3.8673876536468095
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.025819830246899,
+        "max": 3.0375107196350983,
+        "pixels": 230400,
+        "rec709_linear": 1.1278071039805706,
+        "rec709_srgb": 3.0375107196350983
+      },
+      "gate_value_pct": 3.8673876536468095,
+      "minute_of_day": 310,
+      "pass": true,
+      "time": "05:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9088189062833956,
+        "max": 3.923586520691474,
+        "pixels": 180960,
+        "rec709_linear": 1.4195940086722973,
+        "rec709_srgb": 3.923586520691474
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.07005151597675,
+        "max": 3.081650246459762,
+        "pixels": 230400,
+        "rec709_linear": 1.114972794311367,
+        "rec709_srgb": 3.081650246459762
+      },
+      "gate_value_pct": 3.923586520691474,
+      "minute_of_day": 320,
+      "pass": true,
+      "time": "05:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.789455511057927,
+        "max": 3.8035284851164075,
+        "pixels": 180960,
+        "rec709_linear": 1.4076513949641885,
+        "rec709_srgb": 3.8035284851164075
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9763015159767465,
+        "max": 2.987354664351845,
+        "pixels": 230400,
+        "rec709_linear": 1.1055928664614563,
+        "rec709_srgb": 2.987354664351845
+      },
+      "gate_value_pct": 3.8035284851164075,
+      "minute_of_day": 330,
+      "pass": true,
+      "time": "05:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8585178250492436,
+        "max": 3.873192822593308,
+        "pixels": 180960,
+        "rec709_linear": 1.4358817035929516,
+        "rec709_srgb": 3.873192822593308
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0305442084240934,
+        "max": 3.042070196078494,
+        "pixels": 230400,
+        "rec709_linear": 1.1277654213636308,
+        "rec709_srgb": 3.042070196078494
+      },
+      "gate_value_pct": 3.873192822593308,
+      "minute_of_day": 340,
+      "pass": true,
+      "time": "05:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9207509116230908,
+        "max": 3.9357224597354756,
+        "pixels": 180960,
+        "rec709_linear": 1.4253203555290412,
+        "rec709_srgb": 3.9357224597354756
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0794231118373023,
+        "max": 3.0911820152505713,
+        "pixels": 230400,
+        "rec709_linear": 1.119470362571768,
+        "rec709_srgb": 3.0911820152505713
+      },
+      "gate_value_pct": 3.9357224597354756,
+      "minute_of_day": 350,
+      "pass": true,
+      "time": "05:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7985637962818353,
+        "max": 3.812562209826442,
+        "pixels": 180960,
+        "rec709_linear": 1.3923417813499683,
+        "rec709_srgb": 3.812562209826442
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.983455314996358,
+        "max": 2.9944499023011844,
+        "pixels": 230400,
+        "rec709_linear": 1.093568440768621,
+        "rec709_srgb": 2.9944499023011844
+      },
+      "gate_value_pct": 3.812562209826442,
+      "minute_of_day": 360,
+      "pass": true,
+      "time": "06:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8369242038106,
+        "max": 3.8517060227805016,
+        "pixels": 180960,
+        "rec709_linear": 1.434884318299265,
+        "rec709_srgb": 3.8517060227805016
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0135842184095756,
+        "max": 3.0251941053921856,
+        "pixels": 230400,
+        "rec709_linear": 1.126982058330881,
+        "rec709_srgb": 3.0251941053921856
+      },
+      "gate_value_pct": 3.8517060227805016,
+      "minute_of_day": 370,
+      "pass": true,
+      "time": "06:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9113298428714156,
+        "max": 3.9260050120491123,
+        "pixels": 180960,
+        "rec709_linear": 1.4285179441026423,
+        "rec709_srgb": 3.9260050120491123
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0720236474219242,
+        "max": 3.0835497698802405,
+        "pixels": 230400,
+        "rec709_linear": 1.121981801930617,
+        "rec709_srgb": 3.0835497698802405
+      },
+      "gate_value_pct": 3.9260050120491123,
+      "minute_of_day": 380,
+      "pass": true,
+      "time": "06:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7894490097836804,
+        "max": 3.803583669232489,
+        "pixels": 180960,
+        "rec709_linear": 1.4070810718659006,
+        "rec709_srgb": 3.803583669232489
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.976296409767599,
+        "max": 2.987398006876351,
+        "pixels": 230400,
+        "rec709_linear": 1.105144925194676,
+        "rec709_srgb": 2.987398006876351
+      },
+      "gate_value_pct": 3.803583669232489,
+      "minute_of_day": 390,
+      "pass": true,
+      "time": "06:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.857050704160214,
+        "max": 3.871858496298697,
+        "pixels": 180960,
+        "rec709_linear": 1.4269360431076912,
+        "rec709_srgb": 3.871858496298697
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.029391907225835,
+        "max": 3.041022193967935,
+        "pixels": 230400,
+        "rec709_linear": 1.1207393505241658,
+        "rec709_srgb": 3.041022193967935
+      },
+      "gate_value_pct": 3.871858496298697,
+      "minute_of_day": 400,
+      "pass": true,
+      "time": "06:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9280178915067236,
+        "max": 3.9430249713944217,
+        "pixels": 180960,
+        "rec709_linear": 1.4282239255929075,
+        "rec709_srgb": 3.9430249713944217
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.085130718954239,
+        "max": 3.0969175296160354,
+        "pixels": 230400,
+        "rec709_linear": 1.1217508748927627,
+        "rec709_srgb": 3.0969175296160354
+      },
+      "gate_value_pct": 3.9430249713944217,
+      "minute_of_day": 410,
+      "pass": true,
+      "time": "06:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8977559046017363,
+        "max": 3.91222158423054,
+        "pixels": 180960,
+        "rec709_linear": 1.411864620018429,
+        "rec709_srgb": 3.91222158423054
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0613624500726138,
+        "max": 3.072724035947737,
+        "pixels": 230400,
+        "rec709_linear": 1.1089020036394746,
+        "rec709_srgb": 3.072724035947737
+      },
+      "gate_value_pct": 3.91222158423054,
+      "minute_of_day": 420,
+      "pass": true,
+      "time": "07:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.821675103875895,
+        "max": 3.8360091481597447,
+        "pixels": 180960,
+        "rec709_linear": 1.4145984995180365,
+        "rec709_srgb": 3.8360091481597447
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0016073211691925,
+        "max": 3.0128655184504662,
+        "pixels": 230400,
+        "rec709_linear": 1.1110492381631245,
+        "rec709_srgb": 3.0128655184504662
+      },
+      "gate_value_pct": 3.8360091481597447,
+      "minute_of_day": 430,
+      "pass": true,
+      "time": "07:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9168710956236126,
+        "max": 3.931649866940682,
+        "pixels": 180960,
+        "rec709_linear": 1.4270629551585066,
+        "rec709_srgb": 3.931649866940682
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0763758396877123,
+        "max": 3.087983332992994,
+        "pixels": 230400,
+        "rec709_linear": 1.120839029364077,
+        "rec709_srgb": 3.087983332992994
+      },
+      "gate_value_pct": 3.931649866940682,
+      "minute_of_day": 440,
+      "pass": true,
+      "time": "07:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.833646839224909,
+        "max": 3.8487483755482965,
+        "pixels": 180960,
+        "rec709_linear": 1.430435977158753,
+        "rec709_srgb": 3.8487483755482965
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0110101216412306,
+        "max": 3.0228711199618914,
+        "pixels": 230400,
+        "rec709_linear": 1.123488257060104,
+        "rec709_srgb": 3.0228711199618914
+      },
+      "gate_value_pct": 3.8487483755482965,
+      "minute_of_day": 450,
+      "pass": true,
+      "time": "07:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.714135359419314,
+        "max": 3.7275706952897094,
+        "pixels": 180960,
+        "rec709_linear": 1.403291892258267,
+        "rec709_srgb": 3.7275706952897094
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9171438135439196,
+        "max": 2.9276961502587926,
+        "pixels": 230400,
+        "rec709_linear": 1.1021688403778471,
+        "rec709_srgb": 2.9276961502587926
+      },
+      "gate_value_pct": 3.7275706952897094,
+      "minute_of_day": 460,
+      "pass": true,
+      "time": "07:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8743289240246286,
+        "max": 3.889182897314598,
+        "pixels": 180960,
+        "rec709_linear": 1.4318182313956511,
+        "rec709_srgb": 3.889182897314598
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.042962509077677,
+        "max": 3.0546290672658407,
+        "pixels": 230400,
+        "rec709_linear": 1.1245739025753343,
+        "rec709_srgb": 3.0546290672658407
+      },
+      "gate_value_pct": 3.889182897314598,
+      "minute_of_day": 470,
+      "pass": true,
+      "time": "07:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8979068786370896,
+        "max": 3.912562435204,
+        "pixels": 180960,
+        "rec709_linear": 1.425879486842536,
+        "rec709_srgb": 3.912562435204
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0614810275962143,
+        "max": 3.0729917459831415,
+        "pixels": 230400,
+        "rec709_linear": 1.1199095136242418,
+        "rec709_srgb": 3.0729917459831415
+      },
+      "gate_value_pct": 3.912562435204,
+      "minute_of_day": 480,
+      "pass": true,
+      "time": "08:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7446992943950197,
+        "max": 3.7583693646955165,
+        "pixels": 180960,
+        "rec709_linear": 1.4003680143479953,
+        "rec709_srgb": 3.7583693646955165
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.941149237472755,
+        "max": 2.9518859385212703,
+        "pixels": 230400,
+        "rec709_linear": 1.0998723779358213,
+        "rec709_srgb": 2.9518859385212703
+      },
+      "gate_value_pct": 3.7583693646955165,
+      "minute_of_day": 490,
+      "pass": true,
+      "time": "08:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8916006426148364,
+        "max": 3.9063974541010977,
+        "pixels": 180960,
+        "rec709_linear": 1.425836214174055,
+        "rec709_srgb": 3.9063974541010977
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.056528004720403,
+        "max": 3.0681496670752373,
+        "pixels": 230400,
+        "rec709_linear": 1.1198755265492057,
+        "rec709_srgb": 3.0681496670752373
+      },
+      "gate_value_pct": 3.9063974541010977,
+      "minute_of_day": 500,
+      "pass": true,
+      "time": "08:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.839008945753369,
+        "max": 3.854429282606082,
+        "pixels": 180960,
+        "rec709_linear": 1.4369529223967,
+        "rec709_srgb": 3.854429282606082
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.015221609477125,
+        "max": 3.0273329990468603,
+        "pixels": 230400,
+        "rec709_linear": 1.1286067744657415,
+        "rec709_srgb": 3.0273329990468603
+      },
+      "gate_value_pct": 3.854429282606082,
+      "minute_of_day": 510,
+      "pass": true,
+      "time": "08:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7970547782921074,
+        "max": 3.8112111752571054,
+        "pixels": 180960,
+        "rec709_linear": 1.4150479995993286,
+        "rec709_srgb": 3.8112111752571054
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.982270107116926,
+        "max": 2.993388777233185,
+        "pixels": 230400,
+        "rec709_linear": 1.1114022830186392,
+        "rec709_srgb": 2.993388777233185
+      },
+      "gate_value_pct": 3.8112111752571054,
+      "minute_of_day": 520,
+      "pass": true,
+      "time": "08:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8900114422426832,
+        "max": 3.9046906923423896,
+        "pixels": 180960,
+        "rec709_linear": 1.419079977575659,
+        "rec709_srgb": 3.9046906923423896
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.055279820261441,
+        "max": 3.0668091479439186,
+        "pixels": 230400,
+        "rec709_linear": 1.1145690657208822,
+        "rec709_srgb": 3.0668091479439186
+      },
+      "gate_value_pct": 3.9046906923423896,
+      "minute_of_day": 530,
+      "pass": true,
+      "time": "08:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.897201851562933,
+        "max": 3.9117525129592283,
+        "pixels": 180960,
+        "rec709_linear": 1.4276761802910787,
+        "rec709_srgb": 3.9117525129592283
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.06092728758172,
+        "max": 3.072355619553394,
+        "pixels": 230400,
+        "rec709_linear": 1.1213206666036182,
+        "rec709_srgb": 3.072355619553394
+      },
+      "gate_value_pct": 3.9117525129592283,
+      "minute_of_day": 540,
+      "pass": true,
+      "time": "09:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7904928254826955,
+        "max": 3.8050496315944873,
+        "pixels": 180960,
+        "rec709_linear": 1.429872620247819,
+        "rec709_srgb": 3.8050496315944873
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9771162400145337,
+        "max": 2.9885493981481703,
+        "pixels": 230400,
+        "rec709_linear": 1.1230457871529744,
+        "rec709_srgb": 2.9885493981481703
+      },
+      "gate_value_pct": 3.8050496315944873,
+      "minute_of_day": 550,
+      "pass": true,
+      "time": "09:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.817949151366982,
+        "max": 3.832099768554695,
+        "pixels": 180960,
+        "rec709_linear": 1.4101436496519981,
+        "rec709_srgb": 3.832099768554695
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9986808959694837,
+        "max": 3.009795026552333,
+        "pixels": 230400,
+        "rec709_linear": 1.1075503248308403,
+        "rec709_srgb": 3.009795026552333
+      },
+      "gate_value_pct": 3.832099768554695,
+      "minute_of_day": 560,
+      "pass": true,
+      "time": "09:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8482689273764183,
+        "max": 3.8634960246874863,
+        "pixels": 180960,
+        "rec709_linear": 1.4365719077366108,
+        "rec709_srgb": 3.8634960246874863
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.022494553376895,
+        "max": 3.034454169389963,
+        "pixels": 230400,
+        "rec709_linear": 1.128307519201463,
+        "rec709_srgb": 3.034454169389963
+      },
+      "gate_value_pct": 3.8634960246874863,
+      "minute_of_day": 570,
+      "pass": true,
+      "time": "09:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8658685991343096,
+        "max": 3.880688526117833,
+        "pixels": 180960,
+        "rec709_linear": 1.4300355755729095,
+        "rec709_srgb": 3.880688526117833
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0363176289034057,
+        "max": 3.047957446555048,
+        "pixels": 230400,
+        "rec709_linear": 1.1231737749812227,
+        "rec709_srgb": 3.047957446555048
+      },
+      "gate_value_pct": 3.880688526117833,
+      "minute_of_day": 580,
+      "pass": true,
+      "time": "09:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.777270678386281,
+        "max": 3.789890373346484,
+        "pixels": 180960,
+        "rec709_linear": 1.3708583157044645,
+        "rec709_srgb": 3.789890373346484
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9667313453158917,
+        "max": 2.9766430640658847,
+        "pixels": 230400,
+        "rec709_linear": 1.0766949687928815,
+        "rec709_srgb": 2.9766430640658847
+      },
+      "gate_value_pct": 3.789890373346484,
+      "minute_of_day": 590,
+      "pass": true,
+      "time": "09:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.931319816461814,
+        "max": 3.9460030902723497,
+        "pixels": 180960,
+        "rec709_linear": 1.4214104995883032,
+        "rec709_srgb": 3.9460030902723497
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0877241058460494,
+        "max": 3.0992565938180747,
+        "pixels": 230400,
+        "rec709_linear": 1.1163994965516466,
+        "rec709_srgb": 3.0992565938180747
+      },
+      "gate_value_pct": 3.9460030902723497,
+      "minute_of_day": 600,
+      "pass": true,
+      "time": "10:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8572984749455457,
+        "max": 3.8720865883046245,
+        "pixels": 180960,
+        "rec709_linear": 1.432246820165991,
+        "rec709_srgb": 3.8720865883046245
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0295865105301476,
+        "max": 3.041201341230924,
+        "pixels": 230400,
+        "rec709_linear": 1.1249105233387056,
+        "rec709_srgb": 3.041201341230924
+      },
+      "gate_value_pct": 3.8720865883046245,
+      "minute_of_day": 610,
+      "pass": true,
+      "time": "10:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8484567419658515,
+        "max": 3.862256636500799,
+        "pixels": 180960,
+        "rec709_linear": 1.393261398768797,
+        "rec709_srgb": 3.862256636500799
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.022642066085679,
+        "max": 3.0334807332516696,
+        "pixels": 230400,
+        "rec709_linear": 1.094290723616326,
+        "rec709_srgb": 3.0334807332516696
+      },
+      "gate_value_pct": 3.862256636500799,
+      "minute_of_day": 620,
+      "pass": true,
+      "time": "10:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8660607479065776,
+        "max": 3.881188687349358,
+        "pixels": 180960,
+        "rec709_linear": 1.4261151729360313,
+        "rec709_srgb": 3.881188687349358
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0364685457516245,
+        "max": 3.0483502815223087,
+        "pixels": 230400,
+        "rec709_linear": 1.1200946254101745,
+        "rec709_srgb": 3.0483502815223087
+      },
+      "gate_value_pct": 3.881188687349358,
+      "minute_of_day": 630,
+      "pass": true,
+      "time": "10:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.869609721283143,
+        "max": 3.884464619198737,
+        "pixels": 180960,
+        "rec709_linear": 1.4339511545772576,
+        "rec709_srgb": 3.884464619198737
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0392559685911356,
+        "max": 3.0509232529956747,
+        "pixels": 230400,
+        "rec709_linear": 1.126249135990888,
+        "rec709_srgb": 3.0509232529956747
+      },
+      "gate_value_pct": 3.884464619198737,
+      "minute_of_day": 640,
+      "pass": true,
+      "time": "10:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9012543125119112,
+        "max": 3.9156781739220685,
+        "pixels": 180960,
+        "rec709_linear": 1.4069501711747292,
+        "rec709_srgb": 3.9156781739220685
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0641101579520638,
+        "max": 3.0754388991012913,
+        "pixels": 230400,
+        "rec709_linear": 1.1050421136101518,
+        "rec709_srgb": 3.0754388991012913
+      },
+      "gate_value_pct": 3.9156781739220685,
+      "minute_of_day": 650,
+      "pass": true,
+      "time": "10:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.907299775200398,
+        "max": 3.921656652970626,
+        "pixels": 180960,
+        "rec709_linear": 1.409401732570464,
+        "rec709_srgb": 3.921656652970626
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0688583651053127,
+        "max": 3.080134496187346,
+        "pixels": 230400,
+        "rec709_linear": 1.1069676107897186,
+        "rec709_srgb": 3.080134496187346
+      },
+      "gate_value_pct": 3.921656652970626,
+      "minute_of_day": 660,
+      "pass": true,
+      "time": "11:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.859825303537283,
+        "max": 3.874652044867446,
+        "pixels": 180960,
+        "rec709_linear": 1.4341232576947018,
+        "rec709_srgb": 3.874652044867446
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0315711238199077,
+        "max": 3.043216293572973,
+        "pixels": 230400,
+        "rec709_linear": 1.1263843086477137,
+        "rec709_srgb": 3.043216293572973
+      },
+      "gate_value_pct": 3.874652044867446,
+      "minute_of_day": 670,
+      "pass": true,
+      "time": "11:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9147834642256454,
+        "max": 3.929516819229953,
+        "pixels": 180960,
+        "rec709_linear": 1.418218620689773,
+        "rec709_srgb": 3.929516819229953
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0747361791938923,
+        "max": 3.0863080017701927,
+        "pixels": 230400,
+        "rec709_linear": 1.113892541666759,
+        "rec709_srgb": 3.0863080017701927
+      },
+      "gate_value_pct": 3.929516819229953,
+      "minute_of_day": 680,
+      "pass": true,
+      "time": "11:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8123840606091974,
+        "max": 3.826796384858074,
+        "pixels": 180960,
+        "rec709_linear": 1.4052821984883743,
+        "rec709_srgb": 3.826796384858074
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.994309980936807,
+        "max": 3.005629660607279,
+        "pixels": 230400,
+        "rec709_linear": 1.103732060062744,
+        "rec709_srgb": 3.005629660607279
+      },
+      "gate_value_pct": 3.826796384858074,
+      "minute_of_day": 690,
+      "pass": true,
+      "time": "11:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8725887496171403,
+        "max": 3.88746203689261,
+        "pixels": 180960,
+        "rec709_linear": 1.4335625353353934,
+        "rec709_srgb": 3.88746203689261
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.041595747095129,
+        "max": 3.053277474809404,
+        "pixels": 230400,
+        "rec709_linear": 1.1259439079613403,
+        "rec709_srgb": 3.053277474809404
+      },
+      "gate_value_pct": 3.88746203689261,
+      "minute_of_day": 700,
+      "pass": true,
+      "time": "11:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.936349635639695,
+        "max": 3.9512637233230845,
+        "pixels": 180960,
+        "rec709_linear": 1.422879060141197,
+        "rec709_srgb": 3.9512637233230845
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.091674609658677,
+        "max": 3.103388382693339,
+        "pixels": 230400,
+        "rec709_linear": 1.1175529284858983,
+        "rec709_srgb": 3.103388382693339
+      },
+      "gate_value_pct": 3.9512637233230845,
+      "minute_of_day": 710,
+      "pass": true,
+      "time": "11:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.640270770848844,
+        "max": 3.650866148731796,
+        "pixels": 180960,
+        "rec709_linear": 1.3318690079020132,
+        "rec709_srgb": 3.650866148731796
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.859129334604196,
+        "max": 2.867451120983098,
+        "pixels": 230400,
+        "rec709_linear": 1.0460721166230396,
+        "rec709_srgb": 2.867451120983098
+      },
+      "gate_value_pct": 3.650866148731796,
+      "minute_of_day": 720,
+      "pass": true,
+      "time": "12:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8592401888548014,
+        "max": 3.8740609728506676,
+        "pixels": 180960,
+        "rec709_linear": 1.4309162845378436,
+        "rec709_srgb": 3.8740609728506676
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.031111564996375,
+        "max": 3.042752055759795,
+        "pixels": 230400,
+        "rec709_linear": 1.1238654984807648,
+        "rec709_srgb": 3.042752055759795
+      },
+      "gate_value_pct": 3.8740609728506676,
+      "minute_of_day": 730,
+      "pass": true,
+      "time": "12:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9242529313523105,
+        "max": 3.939108093219654,
+        "pixels": 180960,
+        "rec709_linear": 1.4261876085291436,
+        "rec709_srgb": 3.939108093219654
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.082173656499627,
+        "max": 3.0938411482162698,
+        "pixels": 230400,
+        "rec709_linear": 1.1201515175322647,
+        "rec709_srgb": 3.0938411482162698
+      },
+      "gate_value_pct": 3.939108093219654,
+      "minute_of_day": 740,
+      "pass": true,
+      "time": "12:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8123464976913075,
+        "max": 3.8267632638997013,
+        "pixels": 180960,
+        "rec709_linear": 1.405420296037524,
+        "rec709_srgb": 3.8267632638997013
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.994280478395048,
+        "max": 3.005603646854557,
+        "pixels": 230400,
+        "rec709_linear": 1.103840524179472,
+        "rec709_srgb": 3.005603646854557
+      },
+      "gate_value_pct": 3.8267632638997013,
+      "minute_of_day": 750,
+      "pass": true,
+      "time": "12:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8631496217703094,
+        "max": 3.8779092686500345,
+        "pixels": 180960,
+        "rec709_linear": 1.4256886257973225,
+        "rec709_srgb": 3.8779092686500345
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0341820987654304,
+        "max": 3.0457745714188813,
+        "pixels": 230400,
+        "rec709_linear": 1.1197596081783139,
+        "rec709_srgb": 3.0457745714188813
+      },
+      "gate_value_pct": 3.8779092686500345,
+      "minute_of_day": 760,
+      "pass": true,
+      "time": "12:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.936944141051643,
+        "max": 3.9518752483486597,
+        "pixels": 180960,
+        "rec709_linear": 1.4260333216146186,
+        "rec709_srgb": 3.9518752483486597
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0921415441176445,
+        "max": 3.10386868464051,
+        "pixels": 230400,
+        "rec709_linear": 1.1200303380181484,
+        "rec709_srgb": 3.10386868464051
+      },
+      "gate_value_pct": 3.9518752483486597,
+      "minute_of_day": 770,
+      "pass": true,
+      "time": "12:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9074095744988417,
+        "max": 3.921751178897711,
+        "pixels": 180960,
+        "rec709_linear": 1.4096296600999325,
+        "rec709_srgb": 3.921751178897711
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0689446033042986,
+        "max": 3.0802087384259105,
+        "pixels": 230400,
+        "rec709_linear": 1.1071466288701552,
+        "rec709_srgb": 3.0802087384259105
+      },
+      "gate_value_pct": 3.921751178897711,
+      "minute_of_day": 780,
+      "pass": true,
+      "time": "13:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8240993568072805,
+        "max": 3.8384287460342073,
+        "pixels": 180960,
+        "rec709_linear": 1.4148931206902622,
+        "rec709_srgb": 3.8384287460342073
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.003511369825718,
+        "max": 3.0147659109477005,
+        "pixels": 230400,
+        "rec709_linear": 1.1112806385421434,
+        "rec709_srgb": 3.0147659109477005
+      },
+      "gate_value_pct": 3.8384287460342073,
+      "minute_of_day": 790,
+      "pass": true,
+      "time": "13:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9212370624642294,
+        "max": 3.9360157426189364,
+        "pixels": 180960,
+        "rec709_linear": 1.426417938263757,
+        "rec709_srgb": 3.9360157426189364
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.079804942810447,
+        "max": 3.0914123645152896,
+        "pixels": 230400,
+        "rec709_linear": 1.1203324223446591,
+        "rec709_srgb": 3.0914123645152896
+      },
+      "gate_value_pct": 3.9360157426189364,
+      "minute_of_day": 800,
+      "pass": true,
+      "time": "13:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.866034020445774,
+        "max": 3.881175900209749,
+        "pixels": 180960,
+        "rec709_linear": 1.4261158550678616,
+        "rec709_srgb": 3.881175900209749
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0364475535584514,
+        "max": 3.04834023828974,
+        "pixels": 230400,
+        "rec709_linear": 1.1200951611678829,
+        "rec709_srgb": 3.04834023828974
+      },
+      "gate_value_pct": 3.881175900209749,
+      "minute_of_day": 810,
+      "pass": true,
+      "time": "13:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7875708638893144,
+        "max": 3.801462389261666,
+        "pixels": 180960,
+        "rec709_linear": 1.4017999790778581,
+        "rec709_srgb": 3.801462389261666
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9748212826797324,
+        "max": 2.9857319182326,
+        "pixels": 230400,
+        "rec709_linear": 1.1009970669007345,
+        "rec709_srgb": 2.9857319182326
+      },
+      "gate_value_pct": 3.801462389261666,
+      "minute_of_day": 820,
+      "pass": true,
+      "time": "13:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.890997468837216,
+        "max": 3.9058939698513986,
+        "pixels": 180960,
+        "rec709_linear": 1.4295172822653006,
+        "rec709_srgb": 3.9058939698513986
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0560542619825637,
+        "max": 3.067754222154119,
+        "pixels": 230400,
+        "rec709_linear": 1.1227666987792049,
+        "rec709_srgb": 3.067754222154119
+      },
+      "gate_value_pct": 3.9058939698513986,
+      "minute_of_day": 830,
+      "pass": true,
+      "time": "13:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.873337840883485,
+        "max": 3.887986899065539,
+        "pixels": 180960,
+        "rec709_linear": 1.4280897623388158,
+        "rec709_srgb": 3.887986899065539
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0421840958605704,
+        "max": 3.0536897103077254,
+        "pixels": 230400,
+        "rec709_linear": 1.1216455008369448,
+        "rec709_srgb": 3.0536897103077254
+      },
+      "gate_value_pct": 3.887986899065539,
+      "minute_of_day": 840,
+      "pass": true,
+      "time": "14:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.6623230931040265,
+        "max": 3.674923363845963,
+        "pixels": 180960,
+        "rec709_linear": 1.3773434439488486,
+        "rec709_srgb": 3.674923363845963
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.876449596042121,
+        "max": 2.8863460586873497,
+        "pixels": 230400,
+        "rec709_linear": 1.0817884966014915,
+        "rec709_srgb": 2.8863460586873497
+      },
+      "gate_value_pct": 3.674923363845963,
+      "minute_of_day": 850,
+      "pass": true,
+      "time": "14:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8984761013158455,
+        "max": 3.913264765260718,
+        "pixels": 180960,
+        "rec709_linear": 1.4250712058566568,
+        "rec709_srgb": 3.913264765260718
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.061928104575154,
+        "max": 3.0735433677151893,
+        "pixels": 230400,
+        "rec709_linear": 1.1192746762665824,
+        "rec709_srgb": 3.0735433677151893
+      },
+      "gate_value_pct": 3.913264765260718,
+      "minute_of_day": 860,
+      "pass": true,
+      "time": "14:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8521653577434383,
+        "max": 3.8674233616788687,
+        "pixels": 180960,
+        "rec709_linear": 1.4361033599327162,
+        "rec709_srgb": 3.8674233616788687
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.025554874727659,
+        "max": 3.0375387653186117,
+        "pixels": 230400,
+        "rec709_linear": 1.1279395139471542,
+        "rec709_srgb": 3.0375387653186117
+      },
+      "gate_value_pct": 3.8674233616788687,
+      "minute_of_day": 870,
+      "pass": true,
+      "time": "14:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7982430667521885,
+        "max": 3.812487045560979,
+        "pixels": 180960,
+        "rec709_linear": 1.414223701376439,
+        "rec709_srgb": 3.812487045560979
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9832034086782815,
+        "max": 2.9943908670343524,
+        "pixels": 230400,
+        "rec709_linear": 1.110754865456078,
+        "rec709_srgb": 2.9943908670343524
+      },
+      "gate_value_pct": 3.812487045560979,
+      "minute_of_day": 880,
+      "pass": true,
+      "time": "14:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8889748501817496,
+        "max": 3.903680643106071,
+        "pixels": 180960,
+        "rec709_linear": 1.4194503773919307,
+        "rec709_srgb": 3.903680643106071
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0544656635802494,
+        "max": 3.06601583843956,
+        "pixels": 230400,
+        "rec709_linear": 1.1148599839099123,
+        "rec709_srgb": 3.06601583843956
+      },
+      "gate_value_pct": 3.903680643106071,
+      "minute_of_day": 890,
+      "pass": true,
+      "time": "14:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.888250319284821,
+        "max": 3.9028324638962695,
+        "pixels": 180960,
+        "rec709_linear": 1.428766456890263,
+        "rec709_srgb": 3.9028324638962695
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0538966049382865,
+        "max": 3.065349664351862,
+        "pixels": 230400,
+        "rec709_linear": 1.122176988015894,
+        "rec709_srgb": 3.065349664351862
+      },
+      "gate_value_pct": 3.9028324638962695,
+      "minute_of_day": 900,
+      "pass": true,
+      "time": "15:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7930759984512608,
+        "max": 3.8076547337945144,
+        "pixels": 180960,
+        "rec709_linear": 1.4292390950039406,
+        "rec709_srgb": 3.8076547337945144
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9791451071169277,
+        "max": 2.9905954888344413,
+        "pixels": 230400,
+        "rec709_linear": 1.1225482058676783,
+        "rec709_srgb": 2.9905954888344413
+      },
+      "gate_value_pct": 3.8076547337945144,
+      "minute_of_day": 910,
+      "pass": true,
+      "time": "15:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8292642580167944,
+        "max": 3.843439470536313,
+        "pixels": 180960,
+        "rec709_linear": 1.4097538464354726,
+        "rec709_srgb": 3.843439470536313
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0075679693173574,
+        "max": 3.0187014174837294,
+        "pixels": 230400,
+        "rec709_linear": 1.107244166887861,
+        "rec709_srgb": 3.0187014174837294
+      },
+      "gate_value_pct": 3.843439470536313,
+      "minute_of_day": 920,
+      "pass": true,
+      "time": "15:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.862200435729845,
+        "max": 3.877445891628101,
+        "pixels": 180960,
+        "rec709_linear": 1.434709717149117,
+        "rec709_srgb": 3.877445891628101
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.033436592229483,
+        "max": 3.0454106273829042,
+        "pixels": 230400,
+        "rec709_linear": 1.1268449236775355,
+        "rec709_srgb": 3.0454106273829042
+      },
+      "gate_value_pct": 3.877445891628101,
+      "minute_of_day": 930,
+      "pass": true,
+      "time": "15:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8684763324722704,
+        "max": 3.8833176843328854,
+        "pixels": 180960,
+        "rec709_linear": 1.4296866449004917,
+        "rec709_srgb": 3.8833176843328854
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0383657861292623,
+        "max": 3.050022431236454,
+        "pixels": 230400,
+        "rec709_linear": 1.1228997190155945,
+        "rec709_srgb": 3.050022431236454
+      },
+      "gate_value_pct": 3.8833176843328854,
+      "minute_of_day": 940,
+      "pass": true,
+      "time": "15:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.850596383557829,
+        "max": 3.864462690920782,
+        "pixels": 180960,
+        "rec709_linear": 1.3884545938974486,
+        "rec709_srgb": 3.864462690920782
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0243225762527115,
+        "max": 3.0352134051606976,
+        "pixels": 230400,
+        "rec709_linear": 1.0905153789569544,
+        "rec709_srgb": 3.0352134051606976
+      },
+      "gate_value_pct": 3.864462690920782,
+      "minute_of_day": 950,
+      "pass": true,
+      "time": "15:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9205298682986167,
+        "max": 3.9351322610565225,
+        "pixels": 180960,
+        "rec709_linear": 1.4223738292365236,
+        "rec709_srgb": 3.9351322610565225
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0792495007262053,
+        "max": 3.090718463371477,
+        "pixels": 230400,
+        "rec709_linear": 1.1171561117128528,
+        "rec709_srgb": 3.090718463371477
+      },
+      "gate_value_pct": 3.9351322610565225,
+      "minute_of_day": 960,
+      "pass": true,
+      "time": "16:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.829985177094697,
+        "max": 3.8444974155268232,
+        "pixels": 180960,
+        "rec709_linear": 1.4337726676136366,
+        "rec709_srgb": 3.8444974155268232
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.00813419117646,
+        "max": 3.0195323451116924,
+        "pixels": 230400,
+        "rec709_linear": 1.126108949354877,
+        "rec709_srgb": 3.0195323451116924
+      },
+      "gate_value_pct": 3.8444974155268232,
+      "minute_of_day": 970,
+      "pass": true,
+      "time": "16:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8115230029530185,
+        "max": 3.8248846474576728,
+        "pixels": 180960,
+        "rec709_linear": 1.3887041838751613,
+        "rec709_srgb": 3.8248846474576728
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.993633691902683,
+        "max": 3.0041281501907138,
+        "pixels": 230400,
+        "rec709_linear": 1.090711411085283,
+        "rec709_srgb": 3.0041281501907138
+      },
+      "gate_value_pct": 3.8248846474576728,
+      "minute_of_day": 980,
+      "pass": true,
+      "time": "16:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8559360968082834,
+        "max": 3.871009326294637,
+        "pixels": 180960,
+        "rec709_linear": 1.4271147624014038,
+        "rec709_srgb": 3.871009326294637
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0285164760348393,
+        "max": 3.040355241693913,
+        "pixels": 230400,
+        "rec709_linear": 1.1208797196361024,
+        "rec709_srgb": 3.040355241693913
+      },
+      "gate_value_pct": 3.871009326294637,
+      "minute_of_day": 990,
+      "pass": true,
+      "time": "16:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8679497292580325,
+        "max": 3.8828316755084926,
+        "pixels": 180960,
+        "rec709_linear": 1.4344256168613976,
+        "rec709_srgb": 3.8828316755084926
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0379521831880796,
+        "max": 3.0496407118056283,
+        "pixels": 230400,
+        "rec709_linear": 1.126621786576556,
+        "rec709_srgb": 3.0496407118056283
+      },
+      "gate_value_pct": 3.8828316755084926,
+      "minute_of_day": 1000,
+      "pass": true,
+      "time": "16:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8987014788231518,
+        "max": 3.913140011008873,
+        "pixels": 180960,
+        "rec709_linear": 1.4066161231269154,
+        "rec709_srgb": 3.913140011008873
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.062105119825684,
+        "max": 3.0734453836465523,
+        "pixels": 230400,
+        "rec709_linear": 1.1047797467059315,
+        "rec709_srgb": 3.0734453836465523
+      },
+      "gate_value_pct": 3.913140011008873,
+      "minute_of_day": 1010,
+      "pass": true,
+      "time": "16:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.899235305675465,
+        "max": 3.913720274440493,
+        "pixels": 180960,
+        "rec709_linear": 1.4114239078824387,
+        "rec709_srgb": 3.913720274440493
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0625243963326048,
+        "max": 3.073901132216804,
+        "pixels": 230400,
+        "rec709_linear": 1.1085558609826653,
+        "rec709_srgb": 3.073901132216804
+      },
+      "gate_value_pct": 3.913720274440493,
+      "minute_of_day": 1020,
+      "pass": true,
+      "time": "17:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8525027016406144,
+        "max": 3.8673876536468095,
+        "pixels": 180960,
+        "rec709_linear": 1.4359347742988697,
+        "rec709_srgb": 3.8673876536468095
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.025819830246899,
+        "max": 3.0375107196350983,
+        "pixels": 230400,
+        "rec709_linear": 1.1278071039805706,
+        "rec709_srgb": 3.0375107196350983
+      },
+      "gate_value_pct": 3.8673876536468095,
+      "minute_of_day": 1030,
+      "pass": true,
+      "time": "17:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9088189062833956,
+        "max": 3.923586520691474,
+        "pixels": 180960,
+        "rec709_linear": 1.4195940086722973,
+        "rec709_srgb": 3.923586520691474
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.07005151597675,
+        "max": 3.081650246459762,
+        "pixels": 230400,
+        "rec709_linear": 1.114972794311367,
+        "rec709_srgb": 3.081650246459762
+      },
+      "gate_value_pct": 3.923586520691474,
+      "minute_of_day": 1040,
+      "pass": true,
+      "time": "17:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.789455511057927,
+        "max": 3.8035284851164075,
+        "pixels": 180960,
+        "rec709_linear": 1.4076513949641885,
+        "rec709_srgb": 3.8035284851164075
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9763015159767465,
+        "max": 2.987354664351845,
+        "pixels": 230400,
+        "rec709_linear": 1.1055928664614563,
+        "rec709_srgb": 2.987354664351845
+      },
+      "gate_value_pct": 3.8035284851164075,
+      "minute_of_day": 1050,
+      "pass": true,
+      "time": "17:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8585178250492436,
+        "max": 3.873192822593308,
+        "pixels": 180960,
+        "rec709_linear": 1.4358817035929516,
+        "rec709_srgb": 3.873192822593308
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0305442084240934,
+        "max": 3.042070196078494,
+        "pixels": 230400,
+        "rec709_linear": 1.1277654213636308,
+        "rec709_srgb": 3.042070196078494
+      },
+      "gate_value_pct": 3.873192822593308,
+      "minute_of_day": 1060,
+      "pass": true,
+      "time": "17:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9207509116230908,
+        "max": 3.9357224597354756,
+        "pixels": 180960,
+        "rec709_linear": 1.4253203555290412,
+        "rec709_srgb": 3.9357224597354756
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0794231118373023,
+        "max": 3.0911820152505713,
+        "pixels": 230400,
+        "rec709_linear": 1.119470362571768,
+        "rec709_srgb": 3.0911820152505713
+      },
+      "gate_value_pct": 3.9357224597354756,
+      "minute_of_day": 1070,
+      "pass": true,
+      "time": "17:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7985637962818353,
+        "max": 3.812562209826442,
+        "pixels": 180960,
+        "rec709_linear": 1.3923417813499683,
+        "rec709_srgb": 3.812562209826442
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.983455314996358,
+        "max": 2.9944499023011844,
+        "pixels": 230400,
+        "rec709_linear": 1.093568440768621,
+        "rec709_srgb": 2.9944499023011844
+      },
+      "gate_value_pct": 3.812562209826442,
+      "minute_of_day": 1080,
+      "pass": true,
+      "time": "18:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8369242038106,
+        "max": 3.8517060227805016,
+        "pixels": 180960,
+        "rec709_linear": 1.434884318299265,
+        "rec709_srgb": 3.8517060227805016
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0135842184095756,
+        "max": 3.0251941053921856,
+        "pixels": 230400,
+        "rec709_linear": 1.126982058330881,
+        "rec709_srgb": 3.0251941053921856
+      },
+      "gate_value_pct": 3.8517060227805016,
+      "minute_of_day": 1090,
+      "pass": true,
+      "time": "18:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9113298428714156,
+        "max": 3.9260050120491123,
+        "pixels": 180960,
+        "rec709_linear": 1.4285179441026423,
+        "rec709_srgb": 3.9260050120491123
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0720236474219242,
+        "max": 3.0835497698802405,
+        "pixels": 230400,
+        "rec709_linear": 1.121981801930617,
+        "rec709_srgb": 3.0835497698802405
+      },
+      "gate_value_pct": 3.9260050120491123,
+      "minute_of_day": 1100,
+      "pass": true,
+      "time": "18:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7894490097836804,
+        "max": 3.803583669232489,
+        "pixels": 180960,
+        "rec709_linear": 1.4070810718659006,
+        "rec709_srgb": 3.803583669232489
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.976296409767599,
+        "max": 2.987398006876351,
+        "pixels": 230400,
+        "rec709_linear": 1.105144925194676,
+        "rec709_srgb": 2.987398006876351
+      },
+      "gate_value_pct": 3.803583669232489,
+      "minute_of_day": 1110,
+      "pass": true,
+      "time": "18:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.857050704160214,
+        "max": 3.871858496298697,
+        "pixels": 180960,
+        "rec709_linear": 1.4269360431076912,
+        "rec709_srgb": 3.871858496298697
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.029391907225835,
+        "max": 3.041022193967935,
+        "pixels": 230400,
+        "rec709_linear": 1.1207393505241658,
+        "rec709_srgb": 3.041022193967935
+      },
+      "gate_value_pct": 3.871858496298697,
+      "minute_of_day": 1120,
+      "pass": true,
+      "time": "18:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9280178915067236,
+        "max": 3.9430249713944217,
+        "pixels": 180960,
+        "rec709_linear": 1.4282239255929075,
+        "rec709_srgb": 3.9430249713944217
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.085130718954239,
+        "max": 3.0969175296160354,
+        "pixels": 230400,
+        "rec709_linear": 1.1217508748927627,
+        "rec709_srgb": 3.0969175296160354
+      },
+      "gate_value_pct": 3.9430249713944217,
+      "minute_of_day": 1130,
+      "pass": true,
+      "time": "18:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8977559046017363,
+        "max": 3.91222158423054,
+        "pixels": 180960,
+        "rec709_linear": 1.411864620018429,
+        "rec709_srgb": 3.91222158423054
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0613624500726138,
+        "max": 3.072724035947737,
+        "pixels": 230400,
+        "rec709_linear": 1.1089020036394746,
+        "rec709_srgb": 3.072724035947737
+      },
+      "gate_value_pct": 3.91222158423054,
+      "minute_of_day": 1140,
+      "pass": true,
+      "time": "19:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.821675103875895,
+        "max": 3.8360091481597447,
+        "pixels": 180960,
+        "rec709_linear": 1.4145984995180365,
+        "rec709_srgb": 3.8360091481597447
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0016073211691925,
+        "max": 3.0128655184504662,
+        "pixels": 230400,
+        "rec709_linear": 1.1110492381631245,
+        "rec709_srgb": 3.0128655184504662
+      },
+      "gate_value_pct": 3.8360091481597447,
+      "minute_of_day": 1150,
+      "pass": true,
+      "time": "19:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9168710956236126,
+        "max": 3.931649866940682,
+        "pixels": 180960,
+        "rec709_linear": 1.4270629551585066,
+        "rec709_srgb": 3.931649866940682
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0763758396877123,
+        "max": 3.087983332992994,
+        "pixels": 230400,
+        "rec709_linear": 1.120839029364077,
+        "rec709_srgb": 3.087983332992994
+      },
+      "gate_value_pct": 3.931649866940682,
+      "minute_of_day": 1160,
+      "pass": true,
+      "time": "19:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.833646839224909,
+        "max": 3.8487483755482965,
+        "pixels": 180960,
+        "rec709_linear": 1.430435977158753,
+        "rec709_srgb": 3.8487483755482965
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0110101216412306,
+        "max": 3.0228711199618914,
+        "pixels": 230400,
+        "rec709_linear": 1.123488257060104,
+        "rec709_srgb": 3.0228711199618914
+      },
+      "gate_value_pct": 3.8487483755482965,
+      "minute_of_day": 1170,
+      "pass": true,
+      "time": "19:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.714135359419314,
+        "max": 3.7275706952897094,
+        "pixels": 180960,
+        "rec709_linear": 1.403291892258267,
+        "rec709_srgb": 3.7275706952897094
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9171438135439196,
+        "max": 2.9276961502587926,
+        "pixels": 230400,
+        "rec709_linear": 1.1021688403778471,
+        "rec709_srgb": 2.9276961502587926
+      },
+      "gate_value_pct": 3.7275706952897094,
+      "minute_of_day": 1180,
+      "pass": true,
+      "time": "19:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8743289240246286,
+        "max": 3.889182897314598,
+        "pixels": 180960,
+        "rec709_linear": 1.4318182313956511,
+        "rec709_srgb": 3.889182897314598
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.042962509077677,
+        "max": 3.0546290672658407,
+        "pixels": 230400,
+        "rec709_linear": 1.1245739025753343,
+        "rec709_srgb": 3.0546290672658407
+      },
+      "gate_value_pct": 3.889182897314598,
+      "minute_of_day": 1190,
+      "pass": true,
+      "time": "19:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8979068786370896,
+        "max": 3.912562435204,
+        "pixels": 180960,
+        "rec709_linear": 1.425879486842536,
+        "rec709_srgb": 3.912562435204
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0614810275962143,
+        "max": 3.0729917459831415,
+        "pixels": 230400,
+        "rec709_linear": 1.1199095136242418,
+        "rec709_srgb": 3.0729917459831415
+      },
+      "gate_value_pct": 3.912562435204,
+      "minute_of_day": 1200,
+      "pass": true,
+      "time": "20:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7446992943950197,
+        "max": 3.7583693646955165,
+        "pixels": 180960,
+        "rec709_linear": 1.4003680143479953,
+        "rec709_srgb": 3.7583693646955165
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.941149237472755,
+        "max": 2.9518859385212703,
+        "pixels": 230400,
+        "rec709_linear": 1.0998723779358213,
+        "rec709_srgb": 2.9518859385212703
+      },
+      "gate_value_pct": 3.7583693646955165,
+      "minute_of_day": 1210,
+      "pass": true,
+      "time": "20:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8916006426148364,
+        "max": 3.9063974541010977,
+        "pixels": 180960,
+        "rec709_linear": 1.425836214174055,
+        "rec709_srgb": 3.9063974541010977
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.056528004720403,
+        "max": 3.0681496670752373,
+        "pixels": 230400,
+        "rec709_linear": 1.1198755265492057,
+        "rec709_srgb": 3.0681496670752373
+      },
+      "gate_value_pct": 3.9063974541010977,
+      "minute_of_day": 1220,
+      "pass": true,
+      "time": "20:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.839008945753369,
+        "max": 3.854429282606082,
+        "pixels": 180960,
+        "rec709_linear": 1.4369529223967,
+        "rec709_srgb": 3.854429282606082
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.015221609477125,
+        "max": 3.0273329990468603,
+        "pixels": 230400,
+        "rec709_linear": 1.1286067744657415,
+        "rec709_srgb": 3.0273329990468603
+      },
+      "gate_value_pct": 3.854429282606082,
+      "minute_of_day": 1230,
+      "pass": true,
+      "time": "20:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7970547782921074,
+        "max": 3.8112111752571054,
+        "pixels": 180960,
+        "rec709_linear": 1.4150479995993286,
+        "rec709_srgb": 3.8112111752571054
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.982270107116926,
+        "max": 2.993388777233185,
+        "pixels": 230400,
+        "rec709_linear": 1.1114022830186392,
+        "rec709_srgb": 2.993388777233185
+      },
+      "gate_value_pct": 3.8112111752571054,
+      "minute_of_day": 1240,
+      "pass": true,
+      "time": "20:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8900114422426832,
+        "max": 3.9046906923423896,
+        "pixels": 180960,
+        "rec709_linear": 1.419079977575659,
+        "rec709_srgb": 3.9046906923423896
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.055279820261441,
+        "max": 3.0668091479439186,
+        "pixels": 230400,
+        "rec709_linear": 1.1145690657208822,
+        "rec709_srgb": 3.0668091479439186
+      },
+      "gate_value_pct": 3.9046906923423896,
+      "minute_of_day": 1250,
+      "pass": true,
+      "time": "20:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.897201851562933,
+        "max": 3.9117525129592283,
+        "pixels": 180960,
+        "rec709_linear": 1.4276761802910787,
+        "rec709_srgb": 3.9117525129592283
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.06092728758172,
+        "max": 3.072355619553394,
+        "pixels": 230400,
+        "rec709_linear": 1.1213206666036182,
+        "rec709_srgb": 3.072355619553394
+      },
+      "gate_value_pct": 3.9117525129592283,
+      "minute_of_day": 1260,
+      "pass": true,
+      "time": "21:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.7904928254826955,
+        "max": 3.8050496315944873,
+        "pixels": 180960,
+        "rec709_linear": 1.429872620247819,
+        "rec709_srgb": 3.8050496315944873
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9771162400145337,
+        "max": 2.9885493981481703,
+        "pixels": 230400,
+        "rec709_linear": 1.1230457871529744,
+        "rec709_srgb": 2.9885493981481703
+      },
+      "gate_value_pct": 3.8050496315944873,
+      "minute_of_day": 1270,
+      "pass": true,
+      "time": "21:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.817949151366982,
+        "max": 3.832099768554695,
+        "pixels": 180960,
+        "rec709_linear": 1.4101436496519981,
+        "rec709_srgb": 3.832099768554695
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9986808959694837,
+        "max": 3.009795026552333,
+        "pixels": 230400,
+        "rec709_linear": 1.1075503248308403,
+        "rec709_srgb": 3.009795026552333
+      },
+      "gate_value_pct": 3.832099768554695,
+      "minute_of_day": 1280,
+      "pass": true,
+      "time": "21:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8482689273764183,
+        "max": 3.8634960246874863,
+        "pixels": 180960,
+        "rec709_linear": 1.4365719077366108,
+        "rec709_srgb": 3.8634960246874863
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.022494553376895,
+        "max": 3.034454169389963,
+        "pixels": 230400,
+        "rec709_linear": 1.128307519201463,
+        "rec709_srgb": 3.034454169389963
+      },
+      "gate_value_pct": 3.8634960246874863,
+      "minute_of_day": 1290,
+      "pass": true,
+      "time": "21:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8658685991343096,
+        "max": 3.880688526117833,
+        "pixels": 180960,
+        "rec709_linear": 1.4300355755729095,
+        "rec709_srgb": 3.880688526117833
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0363176289034057,
+        "max": 3.047957446555048,
+        "pixels": 230400,
+        "rec709_linear": 1.1231737749812227,
+        "rec709_srgb": 3.047957446555048
+      },
+      "gate_value_pct": 3.880688526117833,
+      "minute_of_day": 1300,
+      "pass": true,
+      "time": "21:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.777270678386281,
+        "max": 3.789890373346484,
+        "pixels": 180960,
+        "rec709_linear": 1.3708583157044645,
+        "rec709_srgb": 3.789890373346484
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.9667313453158917,
+        "max": 2.9766430640658847,
+        "pixels": 230400,
+        "rec709_linear": 1.0766949687928815,
+        "rec709_srgb": 2.9766430640658847
+      },
+      "gate_value_pct": 3.789890373346484,
+      "minute_of_day": 1310,
+      "pass": true,
+      "time": "21:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.931319816461814,
+        "max": 3.9460030902723497,
+        "pixels": 180960,
+        "rec709_linear": 1.4214104995883032,
+        "rec709_srgb": 3.9460030902723497
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0877241058460494,
+        "max": 3.0992565938180747,
+        "pixels": 230400,
+        "rec709_linear": 1.1163994965516466,
+        "rec709_srgb": 3.0992565938180747
+      },
+      "gate_value_pct": 3.9460030902723497,
+      "minute_of_day": 1320,
+      "pass": true,
+      "time": "22:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8572984749455457,
+        "max": 3.8720865883046245,
+        "pixels": 180960,
+        "rec709_linear": 1.432246820165991,
+        "rec709_srgb": 3.8720865883046245
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0295865105301476,
+        "max": 3.041201341230924,
+        "pixels": 230400,
+        "rec709_linear": 1.1249105233387056,
+        "rec709_srgb": 3.041201341230924
+      },
+      "gate_value_pct": 3.8720865883046245,
+      "minute_of_day": 1330,
+      "pass": true,
+      "time": "22:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8484567419658515,
+        "max": 3.862256636500799,
+        "pixels": 180960,
+        "rec709_linear": 1.393261398768797,
+        "rec709_srgb": 3.862256636500799
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.022642066085679,
+        "max": 3.0334807332516696,
+        "pixels": 230400,
+        "rec709_linear": 1.094290723616326,
+        "rec709_srgb": 3.0334807332516696
+      },
+      "gate_value_pct": 3.862256636500799,
+      "minute_of_day": 1340,
+      "pass": true,
+      "time": "22:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8660607479065776,
+        "max": 3.881188687349358,
+        "pixels": 180960,
+        "rec709_linear": 1.4261151729360313,
+        "rec709_srgb": 3.881188687349358
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0364685457516245,
+        "max": 3.0483502815223087,
+        "pixels": 230400,
+        "rec709_linear": 1.1200946254101745,
+        "rec709_srgb": 3.0483502815223087
+      },
+      "gate_value_pct": 3.881188687349358,
+      "minute_of_day": 1350,
+      "pass": true,
+      "time": "22:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.869609721283143,
+        "max": 3.884464619198737,
+        "pixels": 180960,
+        "rec709_linear": 1.4339511545772576,
+        "rec709_srgb": 3.884464619198737
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0392559685911356,
+        "max": 3.0509232529956747,
+        "pixels": 230400,
+        "rec709_linear": 1.126249135990888,
+        "rec709_srgb": 3.0509232529956747
+      },
+      "gate_value_pct": 3.884464619198737,
+      "minute_of_day": 1360,
+      "pass": true,
+      "time": "22:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9012543125119112,
+        "max": 3.9156781739220685,
+        "pixels": 180960,
+        "rec709_linear": 1.4069501711747292,
+        "rec709_srgb": 3.9156781739220685
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0641101579520638,
+        "max": 3.0754388991012913,
+        "pixels": 230400,
+        "rec709_linear": 1.1050421136101518,
+        "rec709_srgb": 3.0754388991012913
+      },
+      "gate_value_pct": 3.9156781739220685,
+      "minute_of_day": 1370,
+      "pass": true,
+      "time": "22:50"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.907299775200398,
+        "max": 3.921656652970626,
+        "pixels": 180960,
+        "rec709_linear": 1.409401732570464,
+        "rec709_srgb": 3.921656652970626
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0688583651053127,
+        "max": 3.080134496187346,
+        "pixels": 230400,
+        "rec709_linear": 1.1069676107897186,
+        "rec709_srgb": 3.080134496187346
+      },
+      "gate_value_pct": 3.921656652970626,
+      "minute_of_day": 1380,
+      "pass": true,
+      "time": "23:00"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.859825303537283,
+        "max": 3.874652044867446,
+        "pixels": 180960,
+        "rec709_linear": 1.4341232576947018,
+        "rec709_srgb": 3.874652044867446
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0315711238199077,
+        "max": 3.043216293572973,
+        "pixels": 230400,
+        "rec709_linear": 1.1263843086477137,
+        "rec709_srgb": 3.043216293572973
+      },
+      "gate_value_pct": 3.874652044867446,
+      "minute_of_day": 1390,
+      "pass": true,
+      "time": "23:10"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.9147834642256454,
+        "max": 3.929516819229953,
+        "pixels": 180960,
+        "rec709_linear": 1.418218620689773,
+        "rec709_srgb": 3.929516819229953
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.0747361791938923,
+        "max": 3.0863080017701927,
+        "pixels": 230400,
+        "rec709_linear": 1.113892541666759,
+        "rec709_srgb": 3.0863080017701927
+      },
+      "gate_value_pct": 3.929516819229953,
+      "minute_of_day": 1400,
+      "pass": true,
+      "time": "23:20"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8123840606091974,
+        "max": 3.826796384858074,
+        "pixels": 180960,
+        "rec709_linear": 1.4052821984883743,
+        "rec709_srgb": 3.826796384858074
+      },
+      "full_square": {
+        "channel_mean_srgb": 2.994309980936807,
+        "max": 3.005629660607279,
+        "pixels": 230400,
+        "rec709_linear": 1.103732060062744,
+        "rec709_srgb": 3.005629660607279
+      },
+      "gate_value_pct": 3.826796384858074,
+      "minute_of_day": 1410,
+      "pass": true,
+      "time": "23:30"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.8725887496171403,
+        "max": 3.88746203689261,
+        "pixels": 180960,
+        "rec709_linear": 1.4335625353353934,
+        "rec709_srgb": 3.88746203689261
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.041595747095129,
+        "max": 3.053277474809404,
+        "pixels": 230400,
+        "rec709_linear": 1.1259439079613403,
+        "rec709_srgb": 3.053277474809404
+      },
+      "gate_value_pct": 3.88746203689261,
+      "minute_of_day": 1420,
+      "pass": true,
+      "time": "23:40"
+    },
+    {
+      "disc": {
+        "channel_mean_srgb": 3.936349635639695,
+        "max": 3.9512637233230845,
+        "pixels": 180960,
+        "rec709_linear": 1.422879060141197,
+        "rec709_srgb": 3.9512637233230845
+      },
+      "full_square": {
+        "channel_mean_srgb": 3.091674609658677,
+        "max": 3.103388382693339,
+        "pixels": 230400,
+        "rec709_linear": 1.1175529284858983,
+        "rec709_srgb": 3.103388382693339
+      },
+      "gate_value_pct": 3.9512637233230845,
+      "minute_of_day": 1430,
+      "pass": true,
+      "time": "23:50"
+    }
+  ],
+  "sampling": {
+    "covers": "00:00 to 23:59 inclusive of a whole day",
+    "interval_minutes": 10,
+    "samples": 144
+  },
+  "sensitivity": [
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.8935567864635017,
+      "pass": true,
+      "vary": "day=1"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9246134723739248,
+      "pass": true,
+      "vary": "day=8"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9235448158839232,
+      "pass": true,
+      "vary": "day=11"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.95806828895127,
+      "pass": true,
+      "vary": "day=22"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9718632383280195,
+      "pass": true,
+      "vary": "day=28"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9422334724605954,
+      "pass": true,
+      "vary": "day=31"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9512508638026214,
+      "pass": true,
+      "vary": "battery=0"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9419531275463164,
+      "pass": true,
+      "vary": "battery=15"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.951326273382899,
+      "pass": true,
+      "vary": "battery=50"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9518752483486597,
+      "pass": true,
+      "vary": "battery=80"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9518590467398105,
+      "pass": true,
+      "vary": "battery=95"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9511597181047313,
+      "pass": true,
+      "vary": "battery=100"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.9518875223210146,
+      "pass": true,
+      "vary": "heart_rate=0 (fallback)"
+    },
+    {
+      "at_time": "00:50",
+      "gate_value_pct": 3.951444617811759,
+      "pass": true,
+      "vary": "heart_rate=200"
+    }
+  ],
+  "source": "https://developer.android.com/docs/quality-guidelines/wear-app-quality",
+  "visual_version": "field-tourbillon-mk2-rc1",
+  "worst_time_sample": {
+    "disc": {
+      "channel_mean_srgb": 3.936944141051643,
+      "max": 3.9518752483486597,
+      "pixels": 180960,
+      "rec709_linear": 1.4260333216146186,
+      "rec709_srgb": 3.9518752483486597
+    },
+    "full_square": {
+      "channel_mean_srgb": 3.0921415441176445,
+      "max": 3.10386868464051,
+      "pixels": 230400,
+      "rec709_linear": 1.1200303380181484,
+      "rec709_srgb": 3.10386868464051
+    },
+    "gate_value_pct": 3.9518752483486597,
+    "minute_of_day": 50,
+    "pass": true,
+    "time": "00:50"
+  }
+}
