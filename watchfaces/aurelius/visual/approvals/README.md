@@ -1,9 +1,33 @@
 # Intentional visual-change approval records (ADR-009 §5)
 
 One JSON record per proposed/approved visual version change. Approved
-goldens may move ONLY when a record with `owner.status == "approved"` binds
-the exact new golden hashes — enforced by `tools/validate.py` (stdlib hash
-checks) and `tests/visual/` (pixel-level checks).
+goldens may move ONLY when an *authoritative* record binds the exact new
+golden hashes — enforced by `tools/validate.py` (stdlib hash checks) and
+`tests/visual/` (pixel-level checks).
+
+## Authoritative records (Phase-4 hardening)
+
+A record authorizes golden bytes only when **both** gates are closed:
+
+- `owner.status == "approved"` — the product owner accepted the pixels;
+- `architecture_review.status == "approved"` — architecture accepted the
+  lineage.
+
+Every committed golden set under `goldens/<version>/` — the active one and
+every superseded one — must have **exactly one** such record. Validation
+rejects:
+
+- owner-approved but architecture-pending/rejected records;
+- architecture-approved but owner-pending/rejected records;
+- two or more fully-approved records for one `visual_version`, which is
+  reported as ambiguity rather than resolved by taking the last match.
+
+Records that are `proposed` or `rejected` stay committed as historical
+evidence (ADR-009 §5); they simply never authorize goldens. `APPROVAL-0002`
+and `APPROVAL-0003` are exactly that.
+
+Rationale: `docs/reports/PHASE_3_POST_MERGE_REVIEW.md` §"Non-blocking future
+hardening".
 
 Required fields:
 

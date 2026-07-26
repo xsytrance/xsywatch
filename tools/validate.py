@@ -731,6 +731,12 @@ def check_visual(root: Path) -> None:
                 err(f"visual[{face}]: {rp.name}: owner.status must be "
                     f"proposed|approved|rejected")
                 continue
+            arch = rec["architecture_review"]
+            if not isinstance(arch, dict) or arch.get("status") not in (
+                    "pending", "approved", "rejected"):
+                err(f"visual[{face}]: {rp.name}: architecture_review.status "
+                    f"must be pending|approved|rejected")
+                continue
             for kind, sha in (rec["proposed_goldens"] or {}).items():
                 if not re.fullmatch(r"[0-9a-f]{64}", sha or ""):
                     err(f"visual[{face}]: {rp.name}: proposed_goldens."
@@ -755,17 +761,75 @@ def check_visual(root: Path) -> None:
         goldens_root = vdir / "goldens"
         golden_dirs = (sorted(p for p in goldens_root.iterdir() if p.is_dir())
                        if goldens_root.is_dir() else [])
+        # --- exactly one authoritative record per visual version ----------
+        # A record authorizes golden bytes only when BOTH gates are closed:
+        # the product owner accepted the pixels and architecture accepted
+        # the lineage. Half-approved records (one gate closed, the other
+        # still open) are legitimate work-in-progress states, but they are
+        # not authorization — the Phase-3 promotion sequence closed both
+        # gates in the same step precisely because either alone is
+        # insufficient. Duplicates are rejected rather than resolved by
+        # taking the last match: two approved records for one generation
+        # means nobody can say which bytes are the approved ones, which is
+        # the ambiguity ADR-009 exists to prevent.
+        def _authoritative(rec: dict) -> bool:
+            return (rec["owner"]["status"] == "approved"
+                    and rec["architecture_review"]["status"] == "approved")
+
+        def _rid(rec: dict) -> str:
+            return rec.get("approval_id", "<record>")
+
+        approved_by_version: dict[str, list] = {}
+        for rec in records:
+            if _authoritative(rec):
+                approved_by_version.setdefault(
+                    rec["visual_version"], []).append(rec)
+        for version, recs in sorted(approved_by_version.items()):
+            if len(recs) > 1:
+                err(f"visual[{face}]: visual_version {version} has "
+                    f"{len(recs)} fully-approved records "
+                    f"({', '.join(sorted(_rid(r) for r in recs))}) — exactly "
+                    f"one authoritative approved record is permitted per "
+                    f"generation (ADR-009 §5)")
+
         for gd in golden_dirs:
             version = gd.name
             active = version == approved_version
             version_recs = [r for r in records
-                            if r["visual_version"] == version
-                            and r["owner"]["status"] == "approved"]
-            if not version_recs:
-                err(f"visual[{face}]: goldens/{version} exists with no "
-                    f"owner-approved record in approvals/ (ADR-009 §5)")
+                            if r["visual_version"] == version]
+            authoritative = [r for r in version_recs if _authoritative(r)]
+            if len(authoritative) > 1:
+                # already reported above; do not also compare against an
+                # arbitrarily chosen record
                 continue
-            rec = version_recs[-1]
+            if not authoritative:
+                owner_only = [r for r in version_recs
+                              if r["owner"]["status"] == "approved"]
+                arch_only = [r for r in version_recs
+                             if r["architecture_review"]["status"]
+                             == "approved"]
+                if owner_only:
+                    err(f"visual[{face}]: goldens/{version} is authorized "
+                        f"only by owner-approved record(s) "
+                        f"{', '.join(sorted(_rid(r) for r in owner_only))} "
+                        f"whose architecture_review.status is not approved "
+                        f"— a committed golden set requires BOTH owner and "
+                        f"architecture approval (ADR-009 §5)")
+                elif arch_only:
+                    err(f"visual[{face}]: goldens/{version} is authorized "
+                        f"only by architecture-approved record(s) "
+                        f"{', '.join(sorted(_rid(r) for r in arch_only))} "
+                        f"whose owner.status is not approved — a committed "
+                        f"golden set requires BOTH owner and architecture "
+                        f"approval (ADR-009 §5)")
+                else:
+                    err(f"visual[{face}]: goldens/{version} exists with no "
+                        f"fully-approved record in approvals/ (needs "
+                        f"owner.status == approved AND "
+                        f"architecture_review.status == approved, "
+                        f"ADR-009 §5)")
+                continue
+            rec = authoritative[0]
             for kind in ("normal", "aod"):
                 gp = gd / f"{kind}.png"
                 if not gp.exists():

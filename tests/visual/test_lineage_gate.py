@@ -444,6 +444,168 @@ class ApprovalDeltaBindingTests(unittest.TestCase):
                           self.errors())
 
 
+APPROVAL_1 = "visual/approvals/APPROVAL-0001-field-tourbillon-v1.json"
+APPROVAL_4 = "visual/approvals/APPROVAL-0004-field-tourbillon-mk2-r2.json"
+
+
+class GoldenAuthorizationTests(unittest.TestCase):
+    """Phase-4 validator hardening (PHASE_3_POST_MERGE_REVIEW.md §
+    "Non-blocking future hardening").
+
+    1. Every committed golden set requires BOTH owner.status == "approved"
+       and architecture_review.status == "approved".
+    2. Every committed visual_version may have exactly ONE authoritative
+       approved record; duplicates/ambiguity are rejected rather than
+       resolved by silently taking the last matching record.
+
+    Proposed and rejected records stay committed as historical evidence
+    (ADR-009 §5) — they simply never authorize golden bytes.
+    """
+
+    def setUp(self):
+        self.sb = Sandbox()
+        self.addCleanup(self.sb.close)
+
+    def rec(self, rel: str) -> dict:
+        return json.loads(self.sb.path(rel).read_text(encoding="utf-8"))
+
+    def write(self, rel: str, rec: dict) -> None:
+        self.sb.path(rel).write_text(json.dumps(rec, indent=2),
+                                     encoding="utf-8")
+
+    def errors(self) -> list[str]:
+        VAL.issues.clear()
+        VAL.check_visual(self.sb.root)
+        errs = [m for s, m in VAL.issues if s == "ERROR"]
+        VAL.issues.clear()
+        return errs
+
+    def assert_error(self, needle: str, errs: list[str]) -> None:
+        self.assertTrue(any(needle in e for e in errs),
+                        f"expected an error containing {needle!r}; got {errs}")
+
+    # -- positive control: the real records are unique and fully approved --
+
+    def test_committed_records_are_unique_and_fully_approved(self):
+        """APPROVAL-0001 and APPROVAL-0004 remain valid, unique, and
+        approved by BOTH gates after the hardening."""
+        self.assertEqual(self.errors(), [])
+        seen: dict[str, list[str]] = {}
+        for p in sorted(self.sb.path("visual/approvals").glob("*.json")):
+            r = json.loads(p.read_text(encoding="utf-8"))
+            if (r["owner"]["status"] == "approved"
+                    and r["architecture_review"]["status"] == "approved"):
+                seen.setdefault(r["visual_version"], []).append(
+                    r["approval_id"])
+        self.assertEqual(seen, {"field-tourbillon-v1": ["APPROVAL-0001"],
+                                "field-tourbillon-mk2-r2": ["APPROVAL-0004"]})
+
+    def test_proposed_records_are_preserved_as_history(self):
+        """APPROVAL-0002/0003 are owner=proposed / architecture=pending and
+        must remain committed without being treated as authorization."""
+        ids = {}
+        for p in sorted(self.sb.path("visual/approvals").glob("*.json")):
+            r = json.loads(p.read_text(encoding="utf-8"))
+            ids[r["approval_id"]] = (r["owner"]["status"],
+                                     r["architecture_review"]["status"])
+        self.assertEqual(ids["APPROVAL-0002"], ("proposed", "pending"))
+        self.assertEqual(ids["APPROVAL-0003"], ("proposed", "pending"))
+        self.assertEqual(self.errors(), [])
+
+    # -- 1. owner-approved but architecture-pending ------------------------
+
+    def test_owner_approved_architecture_pending_rejected(self):
+        rec = self.rec(APPROVAL_4)
+        rec["architecture_review"]["status"] = "pending"
+        self.write(APPROVAL_4, rec)
+        self.assert_error("architecture_review.status is not approved",
+                          self.errors())
+
+    def test_owner_approved_architecture_rejected_is_rejected(self):
+        rec = self.rec(APPROVAL_1)
+        rec["architecture_review"]["status"] = "rejected"
+        self.write(APPROVAL_1, rec)
+        self.assert_error("architecture_review.status is not approved",
+                          self.errors())
+
+    # -- 2. architecture-approved but owner-pending ------------------------
+
+    def test_architecture_approved_owner_proposed_rejected(self):
+        rec = self.rec(APPROVAL_4)
+        rec["owner"]["status"] = "proposed"
+        self.write(APPROVAL_4, rec)
+        self.assert_error("owner.status is not approved", self.errors())
+
+    def test_architecture_approved_owner_rejected_is_rejected(self):
+        rec = self.rec(APPROVAL_1)
+        rec["owner"]["status"] = "rejected"
+        self.write(APPROVAL_1, rec)
+        self.assert_error("owner.status is not approved", self.errors())
+
+    # -- 3. neither gate closed --------------------------------------------
+
+    def test_no_approved_record_at_all_rejected(self):
+        rec = self.rec(APPROVAL_4)
+        rec["owner"]["status"] = "proposed"
+        rec["architecture_review"]["status"] = "pending"
+        self.write(APPROVAL_4, rec)
+        self.assert_error("exists with no fully-approved record",
+                          self.errors())
+
+    # -- 4. duplicate approved records for one visual version --------------
+
+    def test_duplicate_approved_records_rejected(self):
+        """A second fully-approved record for the SAME generation must be
+        rejected, not silently resolved by taking the last match."""
+        dup = self.rec(APPROVAL_4)
+        dup["approval_id"] = "APPROVAL-0099"
+        self.write("visual/approvals/APPROVAL-0099-duplicate-r2.json", dup)
+        errs = self.errors()
+        self.assert_error("has 2 fully-approved records", errs)
+        self.assert_error("exactly one authoritative approved record", errs)
+
+    def test_ambiguous_duplicate_is_not_silently_resolved(self):
+        """The pre-hardening code took records[-1]. A duplicate carrying
+        DIFFERENT golden hashes must be reported as ambiguous rather than
+        letting either record validate the committed bytes."""
+        dup = self.rec(APPROVAL_4)
+        dup["approval_id"] = "APPROVAL-0098"
+        dup["proposed_goldens"]["normal"] = "0" * 64
+        dup["proposed_goldens"]["aod"] = "1" * 64
+        self.write("visual/approvals/APPROVAL-0098-ambiguous-r2.json", dup)
+        errs = self.errors()
+        self.assert_error("fully-approved records", errs)
+        self.assertFalse(
+            any("does not match approved record" in e for e in errs),
+            f"ambiguity must be reported instead of comparing against an "
+            f"arbitrarily chosen record: {errs}")
+
+    def test_duplicate_approved_record_for_superseded_version_rejected(self):
+        """The rule covers superseded generations too, not only the active
+        one — historical goldens stay evidence and must stay unambiguous."""
+        dup = self.rec(APPROVAL_1)
+        dup["approval_id"] = "APPROVAL-0097"
+        self.write("visual/approvals/APPROVAL-0097-duplicate-v1.json", dup)
+        self.assert_error("field-tourbillon-v1 has 2 fully-approved records",
+                          self.errors())
+
+    # -- 5. schema: architecture_review.status must be a known value -------
+
+    def test_unknown_architecture_status_rejected(self):
+        rec = self.rec(APPROVAL_4)
+        rec["architecture_review"]["status"] = "probably-fine"
+        self.write(APPROVAL_4, rec)
+        self.assert_error("architecture_review.status must be "
+                          "pending|approved|rejected", self.errors())
+
+    def test_architecture_review_must_be_an_object(self):
+        rec = self.rec(APPROVAL_4)
+        rec["architecture_review"] = "approved"
+        self.write(APPROVAL_4, rec)
+        self.assert_error("architecture_review.status must be "
+                          "pending|approved|rejected", self.errors())
+
+
 class ExpressionEvaluatorTests(unittest.TestCase):
     ST = {"MINUTE": 9, "SECOND": 35, "MILLISECOND": 0, "HOUR_0_11": 10,
           "DAY": 24, "BATTERY_PERCENT": 80, "HEART_RATE": 72,
