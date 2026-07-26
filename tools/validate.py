@@ -145,6 +145,13 @@ def check_releases(root: Path, faces: dict[str, dict], aapt2: str | None) -> Non
             err(f"releases[{slug}]: APK present but no source project in watchfaces/")
         for chan_dir in sorted(d for d in face_dir.iterdir() if d.is_dir()):
             channel = chan_dir.name
+            # `candidates/` is not a release channel. It holds versioned,
+            # unpublished release candidates (ADR-010 §4) which are
+            # deliberately absent from MANIFEST.json — a candidate is not a
+            # release and must not be listed as one.
+            if channel == "candidates":
+                check_candidates(slug, chan_dir, root)
+                continue
             key = (slug, channel)
             seen.add(key)
             apks = sorted(chan_dir.glob("*.apk"))
@@ -180,10 +187,22 @@ def check_releases(root: Path, faces: dict[str, dict], aapt2: str | None) -> Non
                 err(f"releases[{slug}/{channel}]: APK package {b['package']} != "
                     f"source applicationId {src['applicationId']}")
             if channel == "current":
+                cand_root = face_dir / "candidates"
+                candidates = ({d.name for d in cand_root.iterdir() if d.is_dir()}
+                              if cand_root.is_dir() else set())
                 for f_src, f_apk in (("versionCode", "versionCode"), ("versionName", "versionName")):
-                    if src.get(f_src) and str(b[f_apk]) != str(src[f_src]):
-                        err(f"releases[{slug}/current]: APK {f_apk}={b[f_apk]} != "
-                            f"source {f_src}={src[f_src]} (source moved on without a release?)")
+                    if not src.get(f_src) or str(b[f_apk]) == str(src[f_src]):
+                        continue
+                    # The source outrunning `current` is normal while a
+                    # release candidate is in flight: the candidate IS the
+                    # release the source moved on to. It is only an error
+                    # when no candidate directory claims that version.
+                    if str(src.get("versionName")) in candidates:
+                        continue
+                    err(f"releases[{slug}/current]: APK {f_apk}={b[f_apk]} != "
+                        f"source {f_src}={src[f_src]} — source moved on with "
+                        f"no matching release and no candidate directory "
+                        f"(have: {sorted(candidates) or 'none'})")
             else:
                 if channel != f"v{b['versionName']}":
                     err(f"releases[{slug}/{channel}]: channel dir does not match "
@@ -684,6 +703,104 @@ def check_visual_delta(root: Path, face: str, records: list) -> None:
             elif dest_by_id.get(u.get("asset_id")) != u.get("destination"):
                 err(f"{tag}: unchanged_handoff_assets destination mismatch "
                     f"for {u.get('asset_id')!r}")
+
+
+def check_candidates(slug: str, root: Path, repo: Path) -> None:
+    """Validate the unpublished release-candidate channel (ADR-010 §4).
+
+    A candidate is not a release: it is absent from MANIFEST.json, it never
+    replaces `current/`, and it must declare itself unpublished. It must
+    also carry no production signing material — the whole point of keeping
+    candidates separate is that signing is a later, separately authorised
+    operation.
+    """
+    for cand in sorted(d for d in root.iterdir() if d.is_dir()):
+        version = cand.name
+        tag = f"candidates[{slug}/{version}]"
+
+        aabs = sorted(cand.glob("*.aab"))
+        apks = sorted(cand.glob("*.apk"))
+        if len(aabs) != 1:
+            err(f"{tag}: expected exactly 1 .aab (Play requires a Wear OS "
+                f"app bundle for watch faces), found {len(aabs)}")
+        if len(apks) != 1:
+            err(f"{tag}: expected exactly 1 device-test .apk, found "
+                f"{len(apks)}")
+
+        for name in ("VERIFY.json", "CANDIDATE.json"):
+            if not (cand / name).exists():
+                err(f"{tag}: {name} missing")
+
+        vp = cand / "VERIFY.json"
+        if vp.exists():
+            try:
+                v = json.loads(vp.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                err(f"{tag}: VERIFY.json invalid ({e})")
+                v = None
+            if v is not None:
+                if v.get("candidate_version") != version:
+                    err(f"{tag}: VERIFY.json version "
+                        f"{v.get('candidate_version')!r} != directory name")
+                if not v.get("consistent"):
+                    err(f"{tag}: VERIFY.json reports inconsistencies: "
+                        f"{v.get('problems')}")
+                if v.get("publication_status") != "not published":
+                    err(f"{tag}: publication_status must be 'not published', "
+                        f"got {v.get('publication_status')!r}")
+                arts = v.get("artifacts", {})
+                if arts.get("aab", {}).get("contains_dex"):
+                    err(f"{tag}: bundle contains dex — Play rejects a watch "
+                        f"face bundle with dex")
+                for kind, a in arts.items():
+                    p = cand / a.get("name", "")
+                    if not p.exists():
+                        err(f"{tag}: {kind} artifact {a.get('name')!r} named "
+                            f"in VERIFY.json is missing")
+                    elif sha256(p) != a.get("sha256"):
+                        err(f"{tag}: {kind} artifact {p.name} checksum drifted "
+                            f"from VERIFY.json")
+                sign = str(arts.get("apk_debug", {}).get("signing", ""))
+                if "NON-DEBUG" in sign:
+                    err(f"{tag}: the device-test APK is not debug-signed "
+                        f"({sign}) — Phase 4 must not create production "
+                        f"signing material")
+
+        cp = cand / "CANDIDATE.json"
+        if cp.exists():
+            try:
+                c = json.loads(cp.read_text(encoding="utf-8"))
+            except json.JSONDecodeError as e:
+                err(f"{tag}: CANDIDATE.json invalid ({e})")
+                c = None
+            if c is not None:
+                if c.get("publication_status") != "not published":
+                    err(f"{tag}: CANDIDATE.json publication_status must be "
+                        f"'not published', got "
+                        f"{c.get('publication_status')!r}")
+                for field in ("package", "version_name", "version_code",
+                              "visual_version", "approval_id",
+                              "studio_producing_commit",
+                              "studio_metadata_commit", "artifacts",
+                              "toolchain", "build_commands",
+                              "reproducibility", "policy_audit",
+                              "known_limitations"):
+                    if field not in c:
+                        err(f"{tag}: CANDIDATE.json missing {field!r}")
+                if c.get("version_name") != version:
+                    err(f"{tag}: CANDIDATE.json version_name "
+                        f"{c.get('version_name')!r} != directory name")
+                for rel in c.get("evidence", {}).values():
+                    if isinstance(rel, str) and rel and not (
+                            repo / rel).exists():
+                        err(f"{tag}: evidence path does not exist: {rel}")
+
+        # no key material anywhere in a candidate directory
+        for p in cand.rglob("*"):
+            if p.is_file() and p.suffix.lower() in (
+                    ".jks", ".keystore", ".p12", ".pfx", ".pem", ".key"):
+                err(f"{tag}: signing material must never be committed: "
+                    f"{p.name}")
 
 
 def check_visual(root: Path) -> None:

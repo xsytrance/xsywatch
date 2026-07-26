@@ -1,0 +1,31 @@
+{
+  "artifacts": {
+    "aab": {
+      "contains_dex": false,
+      "name": "aurelius-2.0.0-rc1.aab",
+      "sha256": "ff61ca19e9c084089306ec95b0dc372d779a0ad00c482b3f6d6b3414d2c6bcf7",
+      "signing": "unsigned \u2014 no upload key exists (ADR-010 \u00a75)",
+      "size_bytes": 748370
+    },
+    "apk_debug": {
+      "name": "aurelius-2.0.0-rc1-debug.apk",
+      "sha256": "d02bf91494f94abb5176685baea19b6e788dbd5c92d0df50c4bfde14d00c7956",
+      "signing": "debug (C=US, O=Android, CN=Android Debug)",
+      "size_bytes": 831637
+    }
+  },
+  "candidate_version": "2.0.0-rc1",
+  "consistent": true,
+  "face": "aurelius",
+  "identity": {
+    "compileSdk": 36,
+    "minSdk": 36,
+    "package": "com.xsytrance.aurelius",
+    "targetSdk": 36,
+    "versionCode": 2,
+    "versionName": "2.0.0-rc1",
+    "wff_version": 4
+  },
+  "problems": [],
+  "publication_status": "not published"
+}

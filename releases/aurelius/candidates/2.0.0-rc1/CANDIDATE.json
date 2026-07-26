@@ -1,0 +1,137 @@
+{
+  "approval_id": "APPROVAL-0005",
+  "approval_state": {
+    "architecture_review": "pending",
+    "note": "rc1 is NOT promoted to approved goldens; field-tourbillon-mk2-r2 remains the active approved golden",
+    "owner": "proposed"
+  },
+  "artifacts": {
+    "aab": {
+      "contains_dex": false,
+      "name": "aurelius-2.0.0-rc1.aab",
+      "role": "distribution candidate (Play requires a Wear OS app bundle for watch faces)",
+      "sha256": "ff61ca19e9c084089306ec95b0dc372d779a0ad00c482b3f6d6b3414d2c6bcf7",
+      "signing": "unsigned \u2014 no upload key exists (ADR-010 \u00a75)",
+      "size_bytes": 748370
+    },
+    "apk_debug": {
+      "name": "aurelius-2.0.0-rc1-debug.apk",
+      "role": "sideload / physical device testing only",
+      "sha256": "d02bf91494f94abb5176685baea19b6e788dbd5c92d0df50c4bfde14d00c7956",
+      "signing": "debug (Android Debug certificate)",
+      "size_bytes": 831637
+    }
+  },
+  "build_commands": {
+    "candidate": "tools/build_candidate.sh --clean --out <dir>",
+    "studio_regenerate": "blender -b -P scripts/export_rc1_layers.py && python3 scripts/finish_rc1_exports.py",
+    "verify": "python3 tools/verify_candidate.py aurelius --version 2.0.0-rc1 --aab <aab> --apk <apk> --write-manifest"
+  },
+  "channel": "candidates",
+  "compile_sdk": 36,
+  "consumer_commit": "399ba123bbb13d2272e02764e279a14718e52163",
+  "device_evidence": {
+    "procedure": "docs/reports/PHASE_4_AURELIUS_RELEASE_READINESS.md",
+    "required_before_checkpoint_b": true,
+    "status": "BLOCKED \u2014 no Galaxy Watch7 reachable during this session"
+  },
+  "evidence": {
+    "aod_luminance": "docs/reports/evidence/phase-4/aurelius/aod/",
+    "approval_record": "watchfaces/aurelius/visual/approvals/APPROVAL-0005-field-tourbillon-mk2-rc1.json",
+    "baseline": "docs/reports/PHASE_4_BASELINE.md",
+    "policy_audit": "docs/reports/PHASE_4_POLICY_AUDIT.md",
+    "wear": "docs/reports/evidence/phase-4/aurelius/wear/"
+  },
+  "face": "aurelius",
+  "final_review_status": "pending Checkpoint B",
+  "goldens": {
+    "previous_approved_aod": "2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936",
+    "previous_approved_normal": "7fd2cf63607e2aa6ef53d0443c44e16885284705d5f4336602aa3ce2526a556e",
+    "proposed_aod": "3e340f4379e1ca8462071761c8c46b8e0e292a7614ac9a2ccde7454a6af934aa",
+    "proposed_normal": "23e1d8e83f642d751ec3ad0c7cf1037faf8359b87ed31288a359a09d81c1d790"
+  },
+  "immutable_prior_release": {
+    "path": "releases/aurelius/current/aurelius.apk",
+    "sha256": "844b9c430f65e0dfaec88604175f1345b4173d647496de4b4ed74359ccfdbcc2",
+    "state": "untouched by this candidate",
+    "version_code": 1,
+    "version_name": "1.0"
+  },
+  "inventory_sha256": "1ec66797d1f4fdbf123e68240662ec256f056e8429941871e89cf675310359ce",
+  "inventory_snapshot": "watchfaces/aurelius/visual/inventories/versions/field-tourbillon-mk2-rc1.json",
+  "known_limitations": [
+    "no owner wear sessions recorded yet \u2014 Checkpoint B requires three",
+    "no physical Watch7 validation for rc1 \u2014 no device was reachable",
+    "AOD panel capture remains unavailable on this hardware",
+    "battery impact is anecdotal, not measured",
+    "tested on one device model only (Galaxy Watch7 44 mm)",
+    "Cycles studio re-renders are not byte-deterministic; committed export bytes are canonical",
+    "Play developer account status (TEST-1) unresolved \u2014 may impose a 14-day closed-test gate before public launch"
+  ],
+  "licensing_provenance": {
+    "asset_licenses": "docs/asset-licenses.json (28 audited entries)",
+    "derived_assets": "docs/derived-asset-provenance.json",
+    "notices": "THIRD_PARTY_NOTICES/",
+    "open_owner_action": "AI-model licence position for commercial sale of generated artwork remains unresolved (docs/LICENSING.md)",
+    "typeface": "Rajdhani Bold, SIL OFL-1.1"
+  },
+  "min_sdk": 36,
+  "package": "com.xsytrance.aurelius",
+  "policy_audit": {
+    "date_checked": "2026-07-26",
+    "path": "docs/reports/PHASE_4_POLICY_AUDIT.md",
+    "unresolved": [
+      "TEST-1 Play developer account status"
+    ]
+  },
+  "product": "AURELIUS \u2014 Field Tourbillon Mk II",
+  "publication_status": "not published",
+  "reproducibility": {
+    "aab_byte_identical": true,
+    "apk_byte_identical": true,
+    "method": "two clean builds from the documented environment",
+    "note": "both artifacts reproduced byte-for-byte across two independent --clean builds; no non-deterministic field needed explaining"
+  },
+  "schema": "agenor.release-candidate/1",
+  "signing": {
+    "aab": "unsigned; Play App Signing would hold the app signing key and a developer-held RSA 2048+ upload key is a later, separately authorised operation",
+    "apk": "debug certificate, sideload only",
+    "policy": "ADR-010 \u00a75",
+    "state": "no production signing material exists"
+  },
+  "studio_generation": "CommandSatin_ReservePrecision",
+  "studio_metadata_commit": "97ba0f1ceeee721a7a2ec0521603bd61935d036d",
+  "studio_producing_commit": "04015886dbee5cd17b66c4627f822aef3db73d16",
+  "studio_repo": "xsytrance/AGENOR-Horology",
+  "target_sdk": 36,
+  "toolchain": {
+    "agp": "9.2.1",
+    "android_sdk": "36",
+    "blender": "4.5.11 LTS (studio)",
+    "build_tools": "36.0.0",
+    "gradle": "9.6.1 (committed wrapper)",
+    "jdk": "Temurin 21.0.11+10 LTS",
+    "memory_footprint": "1.7.0",
+    "pillow": "12.1.1",
+    "python": "3.14.4",
+    "wff_validator": "google/watchface, max supported format 5"
+  },
+  "validation": {
+    "bundle_contains_dex": false,
+    "identity_consistent_across_toml_gradle_manifest_xml_artifacts": true,
+    "memory_footprint": "PASS (ambient 10 MB / active 100 MB limits)",
+    "packaged_xml_matches_source": true,
+    "wff_validator": "PASS (v4, against the XML extracted from the APK)",
+    "wo_p7_aod_luminance": {
+      "evidence": "docs/reports/evidence/phase-4/aurelius/aod/wo_p7_luminance.json",
+      "limit_pct": 15.0,
+      "max_pct": 3.972,
+      "result": "PASS",
+      "samples": 144
+    }
+  },
+  "version_code": 2,
+  "version_name": "2.0.0-rc1",
+  "visual_version": "field-tourbillon-mk2-rc1",
+  "wff_version": 4
+}
