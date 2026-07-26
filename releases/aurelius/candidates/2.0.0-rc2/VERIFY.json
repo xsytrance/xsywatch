@@ -1,0 +1,85 @@
+{
+  "artifacts": {
+    "aab": {
+      "contains_dex": false,
+      "name": "aurelius-2.0.0-rc2.aab",
+      "sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
+      "signing": "unsigned \u2014 no upload key exists (ADR-010 \u00a75)",
+      "size_bytes": 748287
+    },
+    "apk_debug": {
+      "name": "aurelius-2.0.0-rc2-debug.apk",
+      "sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+      "signing": "debug (C=US, O=Android, CN=Android Debug)",
+      "size_bytes": 831529
+    }
+  },
+  "candidate_version": "2.0.0-rc2",
+  "consistent": true,
+  "dex_gate": {
+    "allowlist": [
+      "Lcom/xsytrance/aurelius/R;",
+      "Lcom/xsytrance/aurelius/R$*;"
+    ],
+    "deleted": [
+      "mergeDexRelease/classes.dex"
+    ],
+    "dex_dir": "/home/xsyprime/xsywatch/watchfaces/aurelius/app/build/intermediates/dex/release",
+    "dex_files_found": 1,
+    "gate": "dex-allowlist",
+    "package": "com.xsytrance.aurelius",
+    "passed": true,
+    "pre_strip_inventory": [
+      {
+        "class_count": 6,
+        "classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "dexdump_agrees": true,
+        "dexdump_classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "disallowed": [],
+        "path": "mergeDexRelease/classes.dex",
+        "sha256": "3786354dbeaf659781e0bcba69c8e1e5c9b559463c3035bacd9723d4b7aa8d48",
+        "size_bytes": 3076
+      }
+    ],
+    "violations": []
+  },
+  "dex_state": {
+    "aab": [],
+    "apk_debug": [
+      "classes.dex",
+      "classes2.dex"
+    ],
+    "apk_policy": "the device-test APK may retain the generated R dex; only the distributed bundle must be dex-free"
+  },
+  "face": "aurelius",
+  "identity": {
+    "compileSdk": 36,
+    "minSdk": 36,
+    "package": "com.xsytrance.aurelius",
+    "targetSdk": 36,
+    "versionCode": 3,
+    "versionName": "2.0.0-rc2",
+    "wff_version": 4
+  },
+  "manifest_permissions": {
+    "apk": [],
+    "policy": "minimum verified set; no unqualified BODY_SENSORS on an API-36-only package and no sensitive permission without a backing feature",
+    "source": []
+  },
+  "problems": [],
+  "publication_status": "not published"
+}

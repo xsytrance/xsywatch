@@ -1,0 +1,41 @@
+{
+  "allowlist": [
+    "Lcom/xsytrance/aurelius/R;",
+    "Lcom/xsytrance/aurelius/R$*;"
+  ],
+  "deleted": [
+    "mergeDexRelease/classes.dex"
+  ],
+  "dex_dir": "/home/xsyprime/xsywatch/watchfaces/aurelius/app/build/intermediates/dex/release",
+  "dex_files_found": 1,
+  "gate": "dex-allowlist",
+  "package": "com.xsytrance.aurelius",
+  "passed": true,
+  "pre_strip_inventory": [
+    {
+      "class_count": 6,
+      "classes": [
+        "Lcom/xsytrance/aurelius/R$drawable;",
+        "Lcom/xsytrance/aurelius/R$font;",
+        "Lcom/xsytrance/aurelius/R$integer;",
+        "Lcom/xsytrance/aurelius/R$raw;",
+        "Lcom/xsytrance/aurelius/R$xml;",
+        "Lcom/xsytrance/aurelius/R;"
+      ],
+      "dexdump_agrees": true,
+      "dexdump_classes": [
+        "Lcom/xsytrance/aurelius/R$drawable;",
+        "Lcom/xsytrance/aurelius/R$font;",
+        "Lcom/xsytrance/aurelius/R$integer;",
+        "Lcom/xsytrance/aurelius/R$raw;",
+        "Lcom/xsytrance/aurelius/R$xml;",
+        "Lcom/xsytrance/aurelius/R;"
+      ],
+      "disallowed": [],
+      "path": "mergeDexRelease/classes.dex",
+      "sha256": "3786354dbeaf659781e0bcba69c8e1e5c9b559463c3035bacd9723d4b7aa8d48",
+      "size_bytes": 3076
+    }
+  ],
+  "violations": []
+}
