@@ -9,7 +9,7 @@
   "candidate_version": "2.0.0-rc2",
   "checker": "python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2",
   "face": "aurelius",
-  "note": "A passing checker means every claim here is TRUE, not that the candidate is publishable. This record honestly reports eight blocked or proposed gates.",
+  "note": "A passing checker means every claim here is TRUE, not that the candidate is publishable. This record honestly reports nine blocked or proposed gates. Two of them — installed-APK-hash-verified and installed-resource-lineage-verified — carry complete, passing evidence and are held open only by the device-validated prerequisite; see docs/reports/PHASE_4_AURELIUS_RELEASE_READINESS.md for why that prerequisite was not relaxed.",
   "publication_status": "not published",
   "schema": "agenor.release-readiness/1",
   "state_values": [
@@ -45,9 +45,11 @@
       "state": "complete"
     },
     "device-validated": {
-      "detail": "no Galaxy Watch7 reachable; adb reported zero devices throughout. The byte-lineage half of the qualitative-behavioral-lineage policy is complete; the on-panel half is not.",
+      "detail": "a device session DID occur on 2026-07-26 (wireless adb, Watch7 SM-L310, API 36) and four rows PASS: install with upgrade continuity, installed-APK pullback, installed-resource lineage, and the permission A/B. The gate stays blocked because the Checkpoint B visual matrix was not run — AOD at actual scale, ten sleep/wake cycles, the date/reserve/hands/gears/cage/parallax rows, Command Satin legibility at actual scale, crash/ANR review and touch-inertness. No DEVICE_TEST_RESULTS.md exists for rc2, so this gate has no basis to close.",
       "evidence": [
-        "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md"
+        "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md",
+        "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md",
+        "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
       ],
       "state": "blocked"
     },
@@ -61,12 +63,19 @@
       "state": "complete"
     },
     "installed-APK-hash-verified": {
-      "detail": "requires the device: the installed APK must be pulled back and hashed",
-      "state": "blocked"
+      "detail": "EVIDENCE COMPLETE AND PASSING: the APK pulled back from /data/app on the Watch7 hashes byte-identical to the candidate, so the artifact on the panel is the artifact in the repository and not a re-signed or re-packaged variant. Held at `proposed` rather than `complete` solely because the gate model requires device-validated first, and the visual-matrix half of that gate has not been run. Nothing further is needed from the device for THIS row.",
+      "evidence": [
+        "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
+      ],
+      "state": "proposed",
+      "value": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc"
     },
     "installed-resource-lineage-verified": {
-      "detail": "requires the device: packaged resources must be verified from the installed APK",
-      "state": "blocked"
+      "detail": "EVIDENCE COMPLETE AND PASSING: of the 60 inventory resources extracted from the INSTALLED APK, 58 are byte-identical to repository source and 0 drifted. The 2 non-identical entries are both explained and neither is drift — res/xml/watch_face_info.xml is compiled to binary AXML at packaging, and res/values/integers.xml is folded into resources.arsc. res/raw/watchface.xml, the file that defines every pixel of the face, is byte-identical. Held at `proposed` for the same prerequisite reason as installed-APK-hash-verified.",
+      "evidence": [
+        "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
+      ],
+      "state": "proposed"
     },
     "owner-pixel-approved": {
       "detail": "APPROVAL-0005 owner.status is proposed. The craftsmanship DIRECTION was approved at Checkpoint A; final pixel acceptance requires the wear evidence the review made a condition.",
@@ -83,14 +92,16 @@
       "state": "blocked"
     },
     "permissions-verified": {
-      "detail": "ACTIVITY_RECOGNITION and BODY_SENSORS removed on static and documentary grounds and rc2 declares no permission, but whether the WFF runtime supplies [HEART_RATE] without one is UNPROVEN: it needs the Galaxy Watch7 and no device was reachable. Static half complete, empirical half blocked.",
+      "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+      "detail": "SETTLED EMPIRICALLY on the Galaxy Watch7. The previously UNPROVEN half is now measured: rc2 declares no permission and still receives live heart rate. The balance wheel is driven at HR/60 Hz, so its frequency reads back the rate the runtime handed the face — 1.7300 Hz and 1.7350 Hz over two runs (103.8 and 104.1 bpm), against a documented 70.0 bpm fallback, matching the watch's own live reading to within 0.2 bpm. dumpsys shows the WFF runtime, not this package, holding the sensor connection; the face declares hasCode=false and could not open one. The package dump reports zero requested permissions, so nothing could have persisted across the in-place upgrade from the build that once declared BODY_SENSORS. android.permission.health.READ_HEART_RATE is deliberately NOT adopted; Variant B is retained unshipped for repeatability. The two outstanding HR recordings (post-exertion tracking, off-wrist fallback) are behavioural rows of device-validated, not permission questions, and are not claimed here.",
       "evidence": [
-        "docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md"
+        "docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md",
+        "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
       ],
-      "state": "blocked"
+      "state": "complete"
     },
     "policy-ready": {
-      "detail": "TEST-1 account facts unresolved; privacy policy not yet hosted at https://x1c7.com/privacy/aurelius; support email and response commitment not chosen. Depends on permissions-verified.",
+      "detail": "its permissions-verified prerequisite is now satisfied, so the declared-permission position for the listing is settled (none). Still blocked on owner-only inputs: the four TEST-1 account facts, a privacy policy actually hosted at https://x1c7.com/privacy/aurelius, and a chosen support email plus response commitment. Price remains a recorded recommendation, not the owner's decision.",
       "evidence": [
         "docs/reports/PHASE_4_POLICY_AUDIT.md",
         "docs/reports/PHASE_4_TEST1_READINESS.md"
@@ -98,7 +109,7 @@
       "state": "blocked"
     },
     "publishable": {
-      "detail": "interlocked: every required predecessor must be complete first. Eight are not.",
+      "detail": "interlocked: every required predecessor must be complete first. All five are not — architecture-approved, policy-ready, signing-authorized, owner-pixel-approved and owner-wear-complete.",
       "state": "blocked"
     },
     "signing-authorized": {
@@ -112,10 +123,7 @@
   "summary": {
     "blocked": [
       "device-validated",
-      "installed-APK-hash-verified",
-      "installed-resource-lineage-verified",
       "owner-wear-complete",
-      "permissions-verified",
       "policy-ready",
       "publishable",
       "signing-authorized"
@@ -123,10 +131,13 @@
     "complete": [
       "assembled",
       "consumer-lineage-verified",
-      "dex-gate-passed"
+      "dex-gate-passed",
+      "permissions-verified"
     ],
     "proposed": [
       "architecture-approved",
+      "installed-APK-hash-verified",
+      "installed-resource-lineage-verified",
       "owner-pixel-approved"
     ]
   },

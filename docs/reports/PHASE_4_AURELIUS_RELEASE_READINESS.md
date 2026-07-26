@@ -953,3 +953,113 @@ The face is installed but **not yet selected in the picker**, so the
 permission A/B comparison, the visual matrix and the three wear sessions
 cannot proceed. Owner launch inputs remain unresolved and price remains a
 recommendation only.
+
+
+---
+
+# READINESS reconciliation — the record catches up with the device session
+
+**Date:** 2026-07-26
+**Status:** record corrected; **acceptance still blocked**
+**Candidate:** 2.0.0-rc2 — **artifact bytes unchanged**, no rebuild, no rc3
+
+## Why this was needed
+
+The device session and the permission test landed as evidence commits, but
+`READINESS.json` was never re-derived from them. It still asserted:
+
+> device-validated: *"no Galaxy Watch7 reachable; adb reported zero devices
+> throughout"*
+
+That was **false** at the moment it was read. A watch had been reached, the
+face had run on the panel, and four rows of the physical matrix had passed.
+`DEVICE_EVIDENCE_BLOCKER.md` carried the same false claim.
+
+The readiness checker did not catch this, and could not have. It verifies
+that the record is **internally honest** — that no gate claims more than its
+evidence supports. It has no mechanism to notice a gate claiming *less* than
+its evidence supports, or to notice that a `detail` string has been overtaken
+by events. Under-claiming is invisible to a fail-closed gate. That is a real
+limitation of the design and is recorded here rather than papered over.
+
+## What moved
+
+| Gate | Was | Now | Why |
+|---|---|---|---|
+| `permissions-verified` | blocked | **complete** | the empirical half is no longer unproven — measured on the panel |
+| `installed-APK-hash-verified` | blocked | **proposed** | evidence complete and passing; held only by its prerequisite |
+| `installed-resource-lineage-verified` | blocked | **proposed** | evidence complete and passing; held only by its prerequisite |
+| `device-validated` | blocked, *false reason* | blocked, **true reason** | session happened; the visual matrix did not |
+| `policy-ready` | blocked, "depends on permissions-verified" | blocked, owner inputs only | that dependency is now satisfied |
+| `publishable` | "Eight are not" | five named predecessors | the count was stale |
+
+**3/13 → 4/13 complete, 0 inconsistencies.**
+
+## The dependency I deliberately did not relax
+
+`installed-APK-hash-verified` and `installed-resource-lineage-verified` both
+carry complete, passing evidence. Nothing further is needed from the device
+for either. They are nonetheless **not** `complete`, because `REQUIRES` makes
+them depend on `device-validated`, which the unrun visual matrix keeps
+blocked.
+
+There is a defensible argument that this dependency is modelled backwards:
+pulling the installed APK back is a *subset* of the physical matrix, so
+making it require the whole matrix means a sub-item cannot close until its
+own superset does. Relaxing it to depend on "a device session occurred"
+rather than "the full matrix passed" would let both gates close honestly and
+would take the count to 6/13.
+
+I did not make that change. Editing the gate graph immediately before an
+architecture re-review — in a direction that makes the numbers look
+better — is exactly the kind of move this phase's tooling exists to prevent.
+It is raised here as a question for the reviewer, not taken as a liberty.
+Both gates record `EVIDENCE COMPLETE AND PASSING` in their `detail` so the
+distinction is not lost.
+
+## What `permissions-verified: complete` does and does not claim
+
+It claims the permission question is settled: rc2 declares nothing, receives
+live heart rate anyway, and `android.permission.health.READ_HEART_RATE` is
+correctly **not** adopted. The measurement is frequency-domain and therefore
+not a matter of interpretation — 1.7300 / 1.7350 Hz against a 70.0 bpm
+fallback that would read 1.1667 Hz.
+
+One residual was considered and dismissed on evidence: the observation was
+made after an in-place upgrade over a build that once declared
+`BODY_SENSORS`, so a persisted grant was a fair thing to suspect. The package
+dump reports **zero requested permissions**, and a package that declares
+nothing has nothing to hold; the sensor connection is owned by the WFF
+runtime process. Nothing carried over.
+
+It does **not** claim the two outstanding HR recordings — tracking after
+exertion, and off-wrist fallback to exactly 70.0 bpm. Those are behavioural
+rows of `device-validated` and are recorded there as outstanding.
+
+## Verification
+
+| Gate | Result |
+|---|---|
+| readiness checker | **4/13 complete, 0 inconsistencies** |
+| readiness tests | **38 passed** |
+| engine tests | **189 passed** (1 skipped) |
+| visual + lineage tests | **67 passed** |
+| deterministic generation | committed XML matches |
+| resource inventory | clean, 60 resources |
+| goldens | normal + AOD byte-identical, bound to APPROVAL-0005 |
+| `tools/validate.py` | **0 errors**, 13 warnings |
+
+`tests/engine/test_candidate_readiness.py` gained the two new evidence paths
+in its scratch-repo fixture, without which the positive control
+(`test_the_committed_record_is_honest`) would fail on missing placeholders.
+No test assertion was weakened.
+
+Artifacts untouched: aab `1a2ae138…`, apk `939d2b44…`.
+`releases/aurelius/current/` untouched at `844b9c43…`.
+
+## Still blocked
+
+Unchanged by this commit: the visual matrix, three wear sessions, owner
+pixel acceptance of APPROVAL-0005, ChatGPT re-review, the four TEST-1 facts,
+a hosted privacy policy, a support address, and the price decision.
+`signing-authorized` remains blocked by design under ADR-010 §5.

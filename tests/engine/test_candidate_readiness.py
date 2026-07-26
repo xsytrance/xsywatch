@@ -61,6 +61,10 @@ class ReadinessGateTests(unittest.TestCase):
                     "docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md",
                     "docs/reports/evidence/phase-4/aurelius/rc2/"
                     "DEVICE_EVIDENCE_BLOCKER.md",
+                    "docs/reports/evidence/phase-4/aurelius/rc2/"
+                    "INSTALL_AND_LINEAGE.md",
+                    "docs/reports/evidence/phase-4/aurelius/rc2/"
+                    "PERMISSION_TEST.md",
                     "watchfaces/aurelius/visual/approvals/"
                     "APPROVAL-0005-field-tourbillon-mk2-rc1.json"):
             p = self.root / rel
