@@ -632,3 +632,129 @@ This is precisely the split ADR-009 §6a now mandates for a
 `qualitative-behavioral-lineage` face.
 
 Device state restored afterwards; nothing promoted by the test.
+
+## 25. Final approval and promotion (2026-07-26)
+
+Phase 3 received **final product-owner pixel acceptance** and **final
+ChatGPT architecture approval** — `docs/reports/PHASE_3_FINAL_REVIEW.md`,
+review commit `28008abe`, verdict **APPROVED FOR PROMOTION AND MERGE**.
+`APPROVAL-0004` / `field-tourbillon-mk2-r2` is accepted as rendered in
+normal and AOD, and becomes the first premium Aurelius visual generation
+to replace `field-tourbillon-v1` as the active golden baseline.
+
+### Promotion commits
+
+| Repository | Role | Commit |
+|---|---|---|
+| AGENOR-Horology | r2 producing commit (unchanged) | `c8c29dc` |
+| AGENOR-Horology | pre-promotion metadata stamping | `5cf8f04` |
+| AGENOR-Horology | **approval metadata stamping** | **`67b68cb`** |
+| AGENOR-Horology | studio report | `53b1943` |
+| AGENOR-Horology | **merge into `main`** | **`cd67186`** |
+| xsywatch | **consumer promotion** | **`321dde5`** |
+
+Studio-first order was observed: the approved studio metadata was on
+`AGENOR-Horology/main` before the consumer synchronized against it.
+
+### Studio promotion was metadata-only, and proven so
+
+`67b68cb` moves all 50 r2 export lifecycles from `candidate` to
+`approved` and changes nothing else:
+
+- the metadata document with every `lifecycle` field stripped hashes
+  identically before and after (`6e9678d5…`);
+- all 50 declared export checksums are unchanged and each still verifies
+  against its file on disk (50/50);
+- all 99 export PNGs under `exports/aurelius_mk2/` are byte-identical;
+- `source_commit` and `generation` are unchanged;
+- the diff is 50 insertions and 50 deletions in one file.
+
+### Consumer synchronization
+
+Performed with the hardened importer against the committed studio
+metadata, not by hand. It resolved producing commit `c8c29dc` (unchanged)
+and metadata commit `67b68cb`, and re-verified all 50 exports against the
+producing commit's Git object snapshot.
+
+`watchfaces/aurelius/engine/handoff.json` now records the unchanged
+producing commit, the final metadata-stamping commit and 50 `approved`
+lifecycles. **No resource bytes changed**: all 60 consumer resources are
+byte-identical, and across all 50 assets the only differing field is
+`lifecycle` — `sha256`, `destination`, `consumer_component`,
+`source_commit` and `generation` are all unchanged.
+
+### Golden promotion
+
+`states.toml` sets `approved_version = "field-tourbillon-mk2-r2"` and
+clears `proposed_version`. The goldens were **produced by
+`tools/render_reference.py`, not copied**, and reproduce byte-identically
+to the hashes `APPROVAL-0004` had already bound:
+
+| Golden | sha256 |
+|---|---|
+| normal | `7fd2cf63607e2aa6ef53d0443c44e16885284705d5f4336602aa3ce2526a556e` |
+| AOD | `2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936` |
+
+`APPROVAL-0004` now records owner **AGENOR, approved 2026-07-26** and
+`architecture_review.status = approved` bound to review commit
+`28008abe`. Every other field in the record is unchanged, verified by
+hashing the record with `owner` and `architecture_review` excluded.
+
+### Preserved
+
+`field-tourbillon-v1` goldens; `APPROVAL-0001` … `APPROVAL-0003`; the
+mk2, r1 and r2 candidate directories; all four inventory snapshots; the
+mk2, r1 and r2 physical-device evidence; the WARBIRD-class fixtures; the
+complete Bfont investigation; and every review and correction document.
+`releases/aurelius/current/` is unmodified and the immutable Phase 1
+release remains `844b9c43…`.
+
+### One non-mechanical change, disclosed
+
+The final review permitted merge without further re-review *provided the
+promotion is mechanical*. One change was not, and is recorded here
+rather than buried.
+
+Promotion exposed a real gap in the lineage gate. `tools/validate.py`
+hash-enforced only `goldens/<approved_version>`, so the moment a
+generation was superseded its bytes became **silently mutable** — a
+superseded golden could be corrupted or swapped with nothing to catch it.
+That is the same "same name, wrong bytes" blind spot that let the WARBIRD
+contamination survive an entire phase, and it directly undercuts the
+review's own instruction to preserve v1 and APPROVAL-0001 as evidence:
+they were preserved in the sense of *present*, but no longer *verified*.
+
+It surfaced because deliberate-failure fixtures 6 and 7 — which tamper
+with the v1 goldens and with APPROVAL-0001 — started failing the moment
+v1 stopped being the active version. They had been passing for a reason
+that promotion removed.
+
+The gate now checks **every** committed golden set against the record
+that approved it, active or superseded, and
+`test_superseded_golden_change` states that requirement directly so it
+cannot be lost the next time `approved_version` moves. The new fixture
+fails against the old validator and passes against the new one. Visual
+suite 37 → 38 tests.
+
+### Final verification
+
+| Gate | Result |
+|---|---|
+| Engine tests | **95/95** |
+| Visual/lineage tests | **38/38** (37 + the new superseded-golden fixture) |
+| Date-aperture proof | 62 renders, 0 violations, worst margin 3.07 px |
+| Handoff/import lineage tests | included in the engine suite, all green |
+| Phase 1 release-workflow fixtures | **10/10** |
+| Deterministic generation | OK — zero XML drift |
+| Resource inventory `--check` | clean, 60 resources |
+| Reference render vs approved golden | byte-identical, both states |
+| All-ten Gradle build | **10/10 PASS** |
+| Official WFF validator | PASS (v4) |
+| Memory-footprint evaluator | PASS |
+| `tools/validate.py` | 0 errors, 13 documented warnings |
+| `git diff --check` | clean |
+| Immutable Phase-1 release | `844b9c43…` unchanged |
+| Rebuilt candidate APK | `5a1271ab…` — reproduces the tested APK exactly |
+
+Phase 3 is closed. Phase 4 is not begun and awaits scope definition by
+AGENOR and ChatGPT.
