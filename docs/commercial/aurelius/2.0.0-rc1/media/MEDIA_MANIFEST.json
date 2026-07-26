@@ -1,0 +1,28 @@
+{
+  "candidate_version": "2.0.0-rc1",
+  "face": "aurelius",
+  "files": {
+    "aod_480.png": "acf2d5ecdbc9f4ffc8f6bcdd83173687850599d2f2cfa6e98457e32cd738ddc0",
+    "craftsmanship_normal_bridge.png": "639b3abd8b2e47987a1935651060b1769d8b4cd0b8e313c4ae8ebef94b32bfca",
+    "craftsmanship_normal_cage.png": "1635e00b4c1ae3256f2b9a6e956899eb27ec153000877041e764cca422456f22",
+    "craftsmanship_normal_reserve.png": "7810720c4ebeadf9b7d0273bfc48392da12d2fb8b15c438ba32cdf4efa2ea4ad",
+    "hero.png": "9c4e3e85022fafbe1ee088aaff38e3bef27ac9e046e5a4eebfc1d99f3d3ee788",
+    "normal_480.png": "d93d1f05abfe08a2187d0ed9dcf53107c9951c460de7bf4a0d59af2e94cde681",
+    "normal_vs_aod.png": "e526a30f51805b85847476cfc3d93170ee0259dbae108c1a9e9abb0d2e09b66b",
+    "play/listing_icon_512.png": "ac39fc9c03125e8c94dae64057f29b0ca00f8873120765dab8720c3b78f5ff83",
+    "play/screenshot_1_normal.png": "d93d1f05abfe08a2187d0ed9dcf53107c9951c460de7bf4a0d59af2e94cde681",
+    "play/screenshot_2_aod.png": "acf2d5ecdbc9f4ffc8f6bcdd83173687850599d2f2cfa6e98457e32cd738ddc0",
+    "promotional_not_play/README.md": "2a76776fc5e5b2ba512b13d667320d6efd3da751169128bba9bc88fd4bd262ec",
+    "promotional_not_play/device_context.png": "89a9ec40944e127a7f2f4bd2d6644e8efa100c000b4762720d2c225c05fa083e",
+    "promotional_not_play/vertical_1080x1920.png": "3972bfd4211c7e96f79b5f7283b6c22e40b86b92a9c4966a2ab135834f3f4826"
+  },
+  "play_requirements": {
+    "checked": "2026-07-26",
+    "icon": "WO-G4: face centred and scaled to touch the asset edges, nothing added",
+    "note": "exact icon pixel dimensions could not be confirmed from an official page; 512x512 is produced as the common convention and MUST be confirmed before submission \u2014 see PHASE_4_POLICY_AUDIT.md MEDIA-1",
+    "screenshots": "WO-G6: 1:1, >=384x384, watch face only, no device frames, no added text/graphics/background"
+  },
+  "reproduce": "python3 tools/build_media.py aurelius --version 2.0.0-rc1",
+  "source": "derived from committed reference renders and runtime resources; no hand-edited artwork",
+  "visual_version": "field-tourbillon-mk2-rc1"
+}
