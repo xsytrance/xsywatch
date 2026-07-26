@@ -177,13 +177,18 @@
   ],
   "rationale": "Aurelius Field Tourbillon Mk II revision r2. Corrects the two composition defects disclosed by r1 device testing: the date aperture now contains every day 1..31 with >=2 px clear margin (proved over the full value domain, not sampled), and the occluded lower engraving is removed leaving only the restrained AURELIUS signature. Studio producing commit c8c29dc, metadata stamping commit 5cf8f04; export delta exactly bg.png + bg_aod.png. Zero XML/spec delta retained.",
   "owner": {
-    "status": "proposed",
-    "by": "Design, typeface and both corrections are owner-directed (approve with changes, Phase-3 r1 review); final normal/AOD pixel acceptance of this revision is pending",
-    "date": "2026-07-25"
+    "status": "approved",
+    "by": "AGENOR (product owner)",
+    "date": "2026-07-26",
+    "decision": "APPROVAL-0004 / field-tourbillon-mk2-r2 accepted as rendered in normal and AOD modes. The Olive Instrument direction with Black Titanium Command restraint, the audited OFL-1.1 Rajdhani Bold glyph and engraving source, the enlarged date aperture and the removal of the occluded lower engraving are all accepted. This is the first premium Aurelius visual generation approved to replace field-tourbillon-v1 as the active golden baseline.",
+    "history": "Design, typeface and both r2 corrections were owner-directed (approve with changes, Phase-3 r1 review, 2026-07-25); final pixel acceptance granted 2026-07-26 after the focused Watch7 r2 evidence."
   },
   "architecture_review": {
-    "status": "pending",
-    "ref": "Phase-3 final re-review"
+    "status": "approved",
+    "ref": "docs/reports/PHASE_3_FINAL_REVIEW.md",
+    "review_commit": "28008abea09058fa2b1d25d70c2ae8c35756304d",
+    "date": "2026-07-26",
+    "verdict": "APPROVED FOR PROMOTION AND MERGE — no further architecture re-review required provided promotion is mechanical and every gate remains green."
   },
   "device_evidence": "docs/reports/evidence/phase-3/aurelius/r2/"
 }

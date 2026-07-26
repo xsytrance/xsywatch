@@ -81,13 +81,19 @@ accelerometer_angle_y = 0
 [goldens]
 normal_state = "normal_hero"
 aod_state = "aod"
-approved_version = "field-tourbillon-v1"
+approved_version = "field-tourbillon-mk2-r2"
 # A proposed (not yet owner-accepted) visual generation. While set, the
 # deterministic re-render gate compares against
 # candidates/<proposed_version>/ bound to a `proposed` approval record;
 # approved goldens stay frozen until the record flips to approved and the
 # candidates are promoted (validated by tools/validate.py).
-proposed_version = "field-tourbillon-mk2-r2"
+#
+# Cleared 2026-07-26: field-tourbillon-mk2-r2 received final product-owner
+# pixel acceptance and final architecture approval (APPROVAL-0004,
+# docs/reports/PHASE_3_FINAL_REVIEW.md) and was promoted to the approved
+# golden above. field-tourbillon-v1 goldens, and the mk2/r1/r2 candidates
+# with APPROVAL-0001..0003, are preserved as history.
+# proposed_version = <unset — no generation currently proposed>
 
 # ---------------------------------------------------------------------------
 # Date-aperture contract (revision field-tourbillon-mk2-r2 onward).

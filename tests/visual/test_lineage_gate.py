@@ -228,6 +228,41 @@ class LineageGateTests(unittest.TestCase):
         self.assertTrue(any("does not match approved record" in e
                             for e in errs), errs)
 
+    # -- 7b. superseded goldens stay frozen after promotion -----------------
+
+    def test_superseded_golden_change(self):
+        """Promotion supersedes a generation but does not release its
+        bytes. After field-tourbillon-mk2-r2 became the approved version,
+        the v1 goldens are historical evidence (ADR-009 §5) — tampering
+        with them must still fail even though they are no longer active.
+
+        Fixtures 6 and 7 above happen to exercise this too, because v1 is
+        now superseded; this one states the requirement directly so it
+        cannot be lost the next time approved_version moves."""
+        import tomllib
+        with open(self.sb.path("visual/states.toml"), "rb") as fh:
+            approved = tomllib.load(fh)["goldens"]["approved_version"]
+        superseded = sorted(
+            p.name for p in self.sb.path("visual/goldens").iterdir()
+            if p.is_dir() and p.name != approved)
+        self.assertTrue(superseded, "expected at least one superseded "
+                                    "golden set to be preserved")
+        for version in superseded:
+            with self.subTest(version=version):
+                target = self.sb.path(
+                    f"visual/goldens/{version}/normal.png")
+                original = target.read_bytes()
+                try:
+                    synthetic_warbird((480, 480)).save(target, "PNG")
+                    errs = self.run_check_visual()
+                    self.assertTrue(
+                        any("does not match approved record" in e
+                            for e in errs),
+                        f"tampering with superseded goldens/{version} "
+                        f"was not caught: {errs}")
+                finally:
+                    target.write_bytes(original)
+
     # -- 8. over-broad mask ---------------------------------------------------
 
     def test_overbroad_mask_rejected(self):

@@ -740,42 +740,60 @@ def check_visual(root: Path) -> None:
         check_visual_delta(root, face, records)
 
         # --- approved goldens require a matching approved record ----------
+        # Every committed golden set is checked, not only the currently
+        # active one. Promotion supersedes a generation but does not
+        # release its bytes: superseded goldens are preserved as evidence
+        # (ADR-009 §5), so they must stay verifiable against the record
+        # that approved them. Checking only `approved_version` would leave
+        # every historical set silently mutable the moment it was
+        # superseded — the same "same name, wrong bytes" blind spot that
+        # let the WARBIRD contamination survive a whole phase.
         gdir = vdir / "goldens" / approved_version
-        approved_recs = [r for r in records
-                         if r["visual_version"] == approved_version
-                         and r["owner"]["status"] == "approved"]
         if not gdir.is_dir():
             err(f"visual[{face}]: approved goldens missing: {gdir}")
-        elif not approved_recs:
-            err(f"visual[{face}]: goldens/{approved_version} exists with no "
-                f"owner-approved record in approvals/ (ADR-009 §5)")
-        else:
-            rec = approved_recs[-1]
+
+        goldens_root = vdir / "goldens"
+        golden_dirs = (sorted(p for p in goldens_root.iterdir() if p.is_dir())
+                       if goldens_root.is_dir() else [])
+        for gd in golden_dirs:
+            version = gd.name
+            active = version == approved_version
+            version_recs = [r for r in records
+                            if r["visual_version"] == version
+                            and r["owner"]["status"] == "approved"]
+            if not version_recs:
+                err(f"visual[{face}]: goldens/{version} exists with no "
+                    f"owner-approved record in approvals/ (ADR-009 §5)")
+                continue
+            rec = version_recs[-1]
             for kind in ("normal", "aod"):
-                gp = gdir / f"{kind}.png"
+                gp = gd / f"{kind}.png"
                 if not gp.exists():
                     err(f"visual[{face}]: missing golden {gp.name} in "
-                        f"{approved_version}")
+                        f"{version}")
                     continue
                 actual = sha256(gp)
                 recorded = rec["proposed_goldens"].get(kind)
                 if actual != recorded:
+                    scope = ("approved goldens" if active
+                             else f"superseded goldens ({version})")
                     err(f"visual[{face}]: {kind} golden hash {actual[:12]}… "
                         f"does not match approved record "
                         f"{rec['approval_id']} ({str(recorded)[:12]}…) — "
-                        f"approved goldens may not change without a new "
+                        f"{scope} may not change without a new "
                         f"approved record")
-            meta_p = gdir / "METADATA.json"
+            meta_p = gd / "METADATA.json"
             if meta_p.exists():
                 meta = json.loads(meta_p.read_text(encoding="utf-8"))
                 for kind in ("normal", "aod"):
                     mrec = meta.get("renders", {}).get(kind, {})
-                    gp = gdir / f"{kind}.png"
+                    gp = gd / f"{kind}.png"
                     if gp.exists() and mrec.get("sha256") != sha256(gp):
                         err(f"visual[{face}]: METADATA.json {kind} sha "
-                            f"disagrees with the committed golden bytes")
+                            f"disagrees with the committed golden bytes "
+                            f"({version})")
             else:
-                warn(f"visual[{face}]: goldens/{approved_version} has no "
+                warn(f"visual[{face}]: goldens/{version} has no "
                      f"METADATA.json")
 
         # --- committed inventory must be covered by some record -----------
