@@ -105,10 +105,11 @@ ship companion apps and complication packs, which this deliberately does
 not. A one-off purchase also keeps the data-safety declaration trivially
 true — no accounts, no subscriptions, nothing to collect.
 
-Worth knowing: **price cannot be changed from paid to free later.** Free →
-paid is impossible on Play, and paid → free is one-way. If there is any
-chance you want a free tier, that decision has to happen before the first
-publish, not after.
+Worth knowing: Google Play allows a **paid app to become free**, but that
+change is one-way — once the app is free, it cannot return to paid. An app
+first published as free also cannot later become paid. If there is any
+chance you want a permanently free edition, separate paid/free package, or
+other tiering strategy, decide that before first publication.
 
 ---
 
