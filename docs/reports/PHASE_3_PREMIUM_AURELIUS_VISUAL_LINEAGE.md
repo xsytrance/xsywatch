@@ -594,3 +594,41 @@ of just the two plates.
 Nothing promoted: `owner.status` proposed, `architecture_review` pending,
 `approved_version` still `field-tourbillon-v1`, `proposed_version` set to
 r2, all 50 lifecycles `candidate`, `goldens/` contains only v1.
+
+### Focused Watch7 closure for r2 (2026-07-26)
+
+Executed on the physical Galaxy Watch7 and recorded in
+`docs/reports/evidence/phase-3/aurelius/r2/DEVICE_TEST_RESULTS.md`.
+Every check required by the r1 review passed.
+
+| Check | Result |
+|---|---|
+| Upgrade continuity r1 → r2 | PASS — installed `base.apk` pulled back and hashed: `57dad013…` before, `5a1271ab…` after |
+| Live date inside the enlarged aperture | PASS — day `26` fully contained, min clear margin 2 px measured on device |
+| Aperture geometry device vs reference | PASS — **40 × 30 px in both** |
+| Frame integration at actual scale | PASS — no collision with gear or cage, hands unaffected |
+| Lower engraving absent, no awkward void | PASS — verified against the r1 capture side by side |
+| `AURELIUS` restrained and legible | PASS — at 1:1 and half scale |
+| AOD behaviour | PASS — 10 cycles, complete render after |
+| AOD aperture coherence | PASS — ambient outline concentric with the normal opening |
+| AOD pixel capture | NOT OBTAINABLE — same 1975-byte black doze frame as r1 (`be8b170a…`); ambient proved by byte lineage instead |
+| Motion / smoothness | PASS — 320 frames over 32.17 s, 1 duplicated encoder frame, no stutter |
+| Stability | PASS — zero crash/ANR entries for face or runtime |
+| Touch | PASS — inert, SysUI stayed resumed |
+
+Two lineage facts worth carrying into the final review. First, the APK
+hash is verified *from the device*, not from the build directory: the
+installed `base.apk` was pulled back and hashed at `5a1271ab…`. Second,
+`bg.png`, `bg_aod.png` and `res/raw/watchface.xml` extracted from that
+installed APK are byte-identical to the repository sources, which closes
+the chain studio → handoff manifest → imported resource → inventory →
+packaged APK → **installed panel**.
+
+The on-device margin figure (2 px) is corroborating only and is
+qualified in the evidence report: it is measured from a sheen-lit,
+anti-aliased composited frame. The authoritative containment proof stays
+the deterministic 62-render one (worst margin 3.07 px, 0 violations).
+This is precisely the split ADR-009 §6a now mandates for a
+`qualitative-behavioral-lineage` face.
+
+Device state restored afterwards; nothing promoted by the test.

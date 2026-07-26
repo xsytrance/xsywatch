@@ -202,5 +202,16 @@ the Bfont investigation and the immutable release.
 
 ### Focused Watch7 validation
 
-Captured separately and bound to APK `5a1271ab…` and inventory
-`b76f9ceb…`; see the r2 evidence directory. Nothing promoted.
+Executed 2026-07-26 on the physical Watch7 and bound to APK
+`5a1271ab…` and inventory `b76f9ceb…`; full results in
+`docs/reports/evidence/phase-3/aurelius/r2/DEVICE_TEST_RESULTS.md`.
+
+Both required corrections are confirmed on the panel: the live day sits
+fully inside the enlarged aperture (inner opening measures 40 × 30 px on
+device, identical to the reference render) and the occluded lower
+engraving is absent with no awkward void. Upgrade continuity r1 → r2 was
+verified by pulling the installed `base.apk` back off the watch and
+hashing it, both before and after install. AOD behaviour passed 10
+cycles; the AOD *pixel* capture remains unobtainable on this device
+(the documented black-frame doze pipeline), so the ambient frame is
+proved by byte lineage from the installed APK instead. Nothing promoted.
