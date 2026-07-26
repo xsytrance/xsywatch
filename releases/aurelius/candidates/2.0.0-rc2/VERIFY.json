@@ -59,11 +59,78 @@
   },
   "dex_state": {
     "aab": [],
+    "aab_contains_dex": false,
     "apk_debug": [
       "classes.dex",
       "classes2.dex"
     ],
-    "apk_policy": "the device-test APK may retain the generated R dex; only the distributed bundle must be dex-free"
+    "apk_debug_classified": [
+      {
+        "class_count": 6,
+        "classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "dexdump_agrees": true,
+        "disallowed": [],
+        "generated_r_classes": [
+          "Lcom/xsytrance/aurelius/R$drawable;",
+          "Lcom/xsytrance/aurelius/R$font;",
+          "Lcom/xsytrance/aurelius/R$integer;",
+          "Lcom/xsytrance/aurelius/R$raw;",
+          "Lcom/xsytrance/aurelius/R$xml;",
+          "Lcom/xsytrance/aurelius/R;"
+        ],
+        "justified_toolchain_classes": {},
+        "path": "classes.dex",
+        "sha256": "20adf4bb67a45c7b4cea5ec7ae04a63533cc664741df73aa4fae8c4dd0a4acbf",
+        "size_bytes": 3352
+      },
+      {
+        "class_count": 4,
+        "classes": [
+          "Lcom/android/tools/r8/annotations/LambdaMethod;",
+          "Ljava/lang/Record;",
+          "Ljava/lang/invoke/MethodHandles$Lookup;",
+          "Ljava/lang/invoke/VarHandle;"
+        ],
+        "dexdump_agrees": true,
+        "disallowed": [],
+        "generated_r_classes": [],
+        "justified_toolchain_classes": {
+          "Lcom/android/tools/r8/annotations/LambdaMethod;": "R8 desugaring annotation stub",
+          "Ljava/lang/Record;": "core-library desugaring stub for java.lang.Record",
+          "Ljava/lang/invoke/MethodHandles$Lookup;": "core-library desugaring stub for MethodHandles.Lookup",
+          "Ljava/lang/invoke/VarHandle;": "core-library desugaring stub for VarHandle"
+        },
+        "path": "classes2.dex",
+        "sha256": "1fa4abb8f95122d859306051a593d15a50819a275c3d1b9adcb57bd01ea93b3d",
+        "size_bytes": 12312
+      }
+    ],
+    "apk_debug_distinct_classes": [
+      "Lcom/android/tools/r8/annotations/LambdaMethod;",
+      "Lcom/xsytrance/aurelius/R$drawable;",
+      "Lcom/xsytrance/aurelius/R$font;",
+      "Lcom/xsytrance/aurelius/R$integer;",
+      "Lcom/xsytrance/aurelius/R$raw;",
+      "Lcom/xsytrance/aurelius/R$xml;",
+      "Lcom/xsytrance/aurelius/R;",
+      "Ljava/lang/Record;",
+      "Ljava/lang/invoke/MethodHandles$Lookup;",
+      "Ljava/lang/invoke/VarHandle;"
+    ],
+    "apk_debug_justified_toolchain_classes": {
+      "Lcom/android/tools/r8/annotations/LambdaMethod;": "R8 desugaring annotation stub",
+      "Ljava/lang/Record;": "core-library desugaring stub for java.lang.Record",
+      "Ljava/lang/invoke/MethodHandles$Lookup;": "core-library desugaring stub for MethodHandles.Lookup",
+      "Ljava/lang/invoke/VarHandle;": "core-library desugaring stub for VarHandle"
+    },
+    "apk_policy": "The distributed BUNDLE must contain no dex. The device-test APK may retain the generated Aurelius R dex and nothing else: this is an android:hasCode=\"false\" resource-only package, so any other class would be unexplained. Every APK dex is extracted, hashed, parsed for its defined class descriptors and cross-checked with dexdump; verification fails on an unreadable dex, parser disagreement, or any class outside the generated-R allowlist."
   },
   "face": "aurelius",
   "identity": {
