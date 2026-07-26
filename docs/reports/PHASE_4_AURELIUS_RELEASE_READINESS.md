@@ -463,3 +463,193 @@ python3 tools/wear_log.py
 Checkpoint A is complete. Per the phase scope, **production refinement does
 not continue until AGENOR explicitly selects a craftsmanship direction.**
 Both branches are returned unmerged for owner and ChatGPT review.
+
+---
+
+# Checkpoint B — release candidate
+
+**Status:** **complete except device and wear evidence — returned unmerged**
+**Date:** 2026-07-26
+**Candidate:** `com.xsytrance.aurelius` 2.0.0-rc1 (versionCode 2)
+**Visual version:** `field-tourbillon-mk2-rc1` — **proposed, NOT promoted**
+
+## B0. Boundaries held
+
+- ❌ rc1 **not** approved and **not** promoted to goldens — `field-tourbillon-mk2-r2` remains the active approved golden;
+- ❌ neither branch merged;
+- ❌ nothing published, no public listing;
+- ❌ `releases/aurelius/current/` untouched — still `844b9c43…`;
+- ❌ no production signing material created;
+- ❌ no other watchface begun.
+
+## B1. Studio commits and handoff
+
+| | |
+|---|---|
+| Studio generation | `CommandSatin_ReservePrecision` |
+| Owner selection | `d86d94c` |
+| **Producing commit** | `04015886dbee5cd17b66c4627f822aef3db73d16` |
+| **Metadata commit** | `97ba0f1ceeee721a7a2ec0521603bd61935d036d` |
+| Import | 50 exports verified against the producing-commit snapshot, LFS-aware |
+| Lifecycles | all `candidate` |
+
+## B2. Changed and unchanged assets — measured, not predicted
+
+**6 changed, 44 byte-identical**, measured from the finish's own object
+ledger (`AGENOR@exports/aurelius_rc1/IMPACT.json`, `DELTA.json`).
+
+| | |
+|---|---|
+| Changed runtime resources | `bg.png`, `bg_aod.png`, `cage.png`, `gear_l.png`, `gear_r.png`, `hub.png` |
+| Generated consumer resource | `preview.png` — re-derived from the rc1 normal render |
+| Unchanged manifested assets | 44 of 50, each byte-identical to r2 |
+| Resource count | 60, unchanged |
+| **XML/spec delta** | **zero** — rc1 `xml_sha256` equals r2's exactly |
+
+**The Checkpoint A prediction was wrong about `balance.png`.** It does not
+change: the balance wheel and spokes use `MAT_Gold_Warm` and appear in no
+group the finish touches. Explained in the studio report §B3.
+
+## B3. Proposed rc1 hashes
+
+| | |
+|---|---|
+| rc1 normal | `23e1d8e83f642d751ec3ad0c7cf1037faf8359b87ed31288a359a09d81c1d790` |
+| rc1 AOD | `3e340f4379e1ca8462071761c8c46b8e0e292a7614ac9a2ccde7454a6af934aa` |
+| rc1 inventory | `1ec66797d1f4fdbf123e68240662ec256f056e8429941871e89cf675310359ce` |
+| r2 normal (unchanged) | `7fd2cf63607e2aa6ef53d0443c44e16885284705d5f4336602aa3ce2526a556e` |
+| r2 AOD (unchanged) | `2f2be0e91b7473b5bb492cdc55094777d570a268f36e751d109be56888f1e936` |
+
+vs r2 — normal 65.17% of pixels at mean channel delta **6.41** (max 208);
+AOD 6.29% at mean **0.13** (max 80). A restrained shift in how surfaces
+catch light, not a redesign: r2-vs-v1 was mean 68.3.
+
+APPROVAL-0005 supersedes APPROVAL-0004 **without modifying it**, and binds
+previous goldens, proposed hashes, inventory snapshot, the 6 changed
+resources, all 50 handoff ids, all 44 unchanged assets with per-asset
+reasons, both studio commits, metrics, diff/heat-map/close-up paths, and
+the wear, device and AOD-luminance evidence paths.
+`owner: proposed`, `architecture_review: pending`.
+
+## B4. Candidate artifacts
+
+| Artifact | SHA-256 | Size | Signing |
+|---|---|---|---|
+| `aurelius-2.0.0-rc1.aab` | `ff61ca19e9c084089306ec95b0dc372d779a0ad00c482b3f6d6b3414d2c6bcf7` | 748,370 B | **unsigned** — no upload key exists |
+| `aurelius-2.0.0-rc1-debug.apk` | `d02bf91494f94abb5176685baea19b6e788dbd5c92d0df50c4bfde14d00c7956` | 831,637 B | debug (Android Debug cert) |
+
+`releases/aurelius/candidates/2.0.0-rc1/` with `CANDIDATE.json`,
+`VERIFY.json`, `README.md`. Publication status **not published**.
+
+**Reproducibility: both artifacts are BYTE-IDENTICAL across two
+independent clean builds.** No non-deterministic field needed explaining.
+
+### Package size fell 77%
+
+3,600,717 → 831,637 bytes. AGP was packaging the Kotlin runtime — 2.4 MB
+of `classes.dex` in a face declaring `hasCode="false"` with no code. This
+was also a hard blocker: Play rejects a WFF bundle containing dex. A
+further 3 KB R-class dex, which AGP emits unconditionally and which no
+supported flag suppresses, is stripped before bundling; with
+`hasCode="false"` the platform never loads a class loader for the package,
+so it is inert.
+
+## B5. WO-P7 — official AOD gate
+
+| | |
+|---|---|
+| Metric | average luminance across the face disc; strictest of three readings |
+| Sampling | 144 samples at 10-minute intervals across a whole day |
+| Sensitivity | 14 runs varying date, battery and heart rate |
+| Worst time sample | 00:50 — 3.952% |
+| **Maximum overall** | **3.972%** |
+| Limit | 15% |
+| **Verdict** | **PASS** |
+
+Evidence: `docs/reports/evidence/phase-4/aurelius/aod/`. The old ~7%
+lit-pixel figure was a different quantity and is no longer used as
+compliance anywhere.
+
+## B6. Complete verification
+
+| Gate | Result |
+|---|---|
+| engine tests | **97 passed** (95 → 97) |
+| visual + lineage tests | **67 passed** (50 → 67) |
+| date-aperture proof | **62 renders, 0 violations**, worst margin 3.07 px |
+| validator-governance tests | 12, pass |
+| WO-P7 tests | 17, pass |
+| handoff / import tests | pass |
+| release fixtures | 10/10 |
+| deterministic generation | pass |
+| resource inventory | clean, 60 resources |
+| reference render vs proposed candidate | byte-identical, bound to APPROVAL-0005 |
+| all-ten Gradle builds | **10/10 PASS** |
+| APK build | ✅ |
+| AAB build | ✅ |
+| package metadata inspection | ✅ consistent across face.toml, Gradle, manifest, XML, .aab, .apk |
+| official WFF validator | ✅ **PASS (v4)** on the XML extracted from the APK |
+| memory evaluator | ✅ **PASS** |
+| `tools/validate.py` | **0 errors, 13 warnings** |
+| `git diff --check` | clean, per commit |
+| studio guards | 10 pass across both interpreters |
+| CI | see §B10 |
+
+## B7. Signing
+
+No production signing material exists. `docs/reports/PHASE_4_SIGNING_PLAN.md`
+covers ownership, creation, storage, verified-by-restore backup, access
+control, rotation, the release ceremony, and what may never be committed.
+The bundle builds and verifies **unsigned**, so the packaging path is
+proven without touching key material.
+
+## B8. Commercial packet
+
+`docs/commercial/aurelius/2.0.0-rc1/` — media derived from committed bytes,
+Play assets separated from promotional ones (WO-G6 forbids device frames
+in screenshots), 8-second motion render, full draft copy with data-safety
+and privacy drafts. Every forbidden claim is enumerated and avoided.
+
+## B9. Blocked — must close before Checkpoint B approval
+
+1. **Wear evidence: ZERO sessions recorded.** The review requires one
+   sustained workday, one outdoor/daylight plus low-light, and one with
+   sustained AOD and a charging transition. These cannot be invented.
+   `python3 tools/wear_log.py`, bound to APK `d02bf914…`.
+2. **Physical Watch7 validation: BLOCKED.** `adb` reported zero devices
+   all session. Full status and closing procedure:
+   `docs/reports/evidence/phase-4/aurelius/rc1/DEVICE_EVIDENCE_BLOCKER.md`.
+   The byte-lineage half of the policy is complete without a device;
+   the on-panel half is not.
+3. **TEST-1 unresolved** — `docs/reports/PHASE_4_TEST1_READINESS.md`.
+4. **Privacy policy URL** — owner must host one.
+5. **Price decision** and the AI-artwork licence position.
+
+## B10. Consumer commits
+
+| Commit | Subject |
+|---|---|
+| `454c557` | validator dual-approval hardening |
+| `4325898` | baseline report and wear packet |
+| `6c82009` | policy audit |
+| `b4dd574` | Checkpoint A report |
+| `51ef862` | CI status |
+| `94f6f79` | rc1 import and proposed generation |
+| `399ba12` | WO-P7 gate |
+| `ba4d260` | Play package path, AAB, candidate |
+| `5d64d52` | commercial packet, copy, signing plan |
+| `2bc1d57` | TEST-1 readiness, device blocker, identity guards |
+| *(this)* | Checkpoint B report |
+
+## B11. Files to inspect
+
+**Pixels:** `watchfaces/aurelius/visual/candidates/field-tourbillon-mk2-rc1/`
+— `normal.png`, `aod.png`, `closeups/normal_reserve.png` (the graft),
+`closeups/normal_bridge.png`, `diff/normal/diff_heatmap.png`.
+
+**Governance:** `APPROVAL-0005-field-tourbillon-mk2-rc1.json`,
+`releases/aurelius/candidates/2.0.0-rc1/CANDIDATE.json`.
+
+**Decisions needed:** `PHASE_4_TEST1_READINESS.md`,
+`docs/commercial/aurelius/2.0.0-rc1/COPY_DRAFT.md` (price, privacy URL,
+support address).
