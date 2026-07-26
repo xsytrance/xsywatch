@@ -52,30 +52,57 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[1]
 
+# Component types that move continuously and must therefore be measurable.
+# `analog_hand` is deliberately absent — see required_mechanisms().
+MOVING_TYPES = {"rotating_image", "hr_balance", "seconds_rotor"}
+
+# Mean absolute luma delta over a component box, first frame vs a later
+# frame, above which the mechanism is accepted as having moved.
+MOTION_REF_DELTA_MIN = 1.0
+
+# The documented heart-rate fallback, in bpm. A reading here proves the
+# face got no live data.
+HR_FALLBACK_BPM = 70.0
+HR_FALLBACK_TOLERANCE = 0.6
+
 # Rows that need a human. The tool refuses to score these.
+# Confirmed by the Checkpoint B rc2 re-review, ruling 3: the tool must never
+# decide whether the face looks premium, restrained, readable or accepted.
 OWNER_ROWS = [
     ("Parallax on wrist tilt",
      "background/sheen shift as the wrist tilts, with no edge clipping"),
     ("Normal legibility at actual scale",
      "hands and date read instantly on the panel, not on a monitor"),
-    ("Command Satin legibility",
-     "the engraving remains readable at actual scale"),
+    ("Command Satin visual quality",
+     "the engraving remains readable and well-formed at actual scale"),
     ("Reserve ticks",
      "more usable than the previous revision without becoming loud"),
     ("No stripe or unintended ornament",
      "nothing entered the face that is not in the approved reference"),
-    ("AOD content restraint",
+    ("AOD visual restraint",
      "ambient frame reads as restrained, no bright sheen"),
+    ("AOD post-cycle render visually intact",
+     "inspect the post-cycle capture: all mechanics, hands, date and the "
+     "engraving present, nothing dropped. A captured file is not proof the "
+     "render is complete"),
     ("Battery gauge plausibility",
      "needle position agrees with Settings battery %"),
-    ("Time vs reference clock",
-     "analog time matches an independent clock"),
+    ("Time and date visual correctness",
+     "analog time matches an independent clock and the aperture shows today"),
+    ("Heart rate agrees with the watch's own reading",
+     "compare the implied bpm against the rate the watch itself displays; "
+     "the tool can prove the value is live, not that it is CORRECT"),
     ("Heart rate tracks after exertion",
      "record ~14s after deliberate exertion; implied HR must RISE, not merely "
      "differ from the 70.0 bpm fallback"),
     ("Heart rate falls back off-wrist",
      "record ~14s with the watch off the wrist; implied HR must collapse to "
      "exactly 70.0 bpm"),
+    ("No prompt or unexpected permission behaviour",
+     "no consent dialog at install or activation, and nothing sensitive "
+     "attributed to the package in Settings"),
+    ("Final owner disposition",
+     "keep, change, or reject — the judgement no measurement can make"),
 ]
 
 
@@ -239,13 +266,15 @@ def row_runtime_host(adb: Adb, m: Matrix, pkg: str) -> None:
     out = adb.sh("dumpsys activity service "
                  "com.samsung.wear.watchface.runtime")
     if pkg in out:
-        m.add("Runtime host", "PASS",
+        m.add("Runtime host — face is the active watch face", "PASS",
               f"WFF runtime reports resource-only package {pkg}")
     else:
-        m.add("Runtime host", "PENDING — owner",
-              f"{pkg} not named by the runtime dump. This is the picker "
-              f"row: the face must be SELECTED on the watch. Select it and "
-              f"re-run.")
+        # ruling 3D: selection is an owner ACTION, but active-host state is
+        # machine-measurable. Not knowing is a blocker, not a judgement.
+        m.add("Runtime host — face is the active watch face", "BLOCKED",
+              f"{pkg} is installed but NOT SELECTED — the active WFF runtime "
+              f"does not name it. Select AURELIUS in the picker and re-run; "
+              f"every on-panel row below is meaningless until then")
 
 
 def row_permissions(adb: Adb, m: Matrix, pkg: str) -> None:
@@ -358,15 +387,25 @@ def row_aod_cycles(adb: Adb, m: Matrix, out_dir: Path, cycles: int) -> None:
     cap = adb.run("exec-out", "screencap", "-p", binary=True, timeout=120)
     if cap.stdout:
         after.write_bytes(cap.stdout)
-    m.data["aod_cycles"] = {"count": cycles, "staged": staged}
-    if staged == cycles and after.exists():
-        m.add(f"AOD — {cycles} sleep/wake cycles", "PASS",
-              f"{cycles}/{cycles} staged cleanly; complete render captured "
-              f"afterwards ({after.name}) — inspect for resource loss")
+    m.data["aod_cycles"] = {"count": cycles, "staged": staged,
+                            "post_cycle_capture": after.exists()}
+    # ruling 3C: transition mechanics and visual integrity are different
+    # claims. Wakefulness telemetry proves the former; the existence of a
+    # PNG proves nothing at all about the latter.
+    if staged == cycles:
+        m.add(f"AOD — {staged}/{cycles} sleep/wake transitions", "PASS",
+              f"every transition confirmed via mWakefulness telemetry")
     else:
-        m.add(f"AOD — {cycles} sleep/wake cycles", "PENDING — owner",
-              f"{staged}/{cycles} transitions confirmed via mWakefulness; "
-              f"the panel state needs eyes")
+        m.add(f"AOD — {staged}/{cycles} sleep/wake transitions", "FAIL",
+              f"only {staged} of {cycles} transitions staged; see "
+              f"{(out_dir / 'aod_cycles.log').name}")
+    if after.exists():
+        m.add("AOD — post-cycle screenshot captured", "PASS",
+              f"{after.name} written; visual integrity is an OWNER row and "
+              f"is not claimed here")
+    else:
+        m.add("AOD — post-cycle screenshot captured", "BLOCKED",
+              "screencap returned nothing after the cycles")
 
 
 def row_doze_capture(adb: Adb, m: Matrix, out_dir: Path) -> None:
@@ -398,93 +437,222 @@ def row_doze_capture(adb: Adb, m: Matrix, out_dir: Path) -> None:
               f"non-black doze frame captured at mWakefulness={state}")
 
 
-def row_motion(adb: Adb, m: Matrix, out_dir: Path, face_toml: Path,
-               seconds: int) -> Path | None:
+def _box_series(frames: list[Path], box: tuple[int, int, int, int]) -> list:
+    from PIL import Image
+    x, y, w, h = box
+    out = []
+    for f in frames:
+        with Image.open(f) as im:
+            out.append(list(im.convert("L").crop((x, y, x + w, y + h))
+                            .getdata()))
+    return out
+
+
+def _mean_abs(a: list, b: list) -> float:
+    return sum(abs(p - q) for p, q in zip(a, b)) / max(1, len(a))
+
+
+# Sample offsets for displacement-vs-first-frame. Deliberately NOT round
+# fractions: an oscillator whose period divides the capture evenly returns
+# to phase at 1/4, 1/2 and 3/4, and would measure as perfectly static at
+# every one of them. A unit test caught exactly that.
+REF_OFFSETS = (0.17, 0.31, 0.43, 0.58, 0.71, 0.89)
+
+# A mechanism counts as moving if EITHER signal fires: displacement catches
+# the slow tourbillon cage, interframe activity catches the fast oscillating
+# balance wheel. Neither alone covers both.
+MOTION_INTERFRAME_MIN = 0.5
+
+
+def component_motion(series: list) -> dict:
+    """Interframe activity plus displacement against the first frame.
+
+    Interframe delta alone is a poor test for a slow mechanism: the
+    tourbillon cage turns 6°/s, which is a fraction of a pixel between
+    consecutive frames. Displacement alone is a poor test for an
+    oscillator, which keeps returning to where it started. Both are
+    measured and either is sufficient.
+    """
+    n = len(series)
+    inter = [_mean_abs(series[i - 1], series[i]) for i in range(1, n)]
+    refs = [_mean_abs(series[0], series[int(n * f)])
+            for f in REF_OFFSETS if 0 < int(n * f) < n]
+    return {
+        "mean_interframe_delta": round(sum(inter) / max(1, len(inter)), 3),
+        "max_reference_delta": round(max(refs) if refs else 0.0, 3),
+        "near_static_pairs": sum(1 for d in inter if d < 0.1),
+        "pairs": len(inter),
+        "frames": n,
+    }
+
+
+def mechanism_moved(st: dict) -> bool:
+    """Did this mechanism actually move during the capture?"""
+    return (st["max_reference_delta"] >= MOTION_REF_DELTA_MIN
+            or st["mean_interframe_delta"] >= MOTION_INTERFRAME_MIN)
+
+
+def overall_motion_verdict(required: list[str], passed: list[str],
+                           failed: list[str], frames: int,
+                           seconds: int) -> tuple[str, str]:
+    """Ruling 3A — the mechanical row passes only if EVERY mechanism moved.
+
+    One moving gear is not evidence that the movement is running.
+    """
+    if not required:
+        return "BLOCKED", ("the face contract declares no continuously "
+                           "moving mechanism to measure")
+    if failed:
+        return "FAIL", (f"{len(passed)}/{len(required)} required mechanisms "
+                        f"moved; NOT moving: {', '.join(sorted(failed))}")
+    return "PASS", (f"all {len(required)} required mechanisms moved "
+                    f"({', '.join(sorted(passed))}) across {frames} frames "
+                    f"of a {seconds}s capture")
+
+
+def rows_motion(adb: Adb, m: Matrix, out_dir: Path, face_toml: Path,
+                seconds: int) -> Path | None:
+    """Per-component measured motion — ruling 3A.
+
+    The overall mechanical row passes only when EVERY required continuously
+    moving mechanism passes. It must not pass because one gear moved.
+    """
+    comps = parse_components(face_toml)
+    required = required_mechanisms(comps)
+
     remote = "/sdcard/motion.mp4"
     adb.sh(f"screenrecord --time-limit {seconds} --size 480x480 {remote}",
-           timeout=seconds + 120)
+           timeout=seconds + 180)
     local = out_dir / "motion.mp4"
-    adb.run("pull", remote, str(local), timeout=300)
+    adb.run("pull", remote, str(local), timeout=600)
     adb.sh(f"rm -f {remote}")
+
+    def block(reason: str) -> None:
+        for c in required:
+            m.add(f"Motion — {c['name']} ({c['type']})", "BLOCKED", reason)
+        m.add("Mechanical motion (all required mechanisms)", "BLOCKED", reason)
+
     if not local.exists():
-        m.add("Smoothness / motion", "BLOCKED", "screenrecord produced no file")
+        block("screenrecord produced no file")
         return None
     if not shutil.which("ffmpeg"):
-        m.add("Smoothness / motion", "BLOCKED",
-              f"recording captured ({local.name}) but ffmpeg is not "
-              f"installed, so per-region deltas cannot be computed")
-        return local
-
-    boxes = parse_boxes(face_toml)
-    frames = out_dir / "frames"
-    frames.mkdir(exist_ok=True)
-    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(local),
-                    "-vf", "fps=30", str(frames / "f%04d.png")],
-                   capture_output=True, timeout=600)
-    fs = sorted(frames.glob("*.png"))
-    if len(fs) < 30:
-        m.add("Smoothness / motion", "BLOCKED",
-              f"only {len(fs)} frames extracted")
+        block(f"recording captured ({local.name}) but ffmpeg is not "
+              f"installed, so per-component deltas cannot be computed")
         return local
     try:
-        from PIL import Image
+        import PIL  # noqa: F401
     except ImportError:
-        m.add("Smoothness / motion", "BLOCKED", "Pillow not installed")
+        block("Pillow not installed")
         return local
 
-    stats = {}
-    for name, (x, y, w, h) in boxes.items():
-        prev = None
-        deltas = []
-        for f in fs:
-            with Image.open(f) as im:
-                crop = im.convert("L").crop((x, y, x + w, y + h))
-                px = list(crop.getdata())
-            if prev is not None:
-                deltas.append(sum(abs(a - b) for a, b in zip(px, prev))
-                              / len(px))
-            prev = px
-        if deltas:
-            near_static = sum(1 for d in deltas if d < 0.5)
-            stats[name] = {"mean_delta": round(sum(deltas) / len(deltas), 3),
-                           "near_static_pairs": near_static,
-                           "pairs": len(deltas)}
+    frames_dir = out_dir / "frames"
+    frames_dir.mkdir(exist_ok=True)
+    subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(local),
+                    "-vf", "fps=30", str(frames_dir / "f%04d.png")],
+                   capture_output=True, timeout=900)
+    fs = sorted(frames_dir.glob("*.png"))
+    if len(fs) < 30:
+        block(f"only {len(fs)} frames extracted from {local.name}")
+        return local
+
+    stats: dict[str, dict] = {}
+    passed: list[str] = []
+    failed: list[str] = []
+    for c in required:
+        st = component_motion(_box_series(fs, c["box"]))
+        st["type"] = c["type"]
+        if c.get("speed") is not None:
+            st["declared_speed_deg_s"] = c["speed"]
+        stats[c["name"]] = st
+        ok_move = mechanism_moved(st)
+        label = f"Motion — {c['name']} ({c['type']})"
+        detail = (f"interframe Δ {st['mean_interframe_delta']} "
+                  f"(min {MOTION_INTERFRAME_MIN}), displacement vs frame 0 "
+                  f"Δ {st['max_reference_delta']} "
+                  f"(min {MOTION_REF_DELTA_MIN}), "
+                  f"{st['near_static_pairs']}/{st['pairs']} static pairs "
+                  f"over {st['frames']} frames")
+        if ok_move:
+            passed.append(c["name"])
+            m.add(label, "PASS", detail)
+        else:
+            failed.append(c["name"])
+            m.add(label, "FAIL",
+                  detail + " — this mechanism did not move during the capture")
+
     m.data["motion"] = stats
-    moving = {k: v for k, v in stats.items() if v["mean_delta"] > 1.0}
-    if moving:
-        desc = ", ".join(f"{k} Δ{v['mean_delta']} "
-                         f"({v['near_static_pairs']}/{v['pairs']} static)"
-                         for k, v in sorted(stats.items()))
-        m.add("Smoothness / motion", "PASS",
-              f"{len(fs)} frames; per-region inter-frame deltas: {desc}")
-    else:
-        m.add("Smoothness / motion", "FAIL",
-              f"no region shows motion across {len(fs)} frames — the face "
-              f"may not be running")
+    m.data["motion_required"] = [c["name"] for c in required]
+    result, detail = overall_motion_verdict(
+        [c["name"] for c in required], passed, failed, len(fs), seconds)
+    m.add("Mechanical motion (all required mechanisms)", result, detail)
+
+    # analog hands are deliberately NOT scored here
+    for c in comps:
+        if c.get("type") == "analog_hand" and c.get("name"):
+            m.add(f"Hand — {c['name']}", "PENDING — owner",
+                  "a 60 s capture cannot robustly distinguish a slow hand "
+                  "from a stopped one; confirm by observation or a "
+                  "start/end angle check over a longer period")
     return local
 
 
-def parse_boxes(face_toml: Path) -> dict[str, tuple[int, int, int, int]]:
-    """Pull named layer boxes out of the face contract.
+def parse_components(face_toml: Path) -> list[dict]:
+    """Read the component contract: type, name, box, speed, direction.
 
-    Read from the contract rather than hard-coded so this works for any
+    Read from `face.toml` rather than hard-coded so this works for any
     engine-migrated face, not just aurelius.
     """
-    boxes: dict[str, tuple[int, int, int, int]] = {}
     if not face_toml.exists():
-        return boxes
-    name = None
+        return []
+    comps: list[dict] = []
+    cur: dict | None = None
     for line in face_toml.read_text(encoding="utf-8").splitlines():
-        mm = re.match(r'\s*name\s*=\s*"([^"]+)"', line)
-        if mm:
-            name = mm.group(1)
+        s = line.strip()
+        if s.startswith("[[components]]"):
+            cur = {}
+            comps.append(cur)
             continue
-        bm = re.search(r"box\s*=\s*\{x\s*=\s*(\d+),\s*y\s*=\s*(\d+),\s*"
-                       r"width\s*=\s*(\d+),\s*height\s*=\s*(\d+)\}", line)
-        if bm and name:
-            boxes[name] = tuple(int(g) for g in bm.groups())  # type: ignore
-            name = None
-    return boxes
+        if s.startswith("[[") or s.startswith("[") and not s.startswith("[["):
+            if not s.startswith("[[components]]"):
+                cur = None
+        if cur is None or not s or s.startswith("#"):
+            continue
+        mm = re.match(r'(\w+)\s*=\s*"([^"]*)"', s)
+        if mm:
+            cur[mm.group(1)] = mm.group(2)
+            continue
+        mm = re.match(r"(\w+)\s*=\s*(-?\d+(?:\.\d+)?)\s*$", s)
+        if mm:
+            v = mm.group(2)
+            cur[mm.group(1)] = float(v) if "." in v else int(v)
+            continue
+        mm = re.match(r"(\w+)\s*=\s*(true|false)\s*$", s)
+        if mm:
+            cur[mm.group(1)] = mm.group(2) == "true"
+            continue
+        bm = re.match(r"box\s*=\s*\{x\s*=\s*(\d+),\s*y\s*=\s*(\d+),\s*"
+                      r"width\s*=\s*(\d+),\s*height\s*=\s*(\d+)\}", s)
+        if bm:
+            cur["box"] = tuple(int(g) for g in bm.groups())
+    return [c for c in comps if c.get("type")]
+
+
+def parse_boxes(face_toml: Path) -> dict[str, tuple[int, int, int, int]]:
+    """name -> box, for components that declare one."""
+    return {c["name"]: c["box"] for c in parse_components(face_toml)
+            if c.get("name") and c.get("box")}
+
+
+def required_mechanisms(comps: list[dict]) -> list[dict]:
+    """The continuously-moving mechanisms that MUST show motion.
+
+    Checkpoint B rc2 re-review, ruling 3A: the whole mechanical matrix must
+    not pass because one gear moved. Analog hands are excluded — a 60 s
+    capture cannot robustly distinguish an hour hand from a stopped one, so
+    they stay owner rows rather than being scored on weak evidence.
+    """
+    return [c for c in comps
+            if c.get("type") in MOVING_TYPES and c.get("box")]
 
 
 def row_touch(adb: Adb, m: Matrix, size: int = 480) -> None:
@@ -527,6 +695,27 @@ def row_stability(adb: Adb, m: Matrix, pkg: str, out_dir: Path) -> None:
               "lines mentioning the face or runtime")
 
 
+def hr_verdict(freq_hz: float) -> tuple[str, str]:
+    """Ruling 3E — what the measurement alone can and cannot establish.
+
+    "Distinct from the documented fallback" is measurable and may pass
+    automatically. Whether the value is CORRECT, rises with exertion, or
+    collapses off-wrist are owner observations and are never decided here.
+    """
+    bpm = freq_hz * 60.0
+    if abs(bpm - HR_FALLBACK_BPM) < HR_FALLBACK_TOLERANCE:
+        return "BLOCKED", (
+            f"{freq_hz:.4f} Hz = {bpm:.1f} bpm — indistinguishable from the "
+            f"{HR_FALLBACK_BPM} bpm FALLBACK, so this capture does not show "
+            f"live data reaching the face. Expected off-wrist; on the wrist "
+            f"it is a finding. Re-capture on the wrist to settle it")
+    return "PASS", (
+        f"{freq_hz:.4f} Hz = {bpm:.1f} bpm — clear of the {HR_FALLBACK_BPM} "
+        f"bpm fallback, so the runtime is supplying live data to a package "
+        f"that declares no permission. Agreement with the watch's own "
+        f"reading is an OWNER row")
+
+
 def row_heart_rate(m: Matrix, out_dir: Path, motion: Path | None) -> None:
     """Delegate to the existing frequency tool rather than reimplement it."""
     frames = out_dir / "frames"
@@ -545,18 +734,10 @@ def row_heart_rate(m: Matrix, out_dir: Path, motion: Path | None) -> None:
               f"could not parse a frequency: {out.strip()[:160]}")
         return
     f = float(hz.group(1))
-    bpm = f * 60.0
-    m.data["heart_rate"] = {"hz": f, "implied_bpm": round(bpm, 1)}
-    if abs(bpm - 70.0) < 0.6:
-        m.add("Heart rate — implied from balance frequency", "PENDING — owner",
-              f"{f:.4f} Hz = {bpm:.1f} bpm — indistinguishable from the 70.0 "
-              f"bpm FALLBACK. On-wrist this means no live data reached the "
-              f"face; off-wrist it is the expected result. Only the owner "
-              f"knows which this recording was")
-    else:
-        m.add("Heart rate — implied from balance frequency", "PASS",
-              f"{f:.4f} Hz = {bpm:.1f} bpm — live data, clear of the 70.0 bpm "
-              f"fallback. Compare against the watch's own reading")
+    result, detail = hr_verdict(f)
+    m.data["heart_rate"] = {"hz": f, "implied_bpm": round(f * 60.0, 1),
+                            "fallback_bpm": HR_FALLBACK_BPM}
+    m.add("Heart rate — live data distinct from the fallback", result, detail)
 
 
 # --------------------------------------------------------------------------
@@ -645,7 +826,10 @@ def main() -> int:
     ap.add_argument("--package", default=None,
                     help="defaults to com.xsytrance.<face>")
     ap.add_argument("--cycles", type=int, default=10)
-    ap.add_argument("--record-seconds", type=int, default=32)
+    # ruling 3B: Checkpoint B requires at least sixty seconds of motion
+    # evidence. The override exists for tests, not for shortening the gate.
+    ap.add_argument("--record-seconds", type=int, default=60,
+                    help="motion capture length; Checkpoint B requires >= 60")
     ap.add_argument("--skip-install", action="store_true",
                     help="test the package already on the device")
     args = ap.parse_args()
@@ -696,9 +880,13 @@ def main() -> int:
     else:
         m.add("Normal-mode capture", "BLOCKED", "screencap returned nothing")
 
-    motion = row_motion(adb, m, out_dir,
-                        REPO / "watchfaces" / args.face / "engine/face.toml",
-                        args.record_seconds)
+    if args.record_seconds < 60:
+        m.add("Motion capture length", "BLOCKED",
+              f"--record-seconds {args.record_seconds} is below the 60 s "
+              f"Checkpoint B minimum; this run is not acceptance evidence")
+    motion = rows_motion(adb, m, out_dir,
+                         REPO / "watchfaces" / args.face / "engine/face.toml",
+                         args.record_seconds)
     row_heart_rate(m, out_dir, motion)
     row_aod_cycles(adb, m, out_dir, args.cycles)
     row_doze_capture(adb, m, out_dir)

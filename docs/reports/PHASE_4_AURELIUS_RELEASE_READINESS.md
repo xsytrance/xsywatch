@@ -1063,3 +1063,173 @@ Unchanged by this commit: the visual matrix, three wear sessions, owner
 pixel acceptance of APPROVAL-0005, ChatGPT re-review, the four TEST-1 facts,
 a hosted privacy policy, a support address, and the price decision.
 `signing-authorized` remains blocked by design under ADR-010 §5.
+
+
+---
+
+# Checkpoint B rc2 re-review — three rulings implemented
+
+**Date:** 2026-07-26
+**Answers:** `docs/reports/PHASE_4_CHECKPOINT_B_RC2_REREVIEW.md`
+**Verdict received:** static architecture **conditionally approved**; final
+Checkpoint B acceptance remains blocked
+**Candidate:** 2.0.0-rc2 — **artifact bytes unchanged**, no rebuild, no rc3
+
+```
+aab 1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23
+apk 939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc
+```
+
+`releases/aurelius/current/` untouched at `844b9c43…`.
+
+## Ruling 1 — the readiness DAG was backwards
+
+`installed-APK-hash-verified` depended on `device-validated`, so a sub-item
+of the physical matrix could not close until the whole matrix did. The
+corrected direction makes the matrix depend on proof that the intended
+bytes are installed:
+
+```python
+"installed-APK-hash-verified":        ("consumer-lineage-verified",),
+"installed-resource-lineage-verified": ("installed-APK-hash-verified",),
+"device-validated":                   ("installed-resource-lineage-verified",
+                                       "permissions-verified"),
+```
+
+`owner-wear-complete -> device-validated` and
+`owner-pixel-approved -> owner-wear-complete` are unchanged.
+
+Both installed-byte gates then closed **on their existing evidence**, which
+passed every content and hash check unchanged. **3/13 → 6/13.** The count
+was not forced: it is what the checker derived.
+
+Seven dependency tests pin the corrected direction — the four prerequisite
+edges the ruling named, the structural fact that neither installed-byte
+gate depends on any owner gate, the regression case (an incomplete matrix
+must not block them), and the interlock that still holds.
+
+## Ruling 2 — freshness is now machine-enforced
+
+The original checker verified that no gate claimed **more** than its
+evidence supported. It had no way to notice a gate claiming **less**, or a
+`detail` overtaken by events — which is how the record sat asserting *"no
+Galaxy Watch7 reachable"* while a device session was already committed, and
+still reported 0 inconsistencies.
+
+Every evidence-bearing gate now records:
+
+| Field | Meaning |
+|---|---|
+| `evidence_fingerprint` | sha256 over sorted repo-relative path + file sha256, directories walked recursively |
+| `evaluated_at_commit` | the commit the evaluation was made at; must be reachable from HEAD |
+| `checker_schema` | `agenor.release-readiness-checker/2` |
+| `machine_summary` | machine-derived; hand-editing it is an error |
+
+Recomputed on every run. Changed, added, removed or drifted evidence is
+rejected. A `blocked` gate asserting a condition its own canonical evidence
+set disproves is rejected as a **stale blocker detail** — the specific
+failure that motivated the ruling.
+
+Subjective material is kept separate and is never machine-generated or
+machine-verified: `owner_note`, `reviewer_note`, `waiver_rationale`. A
+`waived` gate must carry a rationale. Changing owner prose provably does
+not alter any derived result.
+
+Fingerprints are written only by an explicit `--stamp`, which pins what is
+there **now** and expressly does not decide that what is there is
+sufficient. `tools/device_matrix.py` still never edits `READINESS.json`.
+
+16 tests: evidence changed after evaluation, a file added under a
+fingerprinted directory, a file removed, evaluation against another commit,
+a malformed commit sha, a stale blocker detail, a hand-edited
+`machine_summary`, a wrong schema, a fingerprint with no evidence behind
+it, order-independence, and — the other direction — valid unchanged
+evidence passing, a truthful `blocked` detail passing, and owner notes
+changing nothing.
+
+## Ruling 3 — device_matrix corrections
+
+**A. Per-component motion.** The old row passed when *any* region moved.
+Component type, name, box and declared speed are now read from `face.toml`,
+and each required mechanism gets its own measured row: `z10_gl` (40°/s),
+`z11_gr` (24°/s reverse), `z21_bal` (HR-driven), `z22_cage` (seconds
+rotor). The overall row passes only when **every** one passes. Analog hands
+remain owner rows — a 60 s capture cannot robustly distinguish a slow hand
+from a stopped one.
+
+Measuring this correctly took two passes. Interframe delta alone calls the
+tourbillon cage static, because 6°/s is sub-pixel between frames. So
+displacement against the first frame was added — and a test immediately
+caught that sampling at 1/4, 1/2 and 3/4 makes an oscillator whose period
+divides the capture evenly read as **perfectly static at every offset**.
+The balance wheel is exactly such an oscillator. Fixed with non-round
+sample offsets plus an either/or criterion: displacement catches the slow
+rotor, interframe activity catches the fast oscillator, neither alone
+covers both.
+
+**B.** Default capture is now **60 s**. A shorter explicit override remains
+for tests, and a run below 60 s records a `BLOCKED` row stating it is not
+acceptance evidence.
+
+**C.** AOD is three rows, not one: measured transitions, screenshot
+captured, and **owner** inspection of the post-cycle frame. The existence
+of a PNG is no longer treated as evidence the render is intact.
+
+**D.** A face that is installed but not selected now reports `BLOCKED —
+NOT SELECTED`, not `PENDING — owner`. Selection is an owner action;
+active-host state is machine-measurable.
+
+**E.** The tool may now pass *live data distinct from the fallback* on the
+measurement alone. Agreement with the watch's own reading, post-exertion
+rise, off-wrist collapse and absence of a permission prompt stay owner
+rows.
+
+**F.** All fail-closed lineage fixtures retained: right-name/wrong-bytes,
+mutated `res/raw/watchface.xml`, missing resource, unreadable inputs, and
+owner rows never defaulting to PASS.
+
+35 device-matrix tests, up from 13.
+
+## Verification
+
+| Gate | Result |
+|---|---|
+| engine tests | **262 passed** (1 skipped), was 202 |
+| visual + lineage tests | **67 passed** |
+| readiness checker | **6/13 complete, 0 inconsistencies** |
+| deterministic generation | committed XML matches |
+| resource inventory | clean, 60 resources |
+| goldens | normal + AOD byte-identical, bound to APPROVAL-0005 |
+| renderer determinism selftest | pass |
+| aperture proof | 62 renders, 0 violations, worst margin 3.07 px |
+| WO-P7 luminance | PASS, 3.972% of 15% |
+| `tools/validate.py` | **0 errors**, 13 warnings |
+| python / shell syntax | clean |
+| `git diff --check` | clean |
+
+## Launch decisions — not invented
+
+No owner answer has been filled in. The sheet records the architecture
+recommendations as recommendations: $3.99 one-time, three business days,
+`https://x1c7.com/privacy/aurelius`, `support@x1c7.com` **only after
+delivery is tested**, and all supported paid markets where the English
+listing posture is acceptable.
+
+The Google Play pricing rule as previously written here was wrong and has
+been corrected: a **paid app may become free, and that change is one-way**;
+an app first published as free can never become paid.
+
+## Awaiting the Watch7
+
+```bash
+python3 tools/device_matrix.py \
+  aurelius \
+  --version 2.0.0-rc2 \
+  --serial WATCH_IP:PORT \
+  --skip-install
+```
+
+`--skip-install` because the exact rc2 APK `939d2b44…` is already installed
+and its bytes are already proven. After the measured rows complete, the
+generated owner rows go to AGENOR for observation on the physical watch;
+they are not converted to PASS without explicit observations.

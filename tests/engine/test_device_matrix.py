@@ -17,6 +17,7 @@ These tests therefore attack it in the two directions that matter:
 from __future__ import annotations
 
 import json
+import re
 import shutil
 import sys
 import tempfile
@@ -38,9 +39,12 @@ def candidate_apk() -> Path:
     return apks[0] if apks else None
 
 
+FACE_TOML = REPO / "watchfaces/aurelius/engine/face.toml"
+
+
 class BoxParsingTests(unittest.TestCase):
     def test_boxes_come_from_the_contract_not_hard_coding(self):
-        boxes = dm.parse_boxes(REPO / "watchfaces/aurelius/engine/face.toml")
+        boxes = dm.parse_boxes(FACE_TOML)
         self.assertIn("z21_bal", boxes)
         # must agree with the box balance_frequency.py measures
         self.assertEqual(boxes["z21_bal"], (194, 316, 92, 92))
@@ -49,6 +53,110 @@ class BoxParsingTests(unittest.TestCase):
 
     def test_a_missing_contract_yields_no_boxes_rather_than_raising(self):
         self.assertEqual(dm.parse_boxes(Path("/nonexistent/face.toml")), {})
+
+    def test_components_carry_type_and_declared_speed(self):
+        comps = {c["name"]: c for c in dm.parse_components(FACE_TOML)
+                 if c.get("name")}
+        self.assertEqual(comps["z10_gl"]["type"], "rotating_image")
+        self.assertEqual(comps["z10_gl"]["speed"], 40)
+        self.assertEqual(comps["z11_gr"]["speed"], 24)
+        self.assertTrue(comps["z11_gr"].get("reverse"))
+        self.assertEqual(comps["z21_bal"]["type"], "hr_balance")
+        self.assertEqual(comps["z22_cage"]["type"], "seconds_rotor")
+
+
+class RequiredMechanismTests(unittest.TestCase):
+    """Ruling 3A — the whole matrix must not pass because one gear moved."""
+
+    def setUp(self):
+        self.comps = dm.parse_components(FACE_TOML)
+        self.required = {c["name"] for c in dm.required_mechanisms(self.comps)}
+
+    def test_all_four_aurelius_mechanisms_are_required(self):
+        self.assertEqual(self.required,
+                         {"z10_gl", "z11_gr", "z21_bal", "z22_cage"})
+
+    def test_analog_hands_are_not_scored_as_required_motion(self):
+        hands = {c["name"] for c in self.comps
+                 if c.get("type") == "analog_hand" and c.get("name")}
+        self.assertTrue(hands)
+        self.assertFalse(hands & self.required)
+
+    def test_static_and_decorative_components_are_not_required(self):
+        for name in ("z52_hub", "z30_date", "z40_sheen", "z31_resv"):
+            self.assertNotIn(name, self.required)
+
+
+class MotionMeasurementTests(unittest.TestCase):
+    """A slow mechanism must not read as static."""
+
+    def test_a_static_series_shows_no_motion(self):
+        series = [[10] * 100 for _ in range(90)]
+        st = dm.component_motion(series)
+        self.assertEqual(st["max_reference_delta"], 0.0)
+        self.assertFalse(dm.mechanism_moved(st))
+
+    def test_a_fast_mechanism_shows_motion(self):
+        series = [[(i * 40) % 256] * 100 for i in range(90)]
+        self.assertTrue(dm.mechanism_moved(dm.component_motion(series)))
+
+    def test_a_slow_mechanism_is_caught_by_displacement_not_interframe(self):
+        """The tourbillon cage turns 6 deg/s — sub-pixel between frames.
+
+        Interframe delta alone would call it static; displacement against
+        the first frame must not.
+        """
+        series = [[int(i * 0.2)] * 100 for i in range(90)]
+        st = dm.component_motion(series)
+        self.assertLess(st["mean_interframe_delta"],
+                        dm.MOTION_INTERFRAME_MIN)
+        self.assertGreater(st["max_reference_delta"],
+                           dm.MOTION_REF_DELTA_MIN)
+        self.assertTrue(dm.mechanism_moved(st))
+
+    def test_an_oscillator_returning_to_phase_still_registers(self):
+        """A balance wheel whose period divides the capture evenly returns
+        to phase at 1/4, 1/2 and 3/4 — round sample offsets would measure
+        it as perfectly static. It must still register as moving."""
+        import math
+        series = [[int(128 + 100 * math.sin(i * 2 * math.pi / 30))] * 100
+                  for i in range(120)]
+        st = dm.component_motion(series)
+        self.assertTrue(dm.mechanism_moved(st),
+                        f"oscillator read as static: {st}")
+
+    def test_the_reference_offsets_are_not_round_fractions(self):
+        """Guards the fix: 1/4, 1/2, 3/4 alias with common periods."""
+        for f in dm.REF_OFFSETS:
+            for bad in (0.25, 0.5, 0.75):
+                self.assertNotAlmostEqual(f, bad, places=3)
+
+
+class OverallMotionVerdictTests(unittest.TestCase):
+    """Ruling 3A — one moving gear is not a working movement."""
+
+    ALL = ["z10_gl", "z11_gr", "z21_bal", "z22_cage"]
+
+    def test_all_moving_passes(self):
+        r, d = dm.overall_motion_verdict(self.ALL, self.ALL, [], 1800, 60)
+        self.assertEqual(r, "PASS")
+        self.assertIn("all 4", d)
+
+    def test_one_static_mechanism_fails_the_whole_row(self):
+        r, d = dm.overall_motion_verdict(
+            self.ALL, ["z10_gl", "z11_gr", "z21_bal"], ["z22_cage"], 1800, 60)
+        self.assertEqual(r, "FAIL")
+        self.assertIn("z22_cage", d)
+
+    def test_only_one_moving_does_not_pass(self):
+        """The exact weakness the ruling identified."""
+        r, _ = dm.overall_motion_verdict(
+            self.ALL, ["z10_gl"], ["z11_gr", "z21_bal", "z22_cage"], 1800, 60)
+        self.assertEqual(r, "FAIL")
+
+    def test_no_declared_mechanism_is_blocked_not_passed(self):
+        r, _ = dm.overall_motion_verdict([], [], [], 1800, 60)
+        self.assertEqual(r, "BLOCKED")
 
 
 class ResourceLineageTests(unittest.TestCase):
@@ -184,6 +292,85 @@ class OwnerRowTests(unittest.TestCase):
                       dest.read_text(encoding="utf-8").lower())
 
 
+class FakeAdb:
+    """Canned adb responses, so the row logic is testable without a watch."""
+
+    def __init__(self, shell_out: str = "", screencap: bytes = b""):
+        self.shell_out = shell_out
+        self.screencap = screencap
+        self.calls: list[str] = []
+
+    def sh(self, cmd: str, timeout: int = 120) -> str:
+        self.calls.append(cmd)
+        if "dumpsys power" in cmd:
+            return "mWakefulness=Asleep"
+        return self.shell_out
+
+    def run(self, *args, timeout: int = 120, binary: bool = False):
+        class R:
+            pass
+        r = R()
+        r.stdout = self.screencap if binary else ""
+        r.stderr = ""
+        return r
+
+
+class RuntimeSelectionTests(unittest.TestCase):
+    """Ruling 3D — active-host state is measurable, not a judgement."""
+
+    def test_face_not_selected_is_blocked_not_pending_owner(self):
+        m = dm.Matrix()
+        dm.row_runtime_host(FakeAdb("some other package"), m,
+                            "com.xsytrance.aurelius")
+        result, detail = m.rows[-1][1], m.rows[-1][2]
+        self.assertEqual(result, "BLOCKED")
+        self.assertNotIn("PENDING", result)
+        self.assertIn("NOT SELECTED", detail)
+
+    def test_face_selected_passes(self):
+        m = dm.Matrix()
+        dm.row_runtime_host(
+            FakeAdb("Resource only package name com.xsytrance.aurelius"),
+            m, "com.xsytrance.aurelius")
+        self.assertEqual(m.rows[-1][1], "PASS")
+
+
+class AodRowSplitTests(unittest.TestCase):
+    """Ruling 3C — a captured PNG is not proof the render is intact."""
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self._sleep = dm.time.sleep
+        dm.time.sleep = lambda *_: None
+        self.addCleanup(lambda: setattr(dm.time, "sleep", self._sleep))
+
+    def test_transitions_and_capture_are_separate_rows(self):
+        m = dm.Matrix()
+        dm.row_aod_cycles(FakeAdb(screencap=b"\x89PNG fake"), m, self.tmp, 3)
+        labels = [r[0] for r in m.rows]
+        self.assertTrue(any("sleep/wake transitions" in x for x in labels))
+        self.assertTrue(any("post-cycle screenshot captured" in x
+                            for x in labels))
+
+    def test_no_row_claims_the_render_is_visually_intact(self):
+        m = dm.Matrix()
+        dm.row_aod_cycles(FakeAdb(screencap=b"\x89PNG fake"), m, self.tmp, 2)
+        for check, result, detail in m.rows:
+            if result == "PASS":
+                self.assertNotIn("visually intact", check.lower())
+                self.assertNotIn("complete render", detail.lower())
+        # it is an owner row instead
+        self.assertTrue(any("visually intact" in c.lower()
+                            for c, _ in dm.OWNER_ROWS))
+
+    def test_a_missing_capture_is_blocked_not_passed(self):
+        m = dm.Matrix()
+        dm.row_aod_cycles(FakeAdb(screencap=b""), m, self.tmp, 2)
+        cap = [r for r in m.rows if "screenshot captured" in r[0]][0]
+        self.assertEqual(cap[1], "BLOCKED")
+
+
 class HeartRateRowTests(unittest.TestCase):
     """The fallback is 70.0 bpm exactly; a reading there proves nothing."""
 
@@ -195,6 +382,34 @@ class HeartRateRowTests(unittest.TestCase):
         m = dm.Matrix()
         dm.row_heart_rate(m, self.tmp, None)
         self.assertEqual(m.rows[-1][1], "BLOCKED", m.rows)
+
+    def test_live_data_distinct_from_fallback_may_pass(self):
+        # the measured rc2 result: 1.7300 Hz = 103.8 bpm
+        result, detail = dm.hr_verdict(1.73)
+        self.assertEqual(result, "PASS")
+        self.assertIn("103.8", detail)
+
+    def test_a_reading_at_the_fallback_is_blocked(self):
+        result, detail = dm.hr_verdict(dm.HR_FALLBACK_BPM / 60.0)
+        self.assertEqual(result, "BLOCKED")
+        self.assertIn("FALLBACK", detail)
+
+    def test_context_interpretation_stays_with_the_owner(self):
+        names = [c.lower() for c, _ in dm.OWNER_ROWS]
+        self.assertTrue(any("exertion" in n for n in names))
+        self.assertTrue(any("off-wrist" in n for n in names))
+        self.assertTrue(any("agrees with the watch" in n for n in names))
+        self.assertTrue(any("prompt" in n for n in names))
+
+
+class CaptureDurationTests(unittest.TestCase):
+    """Ruling 3B — Checkpoint B requires at least sixty seconds."""
+
+    def test_the_default_record_length_is_sixty_seconds(self):
+        src = (REPO / "tools/device_matrix.py").read_text(encoding="utf-8")
+        mm = re.search(r'"--record-seconds",\s*type=int,\s*default=(\d+)', src)
+        self.assertIsNotNone(mm, "could not find the --record-seconds default")
+        self.assertEqual(int(mm.group(1)), 60)
 
 
 if __name__ == "__main__":

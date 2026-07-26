@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 import subprocess
 import sys
@@ -54,6 +55,10 @@ class ReadinessGateTests(unittest.TestCase):
                     "docs/reports/evidence/phase-4/aurelius/rc2",
                     "watchfaces/aurelius/visual/approvals"):
             (self.root / rel).mkdir(parents=True, exist_ok=True)
+        # The REAL evidence bytes, not placeholders. Freshness fingerprints
+        # are computed over the cited evidence, so a scratch repo full of
+        # "placeholder\n" would never reproduce the committed fingerprints
+        # and the positive control would be meaningless.
         for rel in ("docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md",
                     "docs/reports/PHASE_4_POLICY_AUDIT.md",
                     "docs/reports/PHASE_4_TEST1_READINESS.md",
@@ -69,11 +74,47 @@ class ReadinessGateTests(unittest.TestCase):
                     "APPROVAL-0005-field-tourbillon-mk2-rc1.json"):
             p = self.root / rel
             p.parent.mkdir(parents=True, exist_ok=True)
-            p.write_text("placeholder\n")
+            real = REPO / rel
+            if real.exists():
+                shutil.copy(real, p)
+            else:
+                p.write_text("placeholder\n")
+        # the wear directory is cited as a DIRECTORY, so every file under it
+        # contributes to that gate's fingerprint
+        wear = REPO / "docs/reports/evidence/phase-4/aurelius/wear"
+        if wear.exists():
+            shutil.copytree(wear,
+                            self.root / "docs/reports/evidence/phase-4"
+                                        "/aurelius/wear",
+                            dirs_exist_ok=True)
         self.apk = sha256(next(self.cand.glob("*.apk")))
         self.aab = sha256(next(self.cand.glob("*.aab")))
+        self.git_init()
+        # The copied record was evaluated against a commit in the REAL
+        # repository, which this scratch history cannot see — and the
+        # freshness gate correctly rejects that. Re-evaluate here so the
+        # fixture starts self-consistent. (The committed record's own
+        # fingerprints are the positive control in
+        # tests/engine/test_readiness_freshness.py, against the real repo.)
+        self.restamp()
 
     # -- helpers ---------------------------------------------------------
+
+    def git_init(self) -> None:
+        """A real git repo: freshness records evaluated_at_commit, and the
+        ancestry check must be exercised rather than skipped."""
+        env = dict(os.environ)
+        env.update({"GIT_AUTHOR_NAME": "fixture",
+                    "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
+                    "GIT_COMMITTER_NAME": "fixture",
+                    "GIT_COMMITTER_EMAIL": "fixture@example.invalid"})
+        for a in (["init", "-q", "-b", "main"], ["add", "-A"],
+                  ["commit", "-qm", "fixture"]):
+            subprocess.run(["git", "-C", str(self.root), *a],
+                           capture_output=True, env=env)
+        self.head = subprocess.run(
+            ["git", "-C", str(self.root), "rev-parse", "HEAD"],
+            capture_output=True, text=True).stdout.strip()
 
     def record(self) -> dict:
         return json.loads((self.cand / "READINESS.json").read_text())
@@ -81,12 +122,21 @@ class ReadinessGateTests(unittest.TestCase):
     def write(self, r: dict) -> None:
         (self.cand / "READINESS.json").write_text(json.dumps(r, indent=2))
 
-    def run_checker(self):
+    def run_checker(self, *extra: str):
         r = subprocess.run(
             [sys.executable, str(self.root / "tools/check_candidate_readiness.py"),
-             "aurelius", "--version", "2.0.0-rc2"],
+             "aurelius", "--version", "2.0.0-rc2", *extra],
             capture_output=True, text=True)
         return r.returncode, r.stdout + r.stderr
+
+    def restamp(self):
+        """Re-derive fingerprints after legitimately changing the evidence.
+
+        This is the honest workflow: evidence changed, so the record is
+        re-evaluated. It is deliberately an explicit step — a test that
+        forgets it fails, exactly as a human who forgets it would.
+        """
+        return self.run_checker("--stamp")
 
     def session(self, apk: str, contexts, **obs) -> dict:
         o = {"date": "2026-07-27", "duration_hours": 9.0,
@@ -295,8 +345,135 @@ class ReadinessGateTests(unittest.TestCase):
             {"state": "complete", "artifact_sha256": self.apk,
              "evidence": [ev], "detail": "real"})
         self.write(r)
+        # the evidence legitimately changed, so it is re-evaluated; without
+        # this the freshness gate rejects the record, which is the point
+        self.restamp()
         rc, out = self.run_checker()
         self.assertEqual(rc, 0, out)
+
+
+class DependencyGraphTests(ReadinessGateTests):
+    """Checkpoint B rc2 re-review, ruling 1 — the corrected causal order.
+
+    `installed-APK-hash-verified -> device-validated` was backwards. An
+    installed-byte pullback is independent evidence and a PREREQUISITE for
+    trusting the visual matrix, not a consequence of it. These tests pin the
+    corrected direction so it cannot silently drift back.
+    """
+
+    def complete_device(self, r: dict) -> None:
+        r["states"]["device-validated"].update(
+            {"state": "complete", "artifact_sha256": self.apk,
+             "evidence": [self.good_device_evidence()],
+             "detail": "matrix run"})
+
+    # -- 1 --------------------------------------------------------------
+
+    def test_installed_hash_cannot_complete_before_consumer_lineage(self):
+        r = self.record()
+        r["states"]["consumer-lineage-verified"].update(
+            {"state": "blocked", "detail": "held"})
+        self.write(r)
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("installed-APK-hash-verified is `complete` but its "
+                      "prerequisite consumer-lineage-verified", out)
+
+    # -- 2 --------------------------------------------------------------
+
+    def test_resource_lineage_cannot_complete_before_installed_hash(self):
+        r = self.record()
+        r["states"]["installed-APK-hash-verified"].update(
+            {"state": "blocked", "detail": "held"})
+        self.write(r)
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("installed-resource-lineage-verified is `complete` but "
+                      "its prerequisite installed-APK-hash-verified", out)
+
+    # -- 3 --------------------------------------------------------------
+
+    def test_device_validation_cannot_complete_before_resource_lineage(self):
+        r = self.record()
+        self.complete_device(r)
+        r["states"]["installed-resource-lineage-verified"].update(
+            {"state": "blocked", "detail": "held"})
+        self.write(r)
+        self.restamp()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("device-validated is `complete` but its prerequisite "
+                      "installed-resource-lineage-verified", out)
+
+    # -- 4 --------------------------------------------------------------
+
+    def test_device_validation_cannot_complete_before_permissions(self):
+        r = self.record()
+        self.complete_device(r)
+        r["states"]["permissions-verified"].update(
+            {"state": "blocked", "detail": "unproven"})
+        self.write(r)
+        self.restamp()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("device-validated is `complete` but its prerequisite "
+                      "permissions-verified", out)
+
+    # -- 5 --------------------------------------------------------------
+
+    def test_installed_byte_gates_do_not_require_owner_visual_acceptance(self):
+        """Byte identity is not an aesthetic judgement."""
+        sys.path.insert(0, str(REPO / "tools"))
+        import check_candidate_readiness as ccr
+
+        owner_gates = {"owner-pixel-approved", "owner-wear-complete",
+                       "device-validated"}
+        for gate in ("installed-APK-hash-verified",
+                     "installed-resource-lineage-verified"):
+            deps = set(ccr.REQUIRES[gate])
+            self.assertFalse(deps & owner_gates,
+                             f"{gate} must not depend on {deps & owner_gates}")
+
+        # and empirically: both close while every owner gate is open
+        r = self.record()
+        self.assertEqual(r["states"]["owner-pixel-approved"]["state"],
+                         "proposed")
+        self.assertEqual(r["states"]["owner-wear-complete"]["state"],
+                         "blocked")
+        for gate in ("installed-APK-hash-verified",
+                     "installed-resource-lineage-verified"):
+            self.assertEqual(r["states"][gate]["state"], "complete")
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 0, out)
+
+    # -- 6 --------------------------------------------------------------
+
+    def test_incomplete_matrix_does_not_block_installed_byte_gates(self):
+        """The regression this ruling corrects, stated as a test."""
+        r = self.record()
+        self.assertEqual(r["states"]["device-validated"]["state"], "blocked")
+        self.write(r)
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 0, out)
+        self.assertIn("installed-APK-hash-verified: complete", out)
+        self.assertIn("installed-resource-lineage-verified: complete", out)
+
+    # -- the interlock still holds --------------------------------------
+
+    def test_owner_wear_still_requires_device_validation(self):
+        r = self.record()
+        r["states"]["owner-wear-complete"].update(
+            {"state": "complete", "artifact_sha256": self.apk,
+             "evidence": [self.add_sessions(
+                 [self.session(self.apk,
+                               ["office", "home", "outdoor", "low-light"])])],
+             "detail": "claimed"})
+        self.write(r)
+        self.restamp()
+        rc, out = self.run_checker()
+        self.assertEqual(rc, 1)
+        self.assertIn("owner-wear-complete is `complete` but its prerequisite "
+                      "device-validated", out)
 
 
 if __name__ == "__main__":

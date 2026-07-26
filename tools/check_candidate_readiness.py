@@ -26,6 +26,8 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -34,14 +36,25 @@ REPO = Path(__file__).resolve().parents[1]
 STATES = ("unknown", "blocked", "failed", "waived", "proposed", "complete")
 
 # state -> the states that must be complete before it may be complete
+#
+# Checkpoint B rc2 re-review, ruling 1: the direction
+# `installed-APK-hash-verified -> device-validated` was backwards. An
+# installed-byte pullback is INDEPENDENT evidence and a prerequisite for
+# trusting the broader visual matrix — it is not downstream of it. The
+# corrected graph makes the full matrix depend on proof that the intended
+# bytes are actually installed, which is the causal order.
+#
+# This is not a relaxation to improve a score. It is the reviewer's ruling
+# on a question deliberately left open rather than decided locally.
 REQUIRES: dict[str, tuple[str, ...]] = {
     "assembled": (),
     "consumer-lineage-verified": ("assembled",),
     "dex-gate-passed": ("assembled",),
     "permissions-verified": ("assembled",),
-    "device-validated": ("assembled",),
-    "installed-APK-hash-verified": ("device-validated",),
+    "installed-APK-hash-verified": ("consumer-lineage-verified",),
     "installed-resource-lineage-verified": ("installed-APK-hash-verified",),
+    "device-validated": ("installed-resource-lineage-verified",
+                         "permissions-verified"),
     "owner-wear-complete": ("device-validated",),
     "owner-pixel-approved": ("owner-wear-complete",),
     "architecture-approved": (
@@ -56,6 +69,104 @@ REQUIRES: dict[str, tuple[str, ...]] = {
 }
 
 REQUIRED_WEAR_CONTEXTS = {"office", "home", "outdoor", "low-light"}
+
+# Checkpoint B rc2 re-review, ruling 2: freshness is machine-enforced for
+# machine-derived facts. It must not depend on a human remembering to
+# rewrite stale prose — READINESS sat asserting "no Galaxy Watch7
+# reachable" while a device session was already committed, and the checker
+# reported 0 inconsistencies because it only ever caught a gate claiming
+# MORE than its evidence supports.
+CHECKER_SCHEMA = "agenor.release-readiness-checker/2"
+
+# Fields that hold human judgement. They are never machine-generated,
+# never machine-verified, and changing one must not alter a derived result.
+SUBJECTIVE_FIELDS = ("owner_note", "reviewer_note", "waiver_rationale")
+
+# Directory entries never contribute to an evidence fingerprint.
+FINGERPRINT_EXCLUDE = {"__pycache__", ".git", ".DS_Store"}
+
+# A `blocked` gate must not assert a blocker condition that its own
+# canonical evidence set disproves. Each rule is (pattern asserting the
+# condition, human description, predicate that the condition is GONE).
+NO_DEVICE_CLAIM = re.compile(
+    r"no\s+(?:\w+\s+){0,3}device[s]?\s+(?:was\s+|were\s+|is\s+|are\s+)?"
+    r"reachable"
+    r"|adb\s+reported\s+zero\s+devices"
+    r"|zero\s+devices\s+throughout"
+    r"|requires\s+the\s+device:"
+    r"|no\s+Galaxy\s+Watch7\s+reachable",
+    re.I)
+
+
+def _rel(p: Path) -> str:
+    return str(p.relative_to(REPO)).replace("\\", "/")
+
+
+def enumerate_evidence(repo: Path, rels: list[str]) -> list[Path]:
+    """Every evidence file a gate cites, recursively, deterministically.
+
+    Enumerated from the working tree rather than the index: on a clean
+    checkout (CI, and any honest commit) the two are identical, but walking
+    the tree also catches a file ADDED under a fingerprinted directory,
+    which is one of the drift modes the ruling requires be rejected.
+    """
+    files: list[Path] = []
+    for rel in rels:
+        p = repo / rel
+        if p.is_dir():
+            for q in p.rglob("*"):
+                if not q.is_file():
+                    continue
+                parts = q.relative_to(repo).parts
+                if any(x in FINGERPRINT_EXCLUDE for x in parts):
+                    continue
+                files.append(q)
+        elif p.is_file():
+            files.append(p)
+    return sorted(set(files), key=lambda q: str(q.relative_to(repo)))
+
+
+def evidence_fingerprint(repo: Path, rels: list[str]) -> tuple[str, int]:
+    """Deterministic fingerprint over sorted repo-relative path + sha256."""
+    h = hashlib.sha256()
+    files = enumerate_evidence(repo, rels)
+    for f in files:
+        h.update(str(f.relative_to(repo)).replace("\\", "/").encode("utf-8"))
+        h.update(b"\0")
+        h.update(sha256(f).encode("ascii"))
+        h.update(b"\0")
+    return f"sha256:{h.hexdigest()}", len(files)
+
+
+def machine_summary(fingerprint: str, count: int) -> str:
+    """Machine-derived, never hand-written."""
+    return (f"{count} evidence file(s), fingerprint "
+            f"{fingerprint.split(':')[1][:12]}…")
+
+
+def _git(repo: Path, *args: str) -> tuple[int, str]:
+    try:
+        r = subprocess.run(["git", "-C", str(repo), *args],
+                           capture_output=True, text=True, timeout=30)
+        return r.returncode, (r.stdout or "").strip()
+    except (OSError, subprocess.SubprocessError):
+        return 127, ""
+
+
+def git_available(repo: Path) -> bool:
+    return _git(repo, "rev-parse", "--git-dir")[0] == 0
+
+
+def commit_is_reachable(repo: Path, sha: str) -> bool:
+    """The commit a gate was evaluated at must exist and be an ancestor.
+
+    A record evaluated against a commit this branch cannot see is not a
+    record of this branch's evidence.
+    """
+    if _git(repo, "cat-file", "-e", f"{sha}^{{commit}}")[0] != 0:
+        return False
+    return _git(repo, "merge-base", "--is-ancestor", sha, "HEAD")[0] == 0
+
 
 issues: list[str] = []
 
@@ -171,6 +282,88 @@ def check_device(entry: dict, apk_sha: str) -> None:
     ok("device-validated: results present and bound to the candidate APK")
 
 
+def device_session_proven(repo: Path, ev: list[str], apk_sha: str) -> bool:
+    """Does the canonical evidence set itself disprove 'no device'?"""
+    for f in enumerate_evidence(repo, ev):
+        if f.name == "DEVICE_TEST_RESULTS.md":
+            return True
+        if f.suffix.lower() in (".md", ".json", ".txt"):
+            try:
+                if apk_sha and apk_sha in f.read_text(encoding="utf-8",
+                                                      errors="replace"):
+                    return True
+            except OSError:
+                continue
+    return False
+
+
+def check_freshness(repo: Path, name: str, entry: dict, apk_sha: str) -> None:
+    """Reject a record whose evidence moved under it.
+
+    This is the half the original checker could not see. It verified that
+    no gate claimed MORE than its evidence supported; it had no way to
+    notice a gate claiming LESS, or a `detail` overtaken by events.
+    """
+    ev = _ev(entry)
+    if not ev:
+        # nothing cited: freshness is vacuous, but a stamped fingerprint
+        # with no evidence behind it is a lie about what was checked
+        if entry.get("evidence_fingerprint"):
+            err(f"{name}: records an evidence_fingerprint but cites no "
+                f"evidence")
+        return
+
+    fp, count = evidence_fingerprint(repo, ev)
+    recorded = entry.get("evidence_fingerprint")
+    if not recorded:
+        err(f"{name}: no evidence_fingerprint — evidence-bearing gates must "
+            f"pin the bytes they were evaluated against "
+            f"(re-run with --stamp)")
+    elif recorded != fp:
+        err(f"{name}: evidence has CHANGED since evaluation — recorded "
+            f"{str(recorded).split(':')[-1][:12]}… but the cited evidence "
+            f"now fingerprints {fp.split(':')[1][:12]}… ({count} file(s)). "
+            f"A file was changed, added, removed or drifted; re-evaluate, "
+            f"do not re-stamp blindly")
+
+    schema = entry.get("checker_schema")
+    if schema != CHECKER_SCHEMA:
+        err(f"{name}: checker_schema {schema!r} != {CHECKER_SCHEMA!r} — the "
+            f"record was produced by a different gate definition")
+
+    at = entry.get("evaluated_at_commit")
+    if not at:
+        err(f"{name}: no evaluated_at_commit")
+    elif not re.fullmatch(r"[0-9a-f]{40}", str(at)):
+        err(f"{name}: evaluated_at_commit {at!r} is not a full commit sha")
+    elif git_available(repo) and not commit_is_reachable(repo, str(at)):
+        err(f"{name}: evaluated_at_commit {str(at)[:12]}… is not reachable "
+            f"from HEAD — this record was evaluated against another commit")
+
+    ms = entry.get("machine_summary")
+    if ms is not None and ms != machine_summary(fp, count):
+        err(f"{name}: machine_summary is hand-edited or stale "
+            f"({ms!r}) — it is machine-derived and must not be written "
+            f"by hand")
+
+    # subjective prose is preserved, never generated, never verified
+    for f in SUBJECTIVE_FIELDS:
+        if f in entry and not isinstance(entry[f], str):
+            err(f"{name}: {f} must be prose, got {type(entry[f]).__name__}")
+    if entry.get("state") == "waived" and not entry.get("waiver_rationale"):
+        err(f"{name}: a waived gate must carry an explicit waiver_rationale")
+
+    # a blocked gate must not assert a condition its evidence disproves
+    if entry.get("state") == "blocked":
+        detail = str(entry.get("detail", ""))
+        if NO_DEVICE_CLAIM.search(detail) and device_session_proven(
+                repo, ev, apk_sha):
+            err(f"{name}: STALE BLOCKER DETAIL — the record claims the "
+                f"device was unreachable, but its own canonical evidence "
+                f"set proves a device session occurred. Re-derive the "
+                f"detail from the evidence")
+
+
 def check_hash_claim(entry: dict, expect: str, label: str) -> None:
     got = entry.get("value") or entry.get("hash")
     if got != expect:
@@ -187,6 +380,12 @@ def main() -> int:
     ap.add_argument("--version", required=True)
     ap.add_argument("--json", action="store_true",
                     help="print the resolved state table as JSON")
+    ap.add_argument("--stamp", action="store_true",
+                    help="re-derive evidence fingerprints, evaluated_at_commit "
+                         "and machine_summary from the CURRENT evidence, then "
+                         "verify. An explicit human action: it pins what is "
+                         "there now, it does not decide that what is there is "
+                         "sufficient")
     args = ap.parse_args()
 
     cand = REPO / "releases" / args.face / "candidates" / args.version
@@ -222,6 +421,35 @@ def main() -> int:
     if extra:
         err(f"READINESS.json declares unknown state(s): {sorted(extra)}")
 
+    if args.stamp:
+        head = _git(REPO, "rev-parse", "HEAD")[1]
+        if not re.fullmatch(r"[0-9a-f]{40}", head):
+            print("ERROR --stamp needs a git repository to record "
+                  "evaluated_at_commit", file=sys.stderr)
+            return 2
+        for entry in states.values():
+            ev = _ev(entry)
+            if not ev:
+                for k in ("evidence_fingerprint", "machine_summary",
+                          "evaluated_at_commit", "checker_schema"):
+                    entry.pop(k, None)
+                continue
+            fp, count = evidence_fingerprint(REPO, ev)
+            entry["evidence_fingerprint"] = fp
+            entry["machine_summary"] = machine_summary(fp, count)
+            entry["evaluated_at_commit"] = head
+            entry["checker_schema"] = CHECKER_SCHEMA
+        # the summary is machine-derived; regenerating it here is what stops
+        # it going stale the way the gate details did
+        buckets: dict[str, list[str]] = {}
+        for n, e in states.items():
+            buckets.setdefault(str(e.get("state")), []).append(n)
+        r["summary"] = {k: sorted(v) for k, v in sorted(buckets.items())}
+        rp.write_text(json.dumps(r, indent=2, sort_keys=True) + "\n",
+                      encoding="utf-8")
+        print(f"stamped {rp.relative_to(REPO)} at {head[:12]}… — "
+              f"pinned what is there NOW; it does not decide sufficiency\n")
+
     for name, entry in sorted(states.items()):
         before = len(issues)
         st = entry.get("state")
@@ -252,6 +480,10 @@ def main() -> int:
             for rel in ev:
                 if not (REPO / rel).exists():
                     err(f"{name}: evidence path does not exist: {rel}")
+
+        # freshness applies to every state, not only `complete` — a stale
+        # `blocked` record is exactly the failure this was added for
+        check_freshness(REPO, name, entry, apk_sha)
 
         # content checks, regardless of claimed state
         if name == "owner-wear-complete" and st == "complete":
