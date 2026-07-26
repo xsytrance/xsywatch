@@ -67,11 +67,41 @@ class TestAureliusSemanticParity(unittest.TestCase):
             self.assertEqual(b, g, f"element #{i} differs from baseline")
 
     def test_identity_pinned(self):
+        """Identity may not drift silently.
+
+        Phase 2 pinned this to 1 / "1.0" to prove the engine migration
+        changed no identity field. Phase 4 moves the package to the
+        2.0.0-rc1 release candidate deliberately (ADR-010 §3, minSdk
+        raised to match the WFF v4 API floor), so the pin moves with it.
+        The guard's job is unchanged: these values are edited here only
+        alongside a reviewed decision, never as a side effect.
+        """
         spec = load_spec(SPEC)
         self.assertEqual(spec.identity["package"], "com.xsytrance.aurelius")
-        self.assertEqual(str(spec.identity["version_code"]), "1")
-        self.assertEqual(str(spec.identity["version_name"]), "1.0")
+        self.assertEqual(str(spec.identity["version_code"]), "2")
+        self.assertEqual(str(spec.identity["version_name"]), "2.0.0-rc1")
         self.assertEqual(spec.wff_version, 4)
+
+    def test_package_name_never_changes(self):
+        """The package name is the one identity field that must NEVER
+        move: it is immutable once published and an update must keep it
+        (ADR-010 §3). Stated separately so a future version bump cannot
+        carry a rename along with it."""
+        self.assertEqual(load_spec(SPEC).identity["package"],
+                         "com.xsytrance.aurelius")
+
+    def test_min_sdk_satisfies_the_wff_version_floor(self):
+        """WFF v4 requires Wear OS 6 / API 36
+        (developer.android.com/training/wearables/wff, checked
+        2026-07-26). A face declaring a format its minSdk allows onto
+        devices that cannot render it is the FMT-2 defect."""
+        import re
+        floors = {1: 33, 2: 34, 3: 35, 4: 36}
+        spec = load_spec(SPEC)
+        gradle = (SPEC.parent.parent / "app/build.gradle.kts").read_text()
+        m = re.search(r"minSdk\s*=\s*(\d+)", gradle)
+        self.assertIsNotNone(m, "minSdk not found in build.gradle.kts")
+        self.assertGreaterEqual(int(m.group(1)), floors[spec.wff_version])
 
 
 if __name__ == "__main__":
