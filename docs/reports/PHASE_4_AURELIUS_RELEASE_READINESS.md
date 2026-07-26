@@ -1,6 +1,6 @@
 # Phase 4 — Aurelius commercial release readiness
 
-**Status:** **Checkpoint A complete — stopped at the owner checkpoint**
+**Status:** **Checkpoint B complete — returned unmerged for review** (Checkpoint A record retained below)
 **Repository:** `xsytrance/xsywatch`
 **Branch:** `phase-4/aurelius-release-readiness`
 **Branch point:** `3333d427e9c87f1c59b26d61c41f6b9ce6435152` (main)
