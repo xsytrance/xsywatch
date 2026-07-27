@@ -81,12 +81,18 @@ An ISSUE row means this candidate is NOT acceptable as-is.
 
 ## Summary
 
-| Result | Rows |
-|---|---|
-| NOT OBTAINABLE | 1 |
-| PASS | 16 |
-| SKIPPED | 1 |
-| PENDING — owner (not scored) | 26 |
+Scope: **18 measured rows** (machine-scored) and **26 owner rows** (never machine-scored), of which **17 observed** and **9 pending**.
+
+| Origin | Result | Rows |
+|---|---|---|
+| measured | NOT OBTAINABLE | 1 |
+| measured | PASS | 16 |
+| measured | SKIPPED | 1 |
+| owner | ISSUE | 1 |
+| owner | PASS | 16 |
+| owner | PENDING — owner | 9 |
+
+Totals: measured 18, owner 26 — 44 rows in all.
 
 Artefacts under `docs/reports/evidence/phase-4/aurelius/rc2/matrix/`.
 

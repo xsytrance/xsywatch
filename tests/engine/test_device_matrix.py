@@ -492,6 +492,95 @@ class OwnerObservationTests(unittest.TestCase):
         self.assertIn("1 of 26 observed", text)
 
 
+class SummaryAccountingTests(unittest.TestCase):
+    """The footer must agree with the table above it.
+
+    Groups-A/B review: the summary hardcoded every owner row as PENDING, so
+    the document reported 26 pending while its own table showed 17 observed
+    — contradicting itself in its own footer. Counts are now derived from
+    the rows, and these tests assert the two can never disagree again.
+    """
+
+    APK = "c" * 64
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def build(self, measured, observations) -> str:
+        (self.tmp / dm.OWNER_FILE).write_text(json.dumps({
+            "apk_sha256": self.APK, "observations": observations}),
+            encoding="utf-8")
+        m = dm.Matrix()
+        for check, result, detail in measured:
+            m.add(check, result, detail)
+        dest = self.tmp / "DEVICE_TEST_RESULTS.md"
+        dm.emit(m, dest, "aurelius", "2.0.0-rc2", self.APK, self.tmp)
+        return dest.read_text(encoding="utf-8")
+
+    def counts_from_table(self, text: str) -> dict:
+        """Count the owner rows as actually rendered in the table."""
+        out: dict[str, int] = {}
+        for line in text.splitlines():
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) == 5 and cells[0] in ("A", "B", "C", "D"):
+                out[cells[2].strip("*")] = out.get(cells[2].strip("*"), 0) + 1
+        return out
+
+    def counts_from_summary(self, text: str) -> dict:
+        out: dict[str, int] = {}
+        for line in text.splitlines():
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) == 3 and cells[0] == "owner" and cells[2].isdigit():
+                out[cells[1]] = int(cells[2])
+        return out
+
+    def test_summary_owner_counts_equal_table_owner_counts(self):
+        obs = {"Reserve ticks": {"result": "PASS"},
+               "Date readability": {"result": "ISSUE", "note": "grey"},
+               "Battery gauge plausibility": {"result": "NOT TESTED"}}
+        text = self.build([("m1", "PASS", "d")], obs)
+        self.assertEqual(self.counts_from_summary(text),
+                         self.counts_from_table(text))
+
+    def test_pending_count_is_not_the_whole_owner_list_once_observed(self):
+        """The exact defect: 26 reported pending while 17 were observed."""
+        obs = {name: {"result": "PASS"} for _, name, _ in dm.OWNER_ROWS[:17]}
+        text = self.build([("m1", "PASS", "d")], obs)
+        summary = self.counts_from_summary(text)
+        self.assertEqual(summary.get("PASS"), 17)
+        self.assertEqual(summary.get("PENDING — owner"),
+                         len(dm.OWNER_ROWS) - 17)
+        self.assertNotEqual(summary.get("PENDING — owner"),
+                            len(dm.OWNER_ROWS))
+
+    def test_owner_counts_always_total_the_owner_row_list(self):
+        for n in (0, 1, 13, len(dm.OWNER_ROWS)):
+            obs = {name: {"result": "PASS"}
+                   for _, name, _ in dm.OWNER_ROWS[:n]}
+            text = self.build([("m1", "PASS", "d")], obs)
+            self.assertEqual(sum(self.counts_from_summary(text).values()),
+                             len(dm.OWNER_ROWS), f"with {n} observed")
+
+    def test_measured_counts_equal_the_measured_rows(self):
+        measured = [("a", "PASS", "d"), ("b", "PASS", "d"),
+                    ("c", "FAIL", "d"), ("d", "BLOCKED", "d")]
+        text = self.build(measured, {})
+        got = {}
+        for line in text.splitlines():
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) == 3 and cells[0] == "measured" and cells[2].isdigit():
+                got[cells[1]] = int(cells[2])
+        self.assertEqual(got, {"PASS": 2, "FAIL": 1, "BLOCKED": 1})
+
+    def test_scope_line_states_observed_and_pending(self):
+        obs = {"Reserve ticks": {"result": "PASS"}}
+        text = self.build([("m1", "PASS", "d")], obs)
+        self.assertIn(f"**{len(dm.OWNER_ROWS)} owner rows**", text)
+        self.assertIn("**1 observed**", text)
+        self.assertIn(f"**{len(dm.OWNER_ROWS) - 1} pending**", text)
+
+
 class HeartRateRowTests(unittest.TestCase):
     """The fallback is 70.0 bpm exactly; a reading there proves nothing."""
 

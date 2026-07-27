@@ -964,17 +964,34 @@ def emit(m: Matrix, dest: Path, face: str, version: str, apk_sha: str,
         lines += ["",
                   "An ISSUE row means this candidate is NOT acceptable as-is.",
                   "`device-validated` must not be closed while one stands."]
+    # Summary counts are DERIVED from the rows above, never asserted.
+    # A previous version hardcoded every owner row as PENDING, so the
+    # summary claimed 26 pending while 17 were observed — the document
+    # contradicting itself in its own footer.
+    owner_counts: dict[str, int] = {}
+    for _, name, _ in OWNER_ROWS:
+        r = owner.get(name, {}).get("result", "PENDING — owner")
+        owner_counts[r] = owner_counts.get(r, 0) + 1
     lines += [
         "",
         "## Summary",
         "",
-        "| Result | Rows |",
-        "|---|---|",
+        f"Scope: **{len(m.rows)} measured rows** (machine-scored) and "
+        f"**{len(OWNER_ROWS)} owner rows** (never machine-scored), of which "
+        f"**{answered} observed** and "
+        f"**{owner_counts.get('PENDING — owner', 0)} pending**.",
+        "",
+        "| Origin | Result | Rows |",
+        "|---|---|---|",
     ]
     for k in sorted(c):
-        lines.append(f"| {k} | {c[k]} |")
+        lines.append(f"| measured | {k} | {c[k]} |")
+    for k in sorted(owner_counts):
+        lines.append(f"| owner | {k} | {owner_counts[k]} |")
     lines += [
-        f"| PENDING — owner (not scored) | {len(OWNER_ROWS)} |",
+        "",
+        f"Totals: measured {sum(c.values())}, owner {sum(owner_counts.values())}"
+        f" — {sum(c.values()) + sum(owner_counts.values())} rows in all.",
         "",
         f"Artefacts under `{_rel(out_dir)}/`.",
         "",

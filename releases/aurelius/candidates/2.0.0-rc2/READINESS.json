@@ -23,20 +23,22 @@
   "states": {
     "architecture-approved": {
       "checker_schema": "agenor.release-readiness-checker/2",
-      "detail": "Checkpoint B returned CHANGES REQUESTED; this candidate answers those corrections and is returned for re-review",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "detail": "static rc2 architecture was CONDITIONALLY APPROVED at the Checkpoint B rc2 re-review, and the Groups-A/B owner-matrix evidence has since been ACCEPTED. Still proposed, not complete: final Checkpoint B acceptance requires the corrected candidate, its full revalidation, the remaining owner rows and the final architecture review.",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
-        "docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md"
+        "docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md",
+        "docs/reports/PHASE_4_CHECKPOINT_B_RC2_REREVIEW.md",
+        "docs/reports/PHASE_4_RC2_OWNER_MATRIX_AB_CHATGPT_REVIEW.md"
       ],
-      "evidence_fingerprint": "sha256:461f2a42c7fc0711ccf43096ab47a7d2ab98410ba06ee8a51794916995431da0",
-      "machine_summary": "1 evidence file(s), fingerprint 461f2a42c7fc\u2026",
+      "evidence_fingerprint": "sha256:f5bfc771574abdd3bddd593b86ab2aeb07f8e31d8b8341f0101122b86b1bf6f4",
+      "machine_summary": "3 evidence file(s), fingerprint f5bfc771574a\u2026",
       "state": "proposed"
     },
     "assembled": {
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "AAB and debug APK built and verified; build fails if verification fails",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json"
       ],
@@ -48,7 +50,7 @@
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "three roles enforced against COMMIT OBJECTS (blob/LFS oid), not the working tree; two clean detached-worktree rebuilds from the source commit are byte-identical and equal the canonical artifacts",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json"
       ],
@@ -59,7 +61,7 @@
     "device-validated": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "the corrected full matrix ran on 2026-07-27: 20 measured rows, 0 failures (all four mechanisms moved across 1802 frames of a 60s capture; 10/10 AOD transitions; touch inert; zero crash or ANR; HR 104.1 bpm clear of the 70.0 bpm fallback). Owner inspection began the same day: 17 of 26 owner rows observed. BLOCKED on two counts. (1) One row is an ISSUE, not a pass: Date readability - owner reported \"yeah its grey on grey\" and \"looks off-center too\". The aperture proof asserts CONTAINMENT only and never asserted centring, so nothing was checking it; the deterministic render confirms a systematic 1px high bias on every day and a horizontal drift up to 3px on day 1. (2) Nine rows remain unobserved - the three heart-rate behaviour rows, which need simultaneous wheel recording and adb reachability, and the six Group D disposition rows, which are deferred until after the wear sessions. An ISSUE row means the candidate is not acceptable as-is.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_TEST_RESULTS.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/OWNER_OBSERVATIONS.json",
@@ -68,8 +70,8 @@
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
       ],
-      "evidence_fingerprint": "sha256:149de056ecf5fc52372c1618d870be4afd20bfe6543f5eb87efefff2e5af13ec",
-      "machine_summary": "13 evidence file(s), fingerprint 149de056ecf5\u2026",
+      "evidence_fingerprint": "sha256:719d3cd38a64a026e697a75440183efd6bcbe772d4959c77dd01ce32e4feb54a",
+      "machine_summary": "13 evidence file(s), fingerprint 719d3cd38a64\u2026",
       "owner_note": "AGENOR 2026-07-27: Groups A and B complete (16 of 16 rows: 15 PASS, 1 ISSUE on date readability). Group C permission row PASS - no prompt ever seen. Group C heart-rate rows deferred: owner read 130 bpm on the watch but was away from the home network, so no simultaneous wheel recording was possible. That 130 must NOT be paired with the earlier 104.1 bpm measurement, and the watch reading rising is not evidence the FACE received it.",
       "state": "blocked"
     },
@@ -77,7 +79,7 @@
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "release dex allowlisted and deleted only after verification; every debug-APK dex classified \u2014 6 generated R classes plus 4 named D8 desugaring stubs, 0 unexplained; AAB contains no dex",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json",
         "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json"
@@ -90,7 +92,7 @@
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "the APK pulled back from /data/app on the Watch7 hashes byte-identical to the candidate, so the artifact on the panel is the artifact in the repository and not a re-signed or re-packaged variant. Closed under the corrected DAG (Checkpoint B rc2 re-review, ruling 1): an installed-byte pullback is independent evidence and a prerequisite for trusting the visual matrix, not something downstream of it.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
       ],
@@ -103,7 +105,7 @@
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "of the 60 inventory resources extracted from the INSTALLED APK, 58 are byte-identical to repository source and 0 drifted. The 2 non-identical entries are both explained and neither is drift \u2014 res/xml/watch_face_info.xml is compiled to binary AXML at packaging, and res/values/integers.xml is folded into resources.arsc. res/raw/watchface.xml, the file that defines every pixel of the face, is byte-identical. Closed under the corrected DAG; independently reproduced offline by tools/device_matrix.py at 58/2/0.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
       ],
@@ -113,31 +115,33 @@
     },
     "owner-pixel-approved": {
       "checker_schema": "agenor.release-readiness-checker/2",
-      "detail": "APPROVAL-0005 owner.status is proposed. The craftsmanship DIRECTION was approved at Checkpoint A; final pixel acceptance requires the wear evidence the review made a condition.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "detail": "APPROVAL-0005 owner.status is proposed and rc2 CANNOT receive owner pixel approval: the Date readability row is an owner-reported ISSUE, confirmed by review as a real release-blocking defect that must not be converted to PASS by a waiver or a WCAG threshold argument. A shipping correction requires a new package candidate and a new visual approval generation superseding APPROVAL-0005 without modifying it.",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "watchfaces/aurelius/visual/approvals/APPROVAL-0005-field-tourbillon-mk2-rc1.json"
       ],
       "evidence_fingerprint": "sha256:104acc1c443d549ff26139acb1abf143ad7f42b9b87db1f957809e63a584f051",
       "machine_summary": "1 evidence file(s), fingerprint 104acc1c443d\u2026",
+      "reviewer_note": "ChatGPT 2026-07-27: rc2 cannot receive pixel approval; fix the date rather than waive it.",
       "state": "proposed"
     },
     "owner-wear-complete": {
       "checker_schema": "agenor.release-readiness-checker/2",
-      "detail": "zero wear sessions recorded. Requires AGENOR to wear the watch with rc2 installed and run tools/wear_log.py; cannot be invented.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "detail": "zero wear sessions recorded, and per the Groups-A/B review the final release-grade wear evidence must NOT be spent on rc2: rc2 is already known unacceptable (Date readability ISSUE) and any formal session would be bound to an obsolete APK hash. Wearing rc2 remains useful as exploratory product research to surface further defects, but the Checkpoint B wear evidence must be recorded against the corrected candidate. Requires tools/wear_log.py and cannot be invented.",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/wear/"
       ],
       "evidence_fingerprint": "sha256:9e207a5d87dfb4c8ef31fe14ad5343d4b67b9182462cb64f10f803fca7c3a3b5",
       "machine_summary": "4 evidence file(s), fingerprint 9e207a5d87df\u2026",
+      "reviewer_note": "ChatGPT 2026-07-27: do not spend the final wear-session requirement on rc2; exploratory use only.",
       "state": "blocked"
     },
     "permissions-verified": {
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "SETTLED EMPIRICALLY on the Galaxy Watch7. The previously UNPROVEN half is now measured: rc2 declares no permission and still receives live heart rate. The balance wheel is driven at HR/60 Hz, so its frequency reads back the rate the runtime handed the face \u2014 1.7300 Hz and 1.7350 Hz over two runs (103.8 and 104.1 bpm), against a documented 70.0 bpm fallback, matching the watch's own live reading to within 0.2 bpm. dumpsys shows the WFF runtime, not this package, holding the sensor connection; the face declares hasCode=false and could not open one. The package dump reports zero requested permissions, so nothing could have persisted across the in-place upgrade from the build that once declared BODY_SENSORS. android.permission.health.READ_HEART_RATE is deliberately NOT adopted; Variant B is retained unshipped for repeatability. The two outstanding HR recordings (post-exertion tracking, off-wrist fallback) are behavioural rows of device-validated, not permission questions, and are not claimed here.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
@@ -149,7 +153,7 @@
     "policy-ready": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "its permissions-verified prerequisite is now satisfied, so the declared-permission position for the listing is settled (none). Still blocked on owner-only inputs: the four TEST-1 account facts, a privacy policy actually hosted at https://x1c7.com/privacy/aurelius, and a chosen support email plus response commitment. Price remains a recorded recommendation, not the owner's decision.",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/PHASE_4_POLICY_AUDIT.md",
         "docs/reports/PHASE_4_TEST1_READINESS.md"
@@ -165,7 +169,7 @@
     "signing-authorized": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "no production signing material exists and none is authorised (ADR-010 \u00a75)",
-      "evaluated_at_commit": "c9f7d51edad521dd9a234c751829c023198094dd",
+      "evaluated_at_commit": "1ee5761837388ccf108cb4a9009b26c01b13df31",
       "evidence": [
         "docs/reports/PHASE_4_SIGNING_PLAN.md"
       ],
