@@ -39,3 +39,11 @@ Thumbs.db
 /spikes/attitude-horizon/.gradle/
 /spikes/attitude-horizon/local.properties
 /spikes/attitude-horizon/**/__pycache__/
+
+# ATTITUDE motion preview shell build outputs (regenerable; APK hashes are
+# recorded in previews/attitude-motion-shell/BUILD_RECORD.json).
+/previews/attitude-motion-shell/app/build/
+/previews/attitude-motion-shell/.gradle/
+/previews/attitude-motion-shell/local.properties
+/previews/attitude-motion-shell/dist/
+/previews/attitude-motion-shell/**/__pycache__/

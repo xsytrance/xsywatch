@@ -1,0 +1,76 @@
+{
+  "FORMAL_EVIDENCE_ALLOWED": false,
+  "OWNER_PIXEL_APPROVED": false,
+  "PREVIEW_ONLY": true,
+  "PRODUCTION_ASSET": false,
+  "RELEASE_CANDIDATE": false,
+  "analog_hands": false,
+  "aperture": {
+    "cx": 240,
+    "cy": 252,
+    "hh": 74,
+    "hw": 156,
+    "radius": 42
+  },
+  "aperture_matches_spike": true,
+  "authority_note": "The accepted spike APKs and the formal device harness remain authoritative for all formal testing. These preview packages must never be fed into that harness as though they were validated spike builds.",
+  "base_package": "com.xsytrance.attitude.preview",
+  "custom_glyph_alphabet": false,
+  "disclosure_note": "Subjective impressions formed from this preview must be disclosed before any later formal owner observations, exactly as the phone-mediated spike preview was.",
+  "field_radius_px": 224.66,
+  "generated_files": {
+    "app/build.gradle.kts": "c43b9259ee5f406b056dd6f47495b423e0e1085ad1db24c6e61fbe9fc91e362a",
+    "app/src/assertive/res/drawable/preview.png": "71115b09148126c300934de27db8b0b2c023d60c5eb22d73fdad9f952944fbd9",
+    "app/src/assertive/res/raw/watchface.xml": "d7e0032141aa0edf3dbd56e6e9ea5ab4041a14b01e786f0c378b37d5569e63ff",
+    "app/src/assertive/res/values/strings.xml": "f66cc68d74cb6b357af327cfd936271562becfa999f588b7e90cf853102ff30a",
+    "app/src/assertive/res/xml/watch_face_info.xml": "902aa06186931e04480712ab370fa0039da374d4631f59b000636749f27cf396",
+    "app/src/damped/res/drawable/preview.png": "71115b09148126c300934de27db8b0b2c023d60c5eb22d73fdad9f952944fbd9",
+    "app/src/damped/res/raw/watchface.xml": "e412617617f72ecf0e4f3bf16196f0290154295752ca3fb81267284fe5f80c92",
+    "app/src/damped/res/values/strings.xml": "7900264e12c8e1a1dc1eb8bcfca8df0722acf8beed447714e819a39af41d5b11",
+    "app/src/damped/res/xml/watch_face_info.xml": "902aa06186931e04480712ab370fa0039da374d4631f59b000636749f27cf396",
+    "app/src/main/AndroidManifest.xml": "effed50a8bff961e63fa6d8018f1ed5821034866fb78218bfeaaa4e0a6db5673",
+    "app/src/main/res/drawable-nodpi/horizon.png": "a72c0068d7c9ac806cc104e106212d0a4c6679bb17998d523bed55b50935dfcb",
+    "app/src/main/res/drawable-nodpi/horizon_aod.png": "75c48176fe10a041185f2c37957f7b318e6474e3f7b8eab5fa95d9f02debf1ac",
+    "app/src/main/res/drawable-nodpi/plate.png": "a786a088a8d15015d32464f7c726492827e316c35992f92d26d14ce55c079f1a",
+    "app/src/main/res/drawable-nodpi/plate_aod.png": "059b613b4f3352b87fb0b558cab8053e1a4b45362f904507fb81551916cc5850",
+    "app/src/main/res/values/integers.xml": "8f2b6bc3f8e17519814f139c51ebe831071e045635e5846221e09bfeb9d27fab",
+    "app/src/proposed/res/drawable/preview.png": "71115b09148126c300934de27db8b0b2c023d60c5eb22d73fdad9f952944fbd9",
+    "app/src/proposed/res/raw/watchface.xml": "7e38976b10293948cda66903fd0c0260125264104b91e7041642da790593bbff",
+    "app/src/proposed/res/values/strings.xml": "1b8a3645722d48d63908a3f0362df101afe5840e9717151574fac520393f1fce",
+    "app/src/proposed/res/xml/watch_face_info.xml": "902aa06186931e04480712ab370fa0039da374d4631f59b000636749f27cf396"
+  },
+  "motion_contract_source": "imported from spikes/attitude-horizon/generate_spike.py; clamps, gains, roll sign and expression text are the same code, not a retyped copy",
+  "profiles": {
+    "assertive": {
+      "application_id": "com.xsytrance.attitude.preview.assertive",
+      "coverage_margin_px": 18.0,
+      "display_pitch_max_px": 34.0,
+      "display_roll_max_deg": 30.0,
+      "label": "ATTITUDE Preview \u2014 ASSERTIVE",
+      "roll_expression": "-30 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    },
+    "damped": {
+      "application_id": "com.xsytrance.attitude.preview.damped",
+      "coverage_margin_px": 38.0,
+      "display_pitch_max_px": 14.0,
+      "display_roll_max_deg": 14.0,
+      "label": "ATTITUDE Preview \u2014 DAMPED",
+      "roll_expression": "-14 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    },
+    "proposed": {
+      "application_id": "com.xsytrance.attitude.preview.proposed",
+      "coverage_margin_px": 26.0,
+      "display_pitch_max_px": 26.0,
+      "display_roll_max_deg": 22.0,
+      "label": "ATTITUDE Preview \u2014 PROPOSED",
+      "roll_expression": "-22 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    }
+  },
+  "resigning_note": "Phone-mediated installers may repackage or re-sign. These preview packages are never a substitute for pullback-verified accepted spike builds.",
+  "schema": "xsywatch.attitude-motion-preview/1",
+  "text_method": "WFF standard <Font family=\"sans-serif\"> \u2014 real system text, not a hand-built alphabet",
+  "version_code": 1,
+  "version_name": "0.0.1-preview",
+  "wrist_pitch_clamp_deg": 40.0,
+  "wrist_roll_clamp_deg": 45.0
+}

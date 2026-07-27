@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- ATTITUDE motion PREVIEW shell - profile assertive -->
+<!-- PREVIEW ONLY. Not production, not a release candidate, not formal evidence. -->
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="DIGITAL" />
+  <Metadata key="PREVIEW_TIME" value="10:09:30" />
+  <Scene backgroundColor="#000000">
+
+    <PartImage name="p10_horizon" x="15" y="27" width="450" height="450" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Variant mode="AMBIENT" target="angle" value="0" />
+      <Variant mode="AMBIENT" target="y" value="27" />
+      <Transform target="angle" value="-30 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="27 + 34 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+      <Image resource="horizon" />
+    </PartImage>
+
+    <PartImage name="p11_horizon_aod" x="15" y="27" width="450" height="450" alpha="0" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Variant mode="AMBIENT" target="angle" value="0" />
+      <Variant mode="AMBIENT" target="y" value="27" />
+      <Transform target="angle" value="-30 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="27 + 34 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+      <Image resource="horizon_aod" />
+    </PartImage>
+
+    <PartImage name="p20_plate" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Image resource="plate" />
+    </PartImage>
+
+    <PartImage name="p21_plate_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" />
+      <Image resource="plate_aod" />
+    </PartImage>
+
+    <PartText name="p30_time" x="90" y="96" width="300" height="64" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="190" />
+      <Text align="CENTER">
+        <Font family="sans-serif" size="46" weight="NORMAL" color="#E2E6EA">
+          <Template>%s:%s<Parameter expression="[HOUR_0_23]" /><Parameter expression="[MINUTE_Z]" /></Template>
+        </Font>
+      </Text>
+    </PartText>
+
+    <PartText name="p31_title" x="150" y="158" width="180" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER">
+        <Font family="sans-serif" size="14" weight="NORMAL" color="#6C757E">ATTITUDE</Font>
+      </Text>
+    </PartText>
+
+    <PartText name="p40_profile" x="120" y="352" width="240" height="34" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="200" />
+      <Text align="CENTER">
+        <Font family="sans-serif" size="22" weight="NORMAL" color="#D6A85C">ASSERTIVE</Font>
+      </Text>
+    </PartText>
+
+    <PartText name="p41_disclaimer" x="120" y="386" width="240" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" />
+      <Text align="CENTER">
+        <Font family="sans-serif" size="13" weight="NORMAL" color="#78828B">MOTION PREVIEW</Font>
+      </Text>
+    </PartText>
+
+  </Scene>
+</WatchFace>

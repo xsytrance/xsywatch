@@ -1,0 +1,57 @@
+{
+  "FORMAL_EVIDENCE_ALLOWED": false,
+  "OWNER_PIXEL_APPROVED": false,
+  "PREVIEW_ONLY": true,
+  "PRODUCTION_ASSET": false,
+  "RELEASE_CANDIDATE": false,
+  "analog_hands": false,
+  "authority_note": "The accepted spike APKs and the formal device harness remain authoritative for all formal testing. These preview packages must never be fed into that harness as though they were validated spike builds.",
+  "debug_certificate": "C=US, O=Android, CN=Android Debug",
+  "disclosure_note": "Subjective impressions from this preview must be disclosed before any later formal owner observations.",
+  "permissions_declared": [],
+  "resigning_note": "Phone-mediated installers may repackage or re-sign. These preview packages are never a substitute for pullback-verified accepted spike builds.",
+  "schema": "xsywatch.attitude-motion-preview-build/1",
+  "status": "BUILT OFFLINE \u2014 NOT INSTALLED. No device contacted.",
+  "variants": {
+    "assertive": {
+      "apk_bytes": 2487302,
+      "apk_sha256": "57d89f96a098442883dd62b22a5fb6c5587a15f5e9c790350792ccef121812e7",
+      "application_id": "com.xsytrance.attitude.preview.assertive",
+      "display_pitch_max_px": 34.0,
+      "display_roll_max_deg": 30.0,
+      "path": "previews/attitude-motion-shell/dist/attitude-preview-assertive-debug.apk",
+      "version_code": 1,
+      "version_name": "0.0.1-preview-assertive",
+      "watch_face_label": "ATTITUDE Preview \u2014 ASSERTIVE",
+      "wrist_pitch_clamp_deg": 40.0,
+      "wrist_roll_clamp_deg": 45.0
+    },
+    "damped": {
+      "apk_bytes": 2487286,
+      "apk_sha256": "de6f79a3f0333aa53643caf06f60043d1bf71dbd317c39854e735f87399a5234",
+      "application_id": "com.xsytrance.attitude.preview.damped",
+      "display_pitch_max_px": 14.0,
+      "display_roll_max_deg": 14.0,
+      "path": "previews/attitude-motion-shell/dist/attitude-preview-damped-debug.apk",
+      "version_code": 1,
+      "version_name": "0.0.1-preview-damped",
+      "watch_face_label": "ATTITUDE Preview \u2014 DAMPED",
+      "wrist_pitch_clamp_deg": 40.0,
+      "wrist_roll_clamp_deg": 45.0
+    },
+    "proposed": {
+      "apk_bytes": 2487306,
+      "apk_sha256": "93e3969df98eb867c2dfa60e3a2210eb660b17d1161c89c11480ed44dbaad77a",
+      "application_id": "com.xsytrance.attitude.preview.proposed",
+      "display_pitch_max_px": 26.0,
+      "display_roll_max_deg": 22.0,
+      "path": "previews/attitude-motion-shell/dist/attitude-preview-proposed-debug.apk",
+      "version_code": 1,
+      "version_name": "0.0.1-preview-proposed",
+      "watch_face_label": "ATTITUDE Preview \u2014 PROPOSED",
+      "wrist_pitch_clamp_deg": 40.0,
+      "wrist_roll_clamp_deg": 45.0
+    }
+  },
+  "wff_validation": "PASS (v4) for all three variants"
+}

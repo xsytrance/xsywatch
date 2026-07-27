@@ -1,0 +1,90 @@
+{
+  "OWNER_PIXEL_APPROVED": false,
+  "PREVIEW_ONLY": true,
+  "approval_note": "Hashes are not approval. The owner and ChatGPT must look at the actual pixels.",
+  "generator": "previews/attitude-motion-shell/render_review.py",
+  "image_count": 9,
+  "images": [
+    {
+      "bytes": 6745,
+      "height_px": 480,
+      "image": "AOD_ASSERTIVE.png",
+      "path": "previews/attitude-motion-shell/review/AOD_ASSERTIVE.png",
+      "sha256": "7a8515ea1d2dbcaff0440a5d5550004b765d5b9cfc5d5352f6c8c1ffd00dd231",
+      "width_px": 480
+    },
+    {
+      "bytes": 21368,
+      "height_px": 584,
+      "image": "AOD_COMPARISON.png",
+      "path": "previews/attitude-motion-shell/review/AOD_COMPARISON.png",
+      "sha256": "a76de6cb4dc5230e57f16269fd3bb19b5a78c2edbe47ff140fc9e452f033b0f9",
+      "width_px": 1504
+    },
+    {
+      "bytes": 6358,
+      "height_px": 480,
+      "image": "AOD_DAMPED.png",
+      "path": "previews/attitude-motion-shell/review/AOD_DAMPED.png",
+      "sha256": "dda8c1c877f6b3b61df908e165a55a611e4da734c921aa16468f8bbb8bc3b995",
+      "width_px": 480
+    },
+    {
+      "bytes": 6913,
+      "height_px": 480,
+      "image": "AOD_PROPOSED.png",
+      "path": "previews/attitude-motion-shell/review/AOD_PROPOSED.png",
+      "sha256": "d9e1c2522e7072fe8f2c01fa2151390870c822d5b36e180391a3b3c103533f3a",
+      "width_px": 480
+    },
+    {
+      "bytes": 117309,
+      "height_px": 768,
+      "image": "MOTION_STATES_PROPOSED.png",
+      "path": "previews/attitude-motion-shell/review/MOTION_STATES_PROPOSED.png",
+      "sha256": "8122fa843be00a90935b2b255a4c81511cfb61073ef4e4f3311bea2b6e19b030",
+      "width_px": 964
+    },
+    {
+      "bytes": 13013,
+      "height_px": 480,
+      "image": "NORMAL_ASSERTIVE.png",
+      "path": "previews/attitude-motion-shell/review/NORMAL_ASSERTIVE.png",
+      "sha256": "101f42c59e45eb2e577b7f30c02624dcac4f856a49d12b1e820419726483427e",
+      "width_px": 480
+    },
+    {
+      "bytes": 34823,
+      "height_px": 584,
+      "image": "NORMAL_COMPARISON.png",
+      "path": "previews/attitude-motion-shell/review/NORMAL_COMPARISON.png",
+      "sha256": "92150e293d29952f33c499b7bfc0f869ceb0025777f01b3ace52d3177bf5df01",
+      "width_px": 1504
+    },
+    {
+      "bytes": 12624,
+      "height_px": 480,
+      "image": "NORMAL_DAMPED.png",
+      "path": "previews/attitude-motion-shell/review/NORMAL_DAMPED.png",
+      "sha256": "0cbf4b5c8eafd5c58b997fd9cf8db5ad90509909e88f076a028b43654a624fb5",
+      "width_px": 480
+    },
+    {
+      "bytes": 13120,
+      "height_px": 480,
+      "image": "NORMAL_PROPOSED.png",
+      "path": "previews/attitude-motion-shell/review/NORMAL_PROPOSED.png",
+      "sha256": "b627b2779587cc8e3a7cc4961584be04867aaa67ba28c79fb24bac722c31fef7",
+      "width_px": 480
+    }
+  ],
+  "layer_note": "composed from the SAME generated resources the watch face loads, so the layering is real; only text is drawn here rather than by WFF",
+  "render_font_note": "DejaVu Sans (free licence) stands in for the device's sans-serif at render time; the face itself uses WFF's standard system family",
+  "schema": "xsywatch.attitude-motion-preview-review/1",
+  "source_resources": {
+    "horizon.png": "a72c0068d7c9ac806cc104e106212d0a4c6679bb17998d523bed55b50935dfcb",
+    "horizon_aod.png": "75c48176fe10a041185f2c37957f7b318e6474e3f7b8eab5fa95d9f02debf1ac",
+    "plate.png": "a786a088a8d15015d32464f7c726492827e316c35992f92d26d14ce55c079f1a",
+    "plate_aod.png": "059b613b4f3352b87fb0b558cab8053e1a4b45362f904507fb81551916cc5850"
+  }
+}
