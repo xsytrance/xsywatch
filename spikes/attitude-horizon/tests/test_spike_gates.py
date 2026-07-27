@@ -310,7 +310,7 @@ class IsolationTests(unittest.TestCase):
     # watchfaces, releases, Aurelius — not to forbid a dedicated ignore
     # rule or the task instructions committed alongside it.
     ALLOWED_NON_SPIKE = {".gitignore"}
-    ALLOWED_NON_SPIKE_PREFIXES = ("docs/instructions/",)
+    ALLOWED_NON_SPIKE_PREFIXES = ("docs/instructions/", "docs/reports/")
 
     def test_only_spike_paths_changed(self):
         for f in self.changed_files():

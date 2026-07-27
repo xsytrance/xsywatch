@@ -500,16 +500,16 @@ class FinalizeTests(AnalysisTests):
         adb = FakeAdb()
         s = self.init_session(adb)
         d = dh.cmd_finalize(s)
-        self.assertEqual(d["status"], "BLOCKED")
-        self.assertTrue(any("verification" in p
-                            for p in d["blocking_problems"]))
+        self.assertEqual(d["status"], "BLOCKED_INTEGRITY")
+        self.assertTrue(any(p["code"] == "install-unverified"
+                            for p in d["blocking_integrity_problems"]))
 
     def test_finalize_blocks_with_missing_mandatory_captures(self):
         s, _ = self.verified_session()
         d = dh.cmd_finalize(s)
-        self.assertEqual(d["status"], "BLOCKED")
-        self.assertTrue(any("required capture missing" in p
-                            for p in d["blocking_problems"]))
+        self.assertEqual(d["status"], "BLOCKED_INTEGRITY")
+        self.assertTrue(any(p["code"] == "capture-missing"
+                            for p in d["blocking_integrity_problems"]))
 
     def test_finalize_blocks_on_hash_mismatch(self):
         s, _ = self.verified_session()
@@ -517,46 +517,28 @@ class FinalizeTests(AnalysisTests):
         doc["installed_verification"]["installed_apk_sha256"] = "f" * 64
         dh.save(s, doc)
         d = dh.cmd_finalize(s)
-        self.assertEqual(d["status"], "BLOCKED")
+        self.assertEqual(d["status"], "BLOCKED_INTEGRITY")
 
     def test_finalize_separates_machine_from_owner(self):
         s, _ = self.verified_session()
         d = dh.cmd_finalize(s)
         for k in ("machine_measured_results", "not_obtainable",
-                  "pending_owner_observations"):
+                  "pending_owner_observations",
+                  "blocking_integrity_problems", "machine_issues"):
             self.assertIn(k, d)
 
     def test_owner_answers_are_never_inferred(self):
         s, _ = self.verified_session()
         d = dh.cmd_finalize(s)
         self.assertTrue(d["pending_owner_observations"])
-        self.assertIn("never inferred", d["status_rule"])
+        self.assertIn("never convert", d["status_rule"].lower())
 
-    def test_status_is_pending_owner_review_when_machine_complete(self):
-        """Machine-complete but owner-pending must NOT read as COMPLETE."""
-        s, _ = self.verified_session()
-        doc = dh.load(s)
-        for cid in dh.MANDATORY_CAPTURES:
-            raw = s / "raw" / f"{cid}.bin"
-            raw.parent.mkdir(parents=True, exist_ok=True)
-            raw.write_bytes(b"x")
-            doc["captures"][cid] = {
-                "capture_id": cid,
-                "kind": "video" if cid in dh.VIDEO_CAPTURES else "logs",
-                "files": [{"path": dh._rel(raw),
-                           "sha256": dh.sha256(raw), "bytes": 1}]}
-            if cid in dh.VIDEO_CAPTURES:
-                doc["frame_manifests"][cid] = {
-                    "manifest_path": "x", "manifest_sha256": "y",
-                    "source_video_sha256": dh.sha256(raw),
-                    "actual_frame_count": 1}
-                doc["analysis"][cid] = {"path": "a", "sha256": "b",
-                                        "status": "MEASURED"}
-        dh.save(s, doc)
-        d = dh.cmd_finalize(s)
-        self.assertEqual(d["status"], "PENDING_OWNER_REVIEW")
-        self.assertNotEqual(d["status"], "COMPLETE")
-
+    # REMOVED: this "machine complete" test inserted placeholder
+    # analysis paths and hashes that no integrity check could resolve,
+    # so it demonstrated the finalize loophole rather than catching it.
+    # The honest success path is now
+    # test_finalization_integrity.SuccessPathTests, built from real
+    # deterministic fixture files that survive every check.
 
 class OwnerRecordTests(Base):
 

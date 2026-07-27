@@ -104,8 +104,70 @@ FINAL_HORIZON_ANSWERS = ["two-axis reactive", "roll-only", "reduced-motion",
                          "static", "rejected"]
 
 
+# ---------------------------------------------------------------------
+# Machine-evidence dispositions — one authoritative vocabulary.
+#
+# The blocking defect this replaces: finalize checked only that an
+# analysis ENTRY EXISTED, not that it had succeeded. A mandatory resting
+# analysis recorded BLOCKED (too few measurable frames) could therefore
+# advance to PENDING_OWNER_REVIEW as though the machine evidence were
+# complete. Presence is not validity.
+# ---------------------------------------------------------------------
+DISPOSITIONS = ("MEASURED", "PASS", "CLEAN", "NOT_OBTAINABLE", "ISSUE",
+                "BLOCKED", "PARTIAL")
+
+# Which dispositions are machine-complete, per evidence kind. Anything
+# absent, unknown, malformed or contradictory fails closed.
+ACCEPTABLE_DISPOSITIONS = {
+    "video": {"PASS"},
+    "motion_analysis": {"MEASURED"},
+    "aod_cycles": {"PASS"},
+    "logs": {"CLEAN"},
+    "screenshot_normal": {"PASS"},
+    # the ONLY place NOT_OBTAINABLE is machine-complete: the documented
+    # Watch7 doze display-pipeline limitation
+    "screenshot_aod": {"PASS", "NOT_OBTAINABLE"},
+}
+
+# Capture-duration policy (judgment call 1). Actual media duration is
+# measured with ffprobe, never assumed from the intended duration.
+DURATION_PASS_RATIO = 0.95
+DURATION_PARTIAL_RATIO = 0.80      # below this is BLOCKED
+# PARTIAL and BLOCKED both prevent machine-complete finalization; the
+# distinction exists for diagnosis only.
+
+# Extraction-integrity tolerance: the GREATER of two frames or 1% of the
+# count expected from the ACTUAL media duration.
+EXTRACT_TOLERANCE_FRAMES = 2
+EXTRACT_TOLERANCE_RATIO = 0.01
+
+DARK_THRESHOLD = 18          # a pixel this dark inside the aperture is uncovered
+APERTURE_INSET = 4           # excludes rim anti-aliasing
+
+
 class Blocked(Exception):
     """A fail-closed stop. Never a warning, never a default."""
+
+
+class Finding:
+    """A structured verification result — never a bare boolean.
+
+    A boolean cannot say WHY, and a finalization that cannot say why it
+    refused is not auditable.
+    """
+
+    def __init__(self, ok: bool, code: str, detail: str, **extra):
+        self.ok = ok
+        self.code = code
+        self.detail = detail
+        self.extra = extra
+
+    def as_dict(self) -> dict:
+        return {"ok": self.ok, "code": self.code, "detail": self.detail,
+                **self.extra}
+
+    def __repr__(self):
+        return f"Finding({self.code}, ok={self.ok}, {self.detail!r})"
 
 
 # ---------------------------------------------------------------------
@@ -338,28 +400,370 @@ def aod_neutrality(series: list[tuple[float, float]]) -> dict:
     }
 
 
-def mask_edge_exposure(frame_path: Path) -> dict:
-    """Any aperture pixel the horizon field failed to cover."""
+_APERTURE_CACHE: dict = {}
+
+
+def _aperture_mask():
+    """Precompute the inset aperture mask ONCE, cropped to its bbox.
+
+    The old per-frame implementation walked all 230,400 pixels in pure
+    Python. Scanning every frame of a 60 s capture that way is ~1,800
+    frames x 230k pixels, which is why the previous version only checked a
+    midpoint frame — and a midpoint frame is exactly where clipping is
+    LEAST likely, because the extremes are at the ends.
+
+    Coverage is not traded for speed here: the optimisation is a
+    precomputed mask plus a bounding-box crop plus C-level Pillow ops, and
+    every frame is still scanned.
+    """
+    if "mask" in _APERTURE_CACHE:
+        return _APERTURE_CACHE["mask"], _APERTURE_CACHE["bbox"]
     from PIL import Image, ImageDraw
     ap = gs.AP
-    with Image.open(frame_path) as im:
-        g = im.convert("L")
-    mask = Image.new("L", g.size, 0)
-    ImageDraw.Draw(mask).rounded_rectangle(
-        [ap["cx"] - ap["hw"] + 4, ap["cy"] - ap["hh"] + 4,
-         ap["cx"] + ap["hw"] - 4, ap["cy"] + ap["hh"] - 4],
+    m = Image.new("L", (gs.SIZE, gs.SIZE), 0)
+    ImageDraw.Draw(m).rounded_rectangle(
+        [ap["cx"] - ap["hw"] + APERTURE_INSET,
+         ap["cy"] - ap["hh"] + APERTURE_INSET,
+         ap["cx"] + ap["hw"] - APERTURE_INSET,
+         ap["cy"] + ap["hh"] - APERTURE_INSET],
         radius=ap["radius"], fill=255)
-    gp, mp = g.load(), mask.load()
-    dark = total = 0
-    for y in range(g.size[1]):
-        for x in range(g.size[0]):
-            if mp[x, y]:
-                total += 1
-                if gp[x, y] < 18:
-                    dark += 1
-    return {"aperture_pixels": total, "uncovered_pixels": dark,
-            "uncovered_percentage": round(dark / max(1, total) * 100, 4),
-            "exposed": dark > 0}
+    bbox = m.getbbox()
+    mask = m.crop(bbox)
+    _APERTURE_CACHE["mask"], _APERTURE_CACHE["bbox"] = mask, bbox
+    _APERTURE_CACHE["pixels"] = mask.histogram()[255]
+    return mask, bbox
+
+
+def mask_edge_exposure(frame_path: Path) -> dict:
+    """Uncovered aperture pixels in ONE frame. C-level, deterministic."""
+    from PIL import Image, ImageChops
+    mask, bbox = _aperture_mask()
+    with Image.open(frame_path) as im:
+        crop = im.convert("L").crop(bbox)
+    dark = crop.point(lambda v: 255 if v < DARK_THRESHOLD else 0)
+    masked = ImageChops.multiply(dark, mask)
+    uncovered = masked.histogram()[255]
+    total = _APERTURE_CACHE["pixels"]
+    return {"aperture_pixels": total, "uncovered_pixels": uncovered,
+            "uncovered_percentage": round(uncovered / max(1, total) * 100, 4),
+            "exposed": uncovered > 0}
+
+
+def scan_all_frames_for_exposure(frames: list[Path],
+                                 measures: list | None = None) -> dict:
+    """Scan EVERY extracted frame. No sampling, no interpolation.
+
+    Judgment call 2: full coverage is mandatory, because clipping happens
+    at the travel extremes and a sampling strategy that misses the extreme
+    misses the only thing worth finding.
+    """
+    started = time.time()
+    exposed: list[dict] = []
+    worst = None
+    scanned = 0
+    for i, f in enumerate(frames):
+        if not f.exists():
+            raise Blocked(f"frame listed but missing during scan: {f}")
+        r = mask_edge_exposure(f)
+        scanned += 1
+        if r["exposed"]:
+            entry = {"index": i, "path": _rel(f), "sha256": sha256(f),
+                     "uncovered_pixels": r["uncovered_pixels"],
+                     "uncovered_percentage": r["uncovered_percentage"]}
+            if measures and i < len(measures) and measures[i]:
+                entry["measured_angle_deg"] = round(measures[i][0], 4)
+                entry["measured_displacement_px"] = round(measures[i][1], 3)
+            exposed.append(entry)
+            if worst is None or r["uncovered_pixels"] > worst["uncovered_pixels"]:
+                worst = entry
+    runtime = time.time() - started
+    return {
+        "total_extracted_frames": len(frames),
+        "scanned_frames": scanned,
+        "scan_coverage_percentage": round(
+            scanned / max(1, len(frames)) * 100, 4),
+        "sampling_used": False,
+        "scan_runtime_seconds": round(runtime, 3),
+        "frames_per_second_scanned": round(scanned / runtime, 1)
+        if runtime > 0 else None,
+        "uncovered_frame_count": len(exposed),
+        "max_uncovered_pixels": worst["uncovered_pixels"] if worst else 0,
+        "max_uncovered_percentage": worst["uncovered_percentage"]
+        if worst else 0.0,
+        "first_exposed_frame": exposed[0] if exposed else None,
+        "worst_exposed_frame": worst,
+        "last_exposed_frame": exposed[-1] if exposed else None,
+        "exposed": bool(exposed),
+        "disposition": "ISSUE" if exposed else "CLEAN",
+        "waivable_by_owner": False,
+    }
+
+
+
+# ---------------------------------------------------------------------
+# Evidence verification — small functions, structured findings.
+#
+# finalize must independently REVALIDATE what it is about to summarise. It
+# must not trust the index fields already stored in SESSION.json: a stored
+# hash with no matching file on disk is not evidence.
+# ---------------------------------------------------------------------
+
+def _resolve(session: Path, rel: str) -> Path:
+    """Resolve a recorded path and reject escapes."""
+    p = Path(rel)
+    if not p.is_absolute():
+        p = REPO / rel
+    p = p.resolve()
+    roots = [session.resolve(), (REPO / "spikes/attitude-horizon").resolve()]
+    if not any(str(p).startswith(str(r)) for r in roots):
+        raise Blocked(f"path escapes the permitted evidence roots: {rel}")
+    return p
+
+
+def verify_disposition(kind: str, value, where: str) -> Finding:
+    allowed = ACCEPTABLE_DISPOSITIONS.get(kind, set())
+    if value is None:
+        return Finding(False, "disposition-missing",
+                       f"{where}: no disposition recorded")
+    if value not in DISPOSITIONS:
+        return Finding(False, "disposition-unknown",
+                       f"{where}: unknown disposition {value!r}",
+                       value=value)
+    if value not in allowed:
+        return Finding(False, "disposition-unacceptable",
+                       f"{where}: disposition {value} is not machine-complete "
+                       f"(acceptable: {sorted(allowed)})", value=value)
+    return Finding(True, "disposition-ok", f"{where}: {value}", value=value)
+
+
+def verify_raw_capture(session: Path, cid: str, rec: dict) -> list[Finding]:
+    out: list[Finding] = []
+    if rec.get("capture_id") != cid:
+        out.append(Finding(False, "capture-id-mismatch",
+                           f"{cid}: record claims capture_id "
+                           f"{rec.get('capture_id')!r}"))
+    files = rec.get("files") or []
+    if not files:
+        out.append(Finding(False, "raw-missing",
+                           f"{cid}: no raw file recorded"))
+        return out
+    seen = set()
+    for f in files:
+        rel = f.get("path")
+        if rel in seen:
+            out.append(Finding(False, "raw-duplicate",
+                               f"{cid}: duplicate raw record {rel}"))
+            continue
+        seen.add(rel)
+        try:
+            p = _resolve(session, rel)
+        except Blocked as e:
+            out.append(Finding(False, "raw-path-escape", str(e)))
+            continue
+        if not p.exists():
+            out.append(Finding(False, "raw-file-missing",
+                               f"{cid}: recorded raw file does not exist: "
+                               f"{rel}. A stored SHA without a file is not "
+                               f"evidence."))
+            continue
+        got = sha256(p)
+        if got != f.get("sha256"):
+            out.append(Finding(False, "raw-hash-drift",
+                               f"{cid}: raw hash drift for {rel}",
+                               recorded=f.get("sha256"), actual=got))
+        if f.get("bytes") is not None and p.stat().st_size != f["bytes"]:
+            out.append(Finding(False, "raw-size-drift",
+                               f"{cid}: raw byte count drift for {rel}"))
+    if not out:
+        out.append(Finding(True, "raw-ok", f"{cid}: raw evidence verified"))
+    return out
+
+
+def verify_frame_manifest(session: Path, cid: str, s: dict,
+                          raw_sha: str) -> tuple[dict | None, list[Finding]]:
+    out: list[Finding] = []
+    idx = (s.get("frame_manifests") or {}).get(cid)
+    if not idx:
+        return None, [Finding(False, "manifest-index-missing",
+                              f"{cid}: no frame-manifest index")]
+    try:
+        mp = _resolve(session, idx["manifest_path"])
+    except Blocked as e:
+        return None, [Finding(False, "manifest-path-escape", str(e))]
+    if not mp.exists():
+        return None, [Finding(False, "manifest-file-missing",
+                              f"{cid}: frame manifest file does not exist")]
+    if sha256(mp) != idx.get("manifest_sha256"):
+        return None, [Finding(False, "manifest-hash-drift",
+                              f"{cid}: frame manifest hash drift")]
+    try:
+        man = json.loads(mp.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return None, [Finding(False, "manifest-malformed",
+                              f"{cid}: manifest is not valid JSON ({e})")]
+    if man.get("capture_id") != cid:
+        out.append(Finding(False, "manifest-capture-mismatch",
+                           f"{cid}: manifest names {man.get('capture_id')!r}"))
+    if man.get("source_video_sha256") != raw_sha:
+        out.append(Finding(False, "manifest-source-mismatch",
+                           f"{cid}: manifest is not bound to the verified raw "
+                           f"video"))
+    for k in ("extraction_fps", "ffmpeg_version", "ffmpeg_command"):
+        if not man.get(k):
+            out.append(Finding(False, "manifest-field-missing",
+                               f"{cid}: manifest missing {k}"))
+    frames = man.get("frames") or []
+    if not frames:
+        out.append(Finding(False, "manifest-zero-frames",
+                           f"{cid}: manifest lists no frames"))
+    if man.get("actual_frame_count") != len(frames):
+        out.append(Finding(False, "manifest-count-mismatch",
+                           f"{cid}: actual_frame_count "
+                           f"{man.get('actual_frame_count')} != "
+                           f"{len(frames)} listed"))
+    dur = man.get("capture_duration_disposition")
+    if dur != "PASS":
+        out.append(Finding(False, "capture-duration",
+                           f"{cid}: capture duration disposition {dur} "
+                           f"(ratio {man.get('duration_ratio')}) — PARTIAL "
+                           f"and BLOCKED both prevent machine completion",
+                           disposition=dur,
+                           duration_ratio=man.get("duration_ratio")))
+    if not out:
+        out.append(Finding(True, "manifest-ok", f"{cid}: manifest verified"))
+    return man, out
+
+
+def verify_frames(session: Path, cid: str, man: dict) -> list[Finding]:
+    out: list[Finding] = []
+    seen = set()
+    for entry in man.get("frames", []):
+        rel = entry.get("path")
+        if rel in seen:
+            out.append(Finding(False, "frame-duplicate",
+                               f"{cid}: duplicate frame path {rel}"))
+            continue
+        seen.add(rel)
+        try:
+            fp = _resolve(session, rel)
+        except Blocked as e:
+            out.append(Finding(False, "frame-path-escape", str(e)))
+            continue
+        if str(session.resolve()) not in str(fp):
+            out.append(Finding(False, "frame-outside-session",
+                               f"{cid}: frame outside the session directory: "
+                               f"{rel}"))
+            continue
+        if not fp.exists():
+            out.append(Finding(False, "frame-missing",
+                               f"{cid}: listed frame does not exist: {rel}"))
+            continue
+        if sha256(fp) != entry.get("sha256"):
+            out.append(Finding(False, "frame-hash-drift",
+                               f"{cid}: frame hash drift: {rel}"))
+    if not out:
+        out.append(Finding(True, "frames-ok",
+                           f"{cid}: {len(seen)} frames verified"))
+    return out
+
+
+def verify_analysis(session: Path, cid: str, s: dict, raw_sha: str,
+                    man_sha: str | None) -> list[Finding]:
+    out: list[Finding] = []
+    idx = (s.get("analysis") or {}).get(cid)
+    if not idx:
+        return [Finding(False, "analysis-index-missing",
+                        f"{cid}: no analysis recorded")]
+    try:
+        ap = _resolve(session, idx["path"])
+    except Blocked as e:
+        return [Finding(False, "analysis-path-escape", str(e))]
+    if not ap.exists():
+        return [Finding(False, "analysis-file-missing",
+                        f"{cid}: analysis file does not exist: "
+                        f"{idx['path']}. A placeholder index is not "
+                        f"evidence.")]
+    if sha256(ap) != idx.get("sha256"):
+        return [Finding(False, "analysis-hash-drift",
+                        f"{cid}: analysis file hash drift")]
+    try:
+        doc = json.loads(ap.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as e:
+        return [Finding(False, "analysis-malformed",
+                        f"{cid}: analysis is not valid JSON ({e})")]
+
+    if doc.get("capture_id") != cid:
+        out.append(Finding(False, "analysis-capture-mismatch",
+                           f"{cid}: analysis names "
+                           f"{doc.get('capture_id')!r}"))
+    st = doc.get("status")
+    if st not in ("MEASURED",):
+        out.append(Finding(False, "analysis-status",
+                           f"{cid}: analysis status {st!r} is not MEASURED. "
+                           f"Presence of an analysis record is not success.",
+                           status=st))
+    if doc.get("smoothing_applied") is not False:
+        out.append(Finding(False, "analysis-smoothing",
+                           f"{cid}: smoothing_applied is not false"))
+    b = doc.get("binding") or {}
+    sb = s.get("binding") or {}
+    checks = [
+        ("raw_capture_sha256", raw_sha),
+        ("frame_manifest_sha256", man_sha),
+        ("variant", sb.get("variant")),
+        ("built_apk_sha256", sb.get("built_apk_sha256")),
+        ("installed_pullback_sha256",
+         (s.get("installed_verification") or {}).get("installed_apk_sha256")),
+        ("device_model", sb.get("device_model")),
+        ("android_version", sb.get("android_version")),
+        ("api_level", sb.get("api_level")),
+    ]
+    for key, expected in checks:
+        if expected is None:
+            continue
+        if b.get(key) != expected:
+            out.append(Finding(False, "analysis-binding-mismatch",
+                               f"{cid}: analysis binding {key} disagrees with "
+                               f"the session", key=key,
+                               recorded=b.get(key), expected=expected))
+    if not b.get("analysis_code_sha256"):
+        out.append(Finding(False, "analysis-code-hash-missing",
+                           f"{cid}: analysis-code hash not recorded"))
+    if not out:
+        out.append(Finding(True, "analysis-ok", f"{cid}: analysis verified",
+                           status=st))
+    return out
+
+
+def verify_machine_findings(cid: str, rec: dict, s: dict) -> list[Finding]:
+    """Findings, not merely record presence."""
+    out: list[Finding] = []
+    kind = rec.get("kind")
+    if kind == "cycles":
+        if rec.get("cycles_executed") != 10:
+            out.append(Finding(False, "aod-cycle-count",
+                               f"{cid}: {rec.get('cycles_executed')} cycles "
+                               f"executed, exactly 10 required"))
+        if rec.get("cycles_staged") != 10:
+            out.append(Finding(False, "aod-cycles-partial",
+                               f"{cid}: only {rec.get('cycles_staged')}/10 "
+                               f"cycles staged — PARTIAL blocks completion"))
+    if kind == "logs":
+        if rec.get("crash_buffer_hits") or rec.get("fatal_or_anr_hits"):
+            out.append(Finding(False, "crash-anr",
+                               f"{cid}: crash/ANR findings present "
+                               f"({rec.get('crash_buffer_hits')} crash, "
+                               f"{rec.get('fatal_or_anr_hits')} fatal/ANR)"))
+    ana = (s.get("analysis") or {}).get(cid) or {}
+    scan = ana.get("mask_scan") or {}
+    if scan.get("exposed"):
+        out.append(Finding(False, "mask-exposure",
+                           f"{cid}: aperture clipping detected in "
+                           f"{scan.get('uncovered_frame_count')} frame(s); "
+                           f"an ISSUE that owner preference cannot waive"))
+    if not out:
+        out.append(Finding(True, "findings-ok", f"{cid}: no adverse findings"))
+    return out
 
 
 # ---------------------------------------------------------------------
@@ -531,7 +935,8 @@ def cmd_capture(adb: Adb, session: Path, cid: str,
         return _record_capture(session, cid, [local], {
             "kind": "video", "device_side_filename": remote,
             "adb_command": cmdline, "intended_duration_s": secs,
-            "raw_sha256": digest, "instruction": instruction})
+            "raw_sha256": digest, "instruction": instruction,
+            "disposition": "PASS"})
 
     if cid in SCREENSHOT_CAPTURES:
         r = adb.run("exec-out", "screencap", "-p", binary=True, timeout=180)
@@ -539,6 +944,7 @@ def cmd_capture(adb: Adb, session: Path, cid: str,
         if not data:
             return _record_capture(session, cid, [], {
                 "kind": "screenshot", "result": "NOT_OBTAINABLE",
+                "disposition": "NOT_OBTAINABLE",
                 "reason": "screencap returned nothing"})
         local = raw / f"{cid}.png"
         local.write_bytes(data)
@@ -552,11 +958,17 @@ def cmd_capture(adb: Adb, session: Path, cid: str,
         if black and cid == "screenshot_aod":
             return _record_capture(session, cid, [local], {
                 "kind": "screenshot", "result": "NOT_OBTAINABLE",
+                "disposition": "NOT_OBTAINABLE",
                 "reason": "doze returned an entirely black frame — the "
                           "documented Watch7 display-pipeline limitation. "
                           "Recorded as NOT_OBTAINABLE, never as PASS."})
+        # a black NORMAL screenshot is a failure, not a limitation
+        disp = "PASS"
+        if black:
+            disp = "BLOCKED"
         return _record_capture(session, cid, [local], {
-            "kind": "screenshot", "result": "CAPTURED", "lossless": True})
+            "kind": "screenshot", "result": "CAPTURED", "lossless": True,
+            "is_black": black, "disposition": disp})
 
     if cid == "aod_cycles":
         log = []
@@ -579,8 +991,9 @@ def cmd_capture(adb: Adb, session: Path, cid: str,
         staged = sum(1 for e in log if e["sleep_state"] in ("Asleep", "Dozing"))
         return _record_capture(session, cid, [p], {
             "kind": "cycles", "cycles_executed": len(log),
-            "cycles_staged": staged,
-            "result": "PASS" if staged == 10 else "PARTIAL"})
+            "cycles_staged": staged, "cycle_log": log,
+            "result": "PASS" if staged == 10 else "PARTIAL",
+            "disposition": "PASS" if staged == 10 else "PARTIAL"})
 
     # logs_crash_anr
     crash = adb.out("logcat", "-b", "crash", "-d", timeout=300)
@@ -596,7 +1009,53 @@ def cmd_capture(adb: Adb, session: Path, cid: str,
     return _record_capture(session, cid, [pc, pm], {
         "kind": "logs", "crash_buffer_hits": len(hits),
         "fatal_or_anr_hits": len(fatal),
-        "result": "CLEAN" if not hits and not fatal else "FINDINGS"})
+        "result": "CLEAN" if not hits and not fatal else "FINDINGS",
+        "disposition": "CLEAN" if not hits and not fatal else "ISSUE"})
+
+
+def ffprobe_duration(src: Path) -> dict:
+    """Measure the ACTUAL media duration. Never assume the intended one.
+
+    A device recording can be short — the panel slept, the recorder was
+    interrupted — and treating the intended duration as fact would hide
+    exactly that. Extraction fidelity and capture completeness are two
+    different questions and are answered separately.
+    """
+    if not shutil.which("ffprobe"):
+        raise Blocked("ffprobe is not installed; actual media duration "
+                      "cannot be measured and must not be assumed")
+    ver = subprocess.run(["ffprobe", "-version"], capture_output=True,
+                         text=True).stdout.splitlines()[0]
+    cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+           "-of", "default=noprint_wrappers=1:nokey=1", str(src)]
+    r = subprocess.run(cmd, capture_output=True, text=True, timeout=300)
+    if r.returncode != 0:
+        raise Blocked(f"ffprobe failed ({r.returncode}): "
+                      f"{(r.stderr or '')[:300]}")
+    try:
+        dur = float((r.stdout or "").strip())
+    except ValueError:
+        raise Blocked(f"ffprobe returned an unparseable duration: "
+                      f"{(r.stdout or '')[:120]!r}")
+    return {"ffprobe_version": ver, "ffprobe_command": " ".join(cmd),
+            "actual_media_duration_s": round(dur, 4)}
+
+
+def extraction_tolerance(expected_from_media: int) -> int:
+    """Greater of two frames or 1% of the media-derived expectation."""
+    return max(EXTRACT_TOLERANCE_FRAMES,
+               int(round(expected_from_media * EXTRACT_TOLERANCE_RATIO)))
+
+
+def duration_disposition(actual_s: float, intended_s: float) -> tuple[str, float]:
+    ratio = (actual_s / intended_s) if intended_s else 0.0
+    if ratio >= DURATION_PASS_RATIO:
+        d = "PASS"
+    elif ratio >= DURATION_PARTIAL_RATIO:
+        d = "PARTIAL"
+    else:
+        d = "BLOCKED"
+    return d, round(ratio, 4)
 
 
 def cmd_extract_frames(session: Path, cid: str) -> dict:
@@ -606,7 +1065,9 @@ def cmd_extract_frames(session: Path, cid: str) -> dict:
         raise Blocked(f"no capture {cid!r} in this session")
     if rec.get("kind") != "video":
         raise Blocked(f"{cid} is not a video capture")
-    src = REPO / rec["files"][0]["path"]
+    src = REPO / rec["files"][0]["path"] if not Path(
+        rec["files"][0]["path"]).is_absolute() else Path(
+        rec["files"][0]["path"])
     if not src.exists():
         raise Blocked(f"raw capture missing: {src}")
     got = sha256(src)
@@ -615,6 +1076,12 @@ def cmd_extract_frames(session: Path, cid: str) -> dict:
     if not shutil.which("ffmpeg"):
         raise Blocked("ffmpeg is not installed; frame extraction is the "
                       "declared deterministic method and has no fallback")
+
+    probe = ffprobe_duration(src)
+    actual_s = probe["actual_media_duration_s"]
+    intended_s = float(rec.get("intended_duration_s") or 0)
+    expected_from_media = int(round(actual_s * EXTRACT_FPS))
+
     ver = subprocess.run(["ffmpeg", "-version"], capture_output=True,
                          text=True).stdout.splitlines()[0]
     out = session / "frames" / cid
@@ -623,20 +1090,45 @@ def cmd_extract_frames(session: Path, cid: str) -> dict:
     out.mkdir(parents=True)
     cmd = ["ffmpeg", "-y", "-loglevel", "error", "-i", str(src),
            "-vf", f"fps={EXTRACT_FPS}", str(out / "f%05d.png")]
-    subprocess.run(cmd, capture_output=True, timeout=1800)
+    proc = subprocess.run(cmd, capture_output=True, text=True, timeout=1800)
+    # the raw recording is never deleted or overwritten
+    if proc.returncode != 0:
+        raise Blocked(
+            f"ffmpeg exited {proc.returncode} extracting {cid}; extraction "
+            f"is BLOCKED.\nstderr excerpt: {(proc.stderr or '')[:400]}")
     frames = sorted(out.glob("*.png"))
-    expected = int(rec.get("intended_duration_s", 0)) * EXTRACT_FPS
+    if not frames:
+        raise Blocked(f"ffmpeg produced ZERO frames for {cid}; extraction "
+                      f"is BLOCKED")
+
+    tol = extraction_tolerance(expected_from_media)
+    delta = abs(len(frames) - expected_from_media)
+    if delta > tol:
+        raise Blocked(
+            f"{cid}: extracted {len(frames)} frames but the media duration "
+            f"({actual_s}s) implies {expected_from_media} +/- {tol}. A count "
+            f"outside the extraction tolerance indicates an extraction or "
+            f"metadata integrity problem, not merely a short capture.")
+
+    dur_disp, dur_ratio = duration_disposition(actual_s, intended_s)
     man = {
         "capture_id": cid,
         "source_video_path": rec["files"][0]["path"],
         "source_video_sha256": got,
         "ffmpeg_version": ver,
         "ffmpeg_command": " ".join(cmd),
+        "ffmpeg_returncode": proc.returncode,
         "extraction_fps": EXTRACT_FPS,
-        "expected_frame_count": expected,
+        **probe,
+        "intended_duration_s": intended_s,
+        "duration_ratio": dur_ratio,
+        "capture_duration_disposition": dur_disp,
+        "expected_frame_count_from_media": expected_from_media,
+        "extraction_tolerance_frames": tol,
+        "extraction_frame_delta": delta,
+        "extraction_disposition": "PASS",
         "actual_frame_count": len(frames),
-        "frames": [{"path": _rel(f), "sha256": sha256(f)}
-                   for f in frames],
+        "frames": [{"path": _rel(f), "sha256": sha256(f)} for f in frames],
     }
     mp = session / "frames" / f"{cid}_FRAMES.json"
     mp.write_text(json.dumps(man, indent=2, sort_keys=True) + "\n",
@@ -647,6 +1139,8 @@ def cmd_extract_frames(session: Path, cid: str) -> dict:
         "manifest_sha256": sha256(mp),
         "source_video_sha256": got,
         "actual_frame_count": len(frames),
+        "capture_duration_disposition": dur_disp,
+        "duration_ratio": dur_ratio,
     }
     save(session, s)
     return man
@@ -677,9 +1171,10 @@ def cmd_analyze(session: Path, cid: str) -> dict:
         frames = [REPO / f["path"] for f in rec["files"]
                   if f["path"].endswith(".png")]
 
-    measured, failed = [], 0
+    measured, failed, per_frame = [], 0, []
     for f in frames:
         v = horizon_line(f) if f.exists() else None
+        per_frame.append(v)
         if v is None:
             failed += 1
         else:
@@ -696,7 +1191,9 @@ def cmd_analyze(session: Path, cid: str) -> dict:
     elif cid.startswith("sweep_") or cid == "extremes_combined":
         body = {"status": "MEASURED", **sweep_behaviour(measured)}
         if frames:
-            body["mask_edge_exposure"] = mask_edge_exposure(frames[len(frames) // 2])
+            # EVERY frame, not the midpoint: clipping occurs at the
+            # extremes, which is exactly where a midpoint check cannot look
+            body["mask_scan"] = scan_all_frames_for_exposure(frames, per_frame)
     elif cid in ("screenshot_aod", "aod_cycles"):
         body = {"status": "MEASURED", **aod_neutrality(measured)}
     else:
@@ -729,8 +1226,9 @@ def cmd_analyze(session: Path, cid: str) -> dict:
     ap.write_text(json.dumps(out, indent=2, sort_keys=True) + "\n",
                   encoding="utf-8")
     s = load(session)
-    s["analysis"][cid] = {"path": _rel(ap),
-                          "sha256": sha256(ap), "status": body["status"]}
+    s["analysis"][cid] = {"path": _rel(ap), "sha256": sha256(ap),
+                          "status": body["status"],
+                          "mask_scan": body.get("mask_scan")}
     save(session, s)
     return out
 
@@ -741,73 +1239,141 @@ MANDATORY_CAPTURES = ("rest_surface_60s", "rest_wrist_60s",
                       "screenshot_normal", "logs_crash_anr")
 
 
-def cmd_finalize(session: Path) -> dict:
-    s = load(session)
-    problems: list[str] = []
+KIND_FOR_CAPTURE = {
+    "aod_cycles": "aod_cycles",
+    "logs_crash_anr": "logs",
+    "screenshot_normal": "screenshot_normal",
+    "screenshot_aod": "screenshot_aod",
+}
 
+
+def cmd_finalize(session: Path) -> dict:
+    """Independently revalidate the evidence before summarising it.
+
+    The defect this replaces: finalize checked that an analysis ENTRY
+    EXISTED and nothing more, so a mandatory analysis whose own status was
+    BLOCKED could still advance to PENDING_OWNER_REVIEW. Presence is not
+    validity, and a stored hash with no file behind it is not evidence.
+    """
+    s = load(session)
+    integrity: list[dict] = []      # evidence cannot be trusted
+    issues: list[dict] = []         # evidence is trustworthy and adverse
+    not_obtainable: dict = {}
+
+    def add(findings, bucket):
+        for f in findings:
+            if not f.ok:
+                bucket.append(f.as_dict())
+
+    # -- bindings and installed identity ------------------------------
     v = s.get("installed_verification") or {}
     if v.get("status") != "VERIFIED":
-        problems.append("installed-APK pullback verification is missing or "
-                        "did not pass")
-    if v.get("installed_apk_sha256") != s.get("binding", {}).get(
+        integrity.append(Finding(False, "install-unverified",
+                                 "installed-APK pullback verification is "
+                                 "missing or did not pass").as_dict())
+    if v.get("installed_apk_sha256") != (s.get("binding") or {}).get(
             "built_apk_sha256"):
-        problems.append("built and installed APK hashes differ")
+        integrity.append(Finding(False, "apk-hash-mismatch",
+                                 "built and installed APK hashes differ"
+                                 ).as_dict())
     for k in REQUIRED_BINDINGS:
-        if not s.get("binding", {}).get(k):
-            problems.append(f"required binding missing: {k}")
+        if not (s.get("binding") or {}).get(k):
+            integrity.append(Finding(False, "binding-missing",
+                                     f"required binding missing: {k}"
+                                     ).as_dict())
 
+    # -- per mandatory capture ----------------------------------------
     for cid in MANDATORY_CAPTURES:
-        rec = s["captures"].get(cid)
+        rec = (s.get("captures") or {}).get(cid)
         if not rec:
-            problems.append(f"required capture missing: {cid}")
+            integrity.append(Finding(False, "capture-missing",
+                                     f"required capture missing: {cid}"
+                                     ).as_dict())
             continue
-        if rec.get("kind") in ("video", "screenshot") and rec.get("files"):
-            if not rec["files"][0].get("sha256"):
-                problems.append(f"raw hash missing for {cid}")
-        if cid in VIDEO_CAPTURES and cid not in s.get("frame_manifests", {}):
-            problems.append(f"derived frames missing for {cid}")
-        if cid in VIDEO_CAPTURES and cid not in s.get("analysis", {}):
-            problems.append(f"analysis missing for {cid}")
-    if "logs_crash_anr" not in s["captures"]:
-        problems.append("crash/ANR evidence missing")
 
-    for cid, fm in s.get("frame_manifests", {}).items():
-        raw = (s["captures"].get(cid) or {}).get("files") or [{}]
-        if fm.get("source_video_sha256") != raw[0].get("sha256"):
-            problems.append(f"derived frames for {cid} not bound to raw data")
+        disp = rec.get("disposition")
+        kind = KIND_FOR_CAPTURE.get(cid, "video")
+        d = verify_disposition(kind, disp, cid)
+        if disp == "NOT_OBTAINABLE":
+            not_obtainable[cid] = rec.get("reason", "")
+        if not d.ok:
+            (issues if disp in ("ISSUE", "PARTIAL") else integrity).append(
+                d.as_dict())
 
+        raw_findings = verify_raw_capture(session, cid, rec)
+        add(raw_findings, integrity)
+        raw_sha = ((rec.get("files") or [{}])[0]).get("sha256")
+
+        add(verify_machine_findings(cid, rec, s), issues)
+
+        if cid in VIDEO_CAPTURES:
+            man, man_findings = verify_frame_manifest(session, cid, s, raw_sha)
+            for f in man_findings:
+                if not f.ok:
+                    (issues if f.code == "capture-duration"
+                     else integrity).append(f.as_dict())
+            man_sha = ((s.get("frame_manifests") or {}).get(cid) or {}).get(
+                "manifest_sha256")
+            if man:
+                add(verify_frames(session, cid, man), integrity)
+            add(verify_analysis(session, cid, s, raw_sha, man_sha), integrity)
+
+    # -- optional AOD screenshot --------------------------------------
+    aod = (s.get("captures") or {}).get("screenshot_aod")
+    if aod:
+        if aod.get("disposition") == "NOT_OBTAINABLE":
+            not_obtainable["screenshot_aod"] = aod.get("reason", "")
+        else:
+            d = verify_disposition("screenshot_aod",
+                                   aod.get("disposition"), "screenshot_aod")
+            if not d.ok:
+                integrity.append(d.as_dict())
+
+    # -- owner observations, always separate --------------------------
     owner_p = session / "OWNER_OBSERVATION.json"
-    pending_owner = []
+    pending_owner: list[str] = []
     if owner_p.exists():
         od = json.loads(owner_p.read_text(encoding="utf-8"))
         pending_owner = [q for q, a in od["observations"].items()
                          if a["answer"] == "PENDING"]
     else:
-        problems.append("session owner-observation record missing")
+        integrity.append(Finding(False, "owner-record-missing",
+                                 "session owner-observation record missing"
+                                 ).as_dict())
 
-    machine_ok = not problems
+    if integrity:
+        status = "BLOCKED_INTEGRITY"
+    elif issues:
+        status = "MACHINE_ISSUE"
+    elif pending_owner:
+        status = "PENDING_OWNER_REVIEW"
+    else:
+        status = "COMPLETE"
+
     doc = {
-        "schema": "xsywatch.attitude-spike-device-result/1",
+        "schema": "xsywatch.attitude-spike-device-result/2",
         "DISPOSABLE": True,
-        "variant": s.get("binding", {}).get("variant"),
+        "variant": (s.get("binding") or {}).get("variant"),
         "binding": s.get("binding"),
         "installed_verification": v,
-        "machine_measured_results": {
-            cid: a for cid, a in s.get("analysis", {}).items()},
-        "not_obtainable": {
-            cid: rec.get("reason", "")
-            for cid, rec in s["captures"].items()
-            if rec.get("result") == "NOT_OBTAINABLE"},
-        "owner_observations_answered": [] if pending_owner else "all",
+        "machine_measured_results": s.get("analysis", {}),
+        "blocking_integrity_problems": integrity,
+        "machine_issues": issues,
+        "not_obtainable": not_obtainable,
         "pending_owner_observations": pending_owner,
-        "blocking_problems": problems,
-        "status": ("BLOCKED" if not machine_ok
-                   else ("PENDING_OWNER_REVIEW" if pending_owner
-                         else "COMPLETE")),
-        "status_rule": ("Machine evidence completeness and owner judgement "
-                        "are separate. A session is never COMPLETE while "
-                        "owner answers are PENDING, and owner answers are "
-                        "never inferred from measurements."),
+        "status": status,
+        "status_model": {
+            "BLOCKED_INTEGRITY": "evidence cannot be trusted",
+            "MACHINE_ISSUE": "evidence is trustworthy and adverse",
+            "PENDING_OWNER_REVIEW": "machine evidence complete, owner has "
+                                    "not yet answered",
+            "COMPLETE": "machine evidence complete and owner has answered",
+        },
+        "status_rule": ("Machine evidence and owner judgement are separate "
+                        "and never substitute for one another. Owner answers "
+                        "can NEVER convert a failed or adverse machine "
+                        "result into a pass, and clipping is explicitly not "
+                        "waivable."),
         "smoothing_applied": False,
     }
     p = session / "DEVICE_RESULT.json"
@@ -888,7 +1454,8 @@ def main() -> int:
         elif args.cmd == "finalize":
             d = cmd_finalize(session)
             print(json.dumps(d, indent=2, sort_keys=True))
-            return 0 if d["status"] != "BLOCKED" else 1
+            return 0 if d["status"] in ("PENDING_OWNER_REVIEW",
+                                        "COMPLETE") else 1
         return 0
     except Blocked as e:
         print(f"BLOCKED: {e}", file=sys.stderr)
