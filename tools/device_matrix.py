@@ -69,40 +69,71 @@ HR_FALLBACK_TOLERANCE = 0.6
 # Confirmed by the Checkpoint B rc2 re-review, ruling 3: the tool must never
 # decide whether the face looks premium, restrained, readable or accepted.
 OWNER_ROWS = [
-    ("Parallax on wrist tilt",
+    # -- Group A: normal visual inspection -----------------------------
+    ("A", "Hour hand movement",
+     "correctly positioned for the real time and not stuck"),
+    ("A", "Minute hand movement",
+     "correct for the current minute and visibly advancing; a 60 s capture "
+     "cannot distinguish a slow hand from a stopped one"),
+    ("A", "Normal time readability",
+     "the time reads instantly at actual size, not on a monitor"),
+    ("A", "Date readability",
+     "the date is legible and sits correctly within its aperture"),
+    ("A", "Parallax on wrist tilt",
      "background/sheen shift as the wrist tilts, with no edge clipping"),
-    ("Normal legibility at actual scale",
-     "hands and date read instantly on the panel, not on a monitor"),
-    ("Command Satin visual quality",
+    ("A", "Edge clipping",
+     "nothing cut off at the rim and no gap revealed at any tilt angle"),
+    ("A", "Command Satin visual quality",
      "the engraving remains readable and well-formed at actual scale"),
-    ("Reserve ticks",
+    ("A", "Reserve ticks",
      "more usable than the previous revision without becoming loud"),
-    ("No stripe or unintended ornament",
+    ("A", "No stripe or unintended ornament",
      "nothing entered the face that is not in the approved reference"),
-    ("AOD visual restraint",
+    ("A", "Battery gauge plausibility",
+     "needle position agrees with Settings battery %"),
+    # -- Group B: AOD inspection ---------------------------------------
+    ("B", "AOD visual restraint",
      "ambient frame reads as restrained, no bright sheen"),
-    ("AOD post-cycle render visually intact",
+    ("B", "AOD brightness",
+     "comfortable in the ambient lighting: visible without being harsh"),
+    ("B", "AOD missing layers or mechanics",
+     "nothing absent in ambient that should be present"),
+    ("B", "AOD hands and date visibility",
+     "time and date remain legible in the dimmed ambient treatment"),
+    ("B", "AOD post-cycle render visually intact",
      "inspect the post-cycle capture: all mechanics, hands, date and the "
      "engraving present, nothing dropped. A captured file is not proof the "
      "render is complete"),
-    ("Battery gauge plausibility",
-     "needle position agrees with Settings battery %"),
-    ("Time and date visual correctness",
-     "analog time matches an independent clock and the aperture shows today"),
-    ("Heart rate agrees with the watch's own reading",
-     "compare the implied bpm against the rate the watch itself displays; "
-     "the tool can prove the value is live, not that it is CORRECT"),
-    ("Heart rate tracks after exertion",
-     "record ~14s after deliberate exertion; implied HR must RISE, not merely "
-     "differ from the 70.0 bpm fallback"),
-    ("Heart rate falls back off-wrist",
-     "record ~14s with the watch off the wrist; implied HR must collapse to "
-     "exactly 70.0 bpm"),
-    ("No prompt or unexpected permission behaviour",
+    ("B", "AOD clipping or visual corruption",
+     "no tearing, half-drawn layers or misregistration in either mode"),
+    # -- Group C: heart-rate behaviour ---------------------------------
+    ("C", "Heart rate agrees with the watch's own reading",
+     "compare the implied bpm against the rate the watch itself displays, "
+     "SIMULTANEOUSLY; the tool can prove the value is live, not that it is "
+     "correct"),
+    ("C", "Heart rate tracks after exertion",
+     "record ~14s after brief safe exertion; the IMPLIED rate must rise, not "
+     "merely differ from the 70.0 bpm fallback. The watch's own reading "
+     "rising is not evidence the face received it"),
+    ("C", "Heart rate falls back off-wrist",
+     "record ~14s with the watch off the wrist; implied rate must collapse "
+     "to exactly 70.0 bpm"),
+    ("C", "No prompt or unexpected permission behaviour",
      "no consent dialog at install or activation, and nothing sensitive "
      "attributed to the package in Settings"),
-    ("Final owner disposition",
-     "keep, change, or reject — the judgement no measurement can make"),
+    # -- Group D: final disposition ------------------------------------
+    ("D", "Final owner disposition",
+     "KEEP, CHANGE or REJECT — the judgement no measurement can make"),
+    ("D", "Feels premium after real use",
+     "after wearing it, not after looking at a render"),
+    ("D", "Nothing distracting",
+     "no element pulls the eye when it should not"),
+    ("D", "No text or gauge too difficult to read",
+     "every readable element is actually readable in real conditions"),
+    ("D", "Reserve ticks are an improvement",
+     "compared against the previous revision"),
+    ("D", "Motion is satisfying rather than excessive",
+     "the mechanics read as craft, not as busywork"),
 ]
 
 
@@ -661,13 +692,11 @@ def rows_motion(adb: Adb, m: Matrix, out_dir: Path, face_toml: Path,
         [c["name"] for c in required], passed, failed, len(fs), seconds)
     m.add("Mechanical motion (all required mechanisms)", result, detail)
 
-    # analog hands are deliberately NOT scored here
-    for c in comps:
-        if c.get("type") == "analog_hand" and c.get("name"):
-            m.add(f"Hand — {c['name']}", "PENDING — owner",
-                  "a 60 s capture cannot robustly distinguish a slow hand "
-                  "from a stopped one; confirm by observation or a "
-                  "start/end angle check over a longer period")
+    # Analog hands are deliberately NOT scored. They are Group A owner
+    # rows (see OWNER_ROWS) rather than PENDING entries in the measured
+    # table, so every owner judgement lives in exactly one place.
+    m.data["analog_hands_not_scored"] = [
+        c["name"] for c in comps if c.get("type") == "analog_hand"]
     return local
 
 
@@ -825,6 +854,51 @@ def _rel(p: Path) -> str:
         return str(p)
 
 
+OWNER_FILE = "OWNER_OBSERVATIONS.json"
+VALID_OWNER_RESULTS = ("PASS", "ISSUE", "NOT TESTED")
+
+
+def load_owner_observations(out_parent: Path, apk_sha: str) -> dict:
+    """Owner answers, kept OUT of the generated document.
+
+    The matrix regenerates DEVICE_TEST_RESULTS.md on every run. Hand-editing
+    owner verdicts into that file would destroy them the next time the
+    harness ran, so they live in their own record and are merged in here.
+
+    Fail-closed, as everywhere else: a row absent from the file stays
+    PENDING, an unrecognised result is rejected rather than coerced, and an
+    observation bound to a different APK is ignored — an observation of
+    another build is not evidence for this one.
+    """
+    p = out_parent / OWNER_FILE
+    if not p.exists():
+        return {}
+    try:
+        rec = json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as e:
+        print(f"WARNING {OWNER_FILE} is unreadable ({e}); every owner row "
+              f"stays PENDING")
+        return {}
+    if rec.get("apk_sha256") and apk_sha and rec["apk_sha256"] != apk_sha:
+        print(f"WARNING {OWNER_FILE} is bound to APK "
+              f"{str(rec['apk_sha256'])[:12]}…, not {apk_sha[:12]}… — "
+              f"ignoring it; an observation of another build is not "
+              f"evidence for this one")
+        return {}
+    out = {}
+    for name, entry in (rec.get("observations") or {}).items():
+        result = str(entry.get("result", "")).upper()
+        if result not in VALID_OWNER_RESULTS:
+            print(f"WARNING {OWNER_FILE}: {name!r} has result "
+                  f"{entry.get('result')!r}, not one of "
+                  f"{VALID_OWNER_RESULTS}; leaving it PENDING")
+            continue
+        out[name] = {"result": result,
+                     "note": str(entry.get("note") or ""),
+                     "date": str(entry.get("date") or "")}
+    return out
+
+
 def emit(m: Matrix, dest: Path, face: str, version: str, apk_sha: str,
          out_dir: Path) -> None:
     c = m.counts()
@@ -850,20 +924,46 @@ def emit(m: Matrix, dest: Path, face: str, version: str, apk_sha: str,
     ]
     for check, result, detail in m.rows:
         lines.append(f"| {check} | **{result}** | {detail.replace('|', '/')} |")
+    owner = load_owner_observations(dest.parent, apk_sha)
+    answered = sum(1 for _, c, _ in OWNER_ROWS if c in owner)
+    issues = [c for _, c, _ in OWNER_ROWS
+              if owner.get(c, {}).get("result") == "ISSUE"]
+    untested = [c for _, c, _ in OWNER_ROWS
+                if owner.get(c, {}).get("result") == "NOT TESTED"]
     lines += [
         "",
         "## Owner rows — NOT scored by this tool",
         "",
-        "These need a human looking at a physical watch. They are listed as",
-        "outstanding so an unfinished matrix cannot be mistaken for a",
-        "finished one. Replace each `PENDING — owner` with a result and a",
-        "note once observed.",
+        "These need a human looking at a physical watch. Results come from",
+        f"`{OWNER_FILE}` and are recorded verbatim; a row with no recorded",
+        "observation stays `PENDING — owner`. Nothing here is inferred from",
+        "a measurement, and `NOT TESTED` is a final result, not a stand-in",
+        "for PASS.",
         "",
-        "| Check | Result | Criterion |",
-        "|---|---|---|",
+        f"**{answered} of {len(OWNER_ROWS)} observed"
+        + (f"; {len(issues)} ISSUE" if issues else "")
+        + (f"; {len(untested)} NOT TESTED" if untested else "") + ".**",
+        "",
+        "| Group | Check | Result | Owner note | Criterion |",
+        "|---|---|---|---|---|",
     ]
-    for check, crit in OWNER_ROWS:
-        lines.append(f"| {check} | **PENDING — owner** | {crit} |")
+    for group, check, crit in OWNER_ROWS:
+        o = owner.get(check)
+        if o:
+            res = f"**{o['result']}**"
+            note = (o["note"] or "—").replace("|", "/")
+        else:
+            res = "**PENDING — owner**"
+            note = "—"
+        lines.append(f"| {group} | {check} | {res} | {note} | "
+                     f"{crit.replace('|', '/')} |")
+    if issues:
+        lines += ["", "### Owner-reported ISSUES", ""]
+        for name in issues:
+            lines.append(f"- **{name}** — {owner[name]['note']}")
+        lines += ["",
+                  "An ISSUE row means this candidate is NOT acceptable as-is.",
+                  "`device-validated` must not be closed while one stands."]
     lines += [
         "",
         "## Summary",
@@ -891,6 +991,49 @@ def emit(m: Matrix, dest: Path, face: str, version: str, apk_sha: str,
     print(f"\nwrote {_rel(dest)}")
 
 
+def rebuild_doc(out_dir: Path, face: str, version: str, apk: Path) -> int:
+    """Regenerate the results document with no device attached.
+
+    Owner observations arrive over days, not in one sitting. Regenerating
+    must never mean re-deriving or retyping a machine result, so the
+    measured rows are read back verbatim from matrix.json — and if an older
+    matrix.json predates row persistence, from the tables already in the
+    generated document. If neither is available this refuses rather than
+    inventing an empty matrix.
+    """
+    mj = out_dir / "matrix.json"
+    dest = out_dir.parent / "DEVICE_TEST_RESULTS.md"
+    m = Matrix()
+    data = {}
+    if mj.exists():
+        data = json.loads(mj.read_text(encoding="utf-8"))
+        m.rows = [tuple(r) for r in data.get("rows", [])]
+    if not m.rows and dest.exists():
+        # older run: recover the measured rows from the document it wrote
+        for line in dest.read_text(encoding="utf-8").splitlines():
+            if not line.startswith("| ") or line.startswith("| Group "):
+                continue
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if len(cells) == 3 and cells[1].startswith("**"):
+                check, result, detail = cells
+                result = result.strip("*")
+                if result == "PENDING - owner" or "PENDING" in result:
+                    continue
+                m.rows.append((check, result, detail))
+    if not m.rows:
+        print("ERROR no saved measured rows in matrix.json and none "
+              "recoverable from the document; re-run the matrix against the "
+              "device rather than emitting an empty one", file=sys.stderr)
+        return 2
+    m.data = {k: v for k, v in data.items() if k != "rows"}
+    apk_sha = (m.data.get("installed_apk_sha256")
+               or (sha256_file(apk) if apk.exists() else "UNRESOLVED"))
+    emit(m, dest, face, version, apk_sha, out_dir)
+    print(f"rebuilt from {len(m.rows)} preserved measured row(s); no device "
+          f"was contacted and no measured result was re-derived")
+    return 0
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(
         description=__doc__,
@@ -912,6 +1055,12 @@ def main() -> int:
                          "capture). They are a derived intermediate and are "
                          "deleted by default; motion.mp4 is the evidence and "
                          "the frames re-extract from it with one ffmpeg call")
+    ap.add_argument("--rebuild-doc", action="store_true",
+                    help="regenerate DEVICE_TEST_RESULTS.md from the saved "
+                         "measured rows plus the current "
+                         "OWNER_OBSERVATIONS.json, with no device. Measured "
+                         "rows are reused verbatim, never re-derived or "
+                         "retyped")
     args = ap.parse_args()
 
     pkg = args.package or f"com.xsytrance.{args.face}"
@@ -921,6 +1070,13 @@ def main() -> int:
         print(f"ERROR expected exactly one .apk in {cand}", file=sys.stderr)
         return 2
     apk = apks[0]
+
+    short = args.version.split("-")[-1] if "-" in args.version else args.version
+    out_dir = (REPO / "docs/reports/evidence/phase-4" / args.face /
+               short / "matrix")
+
+    if args.rebuild_doc:
+        return rebuild_doc(out_dir, args.face, args.version, apk)
 
     adb = Adb(args.serial)
     if not shutil.which("adb"):
@@ -937,9 +1093,6 @@ def main() -> int:
               file=sys.stderr)
         return 2
 
-    short = args.version.split("-")[-1] if "-" in args.version else args.version
-    out_dir = (REPO / "docs/reports/evidence/phase-4" / args.face /
-               short / "matrix")
     out_dir.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp())
 
@@ -970,8 +1123,12 @@ def main() -> int:
     row_touch(adb, m)
     row_stability(adb, m, pkg, out_dir)
 
+    # Persist the MEASURED rows too, so the document can be regenerated
+    # when owner observations arrive later without a device and without
+    # anyone retyping a machine result.
     (out_dir / "matrix.json").write_text(
-        json.dumps(m.data, indent=2, sort_keys=True), encoding="utf-8")
+        json.dumps({"rows": [list(r) for r in m.rows], **m.data},
+                   indent=2, sort_keys=True), encoding="utf-8")
     emit(m, out_dir.parent / "DEVICE_TEST_RESULTS.md",
          args.face, args.version, apk_sha or "UNRESOLVED", out_dir)
 

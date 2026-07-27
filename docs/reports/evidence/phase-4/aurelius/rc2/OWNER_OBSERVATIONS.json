@@ -1,0 +1,107 @@
+{
+  "schema": "agenor.owner-observations/1",
+  "face": "aurelius",
+  "candidate_version": "2.0.0-rc2",
+  "apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+  "observer": "AGENOR",
+  "note": "Owner observations, recorded verbatim. Written ONLY from the owner's explicit answers. A row absent from this file stays PENDING in the generated matrix; nothing here is ever inferred, defaulted or upgraded from a measurement. NOT TESTED is a final result, not a placeholder for PASS.",
+  "sessions": [
+    {
+      "date": "2026-07-27",
+      "context": "guided inspection over adb, watch on wrist and on desk, Groups A and B plus the permission row of Group C"
+    }
+  ],
+  "observations": {
+    "AOD brightness": {
+      "result": "PASS",
+      "note": "Comfortable in the lighting at the time of inspection.",
+      "date": "2026-07-27"
+    },
+    "AOD clipping or visual corruption": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "AOD hands and date visibility": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "AOD missing layers or mechanics": {
+      "result": "PASS",
+      "note": "Nothing absent in ambient mode.",
+      "date": "2026-07-27"
+    },
+    "AOD post-cycle render visually intact": {
+      "result": "PASS",
+      "note": "Judged from matrix/after_aod_cycles.png, the frame captured immediately after 10 sleep/wake cycles.",
+      "date": "2026-07-27"
+    },
+    "AOD visual restraint": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Battery gauge plausibility": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Command Satin visual quality": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Date readability": {
+      "result": "ISSUE",
+      "note": "\"yeah its grey on grey\" / \"looks off-center too\"",
+      "date": "2026-07-27"
+    },
+    "Edge clipping": {
+      "result": "PASS",
+      "note": "No content clipped and no gap at the rim through the tilt range.",
+      "date": "2026-07-27"
+    },
+    "Hour hand movement": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Minute hand movement": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "No prompt or unexpected permission behaviour": {
+      "result": "PASS",
+      "note": "No prompt, nothing odd. No consent dialog at install, at activation or since.",
+      "date": "2026-07-27"
+    },
+    "No stripe or unintended ornament": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Normal time readability": {
+      "result": "PASS",
+      "note": "Reads instantly at actual size.",
+      "date": "2026-07-27"
+    },
+    "Parallax on wrist tilt": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    },
+    "Reserve ticks": {
+      "result": "PASS",
+      "note": "",
+      "date": "2026-07-27"
+    }
+  },
+  "outstanding": {
+    "Heart rate agrees with the watch's own reading": "Owner read 130 bpm from the watch on 2026-07-27 while away from the home network, so no simultaneous balance-wheel recording could be taken. A comparison is only meaningful when both readings are simultaneous; the earlier 104.1 bpm measurement must NOT be paired with this 130. Row remains open.",
+    "Heart rate tracks after exertion": "Not performed. The 130 bpm reading is the WATCH's own value, not a measurement of what the face received, so it does not demonstrate that the face tracked the rise. Row remains open.",
+    "Heart rate falls back off-wrist": "Not performed. Requires adb reachability to record the wheel. Row remains open.",
+    "Final owner disposition": "Deferred until after the wear sessions, which is when the judgement is meaningful."
+  }
+}

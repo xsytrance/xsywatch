@@ -26,8 +26,6 @@
 | Motion — z21_bal (hr_balance) | **PASS** | interframe Δ 4.0 (min 0.5), displacement vs frame 0 Δ 29.207 (min 1.0), 1204/1801 static pairs over 1802 frames |
 | Motion — z22_cage (seconds_rotor) | **PASS** | interframe Δ 2.577 (min 0.5), displacement vs frame 0 Δ 21.119 (min 1.0), 1204/1801 static pairs over 1802 frames |
 | Mechanical motion (all required mechanisms) | **PASS** | all 4 required mechanisms moved (z10_gl, z11_gr, z21_bal, z22_cage) across 1802 frames of a 60s capture |
-| Hand — z50_hour | **PENDING — owner** | a 60 s capture cannot robustly distinguish a slow hand from a stopped one; confirm by observation or a start/end angle check over a longer period |
-| Hand — z51_min | **PENDING — owner** | a 60 s capture cannot robustly distinguish a slow hand from a stopped one; confirm by observation or a start/end angle check over a longer period |
 | Heart rate — live data distinct from the fallback | **PASS** | 1.7350 Hz = 104.1 bpm — clear of the 70.0 bpm fallback, so the runtime is supplying live data to a package that declares no permission. Agreement with the watch's own reading is an OWNER row |
 | AOD — 10/10 sleep/wake transitions | **PASS** | every transition confirmed via mWakefulness telemetry |
 | AOD — post-cycle screenshot captured | **PASS** | after_aod_cycles.png captured, non-black; visual integrity is an OWNER row and is not claimed here |
@@ -37,27 +35,49 @@
 
 ## Owner rows — NOT scored by this tool
 
-These need a human looking at a physical watch. They are listed as
-outstanding so an unfinished matrix cannot be mistaken for a
-finished one. Replace each `PENDING — owner` with a result and a
-note once observed.
+These need a human looking at a physical watch. Results come from
+`OWNER_OBSERVATIONS.json` and are recorded verbatim; a row with no recorded
+observation stays `PENDING — owner`. Nothing here is inferred from
+a measurement, and `NOT TESTED` is a final result, not a stand-in
+for PASS.
 
-| Check | Result | Criterion |
-|---|---|---|
-| Parallax on wrist tilt | **PENDING — owner** | background/sheen shift as the wrist tilts, with no edge clipping |
-| Normal legibility at actual scale | **PENDING — owner** | hands and date read instantly on the panel, not on a monitor |
-| Command Satin visual quality | **PENDING — owner** | the engraving remains readable and well-formed at actual scale |
-| Reserve ticks | **PENDING — owner** | more usable than the previous revision without becoming loud |
-| No stripe or unintended ornament | **PENDING — owner** | nothing entered the face that is not in the approved reference |
-| AOD visual restraint | **PENDING — owner** | ambient frame reads as restrained, no bright sheen |
-| AOD post-cycle render visually intact | **PENDING — owner** | inspect the post-cycle capture: all mechanics, hands, date and the engraving present, nothing dropped. A captured file is not proof the render is complete |
-| Battery gauge plausibility | **PENDING — owner** | needle position agrees with Settings battery % |
-| Time and date visual correctness | **PENDING — owner** | analog time matches an independent clock and the aperture shows today |
-| Heart rate agrees with the watch's own reading | **PENDING — owner** | compare the implied bpm against the rate the watch itself displays; the tool can prove the value is live, not that it is CORRECT |
-| Heart rate tracks after exertion | **PENDING — owner** | record ~14s after deliberate exertion; implied HR must RISE, not merely differ from the 70.0 bpm fallback |
-| Heart rate falls back off-wrist | **PENDING — owner** | record ~14s with the watch off the wrist; implied HR must collapse to exactly 70.0 bpm |
-| No prompt or unexpected permission behaviour | **PENDING — owner** | no consent dialog at install or activation, and nothing sensitive attributed to the package in Settings |
-| Final owner disposition | **PENDING — owner** | keep, change, or reject — the judgement no measurement can make |
+**17 of 26 observed; 1 ISSUE.**
+
+| Group | Check | Result | Owner note | Criterion |
+|---|---|---|---|---|
+| A | Hour hand movement | **PASS** | — | correctly positioned for the real time and not stuck |
+| A | Minute hand movement | **PASS** | — | correct for the current minute and visibly advancing; a 60 s capture cannot distinguish a slow hand from a stopped one |
+| A | Normal time readability | **PASS** | Reads instantly at actual size. | the time reads instantly at actual size, not on a monitor |
+| A | Date readability | **ISSUE** | "yeah its grey on grey" / "looks off-center too" | the date is legible and sits correctly within its aperture |
+| A | Parallax on wrist tilt | **PASS** | — | background/sheen shift as the wrist tilts, with no edge clipping |
+| A | Edge clipping | **PASS** | No content clipped and no gap at the rim through the tilt range. | nothing cut off at the rim and no gap revealed at any tilt angle |
+| A | Command Satin visual quality | **PASS** | — | the engraving remains readable and well-formed at actual scale |
+| A | Reserve ticks | **PASS** | — | more usable than the previous revision without becoming loud |
+| A | No stripe or unintended ornament | **PASS** | — | nothing entered the face that is not in the approved reference |
+| A | Battery gauge plausibility | **PASS** | — | needle position agrees with Settings battery % |
+| B | AOD visual restraint | **PASS** | — | ambient frame reads as restrained, no bright sheen |
+| B | AOD brightness | **PASS** | Comfortable in the lighting at the time of inspection. | comfortable in the ambient lighting: visible without being harsh |
+| B | AOD missing layers or mechanics | **PASS** | Nothing absent in ambient mode. | nothing absent in ambient that should be present |
+| B | AOD hands and date visibility | **PASS** | — | time and date remain legible in the dimmed ambient treatment |
+| B | AOD post-cycle render visually intact | **PASS** | Judged from matrix/after_aod_cycles.png, the frame captured immediately after 10 sleep/wake cycles. | inspect the post-cycle capture: all mechanics, hands, date and the engraving present, nothing dropped. A captured file is not proof the render is complete |
+| B | AOD clipping or visual corruption | **PASS** | — | no tearing, half-drawn layers or misregistration in either mode |
+| C | Heart rate agrees with the watch's own reading | **PENDING — owner** | — | compare the implied bpm against the rate the watch itself displays, SIMULTANEOUSLY; the tool can prove the value is live, not that it is correct |
+| C | Heart rate tracks after exertion | **PENDING — owner** | — | record ~14s after brief safe exertion; the IMPLIED rate must rise, not merely differ from the 70.0 bpm fallback. The watch's own reading rising is not evidence the face received it |
+| C | Heart rate falls back off-wrist | **PENDING — owner** | — | record ~14s with the watch off the wrist; implied rate must collapse to exactly 70.0 bpm |
+| C | No prompt or unexpected permission behaviour | **PASS** | No prompt, nothing odd. No consent dialog at install, at activation or since. | no consent dialog at install or activation, and nothing sensitive attributed to the package in Settings |
+| D | Final owner disposition | **PENDING — owner** | — | KEEP, CHANGE or REJECT — the judgement no measurement can make |
+| D | Feels premium after real use | **PENDING — owner** | — | after wearing it, not after looking at a render |
+| D | Nothing distracting | **PENDING — owner** | — | no element pulls the eye when it should not |
+| D | No text or gauge too difficult to read | **PENDING — owner** | — | every readable element is actually readable in real conditions |
+| D | Reserve ticks are an improvement | **PENDING — owner** | — | compared against the previous revision |
+| D | Motion is satisfying rather than excessive | **PENDING — owner** | — | the mechanics read as craft, not as busywork |
+
+### Owner-reported ISSUES
+
+- **Date readability** — "yeah its grey on grey" / "looks off-center too"
+
+An ISSUE row means this candidate is NOT acceptable as-is.
+`device-validated` must not be closed while one stands.
 
 ## Summary
 
@@ -65,9 +85,8 @@ note once observed.
 |---|---|
 | NOT OBTAINABLE | 1 |
 | PASS | 16 |
-| PENDING — owner | 2 |
 | SKIPPED | 1 |
-| PENDING — owner (not scored) | 14 |
+| PENDING — owner (not scored) | 26 |
 
 Artefacts under `docs/reports/evidence/phase-4/aurelius/rc2/matrix/`.
 

@@ -266,7 +266,7 @@ class OwnerRowTests(unittest.TestCase):
         dest = self.tmp / "DEVICE_TEST_RESULTS.md"
         dm.emit(m, dest, "aurelius", "2.0.0-rc2", "a" * 64, out_dir)
         text = dest.read_text(encoding="utf-8")
-        for check, _ in dm.OWNER_ROWS:
+        for _, check, _ in dm.OWNER_ROWS:
             self.assertIn(check, text)
         # each owner row carries a PENDING marker, and there are as many
         # PENDING rows as there are owner rows
@@ -280,7 +280,7 @@ class OwnerRowTests(unittest.TestCase):
         self.assertIn("b" * 64, dest.read_text(encoding="utf-8"))
 
     def test_the_subjective_rows_include_the_two_outstanding_hr_recordings(self):
-        names = [c for c, _ in dm.OWNER_ROWS]
+        names = [c for _, c, _ in dm.OWNER_ROWS]
         self.assertTrue(any("exertion" in n for n in names))
         self.assertTrue(any("off-wrist" in n for n in names))
 
@@ -362,7 +362,7 @@ class AodRowSplitTests(unittest.TestCase):
                 self.assertNotIn("complete render", detail.lower())
         # it is an owner row instead
         self.assertTrue(any("visually intact" in c.lower()
-                            for c, _ in dm.OWNER_ROWS))
+                            for _, c, _ in dm.OWNER_ROWS))
 
     def test_a_missing_capture_is_blocked_not_passed(self):
         m = dm.Matrix()
@@ -420,6 +420,78 @@ class BlackFrameTests(unittest.TestCase):
         self.assertIsNone(dm.is_black(p))
 
 
+class OwnerObservationTests(unittest.TestCase):
+    """Owner answers live outside the generated document.
+
+    The matrix regenerates DEVICE_TEST_RESULTS.md on every run, so verdicts
+    hand-edited into it would be destroyed by the next run. They live in
+    OWNER_OBSERVATIONS.json and are merged in — fail-closed, so anything
+    unrecognised stays PENDING rather than being coerced into a result.
+    """
+
+    APK = "a" * 64
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def write(self, obs, apk=None):
+        (self.tmp / dm.OWNER_FILE).write_text(json.dumps({
+            "schema": "agenor.owner-observations/1",
+            "apk_sha256": apk if apk is not None else self.APK,
+            "observations": obs}), encoding="utf-8")
+
+    def test_absent_file_leaves_every_row_pending(self):
+        self.assertEqual(dm.load_owner_observations(self.tmp, self.APK), {})
+
+    def test_a_recorded_result_is_returned_verbatim(self):
+        self.write({"Reserve ticks": {"result": "PASS", "note": "good"}})
+        o = dm.load_owner_observations(self.tmp, self.APK)
+        self.assertEqual(o["Reserve ticks"]["result"], "PASS")
+        self.assertEqual(o["Reserve ticks"]["note"], "good")
+
+    def test_an_unrecognised_result_is_rejected_not_coerced(self):
+        self.write({"Reserve ticks": {"result": "probably fine"}})
+        self.assertNotIn("Reserve ticks",
+                         dm.load_owner_observations(self.tmp, self.APK))
+
+    def test_not_tested_is_preserved_and_never_becomes_pass(self):
+        self.write({"Battery gauge plausibility": {"result": "NOT TESTED"}})
+        o = dm.load_owner_observations(self.tmp, self.APK)
+        self.assertEqual(o["Battery gauge plausibility"]["result"],
+                         "NOT TESTED")
+
+    def test_observations_bound_to_another_apk_are_ignored(self):
+        """An observation of another build is not evidence for this one."""
+        self.write({"Reserve ticks": {"result": "PASS"}}, apk="b" * 64)
+        self.assertEqual(dm.load_owner_observations(self.tmp, self.APK), {})
+
+    def test_unreadable_file_leaves_rows_pending_rather_than_raising(self):
+        (self.tmp / dm.OWNER_FILE).write_text("{not json", encoding="utf-8")
+        self.assertEqual(dm.load_owner_observations(self.tmp, self.APK), {})
+
+    def test_an_issue_row_is_surfaced_in_the_document(self):
+        self.write({"Date readability": {
+            "result": "ISSUE", "note": "grey on grey"}})
+        m = dm.Matrix()
+        m.add("measured", "PASS", "x")
+        dest = self.tmp / "DEVICE_TEST_RESULTS.md"
+        dm.emit(m, dest, "aurelius", "2.0.0-rc2", self.APK, self.tmp)
+        text = dest.read_text(encoding="utf-8")
+        self.assertIn("Owner-reported ISSUES", text)
+        self.assertIn("grey on grey", text)
+        self.assertIn("NOT acceptable as-is", text)
+
+    def test_unobserved_rows_still_render_as_pending(self):
+        self.write({"Reserve ticks": {"result": "PASS"}})
+        m = dm.Matrix()
+        dest = self.tmp / "DEVICE_TEST_RESULTS.md"
+        dm.emit(m, dest, "aurelius", "2.0.0-rc2", self.APK, self.tmp)
+        text = dest.read_text(encoding="utf-8")
+        self.assertIn("PENDING — owner", text)
+        self.assertIn("1 of 26 observed", text)
+
+
 class HeartRateRowTests(unittest.TestCase):
     """The fallback is 70.0 bpm exactly; a reading there proves nothing."""
 
@@ -444,7 +516,7 @@ class HeartRateRowTests(unittest.TestCase):
         self.assertIn("FALLBACK", detail)
 
     def test_context_interpretation_stays_with_the_owner(self):
-        names = [c.lower() for c, _ in dm.OWNER_ROWS]
+        names = [c.lower() for _, c, _ in dm.OWNER_ROWS]
         self.assertTrue(any("exertion" in n for n in names))
         self.assertTrue(any("off-wrist" in n for n in names))
         self.assertTrue(any("agrees with the watch" in n for n in names))
