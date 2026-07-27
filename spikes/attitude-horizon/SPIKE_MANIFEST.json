@@ -1,0 +1,67 @@
+{
+  "DISPOSABLE": true,
+  "aperture": {
+    "cx": 240,
+    "cy": 252,
+    "hh": 74,
+    "hw": 156,
+    "radius": 42
+  },
+  "base_package": "com.xsytrance.attitude.spike",
+  "conservative_aperture_bound_px": 172.66,
+  "generated_files": {
+    "app/build.gradle.kts": "99730317a6e088985e4cae9bccf2b97f97585b108ac03d45fa35779e23b0b5d5",
+    "app/src/assertive/res/drawable-nodpi/plate.png": "5aa7e28923d6d35fc60205853bd2d7b4c96fb6a23ebc74fa750b52297a814211",
+    "app/src/assertive/res/drawable/preview.png": "5aa7e28923d6d35fc60205853bd2d7b4c96fb6a23ebc74fa750b52297a814211",
+    "app/src/assertive/res/raw/watchface.xml": "babaf2b049fd4eff2d890628cfd902c406f97b320322507a1864d2174fd2b0d8",
+    "app/src/assertive/res/xml/watch_face_info.xml": "f0fdccabd681c7cd01a3ab72517267b43e96863d13d3e3edb807d1fa51d317c4",
+    "app/src/damped/res/drawable-nodpi/plate.png": "4da998e133ccca2e84a6de35b6ebef89f5394cf7b56f6c83070eea32e1f26bd8",
+    "app/src/damped/res/drawable/preview.png": "4da998e133ccca2e84a6de35b6ebef89f5394cf7b56f6c83070eea32e1f26bd8",
+    "app/src/damped/res/raw/watchface.xml": "351760eab4ccb99ddecb13a3e008cf8aecf30ca5872fd06aadc9f867c62ecc51",
+    "app/src/damped/res/xml/watch_face_info.xml": "f0fdccabd681c7cd01a3ab72517267b43e96863d13d3e3edb807d1fa51d317c4",
+    "app/src/main/AndroidManifest.xml": "dd82569e1d0114b9d19773922787a6a4374a7ccddc9f78ba502c1fb395da3e70",
+    "app/src/main/res/drawable-nodpi/hand_hour.png": "47ac3f9689870bbc262ebbb25f6858a9275c07adabd59ae6754517aa7a902393",
+    "app/src/main/res/drawable-nodpi/hand_min.png": "2e930fc03d4910ec1dca984e8e0e953955335c9a165b4a9e78fcdb9a45ba3b8f",
+    "app/src/main/res/drawable-nodpi/horizon.png": "b1f020d9eb87403681422bd425ae20c53991174c8ee87dbd7435daeed699f880",
+    "app/src/main/res/values/integers.xml": "8f2b6bc3f8e17519814f139c51ebe831071e045635e5846221e09bfeb9d27fab",
+    "app/src/proposed/res/drawable-nodpi/plate.png": "0bb38975f75ed270d90f5bf42d3cf1f27bbe2485321a7d3d2c65958007a0bc25",
+    "app/src/proposed/res/drawable/preview.png": "0bb38975f75ed270d90f5bf42d3cf1f27bbe2485321a7d3d2c65958007a0bc25",
+    "app/src/proposed/res/raw/watchface.xml": "ceafd46b98e5e4394bdefd4bceca2bea91da13b127d6519ef15b44df183be616",
+    "app/src/proposed/res/xml/watch_face_info.xml": "f0fdccabd681c7cd01a3ab72517267b43e96863d13d3e3edb807d1fa51d317c4"
+  },
+  "label": "ATTITUDE Horizon Spike",
+  "profiles": {
+    "assertive": {
+      "application_id": "com.xsytrance.attitude.spike.assertive",
+      "coverage_margin_px": 18.0,
+      "display_pitch_max_px": 34.0,
+      "display_roll_max_deg": 30.0,
+      "required_field_radius_px": 224.66,
+      "roll_expression": "-30 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    },
+    "damped": {
+      "application_id": "com.xsytrance.attitude.spike.damped",
+      "coverage_margin_px": 38.0,
+      "display_pitch_max_px": 14.0,
+      "display_roll_max_deg": 14.0,
+      "required_field_radius_px": 204.66,
+      "roll_expression": "-14 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    },
+    "proposed": {
+      "application_id": "com.xsytrance.attitude.spike.proposed",
+      "coverage_margin_px": 26.0,
+      "display_pitch_max_px": 26.0,
+      "display_roll_max_deg": 22.0,
+      "required_field_radius_px": 216.66,
+      "roll_expression": "-22 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45"
+    }
+  },
+  "safety_allowance_px": 18.0,
+  "schema": "xsywatch.attitude-spike/1",
+  "shared_field_radius_px": 224.66,
+  "version_code": 1,
+  "version_name": "0.0.1-spike",
+  "warning": "Throwaway engineering experiment. Not product code, not product artwork, not a release candidate. Nothing here may be promoted into ATTITUDE.",
+  "wrist_pitch_clamp_deg": 40.0,
+  "wrist_roll_clamp_deg": 45.0
+}

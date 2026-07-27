@@ -1,0 +1,43 @@
+{
+  "DISPOSABLE": true,
+  "artifact_policy": "debug APK only; no AAB, no signing, no release, no store identity",
+  "base_commit": "3333d427e9c87f1c59b26d61c41f6b9ce6435152",
+  "base_rationale": "origin/main: accepted merged consumer baseline carrying the deterministic WFF infrastructure and build tooling, and none of the Aurelius Phase 4 candidate/readiness/release/evidence work. Not cfccf30. No Aurelius branch merged. No ATTITUDE production code.",
+  "declared_permissions": [],
+  "reproducibility": "all three APKs byte-identical across a full clean rebuild",
+  "schema": "xsywatch.attitude-spike-build/1",
+  "status": "BUILT OFFLINE \u2014 NOT INSTALLED. No device session has occurred.",
+  "variants": {
+    "assertive": {
+      "apk_bytes": 2484031,
+      "apk_path": "spikes/attitude-horizon/app/build/outputs/apk/assertive/debug/app-assertive-debug.apk",
+      "apk_sha256": "99a3150e2c2a505ae0084d91e3fe9f3d775b04449ba791f4698a6669e5f2c03b",
+      "application_id": "com.xsytrance.attitude.spike.assertive",
+      "coverage_margin_px": 18.0,
+      "display_pitch_max_px": 34.0,
+      "display_roll_max_deg": 30.0,
+      "wff_validation": "PASS"
+    },
+    "damped": {
+      "apk_bytes": 2483983,
+      "apk_path": "spikes/attitude-horizon/app/build/outputs/apk/damped/debug/app-damped-debug.apk",
+      "apk_sha256": "c1121f3433e8b453f1ddfe64c6576adddae8271fab54e6ae4a67540ae60fbea6",
+      "application_id": "com.xsytrance.attitude.spike.damped",
+      "coverage_margin_px": 38.0,
+      "display_pitch_max_px": 14.0,
+      "display_roll_max_deg": 14.0,
+      "wff_validation": "PASS"
+    },
+    "proposed": {
+      "apk_bytes": 2484015,
+      "apk_path": "spikes/attitude-horizon/app/build/outputs/apk/proposed/debug/app-proposed-debug.apk",
+      "apk_sha256": "c38e04493841d4bb3d015dfe76ed42cd7001fc5c140c115993d56b764ce31b00",
+      "application_id": "com.xsytrance.attitude.spike.proposed",
+      "coverage_margin_px": 26.0,
+      "display_pitch_max_px": 26.0,
+      "display_roll_max_deg": 22.0,
+      "wff_validation": "PASS"
+    }
+  },
+  "wff_validation": "PASS (v4) for all three variants, official validator"
+}

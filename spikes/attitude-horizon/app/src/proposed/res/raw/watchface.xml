@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- DISPOSABLE SPIKE - profile proposed - NOT PRODUCT CODE -->
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:30" />
+  <Scene backgroundColor="#000000">
+    <PartImage name="s10_horizon" x="15" y="27" width="450" height="450" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="angle" value="0" />
+      <Variant mode="AMBIENT" target="y" value="27" />
+      <Transform target="angle" value="-22 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+      <Transform target="y" value="27 + 26 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+      <Image resource="horizon" />
+    </PartImage>
+    <PartImage name="s20_plate" x="0" y="0" width="480" height="480" alpha="255">
+      <Image resource="plate" />
+    </PartImage>
+    <PartImage name="s30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="hand_hour" />
+    </PartImage>
+    <PartImage name="s31_minute" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Transform target="angle" value="[MINUTE] * 6" />
+      <Image resource="hand_min" />
+    </PartImage>
+  </Scene>
+</WatchFace>

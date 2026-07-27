@@ -1,0 +1,152 @@
+{
+  "DISPOSABLE": true,
+  "allowed_final_concept_answers": [
+    "two-axis reactive",
+    "roll-only",
+    "reduced-motion",
+    "static",
+    "rejected"
+  ],
+  "allowed_profile_preference_answers": [
+    "assertive",
+    "damped",
+    "proposed",
+    "none of them"
+  ],
+  "binding_required": "each profile's answers are only valid when bound to the installed APK pullback sha256 recorded in the device evidence",
+  "final_decisions": {
+    "Should the final concept be two-axis reactive, roll-only, reduced-motion, static, or rejected?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Which profile is preferred?": {
+      "answer": "PENDING",
+      "note": ""
+    }
+  },
+  "profiles": {
+    "assertive": {
+      "application_id": "com.xsytrance.attitude.spike.assertive",
+      "display_pitch_max_px": 34.0,
+      "display_roll_max_deg": 30.0,
+      "installed_apk_sha256": null,
+      "observations": {
+        "Does AOD remain neutral?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does it feel responsive or gimmicky?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does pitch direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does roll direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the horizon remain still enough at rest?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the letterbox geometry make pitch travel feel excessive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is any mask edge or empty pixel visible?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is the motion too weak, premium, or too aggressive?": {
+          "answer": "PENDING",
+          "note": ""
+        }
+      }
+    },
+    "damped": {
+      "application_id": "com.xsytrance.attitude.spike.damped",
+      "display_pitch_max_px": 14.0,
+      "display_roll_max_deg": 14.0,
+      "installed_apk_sha256": null,
+      "observations": {
+        "Does AOD remain neutral?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does it feel responsive or gimmicky?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does pitch direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does roll direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the horizon remain still enough at rest?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the letterbox geometry make pitch travel feel excessive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is any mask edge or empty pixel visible?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is the motion too weak, premium, or too aggressive?": {
+          "answer": "PENDING",
+          "note": ""
+        }
+      }
+    },
+    "proposed": {
+      "application_id": "com.xsytrance.attitude.spike.proposed",
+      "display_pitch_max_px": 26.0,
+      "display_roll_max_deg": 22.0,
+      "installed_apk_sha256": null,
+      "observations": {
+        "Does AOD remain neutral?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does it feel responsive or gimmicky?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does pitch direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does roll direction feel intuitive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the horizon remain still enough at rest?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Does the letterbox geometry make pitch travel feel excessive?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is any mask edge or empty pixel visible?": {
+          "answer": "PENDING",
+          "note": ""
+        },
+        "Is the motion too weak, premium, or too aggressive?": {
+          "answer": "PENDING",
+          "note": ""
+        }
+      }
+    }
+  },
+  "rule": "FAIL-CLOSED. Every answer starts PENDING and stays PENDING until AGENOR gives it explicitly. Nothing here may be inferred from a measurement, from another profile's answer, or from silence. A missing answer is a missing answer.",
+  "schema": "xsywatch.attitude-spike-owner-comparison/1",
+  "status": "PENDING \u2014 no device session has occurred"
+}

@@ -32,3 +32,10 @@ watchfaces/*/tools/out/
 *.swp
 *~
 Thumbs.db
+
+# Disposable attitude-horizon spike build outputs (regenerable; the APKs are
+# hashed in SPIKE_MANIFEST.json and rebuilt byte-identically from source).
+/spikes/attitude-horizon/app/build/
+/spikes/attitude-horizon/.gradle/
+/spikes/attitude-horizon/local.properties
+/spikes/attitude-horizon/**/__pycache__/
