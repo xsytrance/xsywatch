@@ -946,3 +946,88 @@ class CliExtractionRegressionTests(unittest.TestCase):
         self.assertNotIn("expected_frame_count", man)
         self.assertGreater(man["actual_frame_count"], 0)
         self.assertEqual(man["ffmpeg_returncode"], 0)
+
+
+class PreviewDisclosureTests(unittest.TestCase):
+    """A prior preview must be carried into every session owner record.
+
+    The formal DAMPED -> PROPOSED -> ASSERTIVE order exists to reduce
+    expectation bias. A phone-mediated preview partially defeats that, so
+    the harness records it rather than letting the later answers be
+    presented as blind first impressions.
+    """
+
+    def test_the_disclosure_record_exists_and_is_preview_only(self):
+        pv = dh.preview_disclosure()
+        self.assertIsNotNone(pv)
+        self.assertIn("PREVIEW_ONLY", pv["classification"])
+        self.assertEqual(pv["mode"], "A")
+
+    def test_it_records_all_three_accepted_artifacts_exactly(self):
+        pv = dh.preview_disclosure()
+        rec = json.loads((SPIKE / "BUILD_RECORD.json").read_text())["variants"]
+        by_profile = {a["profile"]: a for a in pv["artifacts_transferred"]}
+        self.assertEqual(set(by_profile), set(gs.PROFILES))
+        for name, a in by_profile.items():
+            self.assertEqual(a["sha256"], rec[name]["apk_sha256"], name)
+            self.assertEqual(a["bytes"], rec[name]["apk_bytes"], name)
+            self.assertEqual(a["package_id"],
+                             gs.BASE_PACKAGE + gs.PROFILES[name]["suffix"])
+
+    def test_transfer_order_matches_the_formal_session_order(self):
+        pv = dh.preview_disclosure()
+        order = [a["profile"] for a in
+                 sorted(pv["artifacts_transferred"], key=lambda a: a["order"])]
+        self.assertEqual(order, ["damped", "proposed", "assertive"])
+
+    def test_it_states_the_observations_are_not_blind(self):
+        pv = dh.preview_disclosure()
+        self.assertIs(
+            pv["blindness_disclosure"]["later_owner_observations_are_blind"],
+            False)
+
+    def test_machine_evidence_is_explicitly_unaffected(self):
+        pv = dh.preview_disclosure()
+        self.assertIn("unaffected",
+                      pv["blindness_disclosure"]["what_this_does_NOT_invalidate"])
+
+    def test_a_session_owner_record_carries_the_disclosure(self):
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        s = tmp / "S-damped"
+        s.mkdir(parents=True)
+        dh._write_owner_record(s, "damped")
+        doc = json.loads((s / "OWNER_OBSERVATION.json").read_text())
+        self.assertIs(doc["observations_are_blind"], False)
+        self.assertIn("blindness_disclosure", doc)
+        self.assertIs(doc["blindness_disclosure"]["blind"], False)
+        # and every answer still starts PENDING
+        self.assertTrue(all(a["answer"] == "PENDING"
+                            for a in doc["observations"].values()))
+
+    def test_without_a_disclosure_the_record_would_claim_blind(self):
+        """Not unfalsifiable: absent a preview, sessions are blind."""
+        tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, tmp, True)
+        real = dh.PREVIEW_DISCLOSURE
+        dh.PREVIEW_DISCLOSURE = tmp / "absent.json"
+        try:
+            s = tmp / "S-proposed"
+            s.mkdir(parents=True)
+            dh._write_owner_record(s, "proposed")
+            doc = json.loads((s / "OWNER_OBSERVATION.json").read_text())
+            self.assertIs(doc["observations_are_blind"], True)
+            self.assertNotIn("blindness_disclosure", doc)
+        finally:
+            dh.PREVIEW_DISCLOSURE = real
+
+    def test_the_preview_authorizes_nothing_further(self):
+        pv = dh.preview_disclosure()
+        b = pv["authorization_boundary"]
+        for forbidden in ("finalization", "MERIDIAN", "signing", "merge"):
+            self.assertIn(forbidden, b)
+
+    def test_byte_mismatch_policy_is_recorded(self):
+        pv = dh.preview_disclosure()["byte_integrity_expectation"]
+        self.assertIn("BLOCKS", pv["if_pullback_differs"])
+        self.assertIn("never hand-edited", pv["if_pullback_differs"])

@@ -1,0 +1,64 @@
+{
+  "schema": "xsywatch.attitude-spike-preview-disclosure/1",
+  "DISPOSABLE": true,
+  "mode": "A",
+  "mode_name": "phone-mediated manual installation / visual preview",
+  "classification": "PREVIEW_ONLY — NON-EVIDENTIARY",
+  "date": "2026-07-27",
+
+  "what_happened": "The three accepted debug APKs were transferred to the owner for phone-mediated manual installation onto the Watch7 while away from the harness host. The harness did not contact the watch, did not install anything, and did not modify, repackage, rename or re-sign any APK. Bytes were verified against the accepted values immediately before transfer.",
+
+  "artifacts_transferred": [
+    {
+      "order": 1,
+      "profile": "damped",
+      "package_id": "com.xsytrance.attitude.spike.damped",
+      "filename": "app-damped-debug.apk",
+      "sha256": "c1121f3433e8b453f1ddfe64c6576adddae8271fab54e6ae4a67540ae60fbea6",
+      "bytes": 2483983
+    },
+    {
+      "order": 2,
+      "profile": "proposed",
+      "package_id": "com.xsytrance.attitude.spike.proposed",
+      "filename": "app-proposed-debug.apk",
+      "sha256": "c38e04493841d4bb3d015dfe76ed42cd7001fc5c140c115993d56b764ce31b00",
+      "bytes": 2484015
+    },
+    {
+      "order": 3,
+      "profile": "assertive",
+      "package_id": "com.xsytrance.attitude.spike.assertive",
+      "filename": "app-assertive-debug.apk",
+      "sha256": "99a3150e2c2a505ae0084d91e3fe9f3d775b04449ba791f4698a6669e5f2c03b",
+      "bytes": 2484031
+    }
+  ],
+
+  "owner_scope_for_this_preview": {
+    "answering": "ONLY the high-level kill question — does the reactive horizon feel promising, gimmicky, or obviously wrong?",
+    "explicitly_not_answering": [
+      "stability at rest",
+      "clipping / mask-edge exposure",
+      "roll direction",
+      "pitch direction",
+      "profile preference"
+    ],
+    "owner_statement": "I will not formally score stability, clipping, direction, or profile preference."
+  },
+
+  "blindness_disclosure": {
+    "later_owner_observations_are_blind": false,
+    "reason": "The owner saw all three profiles on the physical watch BEFORE the formal session. The formal profile order (DAMPED then PROPOSED then ASSERTIVE) exists to reduce expectation bias, and a prior preview partially defeats that. Recorded rather than ignored: the later subjective observations must not be presented as blind first impressions.",
+    "mitigation_applied": "The preview was taken in the same DAMPED -> PROPOSED -> ASSERTIVE order as the formal session, so the intended progression is at least preserved.",
+    "what_this_does_NOT_invalidate": "Machine-measured evidence — jitter, monotonicity, observed clamp, clipping, AOD neutrality, crash/ANR — is unaffected by the owner having looked at the face beforehand."
+  },
+
+  "byte_integrity_expectation": {
+    "note": "Some phone-side Wear installers repackage or re-sign what they push. The APKs are debug-signed (CN=Android Debug).",
+    "if_pullback_matches": "No reinstallation is required; the formal session proceeds after VERIFIED.",
+    "if_pullback_differs": "verify-installed BLOCKS that profile, correctly. The owner then reinstalls the accepted build manually through the formal ADB path. The mismatch is reported as recorded and never hand-edited into a pass."
+  },
+
+  "authorization_boundary": "This preview authorizes nothing else. It does not authorize formal captures, finalization, production motion selection, MERIDIAN refinement, release work, signing, packaging, store preparation or merge."
+}

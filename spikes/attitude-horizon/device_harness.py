@@ -961,10 +961,28 @@ def cmd_session_init(adb: Adb, variant: str, stamp: str | None = None) -> Path:
     return session
 
 
+PREVIEW_DISCLOSURE = HERE / "PREVIEW_DISCLOSURE.json"
+
+
+def preview_disclosure() -> dict | None:
+    """A prior phone-mediated preview, if one was recorded.
+
+    Carried into every session owner record so the later observations
+    cannot be presented as blind first impressions. Recording it in the
+    harness rather than only in prose means it cannot be forgotten.
+    """
+    if not PREVIEW_DISCLOSURE.exists():
+        return None
+    try:
+        return json.loads(PREVIEW_DISCLOSURE.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+
+
 def _write_owner_record(session: Path, variant: str) -> None:
     """Session-specific, fail-closed. Never touches another profile."""
     doc = {
-        "schema": "xsywatch.attitude-spike-owner-session/1",
+        "schema": "xsywatch.attitude-spike-owner-session/2",
         "DISPOSABLE": True,
         "variant": variant,
         "package_id": gs.BASE_PACKAGE + gs.PROFILES[variant]["suffix"],
@@ -977,6 +995,19 @@ def _write_owner_record(session: Path, variant: str) -> None:
         "observations": {q: {"answer": "PENDING", "note": ""}
                          for q in OWNER_QUESTIONS},
     }
+    pv = preview_disclosure()
+    doc["observations_are_blind"] = pv is None
+    if pv is not None:
+        doc["blindness_disclosure"] = {
+            "blind": False,
+            "reason": pv.get("blindness_disclosure", {}).get("reason", ""),
+            "preview_date": pv.get("date"),
+            "preview_record": _rel(PREVIEW_DISCLOSURE),
+            "note": ("The owner saw this face on the physical watch before "
+                     "this session. These answers must not be presented as "
+                     "blind first impressions. Machine-measured evidence is "
+                     "unaffected."),
+        }
     (session / "OWNER_OBSERVATION.json").write_text(
         json.dumps(doc, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
