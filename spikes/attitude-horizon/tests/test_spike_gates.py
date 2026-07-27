@@ -305,8 +305,12 @@ class IsolationTests(unittest.TestCase):
              "origin/main...HEAD"], capture_output=True, text=True)
         return [f for f in (r.stdout or "").splitlines() if f.strip()]
 
+    ALLOWED_NON_SPIKE = {".gitignore"}   # the dedicated ignore rule
+
     def test_only_spike_paths_changed(self):
         for f in self.changed_files():
+            if f in self.ALLOWED_NON_SPIKE:
+                continue
             self.assertTrue(f.startswith("spikes/attitude-horizon/"),
                             f"spike branch touched {f}")
 

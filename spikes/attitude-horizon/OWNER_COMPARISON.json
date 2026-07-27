@@ -15,7 +15,31 @@
   ],
   "binding_required": "each profile's answers are only valid when bound to the installed APK pullback sha256 recorded in the device evidence",
   "final_decisions": {
-    "Should the final concept be two-axis reactive, roll-only, reduced-motion, static, or rejected?": {
+    "Does ASSERTIVE feel excessive?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Does PROPOSED feel premium?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Is DAMPED too weak?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Is pitch direction intuitive?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Is roll direction intuitive?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Should pitch remain at all?": {
+      "answer": "PENDING",
+      "note": ""
+    },
+    "Should the final horizon be two-axis reactive, roll-only, reduced-motion, static, or rejected?": {
       "answer": "PENDING",
       "note": ""
     },
@@ -24,6 +48,7 @@
       "note": ""
     }
   },
+  "note": "Template. session-init instantiates a SEPARATE per-session record per profile; answers are never copied across profiles.",
   "profiles": {
     "assertive": {
       "application_id": "com.xsytrance.attitude.spike.assertive",
