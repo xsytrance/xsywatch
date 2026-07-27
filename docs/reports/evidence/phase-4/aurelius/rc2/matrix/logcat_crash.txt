@@ -1,0 +1,27 @@
+--------- beginning of crash
+07-26 18:48:05.258  1619 16533 F libc    : FORTIFY: pthread_mutex_lock called on a destroyed mutex (0xf56821e0)
+07-26 18:48:05.259  1619 16533 F libc    : Fatal signal 6 (SIGABRT), code -1 (SI_QUEUE) in tid 16533 (adbd), pid 1619 (adbd)
+07-26 18:48:05.714 16538 16538 F DEBUG   : *** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+07-26 18:48:05.714 16538 16538 F DEBUG   : Build fingerprint: 'samsung/fresh7blue/fresh7bl:16/BP2A.250325.020/L310XXS2BZF4:user/release-keys'
+07-26 18:48:05.714 16538 16538 F DEBUG   : Revision: '9'
+07-26 18:48:05.714 16538 16538 F DEBUG   : ABI: 'arm'
+07-26 18:48:05.714 16538 16538 F DEBUG   : Timestamp: 2026-07-26 18:48:05.332248961-0400
+07-26 18:48:05.714 16538 16538 F DEBUG   : Process uptime: 25450s
+07-26 18:48:05.714 16538 16538 F DEBUG   : Cmdline: /apex/com.android.adbd/bin/adbd --root_seclabel=u:r:su:s0 --tim_seclabel=u:r:adbd_tradeinmode:s0
+07-26 18:48:05.715 16538 16538 F DEBUG   : pid: 1619, tid: 16533, name: adbd  >>> /apex/com.android.adbd/bin/adbd <<<
+07-26 18:48:05.715 16538 16538 F DEBUG   : uid: 2000
+07-26 18:48:05.715 16538 16538 F DEBUG   : signal 6 (SIGABRT), code -1 (SI_QUEUE), fault addr --------
+07-26 18:48:05.715 16538 16538 F DEBUG   : Abort message: 'FORTIFY: pthread_mutex_lock called on a destroyed mutex (0xf56821e0)'
+07-26 18:48:05.715 16538 16538 F DEBUG   :     r0  00000000  r1  00004095  r2  00000006  r3  f40cdfe8
+07-26 18:48:05.715 16538 16538 F DEBUG   :     r4  f40cdfe8  r5  00000653  r6  00004095  r7  0000016b
+07-26 18:48:05.715 16538 16538 F DEBUG   :     r8  00000000  r9  ffffffff  r10 ffe11120  r11 00000000
+07-26 18:48:05.715 16538 16538 F DEBUG   :     ip  f40cdff8  sp  f40cdfe0  lr  f52fe30f  pc  f52fe322
+07-26 18:48:05.715 16538 16538 F DEBUG   : 7 total frames
+07-26 18:48:05.716 16538 16538 F DEBUG   : backtrace:
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #00 pc 0006a322  /apex/com.android.runtime/lib/bionic/libc.so (abort+138) (BuildId: 76a45c6a1d394dee1634a851e6a291ac)
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #01 pc 0006c797  /apex/com.android.runtime/lib/bionic/libc.so (__fortify_fatal(char const*, ...)+30) (BuildId: 76a45c6a1d394dee1634a851e6a291ac)
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #02 pc 00076161  /apex/com.android.runtime/lib/bionic/libc.so (HandleUsingDestroyedMutex(pthread_mutex_t*, char const*)+24) (BuildId: 76a45c6a1d394dee1634a851e6a291ac)
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #03 pc 0007600f  /apex/com.android.runtime/lib/bionic/libc.so (pthread_mutex_lock+134) (BuildId: 76a45c6a1d394dee1634a851e6a291ac)
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #04 pc 0007740d  /apex/com.android.adbd/lib/libc++.so (std::__1::mutex::lock()+4) (BuildId: d55bd1b912e75346db15cf244af97715df95de02)
+07-26 18:48:05.716 16538 16538 F DEBUG   :       #05 pc 000aeeb1  /apex/com.android.adbd/bin/adbd (atransport::Kick()+64) (BuildId: 64716c694e08d5c2e9a674f40de3d232)
+07-26 18:48:05.717 16538 16538 F DEBUG   :       #06 pc 2397cf24  <unknown>

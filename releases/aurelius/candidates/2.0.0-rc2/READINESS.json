@@ -24,7 +24,7 @@
     "architecture-approved": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "Checkpoint B returned CHANGES REQUESTED; this candidate answers those corrections and is returned for re-review",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/PHASE_4_CHECKPOINT_B_CHATGPT_REVIEW.md"
       ],
@@ -36,7 +36,7 @@
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "AAB and debug APK built and verified; build fails if verification fails",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json"
       ],
@@ -48,7 +48,7 @@
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "three roles enforced against COMMIT OBJECTS (blob/LFS oid), not the working tree; two clean detached-worktree rebuilds from the source commit are byte-identical and equal the canonical artifacts",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/LINEAGE.json"
       ],
@@ -58,22 +58,24 @@
     },
     "device-validated": {
       "checker_schema": "agenor.release-readiness-checker/2",
-      "detail": "its two prerequisites under the corrected DAG (installed-resource-lineage-verified, permissions-verified) are both complete, so the intended bytes are proven installed before the matrix is trusted. Blocked solely because the Checkpoint B visual matrix has not been run: per-component mechanical motion, AOD at actual scale, ten sleep/wake cycles with owner inspection of the post-cycle frame, the date/reserve/hands/parallax rows, Command Satin legibility, crash/ANR review, touch-inertness, and the post-exertion and off-wrist heart-rate observations. No DEVICE_TEST_RESULTS.md exists for rc2, so this gate has no basis to close.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "detail": "the corrected full matrix RAN on 2026-07-27 against the already-installed rc2 APK: 20 measured rows, 0 failures. All four required mechanisms moved (z10_gl, z11_gr, z21_bal, z22_cage) across 1802 frames of a 60s capture; 10/10 AOD sleep/wake transitions; touch inert; zero crash-buffer or ANR entries; heart rate 1.7350 Hz = 104.1 bpm, clear of the 70.0 bpm fallback. Blocked because 14 OWNER rows remain unobserved - parallax, actual-scale legibility, Command Satin quality, reserve-tick restraint, unintended ornament, AOD restraint, AOD post-cycle visual integrity, battery-gauge plausibility, time/date correctness, HR agreement with the watch's own reading, post-exertion rise, off-wrist fallback, permission-prompt absence and final disposition - plus the two analog-hand rows, which a 60s capture cannot honestly score. Device ACCESS is no longer the blocker; owner observation is.",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
+        "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_TEST_RESULTS.md",
+        "docs/reports/evidence/phase-4/aurelius/rc2/matrix",
         "docs/reports/evidence/phase-4/aurelius/rc2/DEVICE_EVIDENCE_BLOCKER.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
       ],
-      "evidence_fingerprint": "sha256:e5a94a2f0775a33c3a0ab563bb88697410362b7463ad142b209ce4384090ca93",
-      "machine_summary": "3 evidence file(s), fingerprint e5a94a2f0775\u2026",
+      "evidence_fingerprint": "sha256:3e008475c48430a259fcf8dc8dc35cf4cd67879fd5d78cf351991122dbffd22c",
+      "machine_summary": "12 evidence file(s), fingerprint 3e008475c484\u2026",
       "state": "blocked"
     },
     "dex-gate-passed": {
       "artifact_sha256": "1a2ae1386a5bacc70e2316c6562d50a9ec083b35b3038ecf5e564526f18a3b23",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "release dex allowlisted and deleted only after verification; every debug-APK dex classified \u2014 6 generated R classes plus 4 named D8 desugaring stubs, 0 unexplained; AAB contains no dex",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "releases/aurelius/candidates/2.0.0-rc2/VERIFY.json",
         "releases/aurelius/candidates/2.0.0-rc2/dex_gate.json"
@@ -86,7 +88,7 @@
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "the APK pulled back from /data/app on the Watch7 hashes byte-identical to the candidate, so the artifact on the panel is the artifact in the repository and not a re-signed or re-packaged variant. Closed under the corrected DAG (Checkpoint B rc2 re-review, ruling 1): an installed-byte pullback is independent evidence and a prerequisite for trusting the visual matrix, not something downstream of it.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
       ],
@@ -99,7 +101,7 @@
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "of the 60 inventory resources extracted from the INSTALLED APK, 58 are byte-identical to repository source and 0 drifted. The 2 non-identical entries are both explained and neither is drift \u2014 res/xml/watch_face_info.xml is compiled to binary AXML at packaging, and res/values/integers.xml is folded into resources.arsc. res/raw/watchface.xml, the file that defines every pixel of the face, is byte-identical. Closed under the corrected DAG; independently reproduced offline by tools/device_matrix.py at 58/2/0.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/rc2/INSTALL_AND_LINEAGE.md"
       ],
@@ -110,7 +112,7 @@
     "owner-pixel-approved": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "APPROVAL-0005 owner.status is proposed. The craftsmanship DIRECTION was approved at Checkpoint A; final pixel acceptance requires the wear evidence the review made a condition.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "watchfaces/aurelius/visual/approvals/APPROVAL-0005-field-tourbillon-mk2-rc1.json"
       ],
@@ -121,7 +123,7 @@
     "owner-wear-complete": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "zero wear sessions recorded. Requires AGENOR to wear the watch with rc2 installed and run tools/wear_log.py; cannot be invented.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/evidence/phase-4/aurelius/wear/"
       ],
@@ -133,7 +135,7 @@
       "artifact_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "SETTLED EMPIRICALLY on the Galaxy Watch7. The previously UNPROVEN half is now measured: rc2 declares no permission and still receives live heart rate. The balance wheel is driven at HR/60 Hz, so its frequency reads back the rate the runtime handed the face \u2014 1.7300 Hz and 1.7350 Hz over two runs (103.8 and 104.1 bpm), against a documented 70.0 bpm fallback, matching the watch's own live reading to within 0.2 bpm. dumpsys shows the WFF runtime, not this package, holding the sensor connection; the face declares hasCode=false and could not open one. The package dump reports zero requested permissions, so nothing could have persisted across the in-place upgrade from the build that once declared BODY_SENSORS. android.permission.health.READ_HEART_RATE is deliberately NOT adopted; Variant B is retained unshipped for repeatability. The two outstanding HR recordings (post-exertion tracking, off-wrist fallback) are behavioural rows of device-validated, not permission questions, and are not claimed here.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/PHASE_4_PERMISSION_INVESTIGATION.md",
         "docs/reports/evidence/phase-4/aurelius/rc2/PERMISSION_TEST.md"
@@ -145,7 +147,7 @@
     "policy-ready": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "its permissions-verified prerequisite is now satisfied, so the declared-permission position for the listing is settled (none). Still blocked on owner-only inputs: the four TEST-1 account facts, a privacy policy actually hosted at https://x1c7.com/privacy/aurelius, and a chosen support email plus response commitment. Price remains a recorded recommendation, not the owner's decision.",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/PHASE_4_POLICY_AUDIT.md",
         "docs/reports/PHASE_4_TEST1_READINESS.md"
@@ -161,7 +163,7 @@
     "signing-authorized": {
       "checker_schema": "agenor.release-readiness-checker/2",
       "detail": "no production signing material exists and none is authorised (ADR-010 \u00a75)",
-      "evaluated_at_commit": "3001ddda6957b67fe48d27f0bfc951425a925998",
+      "evaluated_at_commit": "12e407e8c4273c22024c5f0f88d9691f69372755",
       "evidence": [
         "docs/reports/PHASE_4_SIGNING_PLAN.md"
       ],

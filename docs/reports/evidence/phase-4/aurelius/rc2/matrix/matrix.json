@@ -1,0 +1,92 @@
+{
+  "aod_cycles": {
+    "count": 10,
+    "post_cycle_capture": true,
+    "staged": 10
+  },
+  "candidate_apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+  "capture_wakefulness": "Awake",
+  "device": {
+    "ro.build.display.id": "BP2A.250325.020.L310XXS2BZF4",
+    "ro.build.version.release": "16",
+    "ro.build.version.sdk": "36",
+    "ro.product.model": "SM-L310"
+  },
+  "heart_rate": {
+    "fallback_bpm": 70.0,
+    "hz": 1.735,
+    "implied_bpm": 104.1
+  },
+  "installed_apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+  "motion": {
+    "z10_gl": {
+      "declared_speed_deg_s": 40,
+      "frames": 1802,
+      "max_reference_delta": 26.743,
+      "mean_interframe_delta": 4.919,
+      "near_static_pairs": 1204,
+      "pairs": 1801,
+      "type": "rotating_image"
+    },
+    "z11_gr": {
+      "declared_speed_deg_s": 24,
+      "frames": 1802,
+      "max_reference_delta": 35.957,
+      "mean_interframe_delta": 2.762,
+      "near_static_pairs": 1204,
+      "pairs": 1801,
+      "type": "rotating_image"
+    },
+    "z21_bal": {
+      "frames": 1802,
+      "max_reference_delta": 29.207,
+      "mean_interframe_delta": 4.0,
+      "near_static_pairs": 1204,
+      "pairs": 1801,
+      "type": "hr_balance"
+    },
+    "z22_cage": {
+      "frames": 1802,
+      "max_reference_delta": 21.119,
+      "mean_interframe_delta": 2.577,
+      "near_static_pairs": 1204,
+      "pairs": 1801,
+      "type": "seconds_rotor"
+    }
+  },
+  "motion_required": [
+    "z10_gl",
+    "z11_gr",
+    "z21_bal",
+    "z22_cage"
+  ],
+  "pre_upgrade_apk_sha256": "939d2b44b51557dc7f8598870d32af2f6f9cdb7c30472d17376332cb149012fc",
+  "requested_permissions": [],
+  "resource_lineage": {
+    "absent": [],
+    "ambiguous": [],
+    "compiled": 2,
+    "drift": [],
+    "identical": 58,
+    "total": 60
+  },
+  "screen_off_timeout_restored_to": "60000",
+  "stability": {
+    "crash_hits": 0,
+    "fatal_or_anr": 0
+  },
+  "touch": {
+    "after": "topResumedActivity=ActivityRecord{203537639 u0 com.samsung.android.wearable.sysui/com.google.android.clockwork.sysui.mainui.activity.SysUiActivity t2}",
+    "before": "topResumedActivity=ActivityRecord{203537639 u0 com.samsung.android.wearable.sysui/com.google.android.clockwork.sysui.mainui.activity.SysUiActivity t2}"
+  },
+  "version_after": {
+    "minSdk": "36",
+    "versionCode": "3",
+    "versionName": "2.0.0-rc2"
+  },
+  "version_before": {
+    "minSdk": "36",
+    "versionCode": "3",
+    "versionName": "2.0.0-rc2"
+  }
+}

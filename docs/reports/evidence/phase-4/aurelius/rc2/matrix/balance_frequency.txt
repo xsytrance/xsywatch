@@ -1,0 +1,1 @@
+/home/xsyprime/xsywatch/docs/reports/evidence/phase-4/aurelius/rc2/matrix/frames: frames=1802  peak=1.7350 Hz  implied HR=104.1 bpm

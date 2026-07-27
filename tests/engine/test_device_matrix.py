@@ -371,6 +371,55 @@ class AodRowSplitTests(unittest.TestCase):
         self.assertEqual(cap[1], "BLOCKED")
 
 
+class BlackFrameTests(unittest.TestCase):
+    """A capture of a sleeping panel is not a capture of the face.
+
+    Caught on the first live run: the Watch7 screen times out in seconds,
+    so `normal.png` came back an entirely black 1975-byte frame — the same
+    size as the known-black doze capture — and the row reported PASS on
+    file existence alone. That is the exact false-pass class the re-review
+    flagged for AOD, sitting unnoticed in the normal-mode row.
+    """
+
+    def setUp(self):
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+
+    def png(self, colour) -> bytes:
+        from PIL import Image
+        import io
+        buf = io.BytesIO()
+        Image.new("RGB", (48, 48), colour).save(buf, "PNG")
+        return buf.getvalue()
+
+    def test_a_black_capture_is_rejected(self):
+        ok, detail = dm.capture_png(
+            FakeAdb(screencap=self.png((0, 0, 0))), self.tmp / "n.png")
+        self.assertFalse(ok)
+        self.assertIn("black", detail.lower())
+
+    def test_a_real_capture_is_accepted(self):
+        ok, detail = dm.capture_png(
+            FakeAdb(screencap=self.png((90, 100, 70))), self.tmp / "n.png")
+        self.assertTrue(ok, detail)
+        self.assertIn("non-black", detail)
+
+    def test_an_empty_screencap_is_rejected(self):
+        ok, detail = dm.capture_png(FakeAdb(screencap=b""),
+                                    self.tmp / "n.png")
+        self.assertFalse(ok)
+
+    def test_unreadable_bytes_are_rejected_not_passed(self):
+        ok, detail = dm.capture_png(FakeAdb(screencap=b"not a png"),
+                                    self.tmp / "n.png")
+        self.assertFalse(ok)
+
+    def test_is_black_returns_none_for_unreadable(self):
+        p = self.tmp / "junk.png"
+        p.write_bytes(b"nope")
+        self.assertIsNone(dm.is_black(p))
+
+
 class HeartRateRowTests(unittest.TestCase):
     """The fallback is 70.0 bpm exactly; a reading there proves nothing."""
 

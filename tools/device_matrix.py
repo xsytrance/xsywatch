@@ -371,6 +371,63 @@ def _wakefulness(adb: Adb) -> str:
     return mm.group(1) if mm else "?"
 
 
+def ensure_awake(adb: Adb, tries: int = 6) -> str:
+    """A capture of a sleeping panel is not a capture of the face.
+
+    The Watch7 screen times out in seconds, which silently turned the
+    first live run's normal-mode capture into a black frame and made
+    `screenrecord` write a zero-byte file.
+    """
+    st = _wakefulness(adb)
+    for _ in range(tries):
+        if st == "Awake":
+            return st
+        adb.sh("input keyevent KEYCODE_WAKEUP")
+        time.sleep(1.5)
+        st = _wakefulness(adb)
+    return st
+
+
+def get_screen_timeout(adb: Adb) -> str:
+    return adb.sh("settings get system screen_off_timeout").strip()
+
+
+def set_screen_timeout(adb: Adb, ms: str) -> None:
+    if ms and ms.lower() not in ("null", "none", ""):
+        adb.sh(f"settings put system screen_off_timeout {ms}")
+
+
+def is_black(p: Path) -> bool | None:
+    """True if the frame is entirely black; None if it cannot be read."""
+    try:
+        from PIL import Image
+        with Image.open(p) as im:
+            return im.convert("L").getextrema() == (0, 0)
+    except Exception:  # noqa: BLE001 - Pillow optional, unreadable file
+        return None
+
+
+def capture_png(adb: Adb, dest: Path) -> tuple[bool, str]:
+    """Capture and PROVE it is not a black frame.
+
+    The AOD doze row already treated a black frame as evidence of nothing.
+    The normal-mode row did not, and passed on file existence alone — the
+    same false-pass class the re-review flagged for AOD.
+    """
+    cap = adb.run("exec-out", "screencap", "-p", binary=True, timeout=120)
+    if not cap.stdout:
+        return False, "screencap returned nothing"
+    dest.write_bytes(cap.stdout)
+    black = is_black(dest)
+    if black is True:
+        return False, (f"{dest.name} is an entirely black frame — the panel "
+                       f"was asleep or the capture pipeline returned nothing "
+                       f"drawable; this is not evidence of the face")
+    if black is None:
+        return False, f"{dest.name} written but could not be read back"
+    return True, f"{dest.name} captured, non-black"
+
+
 def row_aod_cycles(adb: Adb, m: Matrix, out_dir: Path, cycles: int) -> None:
     log = []
     for i in range(cycles):
@@ -384,11 +441,10 @@ def row_aod_cycles(adb: Adb, m: Matrix, out_dir: Path, cycles: int) -> None:
     (out_dir / "aod_cycles.log").write_text("\n".join(log) + "\n")
     staged = sum(1 for ln in log if "sleep→Asleep" in ln or "sleep→Dozing" in ln)
     after = out_dir / "after_aod_cycles.png"
-    cap = adb.run("exec-out", "screencap", "-p", binary=True, timeout=120)
-    if cap.stdout:
-        after.write_bytes(cap.stdout)
+    ensure_awake(adb)
+    ok_after, after_detail = capture_png(adb, after)
     m.data["aod_cycles"] = {"count": cycles, "staged": staged,
-                            "post_cycle_capture": after.exists()}
+                            "post_cycle_capture": ok_after}
     # ruling 3C: transition mechanics and visual integrity are different
     # claims. Wakefulness telemetry proves the former; the existence of a
     # PNG proves nothing at all about the latter.
@@ -399,13 +455,12 @@ def row_aod_cycles(adb: Adb, m: Matrix, out_dir: Path, cycles: int) -> None:
         m.add(f"AOD — {staged}/{cycles} sleep/wake transitions", "FAIL",
               f"only {staged} of {cycles} transitions staged; see "
               f"{(out_dir / 'aod_cycles.log').name}")
-    if after.exists():
+    if ok_after:
         m.add("AOD — post-cycle screenshot captured", "PASS",
-              f"{after.name} written; visual integrity is an OWNER row and "
-              f"is not claimed here")
+              f"{after_detail}; visual integrity is an OWNER row and is not "
+              f"claimed here")
     else:
-        m.add("AOD — post-cycle screenshot captured", "BLOCKED",
-              "screencap returned nothing after the cycles")
+        m.add("AOD — post-cycle screenshot captured", "BLOCKED", after_detail)
 
 
 def row_doze_capture(adb: Adb, m: Matrix, out_dir: Path) -> None:
@@ -443,8 +498,9 @@ def _box_series(frames: list[Path], box: tuple[int, int, int, int]) -> list:
     out = []
     for f in frames:
         with Image.open(f) as im:
-            out.append(list(im.convert("L").crop((x, y, x + w, y + h))
-                            .getdata()))
+            # tobytes() on an "L" image yields the same pixel sequence as
+            # getdata(), without the deprecation, and iterates as ints
+            out.append(im.convert("L").crop((x, y, x + w, y + h)).tobytes())
     return out
 
 
@@ -520,20 +576,39 @@ def rows_motion(adb: Adb, m: Matrix, out_dir: Path, face_toml: Path,
     comps = parse_components(face_toml)
     required = required_mechanisms(comps)
 
-    remote = "/sdcard/motion.mp4"
-    adb.sh(f"screenrecord --time-limit {seconds} --size 480x480 {remote}",
-           timeout=seconds + 180)
-    local = out_dir / "motion.mp4"
-    adb.run("pull", remote, str(local), timeout=600)
-    adb.sh(f"rm -f {remote}")
-
     def block(reason: str) -> None:
         for c in required:
             m.add(f"Motion — {c['name']} ({c['type']})", "BLOCKED", reason)
         m.add("Mechanical motion (all required mechanisms)", "BLOCKED", reason)
 
+    # The panel must stay lit for the whole capture. The Watch7 screen
+    # times out in seconds, which produced a zero-byte recording on the
+    # first live run. Raise the timeout for the duration and put it back.
+    prev_timeout = get_screen_timeout(adb)
+    set_screen_timeout(adb, str((seconds + 120) * 1000))
+    state = ensure_awake(adb)
+    m.data["capture_wakefulness"] = state
+    m.data["screen_off_timeout_restored_to"] = prev_timeout
+    try:
+        if state != "Awake":
+            block(f"the panel would not stay awake (mWakefulness={state}); a "
+                  f"recording of a sleeping screen is not motion evidence")
+            return None
+        remote = "/sdcard/motion.mp4"
+        adb.sh(f"screenrecord --time-limit {seconds} --size 480x480 {remote}",
+               timeout=seconds + 180)
+        local = out_dir / "motion.mp4"
+        adb.run("pull", remote, str(local), timeout=600)
+        adb.sh(f"rm -f {remote}")
+    finally:
+        set_screen_timeout(adb, prev_timeout)
+
     if not local.exists():
         block("screenrecord produced no file")
+        return None
+    if local.stat().st_size == 0:
+        block("screenrecord produced a ZERO-BYTE file — the display was "
+              "asleep or the recorder never started")
         return None
     if not shutil.which("ffmpeg"):
         block(f"recording captured ({local.name}) but ffmpeg is not "
@@ -832,6 +907,11 @@ def main() -> int:
                     help="motion capture length; Checkpoint B requires >= 60")
     ap.add_argument("--skip-install", action="store_true",
                     help="test the package already on the device")
+    ap.add_argument("--keep-frames", action="store_true",
+                    help="keep the extracted PNG frames (~340 MB for a 60 s "
+                         "capture). They are a derived intermediate and are "
+                         "deleted by default; motion.mp4 is the evidence and "
+                         "the frames re-extract from it with one ffmpeg call")
     args = ap.parse_args()
 
     pkg = args.package or f"com.xsytrance.{args.face}"
@@ -873,12 +953,9 @@ def main() -> int:
         m, work / "post_base.apk",
         REPO / "watchfaces" / args.face / "visual/inventories/inventory.json")
 
-    cap = adb.run("exec-out", "screencap", "-p", binary=True, timeout=120)
-    if cap.stdout:
-        (out_dir / "normal.png").write_bytes(cap.stdout)
-        m.add("Normal-mode capture", "PASS", "normal.png captured")
-    else:
-        m.add("Normal-mode capture", "BLOCKED", "screencap returned nothing")
+    ensure_awake(adb)
+    ok_cap, cap_detail = capture_png(adb, out_dir / "normal.png")
+    m.add("Normal-mode capture", "PASS" if ok_cap else "BLOCKED", cap_detail)
 
     if args.record_seconds < 60:
         m.add("Motion capture length", "BLOCKED",
@@ -898,6 +975,13 @@ def main() -> int:
     emit(m, out_dir.parent / "DEVICE_TEST_RESULTS.md",
          args.face, args.version, apk_sha or "UNRESOLVED", out_dir)
 
+    frames_dir = out_dir / "frames"
+    if frames_dir.exists() and not args.keep_frames:
+        n = len(list(frames_dir.glob("*.png")))
+        shutil.rmtree(frames_dir, ignore_errors=True)
+        print(f"\nremoved {n} derived frame(s); re-extract with:\n"
+              f"  ffmpeg -i {_rel(out_dir / 'motion.mp4')} -vf fps=30 "
+              f"{_rel(frames_dir)}/f%04d.png")
     shutil.rmtree(work, ignore_errors=True)
     bad = sum(v for k, v in m.counts().items() if k in ("FAIL",))
     print(f"\n{len(m.rows)} measured rows, {len(OWNER_ROWS)} owner rows "
