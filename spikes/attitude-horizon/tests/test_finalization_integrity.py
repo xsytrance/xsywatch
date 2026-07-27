@@ -61,7 +61,7 @@ class FixtureSession:
         self.session = root
         for sub in ("raw", "frames", "analysis", "pullback"):
             (self.session / sub).mkdir(parents=True, exist_ok=True)
-        self.apk_sha = "a" * 64
+        self.apk_sha = None   # set by _make_binaries
         self.doc = {
             "schema": "xsywatch.attitude-spike-session/1",
             "binding": {
@@ -82,9 +82,27 @@ class FixtureSession:
                 "status": "VERIFIED",
                 "installed_apk_sha256": self.apk_sha,
                 "built_apk_sha256": self.apk_sha,
+                "pullback_path": None,      # filled by _make_binaries
             },
             "captures": {}, "frame_manifests": {}, "analysis": {},
         }
+        self._make_binaries()
+
+    def _make_binaries(self):
+        """Real files for the installed pullback, built APK and source
+        manifest, because finalization now re-hashes them."""
+        pb = self.session / "pullback" / "installed_base.apk"
+        pb.write_bytes(b"fixture apk bytes")
+        self.apk_sha = dh.sha256(pb)
+        built = self.session / "built.apk"
+        built.write_bytes(b"fixture apk bytes")
+        self.doc["binding"]["built_apk_path"] = dh._rel(built)
+        self.doc["binding"]["built_apk_sha256"] = self.apk_sha
+        self.doc["binding"]["spike_source_manifest_sha256"] = dh.sha256(
+            SPIKE / "SPIKE_MANIFEST.json")
+        self.doc["installed_verification"]["installed_apk_sha256"] = self.apk_sha
+        self.doc["installed_verification"]["built_apk_sha256"] = self.apk_sha
+        self.doc["installed_verification"]["pullback_path"] = dh._rel(pb)
 
     def save(self):
         dh.save(self.session, self.doc)
@@ -92,26 +110,44 @@ class FixtureSession:
     # -- builders ------------------------------------------------------
 
     def add_video(self, cid: str, nframes: int = 40, uncovered_at=None,
-                  duration_disposition="PASS", duration_ratio=1.0,
-                  status="MEASURED"):
+                  intended_s=None, status="MEASURED", frame_overshoot=0):
+        """Semantically COHERENT evidence.
+
+        The previous fixture claimed 40 frames of 1.33 s media against a
+        30 s intended recording at ratio 1.0 — three fields that cannot all
+        be true. It passed only because verification read stored
+        dispositions instead of deriving them. Every derived field here is
+        computed through the same production helpers real extraction uses,
+        so the fixture cannot drift away from the rules it is testing.
+        """
         raw = self.session / "raw" / f"{cid}.mp4"
         raw.write_bytes(f"fixture video {cid}".encode())
         raw_sha = dh.sha256(raw)
+        # a short test-only intended duration that MATCHES the media
+        actual_s = round(nframes / dh.EXTRACT_FPS, 4)
+        if intended_s is None:
+            intended_s = actual_s
         self.doc["captures"][cid] = {
             "capture_id": cid, "kind": "video", "disposition": "PASS",
-            "intended_duration_s": 30,
+            "intended_duration_s": intended_s,
             "files": [{"path": dh._rel(raw), "sha256": raw_sha,
                        "bytes": raw.stat().st_size}]}
 
         fdir = self.session / "frames" / cid
         fdir.mkdir(parents=True, exist_ok=True)
         frames = []
-        for i in range(nframes):
+        for i in range(nframes + frame_overshoot):
             im = horizon_frame(uncovered=(uncovered_at == i),
                                angle_shift=(i % 5) - 2)
             fp = fdir / f"f{i:05d}.png"
             im.save(fp)
             frames.append(fp)
+        # every derived value comes from the PRODUCTION helpers
+        expected = int(round(actual_s * dh.EXTRACT_FPS))
+        tol = dh.extraction_tolerance(expected)
+        delta = abs(len(frames) - expected)
+        ext_disp = "PASS" if delta <= tol else "BLOCKED"
+        dur_disp, dur_ratio = dh.duration_disposition(actual_s, intended_s)
         man = {
             "capture_id": cid,
             "source_video_path": dh._rel(raw),
@@ -122,14 +158,14 @@ class FixtureSession:
             "extraction_fps": dh.EXTRACT_FPS,
             "ffprobe_version": "ffprobe fixture",
             "ffprobe_command": "ffprobe fixture",
-            "actual_media_duration_s": round(nframes / dh.EXTRACT_FPS, 4),
-            "intended_duration_s": 30,
-            "duration_ratio": duration_ratio,
-            "capture_duration_disposition": duration_disposition,
-            "expected_frame_count_from_media": nframes,
-            "extraction_tolerance_frames": 2,
-            "extraction_frame_delta": 0,
-            "extraction_disposition": "PASS",
+            "actual_media_duration_s": actual_s,
+            "intended_duration_s": intended_s,
+            "duration_ratio": dur_ratio,
+            "capture_duration_disposition": dur_disp,
+            "expected_frame_count_from_media": expected,
+            "extraction_tolerance_frames": tol,
+            "extraction_frame_delta": delta,
+            "extraction_disposition": ext_disp,
             "actual_frame_count": len(frames),
             "frames": [{"path": dh._rel(f), "sha256": dh.sha256(f)}
                        for f in frames],
@@ -140,8 +176,8 @@ class FixtureSession:
             "manifest_path": dh._rel(mp), "manifest_sha256": dh.sha256(mp),
             "source_video_sha256": raw_sha,
             "actual_frame_count": len(frames),
-            "capture_duration_disposition": duration_disposition,
-            "duration_ratio": duration_ratio}
+            "capture_duration_disposition": dur_disp,
+            "duration_ratio": dur_ratio}
 
         scan = dh.scan_all_frames_for_exposure(frames)
         analysis = {
@@ -416,8 +452,10 @@ class DeliberateFailureTests(Base):
     def test_15_materially_truncated_capture_blocks(self):
         """PARTIAL duration must not advance to owner review."""
         self.fx.complete(nframes=40)
-        self.fx.add_video("sweep_pitch", nframes=40,
-                          duration_disposition="PARTIAL", duration_ratio=0.85)
+        # 40 frames = 1.3333 s of media against a 1.6 s intended capture:
+        # ratio 0.833, which is PARTIAL by the authoritative rule rather
+        # than by a typed-in field
+        self.fx.add_video("sweep_pitch", nframes=40, intended_s=1.6)
         self.fx.save()
         d = self.finalize()
         self.assertNotEqual(d["status"], "PENDING_OWNER_REVIEW")
@@ -624,3 +662,287 @@ class ScanPerformanceTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class SourceOfTruthFailureTests(Base):
+    """Re-review findings 1-6: derived values, verified files, real bytes."""
+
+    def bump(self, cid):
+        """Re-hash a manifest into the index after editing it."""
+        mp = self.fx.session / "frames" / f"{cid}_FRAMES.json"
+        self.fx.doc["frame_manifests"][cid]["manifest_sha256"] = dh.sha256(mp)
+        self.fx.save()
+
+    def edit_manifest(self, cid, **changes):
+        mp = self.fx.session / "frames" / f"{cid}_FRAMES.json"
+        man = json.loads(mp.read_text())
+        man.update(changes)
+        mp.write_text(json.dumps(man, indent=2, sort_keys=True) + "\n")
+        self.bump(cid)
+        return man
+
+    def edit_analysis(self, cid, mutate):
+        ap = self.fx.session / "analysis" / f"{cid}.json"
+        doc = json.loads(ap.read_text())
+        mutate(doc)
+        ap.write_text(json.dumps(doc, indent=2, sort_keys=True) + "\n")
+        self.fx.doc["analysis"][cid]["sha256"] = dh.sha256(ap)
+        self.fx.save()
+
+    # -- 1: the exact contradiction the old fixture contained ----------
+
+    def test_1_contradictory_duration_ratio_is_rejected(self):
+        """40 frames of 1.33 s media claiming a 30 s capture at ratio 1.0 —
+        the precise combination the previous 'happy path' asserted."""
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch", intended_duration_s=30,
+                           duration_ratio=1.0,
+                           capture_duration_disposition="PASS")
+        d = self.finalize()
+        self.assertNotEqual(d["status"], "PENDING_OWNER_REVIEW")
+        self.assertIn("derived-duration-ratio", self.codes(d))
+
+    def test_2_incorrect_duration_disposition_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch",
+                           capture_duration_disposition="BLOCKED")
+        d = self.finalize()
+        self.assertIn("derived-duration-disposition", self.codes(d))
+
+    def test_3_incorrect_expected_frame_count_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch",
+                           expected_frame_count_from_media=999)
+        d = self.finalize()
+        self.assertIn("derived-expected-count", self.codes(d))
+
+    def test_4_incorrect_extraction_tolerance_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch", extraction_tolerance_frames=500)
+        d = self.finalize()
+        self.assertIn("derived-tolerance", self.codes(d))
+
+    def test_5_incorrect_extraction_delta_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch", extraction_frame_delta=77)
+        d = self.finalize()
+        self.assertIn("derived-delta", self.codes(d))
+
+    def test_6_nonzero_ffmpeg_returncode_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch", ffmpeg_returncode=1)
+        d = self.finalize()
+        self.assertIn("ffmpeg-returncode", self.codes(d))
+
+    def test_7_non_pass_extraction_disposition_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_manifest("sweep_pitch", extraction_disposition="BLOCKED")
+        d = self.finalize()
+        self.assertIn("derived-extraction-disposition", self.codes(d))
+
+    def test_7b_a_frame_count_beyond_tolerance_blocks(self):
+        self.fx.complete(nframes=40)
+        self.fx.add_video("sweep_pitch", nframes=40, frame_overshoot=9)
+        self.fx.save()
+        d = self.finalize()
+        self.assertIn("extraction-disposition", self.codes(d))
+
+    def test_8_invalid_primitive_duration_is_rejected(self):
+        self.fx.complete(nframes=40)
+        for bad in (0, -3, "thirty", None):
+            self.edit_manifest("sweep_pitch", actual_media_duration_s=bad)
+            d = self.finalize()
+            self.assertIn("manifest-primitive-invalid", self.codes(d),
+                          f"accepted duration {bad!r}")
+
+    # -- finding 2: verified file beats the index ----------------------
+
+    def test_9_clipping_hidden_by_a_clean_index_is_still_found(self):
+        """The index says clean; the hash-verified analysis says exposed."""
+        self.fx.complete(nframes=40)
+        self.fx.add_video("sweep_roll_l_to_r", nframes=40, uncovered_at=6)
+        # index lies
+        self.fx.doc["analysis"]["sweep_roll_l_to_r"]["mask_scan"] = {
+            "exposed": False, "uncovered_frame_count": 0}
+        self.fx.save()
+        d = self.finalize()
+        self.assertEqual(d["status"], "MACHINE_ISSUE")
+        self.assertIn("mask-exposure",
+                      {i["code"] for i in d["machine_issues"]})
+
+    def test_10_analysis_and_index_status_disagreement_fails_closed(self):
+        self.fx.complete(nframes=40)
+        self.fx.doc["analysis"]["sweep_pitch"]["status"] = "BLOCKED"
+        self.fx.save()
+        d = self.finalize()
+        self.assertIn("analysis-index-disagreement", self.codes(d))
+
+    def test_11_machine_results_come_from_verified_files(self):
+        self.fx.complete(nframes=40)
+        self.fx.doc["analysis"]["sweep_pitch"]["invented"] = "index only"
+        self.fx.save()
+        d = self.finalize()
+        self.assertNotIn("invented",
+                         d["machine_measured_results"]["sweep_pitch"])
+        self.assertIn("verified analysis FILES", d["machine_results_source"])
+
+    # -- finding 3: real bytes -----------------------------------------
+
+    def test_12_missing_pullback_file_is_rejected(self):
+        self.fx.complete(nframes=40)
+        (self.fx.session / "pullback" / "installed_base.apk").unlink()
+        d = self.finalize()
+        self.assertIn("installed-pullback-file-missing", self.codes(d))
+
+    def test_13_pullback_hash_drift_is_rejected(self):
+        self.fx.complete(nframes=40)
+        pb = self.fx.session / "pullback" / "installed_base.apk"
+        pb.write_bytes(pb.read_bytes() + b"drift")
+        d = self.finalize()
+        self.assertIn("installed-pullback-hash-drift", self.codes(d))
+
+    def test_14_built_apk_missing_or_drifted_is_rejected(self):
+        self.fx.complete(nframes=40)
+        built = self.fx.session / "built.apk"
+        built.write_bytes(b"a different build")
+        d = self.finalize()
+        self.assertIn("built-apk-hash-drift", self.codes(d))
+        built.unlink()
+        d = self.finalize()
+        self.assertIn("built-apk-file-missing", self.codes(d))
+
+    def test_15_source_manifest_drift_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.fx.doc["binding"]["spike_source_manifest_sha256"] = "0" * 64
+        self.fx.save()
+        d = self.finalize()
+        self.assertIn("source-manifest-hash-drift", self.codes(d))
+
+    def test_16_analysis_code_hash_missing_is_rejected(self):
+        self.fx.complete(nframes=40)
+        self.edit_analysis("sweep_pitch",
+                           lambda doc: doc["binding"].pop(
+                               "analysis_code_sha256"))
+        d = self.finalize()
+        self.assertIn("analysis-code-hash-missing", self.codes(d))
+
+    def test_17_analysis_code_hash_mismatch_is_rejected(self):
+        """Harness changed after capture: block until analysis is rerun."""
+        self.fx.complete(nframes=40)
+        self.edit_analysis("sweep_pitch",
+                           lambda doc: doc["binding"].__setitem__(
+                               "analysis_code_sha256", "f" * 64))
+        d = self.finalize()
+        self.assertIn("analysis-code-hash-mismatch", self.codes(d))
+        self.assertIn("FAIL-CLOSED", d["analysis_code_policy"])
+
+    # -- finding 5: real ancestry --------------------------------------
+
+    def test_18_sibling_prefix_path_escape_is_rejected(self):
+        """`SESSION-evil` textually starts with `SESSION` but is not
+        inside it."""
+        evil = self.fx.session.parent / (self.fx.session.name + "-evil")
+        evil.mkdir(parents=True, exist_ok=True)
+        (evil / "x.json").write_text("{}")
+        self.assertFalse(dh._is_within(evil / "x.json", self.fx.session))
+        self.assertTrue(str(evil).startswith(str(self.fx.session)))
+        with self.assertRaises(dh.Blocked):
+            dh._resolve(self.fx.session, str(evil / "x.json"),
+                        [self.fx.session])
+
+    # -- finding 6: present optional evidence --------------------------
+
+    def test_19_present_aod_pass_screenshot_missing_is_rejected(self):
+        self.fx.complete(nframes=40)
+        p = self.fx.add_screenshot("screenshot_aod", disposition="PASS")
+        self.fx.save()
+        p.unlink()
+        d = self.finalize()
+        self.assertIn("raw-file-missing", self.codes(d))
+
+    def test_20_present_aod_pass_screenshot_hash_drift_is_rejected(self):
+        self.fx.complete(nframes=40)
+        p = self.fx.add_screenshot("screenshot_aod", disposition="PASS")
+        self.fx.save()
+        p.write_bytes(p.read_bytes() + b"drift")
+        d = self.finalize()
+        self.assertIn("raw-hash-drift", self.codes(d))
+
+    def test_21_arbitrary_not_obtainable_aod_reason_is_rejected(self):
+        """NOT_OBTAINABLE is not a general escape hatch."""
+        self.fx.complete(nframes=40)
+        self.fx.add_screenshot("screenshot_aod",
+                               disposition="NOT_OBTAINABLE")
+        self.fx.doc["captures"]["screenshot_aod"]["reason"] = \
+            "could not be bothered"
+        self.fx.save()
+        d = self.finalize()
+        self.assertIn("aod-not-obtainable-unjustified", self.codes(d))
+
+    def test_22_documented_doze_reason_is_accepted(self):
+        self.fx.complete(nframes=40)
+        self.fx.add_screenshot("screenshot_aod",
+                               disposition="NOT_OBTAINABLE")
+        self.fx.doc["captures"]["screenshot_aod"]["reason"] = (
+            "doze returned an entirely black frame — the documented Watch7 "
+            "display-pipeline limitation")
+        self.fx.save()
+        d = self.finalize()
+        self.assertEqual(d["status"], "PENDING_OWNER_REVIEW")
+        self.assertIn("screenshot_aod", d["not_obtainable"])
+
+
+class CliExtractionRegressionTests(unittest.TestCase):
+    """Finding 4: the real CLI path, not just the helper."""
+
+    def setUp(self):
+        if not shutil.which("ffmpeg") or not shutil.which("ffprobe"):
+            self.skipTest("ffmpeg/ffprobe unavailable")
+        self.tmp = Path(tempfile.mkdtemp())
+        self.addCleanup(shutil.rmtree, self.tmp, True)
+        self.session = self.tmp / "sessions" / "CLI-proposed"
+        for sub in ("raw", "frames", "analysis", "pullback"):
+            (self.session / sub).mkdir(parents=True, exist_ok=True)
+        # a real 1-second video, generated locally; no device involved
+        self.video = self.session / "raw" / "sweep_pitch.mp4"
+        subprocess.run(
+            ["ffmpeg", "-y", "-loglevel", "error", "-f", "lavfi",
+             "-i", "color=c=gray:s=480x480:d=1", "-r", "30",
+             str(self.video)], check=True, capture_output=True)
+        doc = {"binding": {k: "x" for k in dh.REQUIRED_BINDINGS},
+               "installed_verification": {"status": "VERIFIED"},
+               "captures": {"sweep_pitch": {
+                   "capture_id": "sweep_pitch", "kind": "video",
+                   "disposition": "PASS", "intended_duration_s": 1,
+                   "files": [{"path": dh._rel(self.video),
+                              "sha256": dh.sha256(self.video),
+                              "bytes": self.video.stat().st_size}]}},
+               "frame_manifests": {}, "analysis": {}}
+        dh.save(self.session, doc)
+
+    def test_cli_extract_frames_succeeds_without_keyerror(self):
+        argv = sys.argv
+        sys.argv = ["device_harness.py", "extract-frames",
+                    "--session", str(self.session),
+                    "--capture", "sweep_pitch"]
+        try:
+            import io
+            import contextlib
+            buf = io.StringIO()
+            with contextlib.redirect_stdout(buf):
+                rc = dh.main()
+            out = buf.getvalue()
+        finally:
+            sys.argv = argv
+        self.assertEqual(rc, 0, out)
+        self.assertIn("frames extracted", out)
+        self.assertIn("media-derived expectation", out)
+        # evidence written and raw preserved
+        mp = self.session / "frames" / "sweep_pitch_FRAMES.json"
+        self.assertTrue(mp.exists())
+        self.assertTrue(self.video.exists())
+        man = json.loads(mp.read_text())
+        self.assertIn("expected_frame_count_from_media", man)
+        self.assertNotIn("expected_frame_count", man)
+        self.assertGreater(man["actual_frame_count"], 0)
+        self.assertEqual(man["ffmpeg_returncode"], 0)

@@ -508,14 +508,27 @@ def scan_all_frames_for_exposure(frames: list[Path],
 # hash with no matching file on disk is not evidence.
 # ---------------------------------------------------------------------
 
-def _resolve(session: Path, rel: str) -> Path:
-    """Resolve a recorded path and reject escapes."""
+def _is_within(child: Path, parent: Path) -> bool:
+    """True ancestry, not string prefix.
+
+    A sibling named `SESSION-evil` textually starts with `SESSION`, so a
+    prefix test would accept it as inside the session. Resolved ancestry
+    does not.
+    """
+    try:
+        return child.resolve().is_relative_to(parent.resolve())
+    except (OSError, ValueError):
+        return False
+
+
+def _resolve(session: Path, rel: str, roots: list[Path] | None = None) -> Path:
+    """Resolve a recorded path and reject escapes by real ancestry."""
     p = Path(rel)
     if not p.is_absolute():
         p = REPO / rel
     p = p.resolve()
-    roots = [session.resolve(), (REPO / "spikes/attitude-horizon").resolve()]
-    if not any(str(p).startswith(str(r)) for r in roots):
+    allowed = roots or [session, REPO / "spikes/attitude-horizon"]
+    if not any(_is_within(p, r) for r in allowed):
         raise Blocked(f"path escapes the permitted evidence roots: {rel}")
     return p
 
@@ -579,8 +592,21 @@ def verify_raw_capture(session: Path, cid: str, rec: dict) -> list[Finding]:
     return out
 
 
+def _finite_positive(v) -> bool:
+    return (isinstance(v, (int, float)) and not isinstance(v, bool)
+            and v == v and abs(v) != float("inf") and v > 0)
+
+
 def verify_frame_manifest(session: Path, cid: str, s: dict,
                           raw_sha: str) -> tuple[dict | None, list[Finding]]:
+    """Recompute every derived duration/extraction value from primitives.
+
+    A stored disposition is a claim. The success fixture that prompted this
+    recorded 40 frames of 1.33 s media while asserting a 30 s intended
+    recording at ratio 1.0 — three fields that cannot all be true — and it
+    passed, because verification read the stored disposition instead of
+    deriving it.
+    """
     out: list[Finding] = []
     idx = (s.get("frame_manifests") or {}).get(cid)
     if not idx:
@@ -601,6 +627,7 @@ def verify_frame_manifest(session: Path, cid: str, s: dict,
     except json.JSONDecodeError as e:
         return None, [Finding(False, "manifest-malformed",
                               f"{cid}: manifest is not valid JSON ({e})")]
+
     if man.get("capture_id") != cid:
         out.append(Finding(False, "manifest-capture-mismatch",
                            f"{cid}: manifest names {man.get('capture_id')!r}"))
@@ -608,10 +635,30 @@ def verify_frame_manifest(session: Path, cid: str, s: dict,
         out.append(Finding(False, "manifest-source-mismatch",
                            f"{cid}: manifest is not bound to the verified raw "
                            f"video"))
-    for k in ("extraction_fps", "ffmpeg_version", "ffmpeg_command"):
+
+    for k in ("ffprobe_version", "ffprobe_command", "ffmpeg_version",
+              "ffmpeg_command"):
         if not man.get(k):
             out.append(Finding(False, "manifest-field-missing",
                                f"{cid}: manifest missing {k}"))
+
+    rc = man.get("ffmpeg_returncode")
+    if rc != 0:
+        out.append(Finding(False, "ffmpeg-returncode",
+                           f"{cid}: ffmpeg return code {rc!r} is not 0",
+                           returncode=rc))
+
+    actual = man.get("actual_media_duration_s")
+    intended = man.get("intended_duration_s")
+    fps = man.get("extraction_fps")
+    for label, val in (("actual_media_duration_s", actual),
+                       ("intended_duration_s", intended),
+                       ("extraction_fps", fps)):
+        if not _finite_positive(val):
+            out.append(Finding(False, "manifest-primitive-invalid",
+                               f"{cid}: {label} is missing, non-numeric, "
+                               f"NaN, infinite, zero or negative "
+                               f"({val!r})"))
     frames = man.get("frames") or []
     if not frames:
         out.append(Finding(False, "manifest-zero-frames",
@@ -621,14 +668,64 @@ def verify_frame_manifest(session: Path, cid: str, s: dict,
                            f"{cid}: actual_frame_count "
                            f"{man.get('actual_frame_count')} != "
                            f"{len(frames)} listed"))
-    dur = man.get("capture_duration_disposition")
-    if dur != "PASS":
-        out.append(Finding(False, "capture-duration",
-                           f"{cid}: capture duration disposition {dur} "
-                           f"(ratio {man.get('duration_ratio')}) — PARTIAL "
-                           f"and BLOCKED both prevent machine completion",
-                           disposition=dur,
-                           duration_ratio=man.get("duration_ratio")))
+
+    if all(_finite_positive(v) for v in (actual, intended, fps)):
+        exp = int(round(actual * fps))
+        tol = extraction_tolerance(exp)
+        delta = abs(len(frames) - exp)
+        if man.get("expected_frame_count_from_media") != exp:
+            out.append(Finding(False, "derived-expected-count",
+                               f"{cid}: expected_frame_count_from_media "
+                               f"{man.get('expected_frame_count_from_media')} "
+                               f"!= recomputed {exp}"))
+        if man.get("extraction_tolerance_frames") != tol:
+            out.append(Finding(False, "derived-tolerance",
+                               f"{cid}: extraction_tolerance_frames "
+                               f"{man.get('extraction_tolerance_frames')} != "
+                               f"recomputed {tol}"))
+        if man.get("extraction_frame_delta") != delta:
+            out.append(Finding(False, "derived-delta",
+                               f"{cid}: extraction_frame_delta "
+                               f"{man.get('extraction_frame_delta')} != "
+                               f"recomputed {delta}"))
+        ext_disp = "PASS" if delta <= tol else "BLOCKED"
+        if man.get("extraction_disposition") != ext_disp:
+            out.append(Finding(False, "derived-extraction-disposition",
+                               f"{cid}: extraction_disposition "
+                               f"{man.get('extraction_disposition')!r} != "
+                               f"recomputed {ext_disp!r}"))
+        if ext_disp != "PASS":
+            out.append(Finding(False, "extraction-disposition",
+                               f"{cid}: extraction is {ext_disp} "
+                               f"(delta {delta} > tolerance {tol})"))
+
+        rec_disp, rec_ratio = duration_disposition(actual, intended)
+        if abs((man.get("duration_ratio") or -1) - rec_ratio) > 1e-4:
+            out.append(Finding(False, "derived-duration-ratio",
+                               f"{cid}: duration_ratio "
+                               f"{man.get('duration_ratio')} != recomputed "
+                               f"{rec_ratio}"))
+        if man.get("capture_duration_disposition") != rec_disp:
+            out.append(Finding(False, "derived-duration-disposition",
+                               f"{cid}: capture_duration_disposition "
+                               f"{man.get('capture_duration_disposition')!r} "
+                               f"!= recomputed {rec_disp!r}"))
+        if rec_disp != "PASS":
+            out.append(Finding(False, "capture-duration",
+                               f"{cid}: capture duration {rec_disp} "
+                               f"(ratio {rec_ratio}) — PARTIAL and BLOCKED "
+                               f"both prevent machine completion",
+                               disposition=rec_disp, duration_ratio=rec_ratio))
+
+    # the session index must not disagree with the verified manifest
+    for k in ("capture_duration_disposition", "duration_ratio",
+              "actual_frame_count", "source_video_sha256"):
+        if k in idx and idx[k] != man.get(k):
+            out.append(Finding(False, "index-manifest-disagreement",
+                               f"{cid}: session index {k}={idx[k]!r} "
+                               f"disagrees with the verified manifest "
+                               f"{man.get(k)!r}"))
+
     if not out:
         out.append(Finding(True, "manifest-ok", f"{cid}: manifest verified"))
     return man, out
@@ -649,7 +746,7 @@ def verify_frames(session: Path, cid: str, man: dict) -> list[Finding]:
         except Blocked as e:
             out.append(Finding(False, "frame-path-escape", str(e)))
             continue
-        if str(session.resolve()) not in str(fp):
+        if not _is_within(fp, session):
             out.append(Finding(False, "frame-outside-session",
                                f"{cid}: frame outside the session directory: "
                                f"{rel}"))
@@ -667,30 +764,45 @@ def verify_frames(session: Path, cid: str, man: dict) -> list[Finding]:
     return out
 
 
+ANALYSIS_CODE_POLICY = (
+    "FAIL-CLOSED: an analysis is valid only while its recorded "
+    "analysis_code_sha256 equals the hash of the current harness "
+    "implementation. If the harness changes after capture, the session "
+    "blocks until the analysis is rerun and deliberately rebound. Presence "
+    "of a code hash is not a binding.")
+
+
 def verify_analysis(session: Path, cid: str, s: dict, raw_sha: str,
-                    man_sha: str | None) -> list[Finding]:
+                    man_sha: str | None) -> tuple[dict | None, list[Finding]]:
+    """Return the PARSED, hash-verified analysis document plus findings.
+
+    The verified file — not the mutable SESSION.json index — is the source
+    of truth for status, mask_scan, metrics and bindings. An index could
+    otherwise claim `exposed: false` while the hash-verified analysis says
+    `exposed: true`, hiding clipping from the machine issues.
+    """
     out: list[Finding] = []
     idx = (s.get("analysis") or {}).get(cid)
     if not idx:
-        return [Finding(False, "analysis-index-missing",
-                        f"{cid}: no analysis recorded")]
+        return None, [Finding(False, "analysis-index-missing",
+                              f"{cid}: no analysis recorded")]
     try:
         ap = _resolve(session, idx["path"])
     except Blocked as e:
-        return [Finding(False, "analysis-path-escape", str(e))]
+        return None, [Finding(False, "analysis-path-escape", str(e))]
     if not ap.exists():
-        return [Finding(False, "analysis-file-missing",
-                        f"{cid}: analysis file does not exist: "
-                        f"{idx['path']}. A placeholder index is not "
-                        f"evidence.")]
+        return None, [Finding(False, "analysis-file-missing",
+                              f"{cid}: analysis file does not exist: "
+                              f"{idx['path']}. A placeholder index is not "
+                              f"evidence.")]
     if sha256(ap) != idx.get("sha256"):
-        return [Finding(False, "analysis-hash-drift",
-                        f"{cid}: analysis file hash drift")]
+        return None, [Finding(False, "analysis-hash-drift",
+                              f"{cid}: analysis file hash drift")]
     try:
         doc = json.loads(ap.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        return [Finding(False, "analysis-malformed",
-                        f"{cid}: analysis is not valid JSON ({e})")]
+        return None, [Finding(False, "analysis-malformed",
+                              f"{cid}: analysis is not valid JSON ({e})")]
 
     if doc.get("capture_id") != cid:
         out.append(Finding(False, "analysis-capture-mismatch",
@@ -702,9 +814,15 @@ def verify_analysis(session: Path, cid: str, s: dict, raw_sha: str,
                            f"{cid}: analysis status {st!r} is not MEASURED. "
                            f"Presence of an analysis record is not success.",
                            status=st))
+    if idx.get("status") is not None and idx.get("status") != st:
+        out.append(Finding(False, "analysis-index-disagreement",
+                           f"{cid}: session index status "
+                           f"{idx.get('status')!r} disagrees with the "
+                           f"verified analysis {st!r}"))
     if doc.get("smoothing_applied") is not False:
         out.append(Finding(False, "analysis-smoothing",
                            f"{cid}: smoothing_applied is not false"))
+
     b = doc.get("binding") or {}
     sb = s.get("binding") or {}
     checks = [
@@ -726,16 +844,24 @@ def verify_analysis(session: Path, cid: str, s: dict, raw_sha: str,
                                f"{cid}: analysis binding {key} disagrees with "
                                f"the session", key=key,
                                recorded=b.get(key), expected=expected))
-    if not b.get("analysis_code_sha256"):
+
+    code = b.get("analysis_code_sha256")
+    if not code:
         out.append(Finding(False, "analysis-code-hash-missing",
                            f"{cid}: analysis-code hash not recorded"))
+    elif code != analysis_code_hash():
+        out.append(Finding(False, "analysis-code-hash-mismatch",
+                           f"{cid}: analysis was produced by a different "
+                           f"harness build. {ANALYSIS_CODE_POLICY}",
+                           recorded=code, current=analysis_code_hash()))
     if not out:
         out.append(Finding(True, "analysis-ok", f"{cid}: analysis verified",
                            status=st))
-    return out
+    return doc, out
 
 
-def verify_machine_findings(cid: str, rec: dict, s: dict) -> list[Finding]:
+def verify_machine_findings(cid: str, rec: dict,
+                            analysis_doc: dict | None) -> list[Finding]:
     """Findings, not merely record presence."""
     out: list[Finding] = []
     kind = rec.get("kind")
@@ -754,8 +880,9 @@ def verify_machine_findings(cid: str, rec: dict, s: dict) -> list[Finding]:
                                f"{cid}: crash/ANR findings present "
                                f"({rec.get('crash_buffer_hits')} crash, "
                                f"{rec.get('fatal_or_anr_hits')} fatal/ANR)"))
-    ana = (s.get("analysis") or {}).get(cid) or {}
-    scan = ana.get("mask_scan") or {}
+    # source of truth is the hash-verified analysis DOCUMENT, never the
+    # mutable session index
+    scan = (analysis_doc or {}).get("mask_scan") or {}
     if scan.get("exposed"):
         out.append(Finding(False, "mask-exposure",
                            f"{cid}: aperture clipping detected in "
@@ -1239,6 +1366,68 @@ MANDATORY_CAPTURES = ("rest_surface_60s", "rest_wrist_60s",
                       "screenshot_normal", "logs_crash_anr")
 
 
+def verify_binary_bytes(session: Path, s: dict) -> list[Finding]:
+    """Re-hash the installed pullback, built APK and source manifest.
+
+    Comparing stored hash STRINGS proves only that two strings match. A
+    deleted or modified pullback passes that test while the bytes it
+    claims to describe no longer exist.
+    """
+    out: list[Finding] = []
+    sb = s.get("binding") or {}
+    v = s.get("installed_verification") or {}
+
+    targets = [
+        ("installed-pullback", v.get("pullback_path"),
+         v.get("installed_apk_sha256"), [session]),
+        ("built-apk", sb.get("built_apk_path"),
+         sb.get("built_apk_sha256"), None),
+        ("source-manifest", "spikes/attitude-horizon/SPIKE_MANIFEST.json",
+         sb.get("spike_source_manifest_sha256"), None),
+    ]
+    for label, rel, expected, roots in targets:
+        if not rel:
+            out.append(Finding(False, f"{label}-path-missing",
+                               f"{label}: no path recorded"))
+            continue
+        if not expected:
+            out.append(Finding(False, f"{label}-hash-missing",
+                               f"{label}: no hash recorded"))
+            continue
+        try:
+            fp = _resolve(session, rel, roots)
+        except Blocked as e:
+            out.append(Finding(False, f"{label}-path-escape", str(e)))
+            continue
+        if not fp.exists():
+            out.append(Finding(False, f"{label}-file-missing",
+                               f"{label}: recorded file does not exist: "
+                               f"{rel}"))
+            continue
+        got = sha256(fp)
+        if got != expected:
+            out.append(Finding(False, f"{label}-hash-drift",
+                               f"{label}: bytes on disk do not match the "
+                               f"recorded hash", path=rel,
+                               recorded=expected, actual=got))
+    # installed must equal the ACCEPTED built artifact, not merely itself
+    if (v.get("installed_apk_sha256") and sb.get("built_apk_sha256")
+            and v["installed_apk_sha256"] != sb["built_apk_sha256"]):
+        out.append(Finding(False, "installed-not-accepted-build",
+                           "installed pullback does not equal the accepted "
+                           "built APK"))
+    pkg = sb.get("package_id")
+    variant = sb.get("variant")
+    if pkg and variant and not pkg.endswith("." + variant):
+        out.append(Finding(False, "variant-package-incoherent",
+                           f"package {pkg} does not correspond to variant "
+                           f"{variant}"))
+    if not out:
+        out.append(Finding(True, "binary-bytes-ok",
+                           "installed, built and source bytes revalidated"))
+    return out
+
+
 KIND_FOR_CAPTURE = {
     "aod_cycles": "aod_cycles",
     "logs_crash_anr": "logs",
@@ -1259,6 +1448,7 @@ def cmd_finalize(session: Path) -> dict:
     integrity: list[dict] = []      # evidence cannot be trusted
     issues: list[dict] = []         # evidence is trustworthy and adverse
     not_obtainable: dict = {}
+    verified_analyses: dict = {}    # parsed, hash-verified analysis docs
 
     def add(findings, bucket):
         for f in findings:
@@ -1267,15 +1457,16 @@ def cmd_finalize(session: Path) -> dict:
 
     # -- bindings and installed identity ------------------------------
     v = s.get("installed_verification") or {}
+    sb = s.get("binding") or {}
     if v.get("status") != "VERIFIED":
         integrity.append(Finding(False, "install-unverified",
                                  "installed-APK pullback verification is "
                                  "missing or did not pass").as_dict())
-    if v.get("installed_apk_sha256") != (s.get("binding") or {}).get(
-            "built_apk_sha256"):
+    if v.get("installed_apk_sha256") != sb.get("built_apk_sha256"):
         integrity.append(Finding(False, "apk-hash-mismatch",
                                  "built and installed APK hashes differ"
                                  ).as_dict())
+    add(verify_binary_bytes(session, s), integrity)
     for k in REQUIRED_BINDINGS:
         if not (s.get("binding") or {}).get(k):
             integrity.append(Finding(False, "binding-missing",
@@ -1304,8 +1495,7 @@ def cmd_finalize(session: Path) -> dict:
         add(raw_findings, integrity)
         raw_sha = ((rec.get("files") or [{}])[0]).get("sha256")
 
-        add(verify_machine_findings(cid, rec, s), issues)
-
+        analysis_doc = None
         if cid in VIDEO_CAPTURES:
             man, man_findings = verify_frame_manifest(session, cid, s, raw_sha)
             for f in man_findings:
@@ -1316,18 +1506,41 @@ def cmd_finalize(session: Path) -> dict:
                 "manifest_sha256")
             if man:
                 add(verify_frames(session, cid, man), integrity)
-            add(verify_analysis(session, cid, s, raw_sha, man_sha), integrity)
+            analysis_doc, a_findings = verify_analysis(
+                session, cid, s, raw_sha, man_sha)
+            add(a_findings, integrity)
+            if analysis_doc is not None:
+                verified_analyses[cid] = analysis_doc
+
+        add(verify_machine_findings(cid, rec, analysis_doc), issues)
 
     # -- optional AOD screenshot --------------------------------------
     aod = (s.get("captures") or {}).get("screenshot_aod")
     if aod:
-        if aod.get("disposition") == "NOT_OBTAINABLE":
-            not_obtainable["screenshot_aod"] = aod.get("reason", "")
+        disp = aod.get("disposition")
+        if disp == "NOT_OBTAINABLE":
+            reason = (aod.get("reason") or "").lower()
+            # NOT_OBTAINABLE is not a general escape hatch
+            if not ("doze" in reason or "display-pipeline" in reason
+                    or "display pipeline" in reason):
+                integrity.append(Finding(
+                    False, "aod-not-obtainable-unjustified",
+                    "screenshot_aod claims NOT_OBTAINABLE for a reason other "
+                    "than the documented doze/display-pipeline limitation: "
+                    f"{aod.get('reason')!r}").as_dict())
+            else:
+                not_obtainable["screenshot_aod"] = aod.get("reason", "")
         else:
-            d = verify_disposition("screenshot_aod",
-                                   aod.get("disposition"), "screenshot_aod")
+            d = verify_disposition("screenshot_aod", disp, "screenshot_aod")
             if not d.ok:
                 integrity.append(d.as_dict())
+            # a PRESENT screenshot claiming PASS is verified like any other
+            add(verify_raw_capture(session, "screenshot_aod", aod), integrity)
+            if aod.get("is_black"):
+                integrity.append(Finding(
+                    False, "aod-black-but-pass",
+                    "screenshot_aod claims PASS but is an entirely black "
+                    "frame").as_dict())
 
     # -- owner observations, always separate --------------------------
     owner_p = session / "OWNER_OBSERVATION.json"
@@ -1356,7 +1569,10 @@ def cmd_finalize(session: Path) -> dict:
         "variant": (s.get("binding") or {}).get("variant"),
         "binding": s.get("binding"),
         "installed_verification": v,
-        "machine_measured_results": s.get("analysis", {}),
+        "machine_measured_results": verified_analyses,
+        "machine_results_source": ("parsed, hash-verified analysis FILES — "
+                                   "not the mutable SESSION.json index"),
+        "analysis_code_policy": ANALYSIS_CODE_POLICY,
         "blocking_integrity_problems": integrity,
         "machine_issues": issues,
         "not_obtainable": not_obtainable,
@@ -1446,8 +1662,12 @@ def main() -> int:
                 args.capture), indent=2, sort_keys=True))
         elif args.cmd == "extract-frames":
             m = cmd_extract_frames(session, args.capture)
-            print(f"{m['actual_frame_count']} frames "
-                  f"(expected {m['expected_frame_count']})")
+            print(f"{m['actual_frame_count']} frames extracted "
+                  f"(media-derived expectation "
+                  f"{m['expected_frame_count_from_media']}, "
+                  f"actual media duration "
+                  f"{m['actual_media_duration_s']}s, "
+                  f"capture duration {m['capture_duration_disposition']})")
         elif args.cmd == "analyze":
             print(json.dumps(cmd_analyze(session, args.capture), indent=2,
                              sort_keys=True))
