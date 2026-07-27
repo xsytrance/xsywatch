@@ -54,12 +54,63 @@ nothing usable, and because both were false-pass risks:
    `motion.mp4` is the committed evidence and the frames re-extract from
    it with a single `ffmpeg` call.
 
+## Where this stands after owner inspection (2026-07-27)
+
+Groups A and B are complete: **15 PASS, 1 ISSUE**, recorded verbatim in
+`OWNER_OBSERVATIONS.json` and rendered into `DEVICE_TEST_RESULTS.md`.
+
+**The ISSUE is `Date readability`.** Owner: *"yeah its grey on grey"* and
+*"looks off-center too"*. Both are reproducible against the DESIGN, not the
+panel:
+
+- glyph-vs-window contrast measures **4.53:1** — which technically scrapes
+  WCAG AA for normal text, and is precisely why no gate flagged it. That is
+  a desk metric applied to a wrist at a glance.
+- the deterministic aperture proof shows the glyphs sit **1px high on all
+  62 renders** (top 3.07 vs bottom 4.07) and drift left horizontally by up
+  to **3px on day 1**.
+
+The aperture proof passes because it asserts **containment only**, with a
+2px minimum clear margin. **Centring was never asserted, so nothing was
+checking it.** That is a gap in the gate, not merely a blemish on the face.
+
+An ISSUE row means rc2 is **not acceptable as-is**. Fixing it would change
+package bytes and therefore require rc3 plus a fresh architecture review —
+an owner decision, deliberately not taken here.
+
+## The three heart-rate rows — blocked on network, not on effort
+
+Two attempts on 2026-07-27, neither usable:
+
+1. owner read **130 bpm** while away from the home network;
+2. owner read **98 bpm**, but `adb` returned `No route to host` at the last
+   known address `192.168.1.183:38371`, so no recording was possible.
+
+**Neither number is evidence.** The comparison is only meaningful when the
+watch reading and the balance-wheel recording are simultaneous, so neither
+may be paired with the earlier 104.1 bpm measurement nor with any later
+recording. Recorded rather than quietly discarded.
+
+`tools/hr_probe.sh` exists for exactly this and fails closed: an
+unreachable device, a sleeping panel or a zero-byte recording is reported
+as BLOCKED, never as a number. The full procedure is in
+`OWNER_OBSERVATIONS.json` under `resume_procedure` — about ten minutes of
+owner time once the watch is reachable.
+
 ## To close `device-validated`
 
-1. AGENOR observes the 14 owner rows on the watch and reports them.
-2. The results are recorded against those rows — **never converted to PASS
-   without explicit observations**.
-3. Re-derive readiness with
-   `python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2 --stamp`.
+1. **Nine owner rows remain** — the three heart-rate rows and the six
+   Group D disposition rows. Group D is deliberately deferred until after
+   the wear sessions, when the judgement is meaningful.
+2. **Resolve the `Date readability` ISSUE.** An owner decision: accept it
+   as-is, or fix it and cut rc3.
+3. Results are recorded in `OWNER_OBSERVATIONS.json` — **never converted
+   to PASS without explicit observations**, and `NOT TESTED` is a final
+   result, not a placeholder.
+4. `python3 tools/device_matrix.py aurelius --version 2.0.0-rc2 --rebuild-doc`
+5. `python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2 --stamp`
+
+Three wear sessions bound to this APK remain outstanding regardless, via
+`tools/wear_log.py`.
 
 **Checkpoint B must not be approved on the owner rows being absent.**

@@ -99,9 +99,26 @@
     }
   },
   "outstanding": {
-    "Heart rate agrees with the watch's own reading": "Owner read 130 bpm from the watch on 2026-07-27 while away from the home network, so no simultaneous balance-wheel recording could be taken. A comparison is only meaningful when both readings are simultaneous; the earlier 104.1 bpm measurement must NOT be paired with this 130. Row remains open.",
-    "Heart rate tracks after exertion": "Not performed. The 130 bpm reading is the WATCH's own value, not a measurement of what the face received, so it does not demonstrate that the face tracked the rise. Row remains open.",
-    "Heart rate falls back off-wrist": "Not performed. Requires adb reachability to record the wheel. Row remains open.",
-    "Final owner disposition": "Deferred until after the wear sessions, which is when the judgement is meaningful."
+    "Heart rate agrees with the watch's own reading": "OPEN. Two attempts on 2026-07-27, neither usable. (1) Owner read 130 bpm while away from the home network. (2) Owner read 98 bpm; adb returned 'No route to host' at the last known address 192.168.1.183:38371, so no recording was possible. Neither number is evidence: a comparison is only meaningful when the watch reading and the balance-wheel recording are SIMULTANEOUS. Neither 130 nor 98 may be paired with the earlier 104.1 bpm measurement or with any later recording.",
+    "Heart rate tracks after exertion": "OPEN. Not performed. Note that a rise in the WATCH's own reading is not evidence the FACE received it - only the implied rate measured from the balance wheel demonstrates that.",
+    "Heart rate falls back off-wrist": "OPEN. Not performed. Requires adb reachability to record the wheel. The implied rate must collapse to exactly 70.0 bpm (1.1667 Hz).",
+    "Final owner disposition": "OPEN. Deferred until after the wear sessions, which is when the judgement is meaningful. Covers all six Group D rows."
+  },
+  "resume_procedure": {
+    "blocker": "adb reachability. The watch and this machine must be on the same network, and the wireless-debugging IP:port changes every session (Settings > Developer options > Wireless debugging).",
+    "steps": [
+      "adb connect <IP>:<PORT>",
+      "confirm AURELIUS is the ACTIVE face and on screen (the probe records the panel)",
+      "owner reads HR from the watch, switches back to AURELIUS, states the number",
+      "tools/hr_probe.sh <IP>:<PORT> rest",
+      "owner performs brief safe exertion, reads HR again, returns to AURELIUS",
+      "tools/hr_probe.sh <IP>:<PORT> post_exertion   # implied rate must RISE vs rest",
+      "owner removes the watch, sets it face-up, waits for the sensor to drop out",
+      "tools/hr_probe.sh <IP>:<PORT> off_wrist       # implied rate must be 70.0 bpm",
+      "record results in OWNER_OBSERVATIONS.json, then device_matrix.py --rebuild-doc",
+      "python3 tools/check_candidate_readiness.py aurelius --version 2.0.0-rc2 --stamp"
+    ],
+    "estimated_owner_time": "about ten minutes",
+    "exertion_is_optional": "NOT TESTED is a valid final result and must never be inferred from the other readings."
   }
 }
