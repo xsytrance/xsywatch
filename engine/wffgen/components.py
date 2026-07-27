@@ -178,24 +178,67 @@ def sheen(name: str, resource: str, aod: AmbientPolicy,
 
 
 def analog_hand(name: str, resource: str, aod: AmbientPolicy,
-                which: str) -> Component:
-    """Fullscreen pre-centered analog hand (hour or minute)."""
+                which: str, alpha: int = 255) -> Component:
+    """Fullscreen pre-centered analog hand (hour or minute).
+
+    `alpha` is the NORMAL-mode alpha; 0 with an ambient policy of 255 gives
+    an AOD-only hand, so a face can swap in a distinct ambient hand shape
+    without losing the time reading.
+    """
     angles = {"hour": X.hour_angle(), "minute": X.minute_angle()}
     if which not in angles:
         raise ValueError(f"which must be hour|minute, got {which!r}")
-    part = _part_image(name, FULLSCREEN, resource, pivot=True)
+    part = _part_image(name, FULLSCREEN, resource, alpha=alpha, pivot=True)
     _finish(part, aod, [_transform("angle", angles[which])], resource)
     return Component(name, f"hand-{which}", MotionClass.TIME_CRITICAL, aod,
                      [part], [resource], f"analog {which} hand")
 
 
 def static_image(name: str, resource: str, box: dict,
-                 aod: AmbientPolicy) -> Component:
-    """Non-moving image layer (hand hub, fixed ornament)."""
-    part = _part_image(name, box, resource)
+                 aod: AmbientPolicy, alpha: int = 255) -> Component:
+    """Non-moving image layer (hand hub, fixed ornament).
+
+    `alpha` is the NORMAL-mode alpha. Setting it to 0 with an ambient policy
+    of 255 gives an AOD-only layer, which is how a face swaps a moving
+    normal-mode layer for a frozen ambient one.
+    """
+    part = _part_image(name, box, resource, alpha=alpha)
     _finish(part, aod, [], resource)
     return Component(name, "static-image", MotionClass.STATIC, aod,
-                     [part], [resource], "")
+                     [part], [resource], f"normal alpha {alpha}")
+
+
+def horizon_field(name: str, resource: str, box: dict, aod: AmbientPolicy,
+                  roll_gain_deg: float, pitch_gain_px: float,
+                  roll_clamp_deg: int = 45, pitch_clamp_deg: int = 40,
+                  alpha: int = 255) -> Component:
+    """Wrist-reactive artificial-horizon field: roll about the field centre
+    plus vertical translation, both driven by the accelerometer.
+
+    The field is deliberately oversized. It is drawn below an opaque plate
+    whose only transparent region is the aperture, so the visible result is
+    a horizon seen through a porthole. WFF has no mask primitive for
+    PartImage; occlusion is the mechanism.
+
+    Roll gain is applied NEGATED: as the wrist rolls one way the field
+    counter-rotates, so the horizon appears to stay level.
+
+    Neutral behaviour in AOD is achieved structurally, not by damping this
+    layer: pair it with an `aod` policy of alpha 0 and a separate frozen
+    ambient field. A hidden layer cannot move.
+    """
+    part = _part_image(name, box, resource, alpha=alpha, pivot=True)
+    _finish(part, aod, [
+        _transform("angle", X.parallax_offset(0, -roll_gain_deg, "X",
+                                              roll_clamp_deg)),
+        _transform("y", X.parallax_offset(box["y"], pitch_gain_px, "Y",
+                                          pitch_clamp_deg)),
+    ], resource)
+    return Component(name, "horizon-field", MotionClass.AMBIENT_MOTION, aod,
+                     [part], [resource],
+                     f"roll ±{roll_gain_deg}° (negated), pitch ±"
+                     f"{pitch_gain_px}px, wrist clamps ±{roll_clamp_deg}°/±"
+                     f"{pitch_clamp_deg}°")
 
 
 def text_line(name: str, box: dict, aod: AmbientPolicy, font_family: str,

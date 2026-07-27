@@ -1,0 +1,50 @@
+{
+  "fixture_environment": {
+    "ACCELEROMETER_ANGLE_X": 0.0,
+    "ACCELEROMETER_ANGLE_Y": 0.0,
+    "BATTERY_PERCENT": 78,
+    "DAY": 27,
+    "HEART_RATE": 72,
+    "HOUR_0_11": 10,
+    "MILLISECOND": 0,
+    "MINUTE": 9,
+    "SECOND": 30,
+    "STEP_COUNT": 8420
+  },
+  "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
+  "images": {
+    "MERIDIAN_PRESENTATION.png": {
+      "bytes": 196930,
+      "height": 576,
+      "sha256": "7889aca37fae145f1d5a96553d64790dc01ed2a572c094e2f672dca7ba3f8bc3",
+      "width": 1020
+    },
+    "MERIDIAN_XML_AOD.png": {
+      "bytes": 15197,
+      "height": 480,
+      "sha256": "bc4de8108bedb54c1cf69db7a88a6cd2026b0bf1d355fbf3c19bf70224f96615",
+      "width": 480
+    },
+    "MERIDIAN_XML_HAND_POSITIONS.png": {
+      "bytes": 177500,
+      "height": 398,
+      "sha256": "ea27811b2a5cbfa0aa7f357b87c637e017dfa6cc92b2fefff180b4a1cea0fe39",
+      "width": 1584
+    },
+    "MERIDIAN_XML_MOTION_STATES.png": {
+      "bytes": 316650,
+      "height": 764,
+      "sha256": "66054c9049240f784f52bd4bc0e82f96e2c8156470f0201c5c465127afd558ac",
+      "width": 956
+    },
+    "MERIDIAN_XML_NORMAL.png": {
+      "bytes": 161379,
+      "height": 480,
+      "sha256": "65a64c589cdf665b41c995f993eb7882badf001abbc7793f38b336e98e37f504",
+      "width": 480
+    }
+  },
+  "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
+  "schema": "agenor.meridian-consumer-review/1",
+  "watchface_xml_sha256": "840d760080a74caa136155adcf0a07402b781270c80031d402b9b89cc0bf045e"
+}

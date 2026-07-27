@@ -90,7 +90,10 @@ def parallax_offset(base: float | int, amplitude: float | int,
     if axis not in ("X", "Y"):
         raise ValueError(f"axis must be X or Y, got {axis!r}")
     src = f"[ACCELEROMETER_ANGLE_{axis}]"
-    return (f"{num(base)} + {num(amplitude)} * "
+    # A negative amplitude (used to counter-rotate a reactive layer) must not
+    # emit "base + -22.0 * ..."; fold the sign into the operator instead.
+    op, mag = ("-", -amplitude) if float(amplitude) < 0 else ("+", amplitude)
+    return (f"{num(base)} {op} {num(mag)} * "
             f"clamp({src}, -{num(max_angle)}, {num(max_angle)}) / {num(max_angle)}")
 
 

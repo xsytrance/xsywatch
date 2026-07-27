@@ -1,0 +1,395 @@
+{
+  "bitmap_font": {
+    "characters": {
+      "%": {
+        "height": 40,
+        "resource": "m_pct",
+        "width": 37
+      },
+      "0": {
+        "height": 40,
+        "resource": "m_0",
+        "width": 27
+      },
+      "1": {
+        "height": 40,
+        "resource": "m_1",
+        "width": 27
+      },
+      "2": {
+        "height": 40,
+        "resource": "m_2",
+        "width": 27
+      },
+      "3": {
+        "height": 40,
+        "resource": "m_3",
+        "width": 27
+      },
+      "4": {
+        "height": 40,
+        "resource": "m_4",
+        "width": 27
+      },
+      "5": {
+        "height": 40,
+        "resource": "m_5",
+        "width": 27
+      },
+      "6": {
+        "height": 40,
+        "resource": "m_6",
+        "width": 27
+      },
+      "7": {
+        "height": 40,
+        "resource": "m_7",
+        "width": 27
+      },
+      "8": {
+        "height": 40,
+        "resource": "m_8",
+        "width": 27
+      },
+      "9": {
+        "height": 40,
+        "resource": "m_9",
+        "width": 27
+      }
+    },
+    "family": "mer",
+    "height": 40
+  },
+  "design_contract": {
+    "aod_rules": [
+      "horizon frozen neutral, dark, no ladder",
+      "hands remain the brightest element",
+      "no filled bright sky/ground region",
+      "reduced annulus, outlined indices",
+      "no seconds hand, no reflections",
+      "date and battery retained only"
+    ],
+    "aperture": {
+      "cx": 240,
+      "cy": 330,
+      "r": 76
+    },
+    "aperture_note": "AP is the geometric opening punched in the plate. The polished chamfer is drawn over its rim, as a real chamfered bezel is, so the visible opening measures about 2px smaller in radius. Coverage maths uses the larger geometric r, which is the conservative direction.",
+    "aperture_shape": "circle, low-mounted near 6 o'clock",
+    "canvas": {
+      "height": 480,
+      "width": 480
+    },
+    "coverage_safety_px": 16.0,
+    "horizon_field_radius_px": 126.0,
+    "layout": {
+      "battery": "needle over a graduated arc, upper dial, with percentage",
+      "branding": "AGENOR / MERIDIAN, small, centre-upper",
+      "date": "window at 3 o'clock",
+      "hands": "broad baton hour/minute, slim seconds, dominant layer",
+      "heart_rate": "sub-dial near 4 o'clock",
+      "steps": "sub-dial near 8 o'clock"
+    },
+    "motion_module": {
+      "aod_forces_neutral": true,
+      "default_is_provisional": true,
+      "default_profile": "proposed",
+      "note": "isolated: the profile constants below are the only place gains live, so the later Watch7 result changes a constant rather than the artwork",
+      "profiles": {
+        "assertive": {
+          "pitch_px": 34.0,
+          "roll_deg": 30.0
+        },
+        "damped": {
+          "pitch_px": 14.0,
+          "roll_deg": 14.0
+        },
+        "proposed": {
+          "pitch_px": 26.0,
+          "roll_deg": 22.0
+        },
+        "roll-only": {
+          "pitch_px": 0.0,
+          "roll_deg": 22.0
+        },
+        "static": {
+          "pitch_px": 0.0,
+          "roll_deg": 0.0
+        }
+      },
+      "wrist_pitch_clamp_deg": 40.0,
+      "wrist_roll_clamp_deg": 45.0
+    },
+    "palette": {
+      "accent": [
+        198,
+        152,
+        74
+      ],
+      "case": "satin titanium",
+      "dial": "dark rhodium",
+      "ground": [
+        104,
+        74,
+        44
+      ],
+      "lume": [
+        196,
+        214,
+        206
+      ],
+      "sky": [
+        30,
+        56,
+        84
+      ]
+    },
+    "product": "ATTITUDE \u2014 MERIDIAN",
+    "provenance": "original procedural construction; no external image read",
+    "schema": "agenor.meridian-design-contract/1",
+    "status": "DEVELOPMENT \u2014 not a release candidate, not owner pixel approved",
+    "version": "V1"
+  },
+  "readouts": {
+    "battery": {
+      "align": "CENTER",
+      "aod": true,
+      "box": [
+        200,
+        92,
+        80,
+        28
+      ],
+      "color": "#DEE3E8",
+      "expressions": [
+        "[BATTERY_PERCENT]"
+      ],
+      "size": 18,
+      "template": "%d%%"
+    },
+    "date": {
+      "align": "CENTER",
+      "aod": true,
+      "box": [
+        318,
+        222,
+        60,
+        34
+      ],
+      "color": "#DEE3E8",
+      "expressions": [
+        "[DAY]"
+      ],
+      "size": 24,
+      "template": "%d"
+    },
+    "hr": {
+      "align": "CENTER",
+      "aod": false,
+      "box": [
+        321,
+        294,
+        80,
+        28
+      ],
+      "color": "#DEE3E8",
+      "expressions": [
+        "[HEART_RATE]"
+      ],
+      "size": 18,
+      "template": "%d"
+    },
+    "steps": {
+      "align": "CENTER",
+      "aod": false,
+      "box": [
+        79,
+        294,
+        80,
+        28
+      ],
+      "color": "#DEE3E8",
+      "expressions": [
+        "[STEP_COUNT]"
+      ],
+      "size": 18,
+      "template": "%d"
+    }
+  },
+  "resources": {
+    "m_0.png": {
+      "bytes": 488,
+      "height": 40,
+      "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+      "studio_path": "phase2-meridian/export/glyphs/m_0.png",
+      "width": 27
+    },
+    "m_1.png": {
+      "bytes": 197,
+      "height": 40,
+      "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+      "studio_path": "phase2-meridian/export/glyphs/m_1.png",
+      "width": 27
+    },
+    "m_2.png": {
+      "bytes": 374,
+      "height": 40,
+      "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+      "studio_path": "phase2-meridian/export/glyphs/m_2.png",
+      "width": 27
+    },
+    "m_3.png": {
+      "bytes": 453,
+      "height": 40,
+      "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+      "studio_path": "phase2-meridian/export/glyphs/m_3.png",
+      "width": 27
+    },
+    "m_4.png": {
+      "bytes": 311,
+      "height": 40,
+      "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+      "studio_path": "phase2-meridian/export/glyphs/m_4.png",
+      "width": 27
+    },
+    "m_5.png": {
+      "bytes": 381,
+      "height": 40,
+      "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+      "studio_path": "phase2-meridian/export/glyphs/m_5.png",
+      "width": 27
+    },
+    "m_6.png": {
+      "bytes": 478,
+      "height": 40,
+      "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+      "studio_path": "phase2-meridian/export/glyphs/m_6.png",
+      "width": 27
+    },
+    "m_7.png": {
+      "bytes": 323,
+      "height": 40,
+      "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+      "studio_path": "phase2-meridian/export/glyphs/m_7.png",
+      "width": 27
+    },
+    "m_8.png": {
+      "bytes": 542,
+      "height": 40,
+      "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+      "studio_path": "phase2-meridian/export/glyphs/m_8.png",
+      "width": 27
+    },
+    "m_9.png": {
+      "bytes": 482,
+      "height": 40,
+      "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+      "studio_path": "phase2-meridian/export/glyphs/m_9.png",
+      "width": 27
+    },
+    "m_pct.png": {
+      "bytes": 697,
+      "height": 40,
+      "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+      "studio_path": "phase2-meridian/export/glyphs/m_pct.png",
+      "width": 37
+    },
+    "meridian_battery_needle.png": {
+      "bytes": 1090,
+      "height": 480,
+      "sha256": "e5eba21ac5278b42a30c4f41cfb057a49e3cf6400bbf3ebab23a3ae3dd2f8d07",
+      "studio_path": "phase2-meridian/export/meridian_battery_needle.png",
+      "width": 480
+    },
+    "meridian_dial.png": {
+      "bytes": 158692,
+      "height": 480,
+      "sha256": "7707488002c51acfc23505ba7faaa0ee3ce37cda2b2f33439035888f3220590e",
+      "studio_path": "phase2-meridian/export/meridian_dial.png",
+      "width": 480
+    },
+    "meridian_dial_aod.png": {
+      "bytes": 5964,
+      "height": 480,
+      "sha256": "1d59df666c4a205eefa90c6df9dab4e5fc3563b6d8136751a88ea98459d7fa4c",
+      "studio_path": "phase2-meridian/export/meridian_dial_aod.png",
+      "width": 480
+    },
+    "meridian_hand_hour.png": {
+      "bytes": 1427,
+      "height": 480,
+      "sha256": "a88da6a0aad5deea1e58f6dd44484b8bc857ce35de162f1cc05fe13fdcc08de7",
+      "studio_path": "phase2-meridian/export/meridian_hand_hour.png",
+      "width": 480
+    },
+    "meridian_hand_hour_aod.png": {
+      "bytes": 1297,
+      "height": 480,
+      "sha256": "4db452c3e8ef07258f3dfec252b42705fd00759e54920730727cd2290d892593",
+      "studio_path": "phase2-meridian/export/meridian_hand_hour_aod.png",
+      "width": 480
+    },
+    "meridian_hand_minute.png": {
+      "bytes": 1487,
+      "height": 480,
+      "sha256": "514c7438355d9fdbc92b8160841a0f823b7ca13c08041c8b31c480511dc10030",
+      "studio_path": "phase2-meridian/export/meridian_hand_minute.png",
+      "width": 480
+    },
+    "meridian_hand_minute_aod.png": {
+      "bytes": 1397,
+      "height": 480,
+      "sha256": "d6a2d06b69492a8a834e43acab2785ae9a9104324d417266c820a7e96c67cf43",
+      "studio_path": "phase2-meridian/export/meridian_hand_minute_aod.png",
+      "width": 480
+    },
+    "meridian_hand_second.png": {
+      "bytes": 1511,
+      "height": 480,
+      "sha256": "99a47f9dfd1b8c5f15aa353f2574ee214af3a93af46ee4f165b324273cd63704",
+      "studio_path": "phase2-meridian/export/meridian_hand_second.png",
+      "width": 480
+    },
+    "meridian_horizon.png": {
+      "bytes": 1161,
+      "height": 252,
+      "sha256": "12824f90586e37cce14d01dac8d429d51c89bf8722f26a99e32d062439310b43",
+      "studio_path": "phase2-meridian/export/meridian_horizon.png",
+      "width": 252
+    },
+    "meridian_horizon_aod.png": {
+      "bytes": 833,
+      "height": 252,
+      "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+      "studio_path": "phase2-meridian/export/meridian_horizon_aod.png",
+      "width": 252
+    },
+    "meridian_pinion.png": {
+      "bytes": 1327,
+      "height": 480,
+      "sha256": "23a4739cdbd68ac47a5e780507ae5abef12cb3be84070d666a4194f270e8f4b4",
+      "studio_path": "phase2-meridian/export/meridian_pinion.png",
+      "width": 480
+    },
+    "meridian_pinion_aod.png": {
+      "bytes": 1067,
+      "height": 480,
+      "sha256": "d51138f155295e9774f1ddeee304ccfb871b1b8a6a7619ff35e2950edb435aa6",
+      "studio_path": "phase2-meridian/export/meridian_pinion_aod.png",
+      "width": 480
+    },
+    "preview.png": {
+      "bytes": 160229,
+      "height": 480,
+      "sha256": "cf5199f83494cdb06ccc2b89594585bbafb7243f9dfc98dc9cda4dad80da7ef8",
+      "studio_path": "phase2-meridian/review/MERIDIAN_V1_NORMAL.png",
+      "width": 480
+    }
+  },
+  "schema": "agenor.meridian-studio-import/1",
+  "studio_asset_manifest_schema": "agenor.meridian-asset-manifest/1",
+  "studio_branch": "phase-2/attitude-meridian-fast-track",
+  "studio_commit": "2da909ac51c22c6f742d68a72c4544bf2253556b",
+  "studio_manifest_sha256": "34f763a9556a25178c200cc6d25c6a809c4a4336ce3765c7b91143113ae9aadc",
+  "studio_repository": "xsytrance/AGENOR-Horology"
+}

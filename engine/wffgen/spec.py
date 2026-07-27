@@ -82,10 +82,20 @@ def _build(entry: dict) -> list[C.Component]:
                         entry["alpha_rad_per_sec"], parallax)]
     if kind == "analog_hand":
         return [C.analog_hand(entry["name"], entry["resource"],
-                              _aod(entry["aod"]), entry["which"])]
+                              _aod(entry["aod"]), entry["which"],
+                              int(entry.get("alpha", 255)))]
     if kind == "static_image":
         return [C.static_image(entry["name"], entry["resource"],
-                               _box(entry["box"]), _aod(entry["aod"]))]
+                               _box(entry["box"]), _aod(entry["aod"]),
+                               int(entry.get("alpha", 255)))]
+    if kind == "horizon_field":
+        return [C.horizon_field(entry["name"], entry["resource"],
+                                _box(entry["box"]), _aod(entry["aod"]),
+                                float(entry["roll_gain_deg"]),
+                                float(entry["pitch_gain_px"]),
+                                int(entry.get("roll_clamp_deg", 45)),
+                                int(entry.get("pitch_clamp_deg", 40)),
+                                int(entry.get("alpha", 255)))]
     if kind == "text_line":
         return [C.text_line(entry["name"], _box(entry["box"]),
                             _aod(entry["aod"]), entry["font"],
@@ -95,7 +105,7 @@ def _build(entry: dict) -> list[C.Component]:
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
                      "hr_balance, battery_needle, date_text, sheen, "
-                     "analog_hand, static_image, text_line")
+                     "analog_hand, static_image, text_line, horizon_field")
 
 
 def load_spec(path: Path | str) -> FaceSpec:

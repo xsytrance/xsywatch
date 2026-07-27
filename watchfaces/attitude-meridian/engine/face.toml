@@ -1,0 +1,223 @@
+# ATTITUDE — MERIDIAN (development) — authoritative engine face specification.
+#
+# Regenerate committed XML:  python3 tools/generate_face.py attitude-meridian
+# Verify (CI gate):          python3 tools/generate_face.py attitude-meridian --check
+#
+# Artwork authority is the studio repository; every resource here was
+# imported and hash-recorded by tools/import_studio_export.py into
+# engine/STUDIO_IMPORT.json. Do not hand-edit drawables.
+#
+# THE MOTION CONTRACT LIVES IN ONE PLACE: the z00_horizon component below.
+# The named development profiles are
+#
+#     damped      roll ±14°, pitch ±14px
+#     proposed    roll ±22°, pitch ±26px      <-- provisional default, in use
+#     assertive   roll ±30°, pitch ±34px
+#     roll-only   roll ±22°, pitch   0px
+#     static      roll   0°, pitch   0px
+#
+# Changing the selected profile after the formal Watch7 session means editing
+# roll_gain_deg / pitch_gain_px here and regenerating. No artwork, layout or
+# resource change is required — that is the whole point of the isolation.
+#
+# The field is oversized (252px across an aperture of 152px) and drawn BELOW
+# an opaque plate whose only transparent region is the aperture. WFF has no
+# mask primitive for PartImage, so occlusion is the mechanism.
+
+[face]
+slug = "attitude-meridian"
+width = 480
+height = 480
+wff_version = 4
+clock_type = "ANALOG"
+preview_time = "10:09:35"
+background_color = "#FF000000"
+
+[identity]
+package = "com.xsytrance.attitude.meridian.dev"
+version_code = 1
+version_name = "0.1.0-dev"
+
+# Digits and percent, pre-rendered. Custom TTFs do not render in WFF on the
+# Watch 7, so every AGENOR readout uses a BitmapFont.
+[[fonts]]
+name = "mer"
+height = 40
+[fonts.characters]
+"0" = ["m_0", 27]
+"1" = ["m_1", 27]
+"2" = ["m_2", 27]
+"3" = ["m_3", 27]
+"4" = ["m_4", 27]
+"5" = ["m_5", 27]
+"6" = ["m_6", 27]
+"7" = ["m_7", 27]
+"8" = ["m_8", 27]
+"9" = ["m_9", 27]
+"%" = ["m_pct", 37]
+
+# ---- scene components, document order = z-order -----------------------------
+
+# Wrist-reactive artificial horizon. PROPOSED profile.
+[[components]]
+type = "horizon_field"
+name = "z00_horizon"
+resource = "meridian_horizon"
+box = {x = 114, y = 204, width = 252, height = 252}
+roll_gain_deg = 22.0
+pitch_gain_px = 26.0
+roll_clamp_deg = 45
+pitch_clamp_deg = 40
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+# Frozen ambient horizon. AOD neutrality is structural: the moving field
+# above is hidden at ambient alpha 0 and this static field replaces it, so
+# there is no sensor-driven motion in AOD that damping could get wrong.
+[[components]]
+type = "static_image"
+name = "z01_horizon_aod"
+resource = "meridian_horizon_aod"
+box = {x = 114, y = 204, width = 252, height = 252}
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+# Dial plate: case, annulus, applied indices, reserve scale, sub-dials, date
+# frame, branding, aperture chamfer and datum. Opaque everywhere but the
+# aperture — this is what occludes the oversized horizon field.
+[[components]]
+type = "static_image"
+name = "z02_plate"
+resource = "meridian_dial"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+# Separate ambient plate: outlined indices, no reserve scale, no sub-dials,
+# no machining, no reflections.
+[[components]]
+type = "static_image"
+name = "z03_plate_aod"
+resource = "meridian_dial_aod"
+box = {x = 0, y = 0, width = 480, height = 480}
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+# Integrated power-reserve needle over the upper annulus arc: -62°..+62°
+# expressed as 298°..422° so the angle stays positive.
+[[components]]
+type = "battery_needle"
+name = "z10_resv"
+resource = "meridian_battery_needle"
+box = {x = 0, y = 0, width = 480, height = 480}
+start_deg = 298.0
+sweep_deg = 124.0
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# ---- live data readouts -----------------------------------------------------
+# All four bind live WFF sources. There are no constants here: an absent or
+# unpermitted sensor reads 0, which is the project's established fail-safe —
+# an honest "no reading" rather than a fabricated plausible number.
+
+[[components]]
+type = "text_line"
+name = "z20_batt"
+box = {x = 200, y = 92, width = 80, height = 28}
+font = "mer"
+size = 18
+color = "#DEE3E8"
+template = "%d%%"
+expressions = ["[BATTERY_PERCENT]"]
+align = "CENTER"
+aod = {alpha = 120, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "date_text"
+name = "z21_date"
+box = {x = 318, y = 222, width = 60, height = 34}
+font = "mer"
+size = 24
+color = "#DEE3E8"
+template = "%d"
+expression = "[DAY]"
+aod = {alpha = 140, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "text_line"
+name = "z22_steps"
+box = {x = 79, y = 294, width = 80, height = 28}
+font = "mer"
+size = 18
+color = "#DEE3E8"
+template = "%d"
+expressions = ["[STEP_COUNT]"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "text_line"
+name = "z23_hr"
+box = {x = 321, y = 294, width = 80, height = 28}
+font = "mer"
+size = 18
+color = "#DEE3E8"
+template = "%d"
+expressions = ["[HEART_RATE]"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+# ---- time layer, dominant ---------------------------------------------------
+
+[[components]]
+type = "analog_hand"
+name = "z30_hour"
+resource = "meridian_hand_hour"
+which = "hour"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "analog_hand"
+name = "z31_minute"
+resource = "meridian_hand_minute"
+which = "minute"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+# Seconds: one rotation per minute, normal mode only. No seconds animation
+# in AOD.
+[[components]]
+type = "seconds_rotor"
+name = "z32_second"
+resource = "meridian_hand_second"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0}
+
+# Ambient hands: outlined, still angled by the same expressions, brightest
+# thing on the ambient screen.
+[[components]]
+type = "analog_hand"
+name = "z34_hour_aod"
+resource = "meridian_hand_hour_aod"
+which = "hour"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+[[components]]
+type = "analog_hand"
+name = "z35_minute_aod"
+resource = "meridian_hand_minute_aod"
+which = "minute"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+[[components]]
+type = "static_image"
+name = "z40_pinion"
+resource = "meridian_pinion"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "static_image"
+name = "z41_pinion_aod"
+resource = "meridian_pinion_aod"
+box = {x = 0, y = 0, width = 480, height = 480}
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
