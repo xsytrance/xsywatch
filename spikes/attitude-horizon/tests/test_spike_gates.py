@@ -305,14 +305,28 @@ class IsolationTests(unittest.TestCase):
              "origin/main...HEAD"], capture_output=True, text=True)
         return [f for f in (r.stdout or "").splitlines() if f.strip()]
 
-    ALLOWED_NON_SPIKE = {".gitignore"}   # the dedicated ignore rule
+    # Paths outside the spike that are legitimately on this branch. The
+    # gate exists to stop the spike touching PRODUCT code — engine,
+    # watchfaces, releases, Aurelius — not to forbid a dedicated ignore
+    # rule or the task instructions committed alongside it.
+    ALLOWED_NON_SPIKE = {".gitignore"}
+    ALLOWED_NON_SPIKE_PREFIXES = ("docs/instructions/",)
 
     def test_only_spike_paths_changed(self):
         for f in self.changed_files():
-            if f in self.ALLOWED_NON_SPIKE:
+            if f in self.ALLOWED_NON_SPIKE or f.startswith(
+                    self.ALLOWED_NON_SPIKE_PREFIXES):
                 continue
             self.assertTrue(f.startswith("spikes/attitude-horizon/"),
                             f"spike branch touched {f}")
+
+    def test_no_product_path_is_touched(self):
+        """The guarantee the gate actually exists for."""
+        for f in self.changed_files():
+            for forbidden in ("engine/", "watchfaces/", "releases/",
+                              "tools/", "tests/engine/", "tests/visual/"):
+                self.assertFalse(f.startswith(forbidden),
+                                 f"spike branch touched product path {f}")
 
     def test_no_aurelius_file_changed(self):
         for f in self.changed_files():
