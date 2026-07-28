@@ -13,7 +13,7 @@ import xml.etree.ElementTree as ET
 from . import KNOWN_SOURCES
 from .spec import FaceSpec
 
-SOURCE_RE = re.compile(r"\[([A-Z_0-9]+)\]")
+SOURCE_RE = re.compile(r"\[([A-Z_0-9.]+)\]")   # dots: WEATHER.IS_DAY
 
 
 class SpecError(ValueError):

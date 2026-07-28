@@ -32,10 +32,44 @@ GENERATED FILE - do not edit by hand.
       <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
       <Image resource="hy_dial_aod" />
     </PartImage>
-    <PartImage name="z02_canopy" x="0" y="0" width="480" height="480" alpha="255">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Image resource="hy_canopy" />
-    </PartImage>
+    <Condition>
+      <Expressions>
+        <Expression name="wx_night">[WEATHER.IS_AVAILABLE] &amp;&amp; ![WEATHER.IS_DAY]</Expression>
+        <Expression name="wx_snow">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50 &amp;&amp; [WEATHER.TEMPERATURE] &lt;= 2</Expression>
+        <Expression name="wx_rain">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50</Expression>
+        <Expression name="wx_dull">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 20</Expression>
+      </Expressions>
+      <Compare expression="wx_night">
+        <PartImage name="z02_canopy_0_hy_wx_night" x="0" y="0" width="480" height="480" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="hy_wx_night" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_snow">
+        <PartImage name="z02_canopy_1_hy_wx_snow" x="0" y="0" width="480" height="480" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="hy_wx_snow" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_rain">
+        <PartImage name="z02_canopy_2_hy_wx_rain" x="0" y="0" width="480" height="480" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="hy_wx_rain" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_dull">
+        <PartImage name="z02_canopy_3_hy_wx_overcast" x="0" y="0" width="480" height="480" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="hy_wx_overcast" />
+        </PartImage>
+      </Compare>
+      <Default>
+        <PartImage name="z02_canopy_4_hy_wx_clear" x="0" y="0" width="480" height="480" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="hy_wx_clear" />
+        </PartImage>
+      </Default>
+    </Condition>
     <PartImage name="z10_airscrew" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 300.0) % 360" />

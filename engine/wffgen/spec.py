@@ -62,6 +62,14 @@ def _build(entry: dict) -> list[C.Component]:
                                int(entry.get("loop_count", 1)),
                                entry.get("before", "HIDE"),
                                entry.get("after", "HIDE"))]
+    if kind == "weather_scene":
+        return [C.weather_scene(entry["name"], _box(entry["box"]),
+                                _aod(entry["aod"]), entry["clear"],
+                                entry["overcast"], entry["rain"],
+                                entry["snow"], entry["night"],
+                                int(entry.get("rain_pct", 50)),
+                                int(entry.get("showers_pct", 20)),
+                                int(entry.get("snow_temp", 2)))]
     if kind == "hr_balance":
         return [C.hr_balance(entry["name"], entry["resource"],
                              _box(entry["box"]), _aod(entry["aod"]),
@@ -117,7 +125,8 @@ def _build(entry: dict) -> list[C.Component]:
                             entry.get("align", "CENTER"))]
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
-                     "tap_sequence, hr_balance, battery_needle, value_needle, "
+                     "tap_sequence, weather_scene, hr_balance, battery_needle, "
+                     "value_needle, "
                      "date_text, "
                      "sheen, analog_hand, static_image, text_line, "
                      "horizon_field")

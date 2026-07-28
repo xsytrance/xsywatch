@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hayate.dev"
-version_code = 3
-version_name = "1.0.0-dev"
+version_code = 10
+version_name = "1.1.0-dev"
 
 [[fonts]]
 name = "hyt"
@@ -65,13 +65,33 @@ box = {x = 0, y = 0, width = 480, height = 480}
 alpha = 0
 aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
 
-# The window on the world. Built as its own sprite so live weather can be
-# swapped into it later without touching the plate.
+# ---- THE WINDOW ON THE WORLD, SHOWING REAL WEATHER -------------------
+#
+# WFF v4 carries native weather sources, so this needs no complication
+# provider and no companion app. An earlier version of this project asserted
+# the opposite; it was wrong, and the canopy sat static because of it.
+#
+# The branch runs on numbers whose meaning is unambiguous — IS_DAY,
+# CHANCE_OF_PRECIPITATION, TEMPERATURE. WEATHER.CONDITION exists but the
+# schema documents none of its integer values, and guessing an undocumented
+# enum shows the wearer snow in July.
+#
+# Order matters: WFF renders the FIRST matching Compare. Night is tested
+# first because a lit daytime sky at 3am is worse than no scene at all. If
+# weather is unavailable the Default renders clear, so the window is never
+# empty.
 [[components]]
-type = "static_image"
+type = "weather_scene"
 name = "z02_canopy"
-resource = "hy_canopy"
 box = {x = 0, y = 0, width = 480, height = 480}
+clear = "hy_wx_clear"
+overcast = "hy_wx_overcast"
+rain = "hy_wx_rain"
+snow = "hy_wx_snow"
+night = "hy_wx_night"
+rain_pct = 50
+showers_pct = 20
+snow_temp = 2
 aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
 
 # ---- the signature: the airscrew never stops -------------------------

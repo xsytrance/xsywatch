@@ -165,6 +165,76 @@ def tap_sequence(name: str, resources: list[str], box: dict,
                      f"before={before} after={after}")
 
 
+def weather_scene(name: str, box: dict, aod: AmbientPolicy,
+                  clear: str, overcast: str, rain: str, snow: str,
+                  night: str, rain_pct: int = 50, showers_pct: int = 20,
+                  snow_temp: int = 2) -> Component:
+    """The cockpit window, showing the wearer's actual weather.
+
+    WFF v4 carries native weather sources — WEATHER.IS_DAY,
+    WEATHER.CHANCE_OF_PRECIPITATION, WEATHER.TEMPERATURE and the rest — so
+    this needs no complication provider and no companion app.
+
+    WHY THIS BRANCHES ON NUMBERS AND NOT ON WEATHER.CONDITION: the schema
+    declares CONDITION as a source but documents none of its integer values.
+    Branching on an undocumented enum would be guessing, and guessing wrong
+    shows the wearer snow in July. IS_DAY, CHANCE_OF_PRECIPITATION and
+    TEMPERATURE are numerically unambiguous, so the tree is built from those.
+
+    Order matters: WFF renders the FIRST Compare that matches, so the tests
+    run most-specific first. If weather is unavailable or erroring, nothing
+    matches and Default renders the clear scene — the face never shows an
+    empty window.
+    """
+    # WFF requires each Compare to name a declared Expression rather than
+    # carry inline arithmetic, so every branch test is declared up front.
+    tests = [
+        ("wx_night", "[WEATHER.IS_AVAILABLE] && ![WEATHER.IS_DAY]", night),
+        ("wx_snow", "[WEATHER.IS_AVAILABLE] && "
+                    "[WEATHER.CHANCE_OF_PRECIPITATION] >= %d && "
+                    "[WEATHER.TEMPERATURE] <= %d" % (rain_pct, snow_temp), snow),
+        ("wx_rain", "[WEATHER.IS_AVAILABLE] && "
+                    "[WEATHER.CHANCE_OF_PRECIPITATION] >= %d" % rain_pct, rain),
+        ("wx_dull", "[WEATHER.IS_AVAILABLE] && "
+                    "[WEATHER.CHANCE_OF_PRECIPITATION] >= %d" % showers_pct,
+         overcast),
+    ]
+
+    cond = Elem("Condition", {})
+    exprs = Elem("Expressions", {})
+    for nm, val, _res in tests:
+        e = Elem("Expression", {"name": nm})
+        e.text = val
+        exprs.child(e)
+    cond.child(exprs)
+
+    # Branch parts are mutually exclusive — only the first matching Compare
+    # ever renders — but the z-order check reads document order, so they are
+    # numbered to keep it monotonic.
+    seq = [0]
+
+    def scene(res):
+        part = _part_image(f"{name}_{seq[0]}_{res}", box, res)
+        seq[0] += 1
+        part.child(aod.variant())
+        part.child(Elem("Image", {"resource": res}))
+        return part
+
+    for nm, _val, res in tests:
+        cmp_ = Elem("Compare", {"expression": nm})
+        cmp_.child(scene(res))
+        cond.child(cmp_)
+
+    default = Elem("Default", {})
+    default.child(scene(clear))
+    cond.child(default)
+
+    return Component(name, "weather-scene", MotionClass.EVENT, aod, [cond],
+                     [clear, overcast, rain, snow, night],
+                     "live weather in the cockpit window; falls back to clear "
+                     "when the source is unavailable")
+
+
 def hr_balance(name: str, resource: str, box: dict, aod: AmbientPolicy,
                center: float = 180, amplitude: float = 35,
                fallback: int = 70, clamp_lo: int = 40,

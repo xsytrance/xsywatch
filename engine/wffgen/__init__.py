@@ -29,4 +29,13 @@ KNOWN_SOURCES = frozenset({
     "DAY", "DAY_OF_WEEK_S", "MONTH_S", "AMPM_STRING",
     "BATTERY_PERCENT", "HEART_RATE", "STEP_COUNT", "STEP_PERCENT",
     "ACCELEROMETER_ANGLE_X", "ACCELEROMETER_ANGLE_Y",
+    # Weather. These are native WFF v4 sources — no complication provider and
+    # no companion app is required, contrary to what this engine previously
+    # implied by omitting them. See common/simpleTypes/sourceType.xsd,
+    # weatherSourceType.
+    "WEATHER.IS_AVAILABLE", "WEATHER.IS_ERROR", "WEATHER.IS_DAY",
+    "WEATHER.CONDITION", "WEATHER.CONDITION_NAME",
+    "WEATHER.TEMPERATURE", "WEATHER.TEMPERATURE_UNIT",
+    "WEATHER.TEMPERATURE_LOW", "WEATHER.TEMPERATURE_HIGH",
+    "WEATHER.CHANCE_OF_PRECIPITATION", "WEATHER.UV_INDEX",
 })
