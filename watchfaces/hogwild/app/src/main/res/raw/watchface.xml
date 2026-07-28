@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+GENERATED FILE - do not edit by hand.
+  Authoritative source: watchfaces/hogwild/engine/face.toml
+  Regenerate: python3 tools/generate_face.py hogwild
+  Engine: wffgen 0.1.0-experimental
+-->
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <BitmapFonts>
+    <BitmapFont name="hwg">
+      <Character name=":" resource="m_colon" width="18" height="40" />
+      <Character name="%" resource="m_pct" width="39" height="40" />
+      <Character name="0" resource="m_0" width="28" height="40" />
+      <Character name="1" resource="m_1" width="28" height="40" />
+      <Character name="2" resource="m_2" width="28" height="40" />
+      <Character name="3" resource="m_3" width="28" height="40" />
+      <Character name="4" resource="m_4" width="28" height="40" />
+      <Character name="5" resource="m_5" width="28" height="40" />
+      <Character name="6" resource="m_6" width="28" height="40" />
+      <Character name="7" resource="m_7" width="28" height="40" />
+      <Character name="8" resource="m_8" width="28" height="40" />
+      <Character name="9" resource="m_9" width="28" height="40" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF000000">
+    <PartImage name="z00_plate" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Image resource="wh_dial" />
+    </PartImage>
+    <PartImage name="z01_plate_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
+      <Image resource="wh_dial_aod" />
+    </PartImage>
+    <PartImage name="z10_sweep" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 90.0) % 360" />
+      <Image resource="wh_sweep" />
+    </PartImage>
+    <PartImage name="z11_fuel" x="296" y="99" width="104" height="104" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="235.0 + 250.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      <Image resource="wh_fuel_needle" />
+    </PartImage>
+    <PartImage name="z12_rpm" x="298" y="278" width="100" height="100" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="0 + 32 * sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 200)) * 0.10472)" />
+      <Image resource="wh_rpm_needle" />
+    </PartImage>
+    <PartText name="z20_lcd" x="320" y="228" width="80" height="26">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d:%02d<Parameter expression="[HOUR_0_11]" /><Parameter expression="[MINUTE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps" x="105" y="338" width="80" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hwg" size="15" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="wh_hour" />
+    </PartImage>
+    <PartImage name="z31_minute" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Transform target="angle" value="([MINUTE] + [SECOND] / 60) * 6" />
+      <Image resource="wh_minute" />
+    </PartImage>
+    <PartImage name="z32_second" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      <Image resource="wh_second" />
+    </PartImage>
+    <PartImage name="z33_hour_aod" x="0" y="0" width="480" height="480" alpha="0" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="wh_hour_aod" />
+    </PartImage>
+    <PartImage name="z34_minute_aod" x="0" y="0" width="480" height="480" alpha="0" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
+      <Transform target="angle" value="([MINUTE] + [SECOND] / 60) * 6" />
+      <Image resource="wh_minute_aod" />
+    </PartImage>
+    <PartImage name="z40_hub" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Image resource="wh_hub" />
+    </PartImage>
+  </Scene>
+</WatchFace>

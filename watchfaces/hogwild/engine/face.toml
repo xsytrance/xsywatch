@@ -1,0 +1,176 @@
+# MERIDIAN HOG-WILD — A-10 Thunderbolt II "Warthog".
+#
+# Regenerate XML:  python3 tools/generate_face.py hogwild
+#
+# DEVELOPMENT ONLY. The dial plate is AI-generated concept art, produced via
+# Flux Kontext Pro from a procedurally-placed layout. It is deliberately NOT
+# committed. This package exists to get the design onto a wrist for judgement;
+# anything that ships is rebuilt as original construction per
+# docs/reports/AIRCRAFT_WATCH_DISCOVERY.md.
+#
+# THE SPLIT. The concept image had hands and needles painted into it. A watch
+# face cannot: they move. So the plate is regenerated hands-free and the
+# moving parts are separate layers composited over it — the hands, the fuel
+# needle on battery, the RPM needle on heart rate, and the radar sweep.
+#
+# Sub-dial anchors are the 1024-canvas layout coordinates scaled by 480/1024,
+# which is why the sprite boxes look arbitrary: each one is sized to its own
+# gauge so WFF pivots about that gauge's centre, not the dial centre.
+
+[face]
+slug = "hogwild"
+width = 480
+height = 480
+wff_version = 4
+clock_type = "ANALOG"
+preview_time = "10:09:32"
+background_color = "#FF000000"
+
+[identity]
+package = "com.xsytrance.hogwild.dev"
+version_code = 1
+version_name = "0.1.0-dev"
+
+[[fonts]]
+name = "hwg"
+height = 40
+[fonts.characters]
+":" = ["m_colon", 18]
+"%" = ["m_pct", 39]
+"0" = ["m_0", 28]
+"1" = ["m_1", 28]
+"2" = ["m_2", 28]
+"3" = ["m_3", 28]
+"4" = ["m_4", 28]
+"5" = ["m_5", 28]
+"6" = ["m_6", 28]
+"7" = ["m_7", 28]
+"8" = ["m_8", 28]
+"9" = ["m_9", 28]
+
+# ---- scene, document order = z-order ---------------------------------
+
+[[components]]
+type = "static_image"
+name = "z00_plate"
+resource = "wh_dial"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+# Ambient drops the plate for an outline-and-lume version: a photoreal dial
+# is the worst case for burn-in and power.
+[[components]]
+type = "static_image"
+name = "z01_plate_aod"
+resource = "wh_dial_aod"
+box = {x = 0, y = 0, width = 480, height = 480}
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+# Radar sweep, on its own sprite so the pivot lands on the scope centre.
+# 4 s per revolution.
+[[components]]
+type = "rotating_image"
+name = "z10_sweep"
+resource = "wh_sweep"
+box = {x = 184, y = 305, width = 113, height = 113}
+speed = 90.0
+ratio_note = "PPI sweep, 4s per revolution"
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# Fuel gauge needle = battery. E through F over the gauge's 250 degrees.
+[[components]]
+type = "battery_needle"
+name = "z11_fuel"
+resource = "wh_fuel_needle"
+box = {x = 296, y = 99, width = 104, height = 104}
+start_deg = 235.0
+sweep_deg = 250.0
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# RPM needle oscillating on the wearer's own heart rate.
+[[components]]
+type = "hr_balance"
+name = "z12_rpm"
+resource = "wh_rpm_needle"
+box = {x = 298, y = 278, width = 100, height = 100}
+center = 0
+amplitude = 32
+fallback = 70
+clamp_lo = 40
+clamp_hi = 200
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# ---- live data over the painted instruments --------------------------
+
+# Digital time in the LCD aperture.
+[[components]]
+type = "text_line"
+name = "z20_lcd"
+box = {x = 320, y = 228, width = 80, height = 26}
+font = "hwg"
+size = 20
+color = "#A8F0A0"
+template = "%d:%02d"
+expressions = ["[HOUR_0_11]", "[MINUTE]"]
+align = "CENTER"
+aod = {alpha = 120, duration = 0.4, offset = 0.2}
+
+# Step total in the odometer aperture.
+[[components]]
+type = "text_line"
+name = "z21_steps"
+box = {x = 105, y = 338, width = 80, height = 22}
+font = "hwg"
+size = 15
+color = "#E4E2DC"
+template = "%d"
+expressions = ["[STEP_COUNT]"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+# ---- hands -----------------------------------------------------------
+
+[[components]]
+type = "analog_hand"
+name = "z30_hour"
+resource = "wh_hour"
+which = "hour"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "analog_hand"
+name = "z31_minute"
+resource = "wh_minute"
+which = "minute"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "seconds_rotor"
+name = "z32_second"
+resource = "wh_second"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0}
+
+[[components]]
+type = "analog_hand"
+name = "z33_hour_aod"
+resource = "wh_hour_aod"
+which = "hour"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+[[components]]
+type = "analog_hand"
+name = "z34_minute_aod"
+resource = "wh_minute_aod"
+which = "minute"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+[[components]]
+type = "static_image"
+name = "z40_hub"
+resource = "wh_hub"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
