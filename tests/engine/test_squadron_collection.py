@@ -256,6 +256,116 @@ class TestArtworkProvenance(unittest.TestCase):
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
 
+class TestStaleLineageIsCaught(unittest.TestCase):
+    """The import check must fail on a record that misdescribes the studio.
+
+    These are behavioural: each mutates a copy of the authoritative document
+    the way a real staleness would, and requires the comparison to name the
+    field. The check that shipped with the collection compared only the
+    variant map, so a stale studio_commit passed silently — the artwork was
+    byte-correct while the provenance claim was false. That is precisely the
+    failure these tests exist to prevent recurring.
+    """
+
+    @classmethod
+    def setUpClass(cls):
+        import squadron_scaffold
+        cls.S = squadron_scaffold
+        cls.doc = json.loads(
+            (REPO / "watchfaces" / "SQUADRON_IMPORT.json").read_text())
+
+    def _drift(self, mutate):
+        import copy
+        stale = copy.deepcopy(self.doc)
+        mutate(stale)
+        return self.S.compare_import(stale, self.doc)
+
+    def test_an_unmutated_record_reports_no_drift(self):
+        self.assertEqual(self.S.compare_import(self.doc, self.doc), [],
+                         "the comparison flags a document against itself")
+
+    def test_stale_studio_commit_is_caught(self):
+        d = self._drift(lambda x: x.__setitem__(
+            "studio_commit", "ca7b6395ded0373f881346187c6dbe6d3f30a1a2"))
+        self.assertTrue(any("studio_commit" in m for m in d),
+                        f"stale studio commit not caught: {d}")
+
+    def test_stale_studio_manifest_hash_is_caught(self):
+        d = self._drift(lambda x: x.__setitem__("studio_manifest_sha256",
+                                                "0" * 64))
+        self.assertTrue(any("studio_manifest_sha256" in m for m in d), d)
+
+    def test_stale_platform_is_caught(self):
+        def mutate(x):
+            x["platform"] = dict(x["platform"])
+            x["platform"]["aperture"] = dict(x["platform"]["aperture"])
+            x["platform"]["aperture"]["r"] = 99
+        d = self._drift(mutate)
+        self.assertTrue(any("platform" in m for m in d), d)
+
+    def test_a_changed_motion_default_is_caught(self):
+        def mutate(x):
+            x["platform"] = dict(x["platform"])
+            x["platform"]["default_profile"] = "assertive"
+        d = self._drift(mutate)
+        self.assertTrue(any("platform" in m for m in d), d)
+
+    def test_stale_public_variant_metadata_is_caught(self):
+        d = self._drift(lambda x: x.__setitem__(
+            "public_variants", x["public_variants"][:-1]))
+        self.assertTrue(any("public_variants" in m for m in d), d)
+
+    def test_a_variant_flipped_to_public_is_caught(self):
+        internal = [s for s in SLUGS if s not in PUBLIC][0]
+
+        def mutate(x):
+            x["variants"][internal] = dict(x["variants"][internal])
+            x["variants"][internal]["public"] = True
+        d = self._drift(mutate)
+        self.assertTrue(any(f"variants[{internal}].public" in m for m in d), d)
+
+    def test_a_changed_package_id_is_caught(self):
+        def mutate(x):
+            x["variants"]["pure"] = dict(x["variants"]["pure"])
+            x["variants"]["pure"]["package"] = "com.example.other"
+        d = self._drift(mutate)
+        self.assertTrue(any("variants[pure].package" in m for m in d), d)
+
+    def test_a_single_stale_resource_hash_is_caught(self):
+        def mutate(x):
+            v = x["variants"]["hayate"] = dict(x["variants"]["hayate"])
+            v["resources"] = dict(v["resources"])
+            v["resources"]["sq_dial.png"] = dict(v["resources"]["sq_dial.png"])
+            v["resources"]["sq_dial.png"]["sha256"] = "0" * 64
+        d = self._drift(mutate)
+        self.assertTrue(
+            any("variants[hayate].resources[sq_dial.png]" in m for m in d), d)
+
+    def test_a_dropped_resource_is_caught(self):
+        def mutate(x):
+            v = x["variants"]["balsa"] = dict(x["variants"]["balsa"])
+            v["resources"] = {k: q for k, q in v["resources"].items()
+                              if k != "sq_hand_hour.png"}
+        d = self._drift(mutate)
+        self.assertTrue(any("sq_hand_hour.png" in m for m in d), d)
+
+    def test_a_dropped_variant_is_caught(self):
+        def mutate(x):
+            x["variants"] = {k: q for k, q in x["variants"].items()
+                             if k != "commodore"}
+        d = self._drift(mutate)
+        self.assertTrue(any("commodore" in m for m in d), d)
+
+    def test_the_live_check_agrees_with_the_studio_checkout(self):
+        studio = Path.home() / "AGENOR-Horology"
+        if not (studio / "phase3-squadron" / "SQUADRON_MANIFEST.json").exists():
+            self.skipTest("studio repository not available")
+        produced = self.S.build_import_document(studio)
+        self.assertEqual(self.S.compare_import(self.doc, produced), [],
+                         "the committed import does not describe the studio "
+                         "checkout on this machine")
+
+
 class TestGeneration(unittest.TestCase):
     def test_every_committed_xml_matches_its_spec(self):
         for slug in SLUGS:

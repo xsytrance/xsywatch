@@ -450,6 +450,78 @@ tools/build_face.sh squadron-{slug}
 """
 
 
+# Fields whose disagreement means the record is describing a different
+# studio state than the one that produced these bytes.
+LINEAGE_KEYS = ("schema", "collection", "flagship", "public_variants",
+                "studio_repository", "studio_branch", "studio_commit",
+                "studio_manifest_sha256", "platform")
+VARIANT_KEYS = ("title", "public", "package")
+
+
+def compare_import(committed: dict, produced: dict) -> list[str]:
+    """Every way the committed import can disagree with the studio.
+
+    Compares the COMPLETE authoritative document. An earlier version
+    compared only the variant map, so a stale `studio_commit` — a record
+    naming an authority that did not produce these bytes — passed silently.
+    Lineage fields are exactly the ones that must fail loudest, because the
+    artwork can be byte-correct while the provenance claim is false.
+    """
+    drift: list[str] = []
+    for key in LINEAGE_KEYS:
+        if committed.get(key) != produced.get(key):
+            drift.append(f"{key}: committed {committed.get(key)!r} != "
+                         f"studio {produced.get(key)!r}")
+    cur_v = committed.get("variants", {})
+    new_v = produced.get("variants", {})
+    for slug in sorted(set(cur_v) | set(new_v)):
+        if slug not in cur_v:
+            drift.append(f"variants[{slug}]: missing from the record")
+            continue
+        if slug not in new_v:
+            drift.append(f"variants[{slug}]: recorded but no longer in the "
+                         "studio collection")
+            continue
+        a, b = cur_v[slug], new_v[slug]
+        for field in VARIANT_KEYS:
+            if a.get(field) != b.get(field):
+                drift.append(f"variants[{slug}].{field}: {a.get(field)!r} "
+                             f"!= {b.get(field)!r}")
+        ra, rb = a.get("resources", {}), b.get("resources", {})
+        for name in sorted(set(ra) | set(rb)):
+            if ra.get(name) != rb.get(name):
+                drift.append(f"variants[{slug}].resources[{name}] differs "
+                             "from the studio export")
+    return drift
+
+
+def build_import_document(studio: Path, slugs=None) -> dict:
+    """The authoritative import document this studio checkout implies."""
+    collection = json.loads((studio / "phase3-squadron"
+                             / "SQUADRON_MANIFEST.json").read_text())
+    commit = subprocess.run(["git", "-C", str(studio), "rev-parse", "HEAD"],
+                            capture_output=True, text=True).stdout.strip()
+    record = {}
+    for slug in (slugs or collection["variants"]):
+        meta = collection["variants"][slug]
+        imported, _ = import_assets(slug, meta, studio, slug_dir(slug), True)
+        record[slug] = {"title": meta["title"], "public": meta["public"],
+                        "package": package(slug), "resources": imported}
+    return {
+        "schema": "agenor.squadron-import/1",
+        "collection": collection["collection"],
+        "flagship": collection["flagship"],
+        "public_variants": collection["public_variants"],
+        "studio_repository": "xsytrance/AGENOR-Horology",
+        "studio_branch": "phase-3/attitude-squadron-collection",
+        "studio_commit": commit,
+        "studio_manifest_sha256": sha256(studio / "phase3-squadron"
+                                         / "SQUADRON_MANIFEST.json"),
+        "platform": collection["platform"],
+        "variants": record,
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--studio", default=str(STUDIO_DEFAULT))
@@ -515,14 +587,25 @@ def main() -> int:
     text = json.dumps(doc, indent=2, sort_keys=True) + "\n"
     if args.check:
         if not out.exists():
-            problems.append("no committed SQUADRON_IMPORT.json")
-        else:
-            cur = json.loads(out.read_text())
-            if cur.get("variants") != doc["variants"]:
-                print("ERROR committed SQUADRON_IMPORT.json differs from the "
-                      "studio export", file=sys.stderr)
-                return 1
-        print(f"OK: {len(record)} variants match the studio export")
+            print("ERROR no committed SQUADRON_IMPORT.json", file=sys.stderr)
+            return 1
+        cur = json.loads(out.read_text())
+        drift = compare_import(cur, doc)
+        if drift:
+            for x in drift:
+                print(f"ERROR {x}", file=sys.stderr)
+            print(f"ERROR {len(drift)} lineage/content difference(s); the "
+                  "committed import does not describe this studio checkout",
+                  file=sys.stderr)
+            return 1
+        if cur != doc:
+            print("ERROR SQUADRON_IMPORT.json differs from the scaffold "
+                  "output in a field the field-by-field comparison does not "
+                  "cover — refusing to pass on an unexplained difference",
+                  file=sys.stderr)
+            return 1
+        print(f"OK: complete import document matches studio {commit[:12]} "
+              f"({len(record)} variants)")
         return 0
     out.write_text(text)
     print(f"scaffolded {len(record)} variants from studio {commit[:12]}")

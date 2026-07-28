@@ -120,7 +120,7 @@
   ],
   "schema": "agenor.squadron-import/1",
   "studio_branch": "phase-3/attitude-squadron-collection",
-  "studio_commit": "ca7b6395ded0373f881346187c6dbe6d3f30a1a2",
+  "studio_commit": "c7f30eb39de61319a488a1bad1b564f031a20446",
   "studio_manifest_sha256": "088f65c9b36d00363bb22b2dfeb872990d29af0189d8dfc2320a20bc8c0d160d",
   "studio_repository": "xsytrance/AGENOR-Horology",
   "variants": {
