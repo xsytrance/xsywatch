@@ -545,6 +545,137 @@ class TestNoCollateralChange(unittest.TestCase):
         self.assertEqual(touched, [], f"spike/preview touched: {touched}")
 
 
+class TestBuildRecord(unittest.TestCase):
+    """The build record must describe the artifact that actually exists.
+
+    When the local APK is absent these checks SKIP with an explicit reason
+    rather than passing. A silent pass would let the record drift from
+    reality on any machine that has not built, which is the failure mode
+    this file exists to prevent.
+    """
+
+    RECORD_PATH = FACE / "BUILD_RECORD.json"
+    APK = FACE / "app/build/outputs/apk/debug/app-debug.apk"
+
+    @classmethod
+    def setUpClass(cls):
+        cls.record = json.loads(cls.RECORD_PATH.read_text())
+
+    def _apk(self):
+        if not self.APK.exists():
+            self.skipTest(
+                "local debug APK absent — build-record identity cannot be "
+                "verified against a real artifact on this machine; the "
+                "recorded identity stands unconfirmed here")
+        return self.APK
+
+    def test_recorded_hash_and_size_match_the_local_apk(self):
+        apk = self._apk()
+        art = self.record["artifact"]
+        self.assertEqual(sha256(apk), art["sha256"],
+                         "BUILD_RECORD.json describes a different APK than "
+                         "the one in the output directory")
+        self.assertEqual(apk.stat().st_size, art["bytes"])
+
+    def test_recorded_path_is_the_canonical_debug_output(self):
+        rel = self.record["artifact"]["path"]
+        canonical = FACE / "app/build/outputs/apk/debug/app-debug.apk"
+        self.assertEqual((REPO / rel).resolve(), canonical.resolve())
+
+    def test_recorded_identity_matches_the_apk_contents(self):
+        apk = self._apk()
+        import zipfile
+        with zipfile.ZipFile(apk) as z:
+            names = set(z.namelist())
+        self.assertIn("res/raw/watchface.xml", names)
+        for res in IMPORT["resources"]:
+            stem = Path(res).stem
+            self.assertTrue(
+                any(n.startswith(f"res/") and Path(n).stem == stem
+                    for n in names),
+                f"{stem} is recorded as a studio resource but is not in "
+                "the APK")
+
+    def test_recorded_identity_matches_the_gradle_project(self):
+        gradle = (FACE / "app/build.gradle.kts").read_text()
+        art = self.record["artifact"]
+        self.assertIn(f'applicationId = "{art["package"]}"', gradle)
+        self.assertIn(f'versionName = "{art["version_name"]}"', gradle)
+        self.assertIn(f'versionCode = {art["version_code"]}', gradle)
+
+    def test_recorded_source_commits_are_real_and_current(self):
+        r = subprocess.run(["git", "-C", str(REPO), "cat-file", "-t",
+                            self.record["source"]["consumer_commit"]],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            self.skipTest("consumer commit not present in this clone")
+        self.assertEqual(r.stdout.strip(), "commit")
+        self.assertEqual(self.record["source"]["studio_commit"],
+                         IMPORT["studio_commit"],
+                         "the build record and the studio import disagree "
+                         "about which studio commit produced the artwork")
+
+    def test_recorded_watchface_xml_hash_matches_the_committed_xml(self):
+        self.assertEqual(sha256(XML),
+                         self.record["source"]["watchface_xml_sha256"])
+
+    def test_recorded_motion_matches_the_committed_spec(self):
+        root = ET.fromstring(XML.read_text())
+        t = {x.get("target"): x.get("value")
+             for x in parts(root)["z00_horizon"].iter("Transform")}
+        m = self.record["motion"]
+        self.assertIn(f"{m['roll_gain_deg']} *", t["angle"])
+        self.assertIn(f"{m['pitch_gain_px']} *", t["y"])
+        self.assertEqual(m["profile_in_this_build"], DEFAULT_PROFILE)
+        self.assertTrue(m["profile_is_provisional"])
+        self.assertFalse(m["final_motion_profile_selected"])
+
+    def test_recorded_permissions_match_the_manifest(self):
+        man = (FACE / "app/src/main/AndroidManifest.xml").read_text()
+        declared = set(re.findall(r'uses-permission android:name="([^"]+)"',
+                                  man))
+        self.assertEqual(set(self.record["artifact"]["permissions"]), declared)
+
+    def test_every_boundary_is_recorded_false(self):
+        for key, value in self.record["boundaries"].items():
+            self.assertFalse(value, f"boundary {key} is recorded true")
+        self.assertFalse(self.record["signing"]["production_signing"])
+        self.assertEqual(self.record["signing"]["type"], "debug")
+        self.assertFalse(self.record["device"]["watch_contacted"])
+        self.assertFalse(self.record["device"]["installed_automatically"])
+
+    def test_the_aod_claim_is_not_dressed_up_as_certification(self):
+        aod = self.record["aod_metrics"]
+        self.assertFalse(aod["wo_p7_certification_claim"])
+        self.assertIn("not a WO-P7 certification", aod["wo_p7_statement"])
+        self.assertLess(aod["consumer_render"]["bright_pixel_percentage"],
+                        aod["phase1_meridian_concept_bright_percentage"])
+
+    def test_the_recorded_aod_metric_is_reproducible_from_the_image(self):
+        """Recompute it rather than trusting the number in the file."""
+        try:
+            from PIL import Image
+        except ImportError:  # pragma: no cover
+            self.skipTest("Pillow not available")
+        cr = self.record["aod_metrics"]["consumer_render"]
+        img = FACE / cr["image"]
+        with Image.open(img) as im:
+            px = list(im.convert("RGB").getdata())
+        lum = [0.299 * r + 0.587 * g + 0.114 * b for r, g, b in px]
+        bright = sum(1 for v in lum
+                     if v > self.record["aod_metrics"]["bright_pixel_threshold"])
+        self.assertEqual(bright, cr["bright_pixel_count"])
+        self.assertEqual(len(lum), cr["total_pixel_count"])
+        self.assertAlmostEqual(bright / len(lum) * 100,
+                               cr["bright_pixel_percentage"], places=3)
+
+    def test_the_record_does_not_claim_a_rebuild_it_did_not_perform(self):
+        rep = self.record["reproducibility"]
+        self.assertIn("did NOT rebuild", rep["note"])
+        self.assertEqual(rep["observed_at_commit"],
+                         self.record["source"]["consumer_commit"])
+
+
 class TestGeneratedXmlIsCurrent(unittest.TestCase):
     def test_committed_xml_matches_the_spec(self):
         r = subprocess.run([sys.executable, "tools/generate_face.py", SLUG,
