@@ -32,3 +32,6 @@ watchfaces/*/tools/out/
 *.swp
 *~
 Thumbs.db
+
+# Collection APKs are build outputs, delivered directly rather than tracked
+collection/apk/

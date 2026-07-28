@@ -1,124 +1,134 @@
 {
-  "schema": "agenor.meridian-build-record/1",
-  "product": "ATTITUDE — MERIDIAN",
-  "build_kind": "DEVELOPMENT",
-  "status": "development build authorized for owner wrist trial; not a release candidate and not owner pixel approved",
-  "purpose": "Bind the exact already-built development APK to the source and studio commits that produced it. Evidence only: nothing was rebuilt, redesigned or re-signed to produce this record.",
-
-  "source": {
-    "repository": "xsytrance/xsywatch",
-    "branch": "feature/attitude-meridian-fast-track",
-    "consumer_commit": "b79df235ba63ac908db131704c0b1ff0de4cf2e1",
-    "studio_repository": "xsytrance/AGENOR-Horology",
-    "studio_branch": "phase-2/attitude-meridian-fast-track",
-    "studio_commit": "2da909ac51c22c6f742d68a72c4544bf2253556b",
-    "studio_import_record": "engine/STUDIO_IMPORT.json",
-    "watchface_xml": "app/src/main/res/raw/watchface.xml",
-    "watchface_xml_sha256": "840d760080a74caa136155adcf0a07402b781270c80031d402b9b89cc0bf045e"
-  },
-
-  "artifact": {
-    "path": "watchfaces/attitude-meridian/app/build/outputs/apk/debug/app-debug.apk",
-    "package": "com.xsytrance.attitude.meridian.dev",
-    "version_name": "0.1.0-dev",
-    "version_code": 1,
-    "min_sdk": 34,
-    "target_sdk": 36,
-    "compile_sdk": 36,
-    "sha256": "9ec178add0b7233a285a43a5727a1bcc842a1b93d3b4af489e85a2c3fd41f8ea",
-    "bytes": 2802909,
-    "permissions": [
-      "android.permission.BODY_SENSORS",
-      "android.permission.ACTIVITY_RECOGNITION"
-    ]
-  },
-
-  "signing": {
-    "type": "debug",
-    "certificate_subject": "C=US, O=Android, CN=Android Debug",
-    "certificate_sha256": "1554812f2a6181557d3d0934c4df4e1e8f77ebf1e63c57378c62970a657cda08",
-    "certificate_sha1": "52387681fc86c09184b0de21f35b77e0451ae6c3",
-    "tool": "apksigner verify --print-certs",
-    "production_signing": false
-  },
-
-  "reproducibility": {
-    "clean_rebuild_byte_identical": true,
-    "method": "rm -rf app/build build .gradle, then tools/build_face.sh attitude-meridian; the resulting APK SHA-256 equalled the first build's",
-    "observed_at_commit": "b79df235ba63ac908db131704c0b1ff0de4cf2e1",
-    "note": "Observed during the build cycle that produced this artifact. This record did NOT rebuild to re-confirm it; the instruction was explicit that the exact existing APK must not be rebuilt or replaced."
-  },
-
-  "validation": {
-    "wff_validator": {
-      "tool": "Google official WFF validator (google/watchface), DWFValidationApplication",
-      "format_version": 4,
-      "result": "PASSED"
-    },
-    "engine_tests": {"ran": 138, "result": "OK",
-                     "command": "python3 -m unittest discover -s tests/engine"},
-    "visual_tests": {"ran": 38, "result": "OK",
-                     "command": "python3 -m unittest discover -s tests/visual"},
-    "face_specific_tests": {"ran": 43, "result": "OK",
-                            "command": "python3 -m unittest tests.engine.test_attitude_meridian"},
-    "repository_validation": {"errors": 0, "warnings": 14,
-                              "source_faces_checked": 11,
-                              "command": "python3 tools/validate.py"},
-    "generation_drift": {
-      "aurelius": "OK — committed XML matches deterministic generation",
-      "attitude-meridian": "OK — committed XML matches deterministic generation"
-    }
-  },
-
   "aod_metrics": {
-    "method": "ITU-R BT.601 luma, Y = 0.299*R + 0.587*G + 0.114*B on the 8-bit sRGB values as stored; a pixel is bright when Y > 40 (strictly greater). Identical definition to scripts/attitude_aod_metrics.py, so the numbers are comparable to the Phase 1 concepts.",
     "bright_pixel_threshold": 40,
     "consumer_render": {
-      "image": "review/MERIDIAN_XML_AOD.png",
-      "rendered_from": "the committed watchface.xml and the drawables that go into the APK",
       "bright_pixel_count": 3437,
-      "total_pixel_count": 230400,
       "bright_pixel_percentage": 1.4918,
+      "image": "review/FACE_AOD.png",
+      "image_note": "renamed from MERIDIAN_XML_AOD.png when the per-face renderer was consolidated into tools/render_face_from_xml.py; the pixels are byte-identical, only the filename moved",
+      "max_luma": 255.0,
       "mean_luma": 6.904,
-      "max_luma": 255.0
-    },
-    "studio_render": {
-      "image": "AGENOR-Horology phase2-meridian/review/MERIDIAN_V1_AOD.png",
-      "bright_pixel_percentage": 1.4549,
-      "mean_luma": 6.9109
+      "rendered_from": "the committed watchface.xml and the drawables that go into the APK",
+      "total_pixel_count": 230400
     },
     "consumer_studio_difference_note": "The two differ by 0.037 percentage points because the studio render draws the readouts with a system TTF while the consumer render composes the shipped bitmap-font glyphs. Both are reported; neither is a substitute for the other.",
-    "phase1_meridian_concept_bright_percentage": 12.99,
     "materially_below_phase1_concept": true,
+    "method": "ITU-R BT.601 luma, Y = 0.299*R + 0.587*G + 0.114*B on the 8-bit sRGB values as stored; a pixel is bright when Y > 40 (strictly greater). Identical definition to scripts/attitude_aod_metrics.py, so the numbers are comparable to the Phase 1 concepts.",
+    "phase1_meridian_concept_bright_percentage": 12.99,
+    "studio_render": {
+      "bright_pixel_percentage": 1.4549,
+      "image": "AGENOR-Horology phase2-meridian/review/MERIDIAN_V1_AOD.png",
+      "mean_luma": 6.9109
+    },
     "wo_p7_certification_claim": false,
     "wo_p7_statement": "This is a development measurement of a 480x480 render, not a WO-P7 certification and not a measurement of the physical Watch7 panel."
   },
-
+  "artifact": {
+    "bytes": 2802909,
+    "compile_sdk": 36,
+    "min_sdk": 34,
+    "package": "com.xsytrance.attitude.meridian.dev",
+    "path": "watchfaces/attitude-meridian/app/build/outputs/apk/debug/app-debug.apk",
+    "permissions": [
+      "android.permission.BODY_SENSORS",
+      "android.permission.ACTIVITY_RECOGNITION"
+    ],
+    "sha256": "9ec178add0b7233a285a43a5727a1bcc842a1b93d3b4af489e85a2c3fd41f8ea",
+    "target_sdk": 36,
+    "version_code": 1,
+    "version_name": "0.1.0-dev"
+  },
+  "boundaries": {
+    "aab_created": false,
+    "aurelius_modified": false,
+    "merge_authorized": false,
+    "owner_pixel_approved": false,
+    "production_signing": false,
+    "release_candidate": false,
+    "spike_or_preview_modified": false,
+    "store_state": false
+  },
+  "build_kind": "DEVELOPMENT",
+  "device": {
+    "delivery": "file supplied to the owner for phone-mediated manual installation",
+    "installed_automatically": false,
+    "watch_contacted": false
+  },
   "motion": {
+    "available_profiles": [
+      "damped",
+      "proposed",
+      "assertive",
+      "roll-only",
+      "static"
+    ],
+    "final_motion_profile_selected": false,
+    "isolation": "the contract lives only in the z00_horizon component of engine/face.toml; changing it requires no artwork, layout or resource change",
+    "pitch_gain_px": 26.0,
     "profile_in_this_build": "proposed",
     "profile_is_provisional": true,
     "roll_gain_deg": 22.0,
-    "pitch_gain_px": 26.0,
-    "roll_inverted": true,
-    "available_profiles": ["damped", "proposed", "assertive", "roll-only", "static"],
-    "final_motion_profile_selected": false,
-    "isolation": "the contract lives only in the z00_horizon component of engine/face.toml; changing it requires no artwork, layout or resource change"
+    "roll_inverted": true
   },
-
-  "device": {
-    "installed_automatically": false,
-    "watch_contacted": false,
-    "delivery": "file supplied to the owner for phone-mediated manual installation"
+  "product": "ATTITUDE \u2014 MERIDIAN",
+  "purpose": "Bind the exact already-built development APK to the source and studio commits that produced it. Evidence only: nothing was rebuilt, redesigned or re-signed to produce this record.",
+  "reproducibility": {
+    "clean_rebuild_byte_identical": true,
+    "method": "rm -rf app/build build .gradle, then tools/build_face.sh attitude-meridian; the resulting APK SHA-256 equalled the first build's",
+    "note": "Observed during the build cycle that produced this artifact. This record did NOT rebuild to re-confirm it; the instruction was explicit that the exact existing APK must not be rebuilt or replaced.",
+    "observed_at_commit": "b79df235ba63ac908db131704c0b1ff0de4cf2e1"
   },
-
-  "boundaries": {
-    "release_candidate": false,
-    "aab_created": false,
+  "schema": "agenor.meridian-build-record/1",
+  "signing": {
+    "certificate_sha1": "52387681fc86c09184b0de21f35b77e0451ae6c3",
+    "certificate_sha256": "1554812f2a6181557d3d0934c4df4e1e8f77ebf1e63c57378c62970a657cda08",
+    "certificate_subject": "C=US, O=Android, CN=Android Debug",
     "production_signing": false,
-    "store_state": false,
-    "merge_authorized": false,
-    "owner_pixel_approved": false,
-    "aurelius_modified": false,
-    "spike_or_preview_modified": false
+    "tool": "apksigner verify --print-certs",
+    "type": "debug"
+  },
+  "source": {
+    "branch": "feature/attitude-meridian-fast-track",
+    "consumer_commit": "b79df235ba63ac908db131704c0b1ff0de4cf2e1",
+    "repository": "xsytrance/xsywatch",
+    "studio_branch": "phase-2/attitude-meridian-fast-track",
+    "studio_commit": "2da909ac51c22c6f742d68a72c4544bf2253556b",
+    "studio_import_record": "engine/STUDIO_IMPORT.json",
+    "studio_repository": "xsytrance/AGENOR-Horology",
+    "watchface_xml": "app/src/main/res/raw/watchface.xml",
+    "watchface_xml_sha256": "840d760080a74caa136155adcf0a07402b781270c80031d402b9b89cc0bf045e"
+  },
+  "status": "development build authorized for owner wrist trial; not a release candidate and not owner pixel approved",
+  "validation": {
+    "engine_tests": {
+      "command": "python3 -m unittest discover -s tests/engine",
+      "ran": 138,
+      "result": "OK"
+    },
+    "face_specific_tests": {
+      "command": "python3 -m unittest tests.engine.test_attitude_meridian",
+      "ran": 43,
+      "result": "OK"
+    },
+    "generation_drift": {
+      "attitude-meridian": "OK \u2014 committed XML matches deterministic generation",
+      "aurelius": "OK \u2014 committed XML matches deterministic generation"
+    },
+    "repository_validation": {
+      "command": "python3 tools/validate.py",
+      "errors": 0,
+      "source_faces_checked": 11,
+      "warnings": 14
+    },
+    "visual_tests": {
+      "command": "python3 -m unittest discover -s tests/visual",
+      "ran": 38,
+      "result": "OK"
+    },
+    "wff_validator": {
+      "format_version": 4,
+      "result": "PASSED",
+      "tool": "Google official WFF validator (google/watchface), DWFValidationApplication"
+    }
   }
 }

@@ -1,0 +1,51 @@
+{
+  "fixture_environment": {
+    "ACCELEROMETER_ANGLE_X": 0.0,
+    "ACCELEROMETER_ANGLE_Y": 0.0,
+    "BATTERY_PERCENT": 78,
+    "DAY": 27,
+    "HEART_RATE": 72,
+    "HOUR_0_11": 10,
+    "MILLISECOND": 0,
+    "MINUTE": 9,
+    "SECOND": 30,
+    "STEP_COUNT": 8420
+  },
+  "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
+  "images": {
+    "FACE_AOD.png": {
+      "bytes": 30925,
+      "height": 480,
+      "sha256": "6be539a5ec8d707cb2162626af96a769b60946dd7137fd11d0e5187dad71c661",
+      "width": 480
+    },
+    "FACE_HAND_POSITIONS.png": {
+      "bytes": 188760,
+      "height": 398,
+      "sha256": "c6d089e77541d4fd2241bf878bdcaeae02e1137065286d122c9d62e066bbd2f7",
+      "width": 1584
+    },
+    "FACE_MOTION_STATES.png": {
+      "bytes": 321751,
+      "height": 764,
+      "sha256": "cb3be8981c1129d9a92ec776d16f724518400dc2fbb03a0e18b4d0485d30384b",
+      "width": 956
+    },
+    "FACE_NORMAL.png": {
+      "bytes": 287410,
+      "height": 480,
+      "sha256": "ced5f6dd2a7d81d66603db3e5435c1e252683170d91022dc5e07bcc686ad3fd2",
+      "width": 480
+    },
+    "FACE_PRESENTATION.png": {
+      "bytes": 340672,
+      "height": 576,
+      "sha256": "edb64c3946712a567660bcc18fdbf328073623137ddf64734c7554ff526d7c04",
+      "width": 1020
+    }
+  },
+  "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
+  "schema": "agenor.face-review-render/1",
+  "slug": "squadron-agenor",
+  "watchface_xml_sha256": "f13a48b39d1a9fc6cfcab1f79fadca8db06a8dd8071b3ab6cf0370fb4304624b"
+}

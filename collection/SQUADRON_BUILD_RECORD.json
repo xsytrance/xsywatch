@@ -1,0 +1,166 @@
+{
+  "apks": {
+    "agenor": {
+      "bytes": 3397219,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-AGENOR-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.agenor.dev",
+      "public": false,
+      "sha256": "dcf6b9c1369009d6af83c66d69c1fa69be08bd4e65020642846ddeb85a0927f7",
+      "title": "ATTITUDE AGENOR"
+    },
+    "balsa": {
+      "bytes": 3369744,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-BALSA-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.balsa.dev",
+      "public": true,
+      "sha256": "d4104a7741e8299f9dd46484127705b5f2db594610f3cdd768b336796c4aa16e",
+      "title": "MERIDIAN BALSA"
+    },
+    "cockpit": {
+      "bytes": 3235032,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-COCKPIT-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.cockpit.dev",
+      "public": true,
+      "sha256": "c8425a5cadedd316aacad258fd9fffb4e57aa4dc7b48cb047aa9b8fbf9e8e96b",
+      "title": "MERIDIAN COCKPIT"
+    },
+    "collector": {
+      "bytes": 2918367,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-COLLECTOR-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.collector.dev",
+      "public": true,
+      "sha256": "68375b9008fd6de99065c70e723e59d20548f83484e14d8e164bc835b7966df2",
+      "title": "MERIDIAN COLLECTOR"
+    },
+    "commodore": {
+      "bytes": 3474483,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-COMMODORE-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.commodore.dev",
+      "public": true,
+      "sha256": "2651b03a37fb82fe5b8591bbd572b71ed546bdfa1791cfa9f2bab58202cfc88f",
+      "title": "MERIDIAN COMMODORE"
+    },
+    "hayate": {
+      "bytes": 3363237,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-HAYATE-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.hayate.dev",
+      "public": true,
+      "sha256": "6a1a1d0dc470b7f50f6f5648ed7cfc1c475dd34c31b7edfa08bfe103a3e60543",
+      "title": "MERIDIAN HAYATE"
+    },
+    "heritage": {
+      "bytes": 3419856,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-HERITAGE-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.heritage.dev",
+      "public": true,
+      "sha256": "8c7428995dc0576739c282c274b129b81ebcc61076c90112aa4d212d8eceea66",
+      "title": "MERIDIAN HERITAGE"
+    },
+    "interceptor": {
+      "bytes": 3301766,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-INTERCEPTOR-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.interceptor.dev",
+      "public": true,
+      "sha256": "4fc798f688ef97883d79d49a43c74d8346476bc54a3779266ad698f6e87d4d96",
+      "title": "MERIDIAN INTERCEPTOR"
+    },
+    "khaki": {
+      "bytes": 3206459,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-KHAKI-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.khaki.dev",
+      "public": true,
+      "sha256": "e5ce243595c5ac3d39012db7ee377bd188e74a5b4a4fc75de5b38523f66b93a5",
+      "title": "MERIDIAN KHAKI"
+    },
+    "pure": {
+      "bytes": 3375170,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-PURE-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.pure.dev",
+      "public": true,
+      "sha256": "6d7102440954cdbc5273183469cfcae6029c5f00f22eebca6b0d7b667793704e",
+      "title": "MERIDIAN PURE"
+    },
+    "radial": {
+      "bytes": 3423192,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-RADIAL-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.radial.dev",
+      "public": true,
+      "sha256": "6917900346368094ccf478ce58e317eb2eea9288b55a1a4115f546cd74495ea3",
+      "title": "MERIDIAN RADIAL"
+    },
+    "squadron": {
+      "bytes": 3402029,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-SQUADRON-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.squadron.dev",
+      "public": true,
+      "sha256": "087d233f49b76e8139daa39507625366cc2d0a29a15bd642f6d1c44510d51468",
+      "title": "MERIDIAN SQUADRON"
+    },
+    "trainer": {
+      "bytes": 3449270,
+      "certificate_subject": "C=US, O=Android, CN=Android Debug",
+      "delivered_as": "collection/apk/MERIDIAN-TRAINER-DEV-0.1.0.apk",
+      "package": "com.xsytrance.squadron.trainer.dev",
+      "public": true,
+      "sha256": "47dacd092882ec5550cc9f7895ce56b6d342c10354030b824bee906a1826c15a",
+      "title": "MERIDIAN TRAINER"
+    }
+  },
+  "boundaries": {
+    "aab_created": false,
+    "aurelius_modified": false,
+    "device_contacted": false,
+    "installed_automatically": false,
+    "merge_authorized": false,
+    "owner_pixel_approved": false,
+    "production_signing": false,
+    "release_candidate": false,
+    "spike_or_preview_modified": false,
+    "store_state": false
+  },
+  "build_kind": "DEVELOPMENT",
+  "collection": "ATTITUDE SQUADRON",
+  "flagship": "hayate",
+  "public_variants": [
+    "hayate",
+    "pure",
+    "khaki",
+    "heritage",
+    "squadron",
+    "interceptor",
+    "cockpit",
+    "radial",
+    "balsa",
+    "trainer",
+    "collector",
+    "commodore"
+  ],
+  "schema": "agenor.squadron-build-record/1",
+  "signing": {
+    "production_signing": false,
+    "type": "debug"
+  },
+  "status": "development builds for owner review; not release candidates, not owner pixel approved",
+  "studio_branch": "phase-3/attitude-squadron-collection",
+  "studio_commit": "ca7b6395ded0373f881346187c6dbe6d3f30a1a2",
+  "studio_repository": "xsytrance/AGENOR-Horology",
+  "validation": {
+    "collection_tests": 35,
+    "engine_tests": 185,
+    "repository_validation": "0 errors",
+    "visual_tests": 38,
+    "wff_v4": "PASSED for all 13 faces"
+  }
+}

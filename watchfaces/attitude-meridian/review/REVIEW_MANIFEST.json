@@ -13,38 +13,39 @@
   },
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
-    "MERIDIAN_PRESENTATION.png": {
-      "bytes": 196930,
-      "height": 576,
-      "sha256": "7889aca37fae145f1d5a96553d64790dc01ed2a572c094e2f672dca7ba3f8bc3",
-      "width": 1020
-    },
-    "MERIDIAN_XML_AOD.png": {
+    "FACE_AOD.png": {
       "bytes": 15197,
       "height": 480,
       "sha256": "bc4de8108bedb54c1cf69db7a88a6cd2026b0bf1d355fbf3c19bf70224f96615",
       "width": 480
     },
-    "MERIDIAN_XML_HAND_POSITIONS.png": {
-      "bytes": 177500,
+    "FACE_HAND_POSITIONS.png": {
+      "bytes": 177539,
       "height": 398,
-      "sha256": "ea27811b2a5cbfa0aa7f357b87c637e017dfa6cc92b2fefff180b4a1cea0fe39",
+      "sha256": "2a40349f36e7b674233d9671420c94243083fa9421bf6ee31530d67ec580a202",
       "width": 1584
     },
-    "MERIDIAN_XML_MOTION_STATES.png": {
-      "bytes": 316650,
+    "FACE_MOTION_STATES.png": {
+      "bytes": 316974,
       "height": 764,
-      "sha256": "66054c9049240f784f52bd4bc0e82f96e2c8156470f0201c5c465127afd558ac",
+      "sha256": "f1f0ffeb35c6567d10773f09e3cb5a4b4553ae017726b6dee85febe80cb199a4",
       "width": 956
     },
-    "MERIDIAN_XML_NORMAL.png": {
+    "FACE_NORMAL.png": {
       "bytes": 161379,
       "height": 480,
       "sha256": "65a64c589cdf665b41c995f993eb7882badf001abbc7793f38b336e98e37f504",
       "width": 480
+    },
+    "FACE_PRESENTATION.png": {
+      "bytes": 196863,
+      "height": 576,
+      "sha256": "56dd2a5191e9e8f54aab6e31a6d6cf21888bf08f36980c62239a092eec618848",
+      "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
-  "schema": "agenor.meridian-consumer-review/1",
+  "schema": "agenor.face-review-render/1",
+  "slug": "attitude-meridian",
   "watchface_xml_sha256": "840d760080a74caa136155adcf0a07402b781270c80031d402b9b89cc0bf045e"
 }

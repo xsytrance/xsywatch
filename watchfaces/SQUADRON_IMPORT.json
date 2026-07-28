@@ -1,0 +1,2091 @@
+{
+  "collection": "ATTITUDE SQUADRON",
+  "flagship": "hayate",
+  "platform": {
+    "aperture": {
+      "cx": 240,
+      "cy": 330,
+      "r": 76
+    },
+    "battery_arc": {
+      "r_in": 142,
+      "r_out": 158,
+      "span_deg": 62.0
+    },
+    "bitmap_font": {
+      "family": "sqd",
+      "height": 40
+    },
+    "canvas": 480,
+    "default_profile": "proposed",
+    "horizon_field_radius_px": 126.0,
+    "motion_profiles": {
+      "assertive": {
+        "pitch_px": 34.0,
+        "roll_deg": 30.0
+      },
+      "damped": {
+        "pitch_px": 14.0,
+        "roll_deg": 14.0
+      },
+      "proposed": {
+        "pitch_px": 26.0,
+        "roll_deg": 22.0
+      },
+      "roll-only": {
+        "pitch_px": 0.0,
+        "roll_deg": 22.0
+      },
+      "static": {
+        "pitch_px": 0.0,
+        "roll_deg": 0.0
+      }
+    },
+    "readouts": {
+      "battery": {
+        "align": "CENTER",
+        "aod": true,
+        "box": [
+          200,
+          92,
+          80,
+          28
+        ],
+        "expressions": [
+          "[BATTERY_PERCENT]"
+        ],
+        "size": 18,
+        "template": "%d%%"
+      },
+      "date": {
+        "align": "CENTER",
+        "aod": true,
+        "box": [
+          318,
+          222,
+          60,
+          34
+        ],
+        "expressions": [
+          "[DAY]"
+        ],
+        "size": 24,
+        "template": "%d"
+      },
+      "hr": {
+        "align": "CENTER",
+        "aod": false,
+        "box": [
+          328,
+          294,
+          80,
+          28
+        ],
+        "expressions": [
+          "[HEART_RATE]"
+        ],
+        "size": 18,
+        "template": "%d"
+      },
+      "steps": {
+        "align": "CENTER",
+        "aod": false,
+        "box": [
+          72,
+          294,
+          80,
+          28
+        ],
+        "expressions": [
+          "[STEP_COUNT]"
+        ],
+        "size": 18,
+        "template": "%d"
+      }
+    }
+  },
+  "public_variants": [
+    "hayate",
+    "pure",
+    "khaki",
+    "heritage",
+    "squadron",
+    "interceptor",
+    "cockpit",
+    "radial",
+    "balsa",
+    "trainer",
+    "collector",
+    "commodore"
+  ],
+  "schema": "agenor.squadron-import/1",
+  "studio_branch": "phase-3/attitude-squadron-collection",
+  "studio_commit": "ca7b6395ded0373f881346187c6dbe6d3f30a1a2",
+  "studio_manifest_sha256": "088f65c9b36d00363bb22b2dfeb872990d29af0189d8dfc2320a20bc8c0d160d",
+  "studio_repository": "xsytrance/AGENOR-Horology",
+  "variants": {
+    "agenor": {
+      "package": "com.xsytrance.squadron.agenor.dev",
+      "public": false,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 286719,
+          "height": 480,
+          "sha256": "30aed0e81fc43418e67420af032ae591db33b0f3a4754d26659f89ed581e03d7",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1888,
+          "height": 480,
+          "sha256": "c37504bcd903d9fc095e7f9165452920987437ae16462f5b97f5e74c98f32095",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 289005,
+          "height": 480,
+          "sha256": "eddf5596aeb864aebfb9f2e7049f03820391db75bf1330614f35df4e866f7a6d",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 22682,
+          "height": 480,
+          "sha256": "c9aa1f3f3380c8afa3ca4698c81b6f1c92b3aba916526935f080dacbed199337",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9375,
+          "height": 480,
+          "sha256": "0ce634fc4b4388de638e25e237d47c41329340649fa2e18b49fb5e6ca9e4bcc4",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9433,
+          "height": 480,
+          "sha256": "77d76459f32e8cb8656746354043f7e1af1b1a077eb8f1fb8352794a105d9d13",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4021,
+          "height": 480,
+          "sha256": "a0baf4278483b6379a59bdf64a02039a273c423f01f269f694b73cbf5819bb8d",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1169,
+          "height": 252,
+          "sha256": "f44be75eddf880b49de2795af682476b833f89b1baba7e7f7dda1d2b3177f4ba",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6221,
+          "height": 480,
+          "sha256": "1630a50f257be5bc8316da6a071007156ee33247611d0d2c355c13a363246a91",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "ATTITUDE AGENOR"
+    },
+    "balsa": {
+      "package": "com.xsytrance.squadron.balsa.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 274709,
+          "height": 480,
+          "sha256": "4f1e8e80c1d043504df8fe105736a59a92c2a06ba8f3ffc516bdd256f012c782",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1879,
+          "height": 480,
+          "sha256": "50c5209dc92eade595617c9d004231f070aa215c9906c0aef0756efd9b46c4cd",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 278974,
+          "height": 480,
+          "sha256": "9bf4c59109ac37f458b4c2d8d59d9232dd73520a17857c5b9f7a2e33583261bb",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 25721,
+          "height": 480,
+          "sha256": "eb9b52c56a8bc21addd530bc5067b2d9ce41d37440026ba9cc2b947458e9ba8b",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 10191,
+          "height": 480,
+          "sha256": "8af2657540242118769960ab975c040d4e21f9ac039fe3e4caee325a160407d6",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 10120,
+          "height": 480,
+          "sha256": "4fb80235c195cb38623df1f725d60c712fda5f00ad27ad7f91354f7a18f51760",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 3903,
+          "height": 480,
+          "sha256": "f24c124d7abacebcaade9bd96a4ff3be109fadd2351485c00f149c8601271cfe",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1187,
+          "height": 252,
+          "sha256": "b3c3405b58e4447b4866a9649accd57945cff11b26075a26e4c4b8bed1f508e9",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6294,
+          "height": 480,
+          "sha256": "f8389240614c1d9fffbc711a78e6297c86a7d440ccb3892ee7f812e40bdddbd9",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN BALSA"
+    },
+    "cockpit": {
+      "package": "com.xsytrance.squadron.cockpit.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 233002,
+          "height": 480,
+          "sha256": "eae8b26902f5e268a3a258736221e09ee85bbbc2ab4bc109e92eac1e374528ed",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1805,
+          "height": 480,
+          "sha256": "75b7e8db5397fef7a0fed7b55df59395f266f5bbf079ac52a90df85262302cc6",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 233206,
+          "height": 480,
+          "sha256": "75082a5072b2790088cf4cb6a85ff02940cea5cd95b5d0790eaf1f4625bfb150",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 25701,
+          "height": 480,
+          "sha256": "1a944d0e2d109fe7f8a27716c2d76afbbf201a94381c6b451a47ffb6970e3efe",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9451,
+          "height": 480,
+          "sha256": "369f00b9aaa30422bdf5cb14837e241861f07861552fecedfd84951f2469028d",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9521,
+          "height": 480,
+          "sha256": "c040dd58129a050f57c669cb2519e48f3408a6db8408d751b3e4d2c5ee49cd71",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4012,
+          "height": 480,
+          "sha256": "7043f2f28275acee63b98ee9915eebcb509e464597189fcdde2f842da67d0df4",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1173,
+          "height": 252,
+          "sha256": "ae04c3c70955b7c05bc3980f0b47237c6a81c1935ac48384250b9189a7ca3910",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6160,
+          "height": 480,
+          "sha256": "958bda2c669f8a01f4c19c89108577426adab01d1407526cc0a228ef2d07bfd0",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN COCKPIT"
+    },
+    "collector": {
+      "package": "com.xsytrance.squadron.collector.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 188175,
+          "height": 480,
+          "sha256": "cb1b9ec230f570b221b64d134428be66aa09815a52482546102a033b3ed8dee0",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1851,
+          "height": 480,
+          "sha256": "b86e5fb25903a853c8589be3c720d2cb6b933e8acff4401324fd695c22898de5",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 182483,
+          "height": 480,
+          "sha256": "5400154ae45fefe93290ebd292854e05118e8873fc789d8191b4e9cfbc5bfd19",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 18921,
+          "height": 480,
+          "sha256": "92522ace5f1899a2823279765e6ebb956d3b440163e43a4775c617841cb353fc",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9339,
+          "height": 480,
+          "sha256": "34ede2208c2654161f844c9ce297deaf8299eac4af026869f2c16e5ff92b17fd",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9438,
+          "height": 480,
+          "sha256": "144d897195d782f5c45e7edf56fa340cbe635fb569684fdc65f6ed799c8aca29",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4086,
+          "height": 480,
+          "sha256": "70cd3380cf83c0bcc0dea91f017a946213e8e8c47119ef521464db9a635c9630",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1170,
+          "height": 252,
+          "sha256": "abb2aff995ebe57d1b6c506ddace432608fbd4ed52521327b95510c38d79843b",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6159,
+          "height": 480,
+          "sha256": "6bc39c04049a0260aadbeca43eca3d67975d18804895de26a143becfd706198f",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN COLLECTOR"
+    },
+    "commodore": {
+      "package": "com.xsytrance.squadron.commodore.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 308382,
+          "height": 480,
+          "sha256": "16f9f88dd7ef7202c2fb1fb14e79b137799bcf6b2522a93cf57b761149add510",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1907,
+          "height": 480,
+          "sha256": "48387fbd9313a9a38c88c400685b832124f5569aaa8d363769815997fd9db991",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 316689,
+          "height": 480,
+          "sha256": "d0e94be5bbf0102d937747b3cb7943e453f76240d64e1a62bb080120e7cfd79b",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 22682,
+          "height": 480,
+          "sha256": "c9aa1f3f3380c8afa3ca4698c81b6f1c92b3aba916526935f080dacbed199337",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9424,
+          "height": 480,
+          "sha256": "014dd09d4b0f55a3ac852677f0cdb1cb3f3f053304e2c59e790047d85a8c3df4",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9477,
+          "height": 480,
+          "sha256": "1386dfe0b9e6c139fd54e7b2d9029fbaf696232b7bf05d8e877c03fc24a32916",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4082,
+          "height": 480,
+          "sha256": "6b34f28c484f20b3a1404eaf0906babe5573b45d4b63ba3891ba4d9e1ff84782",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1179,
+          "height": 252,
+          "sha256": "cd918b2d79a0cd0a7adc62c020048002b5ea65a08cbef0c90e89319f6e906b36",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6233,
+          "height": 480,
+          "sha256": "84e048ca5ba646ffe3cbb0015f41a41777a7efda77a881478d7caea6fd0c88e4",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN COMMODORE"
+    },
+    "hayate": {
+      "package": "com.xsytrance.squadron.hayate.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 271634,
+          "height": 480,
+          "sha256": "bf3e9f7266c2cf2ab368bbe3dbc70d7bcb2fd3fe7f0d6c7bf3f48b166ea37bf7",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1855,
+          "height": 480,
+          "sha256": "14a3728b0096a52a796890ef8fd8374f928229eb1e598d4b56c7ae21edad320e",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 277871,
+          "height": 480,
+          "sha256": "70cd4ded46223e51590d07c8649c4e165bd7c305d80f2e98162c69297919d014",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 26189,
+          "height": 480,
+          "sha256": "d6d5fa3a97ddbe17c4e5558db56b7abde7d3bd1b5ab352ca21eeec96b298e6cd",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9242,
+          "height": 480,
+          "sha256": "5a2031fcbbff45c67b2f1d3e36580825c3ae71426de9560b7853355a433b5566",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9385,
+          "height": 480,
+          "sha256": "2852ea82372ad9b0ac7e73765deb29092127c01508d4b4ac1f5a7edd6e485743",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 3950,
+          "height": 480,
+          "sha256": "817ef03efbf4c93a46297413ae6b603f4db4d7f558764bb19c8b6fdd97edf4a8",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1169,
+          "height": 252,
+          "sha256": "927ca06e6aa4a0b7a269209d3b6827c4c743d4080c19d29c6c53686b7b30106b",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6244,
+          "height": 480,
+          "sha256": "934db1e3c28aef206f30c864f834b6b2c729d18d0e2ddeb3b055ee9c6e9b839b",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN HAYATE"
+    },
+    "heritage": {
+      "package": "com.xsytrance.squadron.heritage.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 284935,
+          "height": 480,
+          "sha256": "2aba2513d285c34ac5c1bf6591c3aecb265d838b910b00a84a2b1fe0da759373",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1895,
+          "height": 480,
+          "sha256": "31f069853b071726f929ed31a2d79d0288f5bf59be01bebb42c900f55a0916a2",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 298846,
+          "height": 480,
+          "sha256": "0730c6cb151f3e785e3b0615e4e856ec0f761fee06a788bb4b9b3186f382c5a5",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 25701,
+          "height": 480,
+          "sha256": "1a944d0e2d109fe7f8a27716c2d76afbbf201a94381c6b451a47ffb6970e3efe",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 10193,
+          "height": 480,
+          "sha256": "f420392f1a968a72f5016c4e0d403b0dcead8bb6b08656b955582071e42efadd",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 10140,
+          "height": 480,
+          "sha256": "4f70266caea5942ba9ef17455bdb1a8621ddcec033da4be6de582c0fe32b909f",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4076,
+          "height": 480,
+          "sha256": "1a68290c8b5a41374de3d3a16ef7f336b70c4e21249fa86a0289c3a4b559debc",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1163,
+          "height": 252,
+          "sha256": "151e6eaca1e12c1d89933525b15bf7a19ea88b05f5c259d26bb9f5b26259f4b3",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6255,
+          "height": 480,
+          "sha256": "fa50fe3d4bc3bea5929562d08cdad76dab19c6eaceaf65b7febcee23bcfcb911",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN HERITAGE"
+    },
+    "interceptor": {
+      "package": "com.xsytrance.squadron.interceptor.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 255874,
+          "height": 480,
+          "sha256": "8277850d191315049a9e49fb5d82dac278eb3650e8f11bceefaa3d4ca08c98ef",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1851,
+          "height": 480,
+          "sha256": "6f79d076fc889591bc1a6a0d0d50456882e375c0aaec05557b0dfa5814c688da",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 256604,
+          "height": 480,
+          "sha256": "3e76ee2362d35184747bb391a8bf66832d1b6507641933c419972f341652f300",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 22682,
+          "height": 480,
+          "sha256": "c9aa1f3f3380c8afa3ca4698c81b6f1c92b3aba916526935f080dacbed199337",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9453,
+          "height": 480,
+          "sha256": "dbfbf40951bfc4410575d72b8d94dca125629f90363fc697f2e92705b412c9ec",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9458,
+          "height": 480,
+          "sha256": "9a84ece69e53df93a8b3ebff9b2c17a6860ff5d29874096fc4ae195a91648165",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4100,
+          "height": 480,
+          "sha256": "7d094c7ab25dd0a8ca202e2aa25ea3b438b707875fb7b286821b912e63431b9a",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1156,
+          "height": 252,
+          "sha256": "54fe49496500a3dab931abf572a8fe899ad1a7058067bc5c87fca73f4fc35091",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6231,
+          "height": 480,
+          "sha256": "30bca5fff341eadb9d41117fc0ec18328cc76bab2833aeca063bed2775fc6797",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN INTERCEPTOR"
+    },
+    "khaki": {
+      "package": "com.xsytrance.squadron.khaki.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 222770,
+          "height": 480,
+          "sha256": "555b8e06195b20eb32d03c974b9da14f6005a3ccba0c4773167035a1892db5c2",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1887,
+          "height": 480,
+          "sha256": "2cb076ca58bfcb1d736940ac16df560c7a336bb47fafce74f61c588075df57c5",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 224113,
+          "height": 480,
+          "sha256": "2005aa3433a3524477ca09514f8dfbcd9a3d5659eaef0d8ac4d04176fd73bb2e",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 25721,
+          "height": 480,
+          "sha256": "eb9b52c56a8bc21addd530bc5067b2d9ce41d37440026ba9cc2b947458e9ba8b",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9222,
+          "height": 480,
+          "sha256": "8e9946713a0bd0ff71fdaa69979f8128f56db1902f823ff17f74bb89c0660afc",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9336,
+          "height": 480,
+          "sha256": "8239df30bb24e7ed8ae5f5c412bc7b88f2ce7038aaaf7509e3eba605629dbe90",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4050,
+          "height": 480,
+          "sha256": "a9b331262ec2fc852c2468f159cbdbbd4520d1eac426d5fb8121f1b1534907be",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1162,
+          "height": 252,
+          "sha256": "b24c5924de4e2f0e5f113c00e44f98fa6b546c0e5958fac6cf54dcb23ae2febf",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6285,
+          "height": 480,
+          "sha256": "cd366d86cac6a8489c89bdf448fd958052db2ee0d69479f1316c1265dc6c7b84",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN KHAKI"
+    },
+    "pure": {
+      "package": "com.xsytrance.squadron.pure.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 280131,
+          "height": 480,
+          "sha256": "3431c4bb26cefd048aab0f91962bc5debf1d27901525882336dce754a329838f",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1888,
+          "height": 480,
+          "sha256": "c37504bcd903d9fc095e7f9165452920987437ae16462f5b97f5e74c98f32095",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 281288,
+          "height": 480,
+          "sha256": "e64866450a81a1d65ae5673d98ec89f5f59bc0d32d4b65f8db5d727c15ebf8be",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 22682,
+          "height": 480,
+          "sha256": "c9aa1f3f3380c8afa3ca4698c81b6f1c92b3aba916526935f080dacbed199337",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9375,
+          "height": 480,
+          "sha256": "0ce634fc4b4388de638e25e237d47c41329340649fa2e18b49fb5e6ca9e4bcc4",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9433,
+          "height": 480,
+          "sha256": "77d76459f32e8cb8656746354043f7e1af1b1a077eb8f1fb8352794a105d9d13",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4021,
+          "height": 480,
+          "sha256": "a0baf4278483b6379a59bdf64a02039a273c423f01f269f694b73cbf5819bb8d",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1169,
+          "height": 252,
+          "sha256": "f44be75eddf880b49de2795af682476b833f89b1baba7e7f7dda1d2b3177f4ba",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6221,
+          "height": 480,
+          "sha256": "1630a50f257be5bc8316da6a071007156ee33247611d0d2c355c13a363246a91",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN PURE"
+    },
+    "radial": {
+      "package": "com.xsytrance.squadron.radial.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 297621,
+          "height": 480,
+          "sha256": "8b2a409e4828e6ff8c93e8baa2a6466c84c32464de6113c9db29419e191f5d92",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1888,
+          "height": 480,
+          "sha256": "c37504bcd903d9fc095e7f9165452920987437ae16462f5b97f5e74c98f32095",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 298414,
+          "height": 480,
+          "sha256": "bae122b9e8e3e3ba4ffe6c5c30fad6076d53279fd6bba177ebd97b123283886b",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 18921,
+          "height": 480,
+          "sha256": "92522ace5f1899a2823279765e6ebb956d3b440163e43a4775c617841cb353fc",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9371,
+          "height": 480,
+          "sha256": "3d8d93fa5f3e6ac4a76bff8f492da02dc2e376b061f92ce86ef03d319f6e7a23",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9429,
+          "height": 480,
+          "sha256": "f2a45a84cfdbd4fc6e97928f99b9cf382f0de9e87c72ef2621602f4e8380738a",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 4021,
+          "height": 480,
+          "sha256": "a0baf4278483b6379a59bdf64a02039a273c423f01f269f694b73cbf5819bb8d",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1171,
+          "height": 252,
+          "sha256": "6c2bd3b2a04aa0b3a7639ca66842bf876e20c3ff056a106ac698993ae278aefe",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6164,
+          "height": 480,
+          "sha256": "477512d53e6f5e05e4e4ab1e11a7e27b58e47bc70fac163b322c68c043381214",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN RADIAL"
+    },
+    "squadron": {
+      "package": "com.xsytrance.squadron.squadron.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 283134,
+          "height": 480,
+          "sha256": "67fb8e183f35732c5136fb143ad5740ebe01dc71fdf202fc12bd504cb998d61c",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1886,
+          "height": 480,
+          "sha256": "fcb57ef1afc5e5e3e11dee3f37df6ef4afcbf14f69ee2acbe39d19d88c562d50",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 291783,
+          "height": 480,
+          "sha256": "fd6bdbb28caf964ff3f17320e898602e248fec425935c2151a6e9d0ca758b1bb",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 25721,
+          "height": 480,
+          "sha256": "eb9b52c56a8bc21addd530bc5067b2d9ce41d37440026ba9cc2b947458e9ba8b",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9242,
+          "height": 480,
+          "sha256": "24ed2b44928fbb3e0405301a5d872a584553a83171e1cd5f774d122dca280e2c",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9336,
+          "height": 480,
+          "sha256": "921e7d80d3f219039208ef73bdeda69c9f19f6e71cb0d52bdc86dee4ba11ef99",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 3953,
+          "height": 480,
+          "sha256": "7af0ccb2c7ee3f32d9546c76333585cc6197c48f95796d993fcd0152b7d01421",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1158,
+          "height": 252,
+          "sha256": "2e0a1e7d4259cad4380676aff580989afa575e3b0262b13db13711970d6c91a5",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6213,
+          "height": 480,
+          "sha256": "5bff941c22b1faaa37786c2796b2e5f119a279c6c3ee41d85d5f21b094ff27fd",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN SQUADRON"
+    },
+    "trainer": {
+      "package": "com.xsytrance.squadron.trainer.dev",
+      "public": true,
+      "resources": {
+        "m_0.png": {
+          "bytes": 488,
+          "height": 40,
+          "sha256": "c35a10da63040d21fca8fea4af7f386eb5f39a7bf92cca72daf567b6205938f5",
+          "width": 27
+        },
+        "m_1.png": {
+          "bytes": 197,
+          "height": 40,
+          "sha256": "6414ab8b4428862fc189b3b401f23602a17f21f4489f8e44d4ed88720ff23f11",
+          "width": 27
+        },
+        "m_2.png": {
+          "bytes": 374,
+          "height": 40,
+          "sha256": "ac417395594923ec93696a48f64aa6156369f50e42fad17869231cdadd8610a7",
+          "width": 27
+        },
+        "m_3.png": {
+          "bytes": 453,
+          "height": 40,
+          "sha256": "e13a838541a32fc6c6aa9f69fc584f99f4f960f1a0f01f5055bf583e939467bb",
+          "width": 27
+        },
+        "m_4.png": {
+          "bytes": 311,
+          "height": 40,
+          "sha256": "7cb72e2a45e3464879b27d78bbeaf4e79b8ec960442071c2c206a46f5035cfe8",
+          "width": 27
+        },
+        "m_5.png": {
+          "bytes": 381,
+          "height": 40,
+          "sha256": "a116d80f78a1388493901b6c6ab5e190b2e0024061443d4bf7c95daee1ad80f2",
+          "width": 27
+        },
+        "m_6.png": {
+          "bytes": 478,
+          "height": 40,
+          "sha256": "13dc781312e05f50a6b4b22e5678aeead3f3f49525ff41f5d28b45de51fac6b6",
+          "width": 27
+        },
+        "m_7.png": {
+          "bytes": 323,
+          "height": 40,
+          "sha256": "c4477db2b8468f42c63d5cc52db4094efab433631bb0c2a4d9b993774aec440b",
+          "width": 27
+        },
+        "m_8.png": {
+          "bytes": 542,
+          "height": 40,
+          "sha256": "e21c022f1dbd6bb4737aa4b560855fd2aa0da0fd0bdd535489f4e1cabbc76619",
+          "width": 27
+        },
+        "m_9.png": {
+          "bytes": 482,
+          "height": 40,
+          "sha256": "c753f8b357b64b50394f282aba5c0542290d62144e488b74298dcc7afe92226a",
+          "width": 27
+        },
+        "m_pct.png": {
+          "bytes": 697,
+          "height": 40,
+          "sha256": "73e17ea5793e3e9b85824914cae83bbb6734e13238c4708f9daf3330d89101a9",
+          "width": 37
+        },
+        "preview.png": {
+          "bytes": 293053,
+          "height": 480,
+          "sha256": "90ade28ffa8708a8d7c7a8a35ebb3739a8ba97d02501df4f312644c6a7d66f21",
+          "width": 480
+        },
+        "sq_battery_needle.png": {
+          "bytes": 1799,
+          "height": 480,
+          "sha256": "bdc7c4732d43ee9eb1a2f7c479960fb1270c900700a363d8c025cbba251c3954",
+          "width": 480
+        },
+        "sq_dial.png": {
+          "bytes": 310624,
+          "height": 480,
+          "sha256": "e15d1136a462033116bc833140193a0674e21c174cda64c814f046767d0ef652",
+          "width": 480
+        },
+        "sq_dial_aod.png": {
+          "bytes": 26189,
+          "height": 480,
+          "sha256": "d6d5fa3a97ddbe17c4e5558db56b7abde7d3bd1b5ab352ca21eeec96b298e6cd",
+          "width": 480
+        },
+        "sq_hand_hour.png": {
+          "bytes": 9017,
+          "height": 480,
+          "sha256": "242f1c8c060336425c9b6448c63590a12337e92d48138d6651737acded60f72e",
+          "width": 480
+        },
+        "sq_hand_hour_aod.png": {
+          "bytes": 4340,
+          "height": 480,
+          "sha256": "c9554a91435163fd12843eb18e6e5e516c54532c03e2a052668a7fbb575b27c0",
+          "width": 480
+        },
+        "sq_hand_minute.png": {
+          "bytes": 9245,
+          "height": 480,
+          "sha256": "c238d40ee8d5163f12b8b43e7a9b67c9e1457840d39177df369dde1af345d93b",
+          "width": 480
+        },
+        "sq_hand_minute_aod.png": {
+          "bytes": 5416,
+          "height": 480,
+          "sha256": "1c77c522f5166ceb683700b78ef96e45835079f3c9dba0b3f596e3d8146396ac",
+          "width": 480
+        },
+        "sq_hand_second.png": {
+          "bytes": 3422,
+          "height": 480,
+          "sha256": "1e16524132119c561c7485cc556c72cf8d596dc0db9893bdd712dc0309e2917f",
+          "width": 480
+        },
+        "sq_horizon.png": {
+          "bytes": 1175,
+          "height": 252,
+          "sha256": "5d7f22389e37395a04eb5ee00b0e669687fe7790122df831e651675045297c19",
+          "width": 252
+        },
+        "sq_horizon_aod.png": {
+          "bytes": 833,
+          "height": 252,
+          "sha256": "df6991d6ac9ace6e98498a826d2e37d9c43011f464387c982b2ca4f2185f300d",
+          "width": 252
+        },
+        "sq_pinion.png": {
+          "bytes": 6292,
+          "height": 480,
+          "sha256": "5d2a3bdbd1231a214190ce1b31d0d59a3831938c080e1f876c0f433cc61f9edc",
+          "width": 480
+        },
+        "sq_pinion_aod.png": {
+          "bytes": 1901,
+          "height": 480,
+          "sha256": "18ec74805f3b292a710456cecd59c554f85826778754533ca26690a417ef970e",
+          "width": 480
+        }
+      },
+      "title": "MERIDIAN TRAINER"
+    }
+  }
+}

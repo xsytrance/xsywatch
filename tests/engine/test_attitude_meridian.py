@@ -344,11 +344,12 @@ class TestRenderedFromXml(unittest.TestCase):
             from PIL import Image  # noqa: F401
         except ImportError:  # pragma: no cover
             raise unittest.SkipTest("Pillow not available")
-        sys.path.insert(0, str(FACE / "tools"))
-        import render_from_xml
-        cls.R = render_from_xml
+        sys.path.insert(0, str(REPO / "tools"))
+        import render_face_from_xml
+        cls.R = render_face_from_xml
+        cls.R.select(SLUG)
         cls.root = ET.fromstring(XML.read_text())
-        cls.font = render_from_xml.Font(cls.root)
+        cls.font = render_face_from_xml.Font(cls.root)
 
     def _render(self, ambient=False, **env):
         return self.R.compose(self.root, self.font,
@@ -428,9 +429,9 @@ class TestRenderedFromXml(unittest.TestCase):
                                 f"changing [{source}] changed no pixel")
 
     def test_review_images_match_their_recorded_hashes(self):
-        r = subprocess.run([sys.executable,
-                            str(FACE / "tools/render_from_xml.py"), "--check"],
-                           cwd=REPO, capture_output=True, text=True)
+        r = subprocess.run([sys.executable, "tools/render_face_from_xml.py",
+                            SLUG, "--check"], cwd=REPO,
+                           capture_output=True, text=True)
         self.assertEqual(r.returncode, 0, r.stdout + r.stderr)
 
 
