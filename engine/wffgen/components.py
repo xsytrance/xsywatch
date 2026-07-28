@@ -168,7 +168,9 @@ def tap_sequence(name: str, resources: list[str], box: dict,
 def weather_scene(name: str, box: dict, aod: AmbientPolicy,
                   clear: str, overcast: str, rain: str, snow: str,
                   night: str, rain_pct: int = 50, showers_pct: int = 20,
-                  snow_temp: int = 2) -> Component:
+                  snow_temp: int = 2, roll_gain_deg: float = 0.0,
+                  pitch_gain_px: float = 0.0, roll_clamp_deg: int = 45,
+                  pitch_clamp_deg: int = 40) -> Component:
     """The cockpit window, showing the wearer's actual weather.
 
     WFF v4 carries native weather sources — WEATHER.IS_DAY,
@@ -213,10 +215,22 @@ def weather_scene(name: str, box: dict, aod: AmbientPolicy,
     # numbered to keep it monotonic.
     seq = [0]
 
+    moving = roll_gain_deg or pitch_gain_px
+
     def scene(res):
-        part = _part_image(f"{name}_{seq[0]}_{res}", box, res)
+        part = _part_image(f"{name}_{seq[0]}_{res}", box, res,
+                           pivot=bool(moving))
         seq[0] += 1
         part.child(aod.variant())
+        if moving:
+            # roll is negated so the horizon appears to stay level while the
+            # instrument turns around it, which is what a real gyro does
+            part.child(_transform("angle",
+                                  X.parallax_offset(0, -roll_gain_deg, "X",
+                                                    roll_clamp_deg)))
+            part.child(_transform("y",
+                                  X.parallax_offset(box["y"], pitch_gain_px,
+                                                    "Y", pitch_clamp_deg)))
         part.child(Elem("Image", {"resource": res}))
         return part
 
@@ -229,10 +243,13 @@ def weather_scene(name: str, box: dict, aod: AmbientPolicy,
     default.child(scene(clear))
     cond.child(default)
 
-    return Component(name, "weather-scene", MotionClass.EVENT, aod, [cond],
+    cls = MotionClass.AMBIENT_MOTION if moving else MotionClass.EVENT
+    how = ("wrist-reactive field, roll %.0fdeg pitch %.0fpx" %
+           (roll_gain_deg, pitch_gain_px)) if moving else "static scene"
+    return Component(name, "weather-scene", cls, aod, [cond],
                      [clear, overcast, rain, snow, night],
-                     "live weather in the cockpit window; falls back to clear "
-                     "when the source is unavailable")
+                     f"live weather in the cockpit window ({how}); falls back "
+                     "to clear when the source is unavailable")
 
 
 def hr_balance(name: str, resource: str, box: dict, aod: AmbientPolicy,

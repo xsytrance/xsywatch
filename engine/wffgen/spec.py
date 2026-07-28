@@ -69,7 +69,11 @@ def _build(entry: dict) -> list[C.Component]:
                                 entry["snow"], entry["night"],
                                 int(entry.get("rain_pct", 50)),
                                 int(entry.get("showers_pct", 20)),
-                                int(entry.get("snow_temp", 2)))]
+                                int(entry.get("snow_temp", 2)),
+                                float(entry.get("roll_gain_deg", 0.0)),
+                                float(entry.get("pitch_gain_px", 0.0)),
+                                int(entry.get("roll_clamp_deg", 45)),
+                                int(entry.get("pitch_clamp_deg", 40)))]
     if kind == "hr_balance":
         return [C.hr_balance(entry["name"], entry["resource"],
                              _box(entry["box"]), _aod(entry["aod"]),

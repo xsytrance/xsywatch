@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hayate.dev"
-version_code = 10
-version_name = "1.1.0-dev"
+version_code = 11
+version_name = "1.2.0-dev"
 
 [[fonts]]
 name = "hyt"
@@ -50,48 +50,63 @@ height = 40
 
 # ---- scene, document order = z-order ---------------------------------
 
+# ---- THE VIEWFINDER: a live, wrist-reactive gunsight ------------------
+#
+# The view through the glass rolls and pitches with the wearer's arm, the way
+# MERIDIAN ATTITUDE's horizon does, AND shows the real weather.
+#
+# It sits FIRST in z-order on purpose. WFF has no mask primitive for a
+# PartImage, so the plate above it — whose only transparent region is the
+# gunsight aperture — is what crops it. Occlusion is the mask.
+#
+# The field sprite is 200px in a 100px hole. That margin is what the roll and
+# pitch travel eat into; size it tight and the wearer sees the edge of the
+# world when they tilt their arm.
+#
+# Roll gain is applied negated, so the horizon appears to stay level while
+# the instrument turns around it — what a real gyro does.
+[[components]]
+type = "weather_scene"
+name = "z00_viewfinder"
+box = {x = 140, y = 272, width = 200, height = 200}
+clear = "hy_fld_clear"
+overcast = "hy_fld_overcast"
+rain = "hy_fld_rain"
+snow = "hy_fld_snow"
+night = "hy_fld_night"
+rain_pct = 50
+showers_pct = 20
+snow_temp = 2
+roll_gain_deg = 24.0
+pitch_gain_px = 20.0
+roll_clamp_deg = 45
+pitch_clamp_deg = 40
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
 [[components]]
 type = "static_image"
-name = "z00_plate"
+name = "z01_plate"
 resource = "hy_dial"
 box = {x = 0, y = 0, width = 480, height = 480}
 aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
 
 [[components]]
 type = "static_image"
-name = "z01_plate_aod"
+name = "z02_plate_aod"
 resource = "hy_dial_aod"
 box = {x = 0, y = 0, width = 480, height = 480}
 alpha = 0
 aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
 
-# ---- THE WINDOW ON THE WORLD, SHOWING REAL WEATHER -------------------
-#
-# WFF v4 carries native weather sources, so this needs no complication
-# provider and no companion app. An earlier version of this project asserted
-# the opposite; it was wrong, and the canopy sat static because of it.
-#
-# The branch runs on numbers whose meaning is unambiguous — IS_DAY,
-# CHANCE_OF_PRECIPITATION, TEMPERATURE. WEATHER.CONDITION exists but the
-# schema documents none of its integer values, and guessing an undocumented
-# enum shows the wearer snow in July.
-#
-# Order matters: WFF renders the FIRST matching Compare. Night is tested
-# first because a lit daytime sky at 3am is worse than no scene at all. If
-# weather is unavailable the Default renders clear, so the window is never
-# empty.
+
+# The sight's own hardware: armoured rim, etched reticle, curved glass. It
+# rides above the plate and never moves — a reticle that slides off the sight
+# is worse than no reticle.
 [[components]]
-type = "weather_scene"
-name = "z02_canopy"
+type = "static_image"
+name = "z03_sight_glass"
+resource = "hy_sight_glass"
 box = {x = 0, y = 0, width = 480, height = 480}
-clear = "hy_wx_clear"
-overcast = "hy_wx_overcast"
-rain = "hy_wx_rain"
-snow = "hy_wx_snow"
-night = "hy_wx_night"
-rain_pct = 50
-showers_pct = 20
-snow_temp = 2
 aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
 
 # ---- the signature: the airscrew never stops -------------------------

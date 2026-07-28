@@ -24,14 +24,6 @@ GENERATED FILE - do not edit by hand.
     </BitmapFont>
   </BitmapFonts>
   <Scene backgroundColor="#FF000000">
-    <PartImage name="z00_plate" x="0" y="0" width="480" height="480" alpha="255">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-      <Image resource="hy_dial" />
-    </PartImage>
-    <PartImage name="z01_plate_aod" x="0" y="0" width="480" height="480" alpha="0">
-      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
-      <Image resource="hy_dial_aod" />
-    </PartImage>
     <Condition>
       <Expressions>
         <Expression name="wx_night">[WEATHER.IS_AVAILABLE] &amp;&amp; ![WEATHER.IS_DAY]</Expression>
@@ -40,36 +32,58 @@ GENERATED FILE - do not edit by hand.
         <Expression name="wx_dull">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 20</Expression>
       </Expressions>
       <Compare expression="wx_night">
-        <PartImage name="z02_canopy_0_hy_wx_night" x="0" y="0" width="480" height="480" alpha="255">
-          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-          <Image resource="hy_wx_night" />
+        <PartImage name="z00_viewfinder_0_hy_fld_night" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Image resource="hy_fld_night" />
         </PartImage>
       </Compare>
       <Compare expression="wx_snow">
-        <PartImage name="z02_canopy_1_hy_wx_snow" x="0" y="0" width="480" height="480" alpha="255">
-          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-          <Image resource="hy_wx_snow" />
+        <PartImage name="z00_viewfinder_1_hy_fld_snow" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Image resource="hy_fld_snow" />
         </PartImage>
       </Compare>
       <Compare expression="wx_rain">
-        <PartImage name="z02_canopy_2_hy_wx_rain" x="0" y="0" width="480" height="480" alpha="255">
-          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-          <Image resource="hy_wx_rain" />
+        <PartImage name="z00_viewfinder_2_hy_fld_rain" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Image resource="hy_fld_rain" />
         </PartImage>
       </Compare>
       <Compare expression="wx_dull">
-        <PartImage name="z02_canopy_3_hy_wx_overcast" x="0" y="0" width="480" height="480" alpha="255">
-          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-          <Image resource="hy_wx_overcast" />
+        <PartImage name="z00_viewfinder_3_hy_fld_overcast" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Image resource="hy_fld_overcast" />
         </PartImage>
       </Compare>
       <Default>
-        <PartImage name="z02_canopy_4_hy_wx_clear" x="0" y="0" width="480" height="480" alpha="255">
-          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-          <Image resource="hy_wx_clear" />
+        <PartImage name="z00_viewfinder_4_hy_fld_clear" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
+          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Image resource="hy_fld_clear" />
         </PartImage>
       </Default>
     </Condition>
+    <PartImage name="z01_plate" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Image resource="hy_dial" />
+    </PartImage>
+    <PartImage name="z02_plate_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
+      <Image resource="hy_dial_aod" />
+    </PartImage>
+    <PartImage name="z03_sight_glass" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="hy_sight_glass" />
+    </PartImage>
     <PartImage name="z10_airscrew" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 300.0) % 360" />
