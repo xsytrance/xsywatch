@@ -28,8 +28,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hogwild.dev"
-version_code = 1
-version_name = "0.1.0-dev"
+version_code = 3
+version_name = "0.3.0-dev"
 
 [[fonts]]
 name = "hwg"
@@ -101,13 +101,27 @@ clamp_lo = 40
 clamp_hi = 200
 aod = {alpha = 0, duration = 0.4, offset = 0.1}
 
+# Steps needle. The plate now carries only bare pivots, so every needle on
+# this dial is real: nothing is painted that also moves.
+[[components]]
+type = "value_needle"
+name = "z13_steps_needle"
+resource = "wh_steps_needle"
+box = {x = 98, y = 289, width = 94, height = 94}
+start_deg = 235.0
+sweep_deg = 250.0
+source = "[STEP_COUNT]"
+lo = 0
+hi = 20000
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
 # ---- live data over the painted instruments --------------------------
 
 # Digital time in the LCD aperture.
 [[components]]
 type = "text_line"
 name = "z20_lcd"
-box = {x = 320, y = 228, width = 80, height = 26}
+box = {x = 320, y = 229, width = 80, height = 24}
 font = "hwg"
 size = 20
 color = "#A8F0A0"
@@ -120,9 +134,9 @@ aod = {alpha = 120, duration = 0.4, offset = 0.2}
 [[components]]
 type = "text_line"
 name = "z21_steps"
-box = {x = 105, y = 338, width = 80, height = 22}
+box = {x = 105, y = 341, width = 80, height = 16}
 font = "hwg"
-size = 15
+size = 12
 color = "#E4E2DC"
 template = "%d"
 expressions = ["[STEP_COUNT]"]

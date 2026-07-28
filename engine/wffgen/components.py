@@ -194,6 +194,27 @@ def battery_needle(name: str, resource: str, aod: AmbientPolicy,
                      f"{start_deg}°..+{sweep_deg}° over 0..100% battery")
 
 
+def value_needle(name: str, resource: str, aod: AmbientPolicy,
+                 start_deg: float | str, sweep_deg: float | str,
+                 source: str, lo: int = 0, hi: int = 100,
+                 box: dict | None = None) -> Component:
+    """A gauge needle driven by any data source, not just battery.
+
+    `battery_needle` is this with the source fixed; the underlying expression
+    always supported a clamp range, the component just never exposed it. Step
+    counts, altitude, reserve arcs and anything else with a known full-scale
+    value now get a real needle instead of a number in a box.
+    """
+    part = _part_image(name, box or FULLSCREEN, resource, pivot=True)
+    _finish(part, aod,
+            [_transform("angle", X.gauge_angle(start_deg, sweep_deg,
+                                               source, lo, hi))],
+            resource)
+    return Component(name, "value-needle", MotionClass.TIME_CRITICAL, aod,
+                     [part], [resource],
+                     f"{start_deg}deg..+{sweep_deg}deg over {source} {lo}..{hi}")
+
+
 def date_text(name: str, box: dict, aod: AmbientPolicy, font_family: str,
               size: int, color: str, template: str = "%d",
               expression: str = "[DAY]") -> Component:

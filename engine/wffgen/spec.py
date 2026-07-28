@@ -76,6 +76,12 @@ def _build(entry: dict) -> list[C.Component]:
                                  _aod(entry["aod"]), entry["start_deg"],
                                  entry["sweep_deg"],
                                  _box(entry["box"]) if "box" in entry else None)]
+    if kind == "value_needle":
+        return [C.value_needle(entry["name"], entry["resource"],
+                               _aod(entry["aod"]), entry["start_deg"],
+                               entry["sweep_deg"], entry["source"],
+                               int(entry.get("lo", 0)), int(entry.get("hi", 100)),
+                               _box(entry["box"]) if "box" in entry else None)]
     if kind == "date_text":
         return [C.date_text(entry["name"], _box(entry["box"]),
                             _aod(entry["aod"]), entry["font"],
@@ -111,7 +117,8 @@ def _build(entry: dict) -> list[C.Component]:
                             entry.get("align", "CENTER"))]
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
-                     "tap_sequence, hr_balance, battery_needle, date_text, "
+                     "tap_sequence, hr_balance, battery_needle, value_needle, "
+                     "date_text, "
                      "sheen, analog_hand, static_image, text_line, "
                      "horizon_field")
 

@@ -1,0 +1,211 @@
+# MERIDIAN HAYATE — Nakajima Ki-84 Hayate.
+#
+# Regenerate XML:  python3 tools/generate_face.py hayate
+#
+# DEVELOPMENT ONLY. The dial plate, the ordnance hands and the canopy scene
+# are AI-generated concept art. See PROVENANCE.md.
+#
+# THE SIGNATURE: z10 is the motion-blurred airscrew, and it never stops.
+# Every hero render in the collection has one; this is the first face to
+# carry it. It is a true motion blur — the actual generated shell swept
+# through a full revolution at low per-pass opacity — not an effect.
+#
+# WHY THAT ALSO SURVIVES THE HARDWARE: a Wear OS face is throttled hard when
+# idle, so a crisply drawn propeller would strobe against the frame rate. A
+# blur has no features to alias, so it reads smooth at any refresh rate.
+#
+# NOTHING PAINTED ALSO MOVES. The plate carries bare pivots and empty
+# apertures only. Getting this wrong on HOG-WILD put two fuel needles and
+# doubled text on the wearer's wrist.
+
+[face]
+slug = "hayate"
+width = 480
+height = 480
+wff_version = 4
+clock_type = "ANALOG"
+preview_time = "10:09:32"
+background_color = "#FF000000"
+
+[identity]
+package = "com.xsytrance.hayate.dev"
+version_code = 2
+version_name = "0.2.0-dev"
+
+[[fonts]]
+name = "hyt"
+height = 40
+[fonts.characters]
+"%" = ["m_pct", 39]
+"0" = ["m_0", 28]
+"1" = ["m_1", 28]
+"2" = ["m_2", 28]
+"3" = ["m_3", 28]
+"4" = ["m_4", 28]
+"5" = ["m_5", 28]
+"6" = ["m_6", 28]
+"7" = ["m_7", 28]
+"8" = ["m_8", 28]
+"9" = ["m_9", 28]
+
+# ---- scene, document order = z-order ---------------------------------
+
+[[components]]
+type = "static_image"
+name = "z00_plate"
+resource = "hy_dial"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "static_image"
+name = "z01_plate_aod"
+resource = "hy_dial_aod"
+box = {x = 0, y = 0, width = 480, height = 480}
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+# The window on the world. Built as its own sprite so live weather can be
+# swapped into it later without touching the plate.
+[[components]]
+type = "static_image"
+name = "z02_canopy"
+resource = "hy_canopy"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
+
+# ---- the signature: the airscrew never stops -------------------------
+
+[[components]]
+type = "rotating_image"
+name = "z10_airscrew"
+resource = "hy_disc"
+box = {x = 0, y = 0, width = 480, height = 480}
+speed = 300.0
+ratio_note = "three-blade airscrew, 1.2s per revolution"
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# ---- instruments -----------------------------------------------------
+
+# Fuel reserve, sweeping the painted arc at twelve.
+[[components]]
+type = "battery_needle"
+name = "z11_reserve"
+resource = "hy_reserve_needle"
+box = {x = 0, y = 0, width = 480, height = 480}
+start_deg = -46.0
+sweep_deg = 92.0
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+[[components]]
+type = "value_needle"
+name = "z12_steps_needle"
+resource = "hy_steps_needle"
+box = {x = 84, y = 260, width = 108, height = 108}
+start_deg = 235.0
+sweep_deg = 250.0
+source = "[STEP_COUNT]"
+lo = 0
+hi = 20000
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+[[components]]
+type = "value_needle"
+name = "z13_bpm_needle"
+resource = "hy_bpm_needle"
+box = {x = 288, y = 260, width = 108, height = 108}
+start_deg = 235.0
+sweep_deg = 250.0
+source = "[HEART_RATE]"
+lo = 0
+hi = 200
+aod = {alpha = 0, duration = 0.4, offset = 0.1}
+
+# ---- live data -------------------------------------------------------
+
+[[components]]
+type = "text_line"
+name = "z20_reserve_pct"
+box = {x = 200, y = 110, width = 80, height = 26}
+font = "hyt"
+size = 18
+color = "#E8E6DA"
+template = "%d%%"
+expressions = ["[BATTERY_PERCENT]"]
+align = "CENTER"
+aod = {alpha = 130, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "text_line"
+name = "z21_steps"
+box = {x = 98, y = 320, width = 80, height = 24}
+font = "hyt"
+size = 16
+color = "#E8E6DA"
+template = "%d"
+expressions = ["[STEP_COUNT]"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "text_line"
+name = "z22_bpm"
+box = {x = 302, y = 320, width = 80, height = 24}
+font = "hyt"
+size = 16
+color = "#E8E6DA"
+template = "%d"
+expressions = ["[HEART_RATE]"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+[[components]]
+type = "date_text"
+name = "z23_date"
+box = {x = 324, y = 228, width = 60, height = 26}
+font = "hyt"
+size = 19
+color = "#E8E6DA"
+template = "%d"
+expression = "[DAY]"
+aod = {alpha = 150, duration = 0.4, offset = 0.2}
+
+# ---- hands: cannon shells --------------------------------------------
+
+[[components]]
+type = "analog_hand"
+name = "z30_hour"
+resource = "hy_hour"
+which = "hour"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "analog_hand"
+name = "z31_minute"
+resource = "hy_minute"
+which = "minute"
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "analog_hand"
+name = "z32_hour_aod"
+resource = "hy_hour_aod"
+which = "hour"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+[[components]]
+type = "analog_hand"
+name = "z33_minute_aod"
+resource = "hy_minute_aod"
+which = "minute"
+alpha = 0
+aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
+
+# The airscrew boss pins the shells.
+[[components]]
+type = "static_image"
+name = "z40_hub"
+resource = "hy_hub"
+box = {x = 0, y = 0, width = 480, height = 480}
+aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}

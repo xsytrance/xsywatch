@@ -48,13 +48,18 @@ GENERATED FILE - do not edit by hand.
       <Transform target="angle" value="0 + 32 * sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 200)) * 0.10472)" />
       <Image resource="wh_rpm_needle" />
     </PartImage>
-    <PartText name="z20_lcd" x="320" y="228" width="80" height="26">
+    <PartImage name="z13_steps_needle" x="98" y="289" width="94" height="94" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
+      <Image resource="wh_steps_needle" />
+    </PartImage>
+    <PartText name="z20_lcd" x="320" y="229" width="80" height="24">
       <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d:%02d<Parameter expression="[HOUR_0_11]" /><Parameter expression="[MINUTE]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_steps" x="105" y="338" width="80" height="22">
+    <PartText name="z21_steps" x="105" y="341" width="80" height="16">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="15" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hwg" size="12" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
     <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
