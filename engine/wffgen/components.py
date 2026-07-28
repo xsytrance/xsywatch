@@ -112,6 +112,59 @@ def seconds_rotor(name: str, resource: str, box: dict,
                      [part], [resource], "360deg per minute")
 
 
+def tap_sequence(name: str, resources: list[str], box: dict,
+                 aod: AmbientPolicy, frame_rate: int = 24,
+                 loop_count: int = 1,
+                 before: str = "HIDE", after: str = "HIDE") -> Component:
+    """A frame sequence that plays when the wearer taps the face.
+
+    WFF v4 exposes exactly one interaction hook: AnimationController's `play`
+    trigger, whose vocabulary is TAP / ON_VISIBLE / ON_NEXT_SECOND /
+    ON_NEXT_MINUTE / ON_NEXT_HOUR (common/simpleTypes/eventTriggerType.xsd).
+    There is no pointer position, no drag, no long-press and no per-region
+    hit testing: a tap anywhere in this part's bounding box fires it.
+
+    `before`/`after` are frameOptionType — DO_NOTHING, FIRST_FRAME, THUMBNAIL
+    or HIDE. Defaulting both to HIDE gives a burst that is invisible until
+    provoked and leaves nothing behind, which is what a muzzle flash wants.
+
+    NOTE ON SOUND: the format has no audio element at any version through 5.
+    A watch face ships no code (hasCode=false), so it cannot drive the
+    speaker however capable the hardware is. This component is the closest
+    the format allows — a visual report, silent.
+    """
+    if not resources:
+        raise ValueError(f"{name}: tap_sequence needs at least one frame")
+    if not 1 <= frame_rate <= 60:
+        raise ValueError(f"{name}: frameRate {frame_rate} outside WFF 1..60")
+    valid = {"DO_NOTHING", "FIRST_FRAME", "THUMBNAIL", "HIDE"}
+    for label, opt in (("before", before), ("after", after)):
+        if opt not in valid:
+            raise ValueError(f"{name}: {label}Playing {opt!r} not in {valid}")
+
+    part = Elem("PartAnimatedImage", {
+        "name": name, "x": str(box["x"]), "y": str(box["y"]),
+        "width": str(box["width"]), "height": str(box["height"]),
+        "pivotX": "0.5", "pivotY": "0.5",
+    })
+    part.child(aod.variant())
+    part.child(Elem("AnimationController", {
+        "play": "TAP",
+        "loopCount": str(loop_count),
+        "beforePlaying": before,
+        "afterPlaying": after,
+    }))
+    seq = Elem("SequenceImages", {"frameRate": str(frame_rate),
+                                  "loopCount": str(loop_count)})
+    for res in resources:
+        seq.child(Elem("Image", {"resource": res}))
+    part.child(seq)
+    return Component(name, "tap-sequence", MotionClass.EVENT, aod,
+                     [part], list(resources),
+                     f"{len(resources)} frames @ {frame_rate}fps on TAP; "
+                     f"before={before} after={after}")
+
+
 def hr_balance(name: str, resource: str, box: dict, aod: AmbientPolicy,
                center: float = 180, amplitude: float = 35,
                fallback: int = 70, clamp_lo: int = 40,

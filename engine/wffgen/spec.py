@@ -55,6 +55,13 @@ def _build(entry: dict) -> list[C.Component]:
     if kind == "seconds_rotor":
         return [C.seconds_rotor(entry["name"], entry["resource"],
                                 _box(entry["box"]), _aod(entry["aod"]))]
+    if kind == "tap_sequence":
+        return [C.tap_sequence(entry["name"], list(entry["resources"]),
+                               _box(entry["box"]), _aod(entry["aod"]),
+                               int(entry.get("frame_rate", 24)),
+                               int(entry.get("loop_count", 1)),
+                               entry.get("before", "HIDE"),
+                               entry.get("after", "HIDE"))]
     if kind == "hr_balance":
         return [C.hr_balance(entry["name"], entry["resource"],
                              _box(entry["box"]), _aod(entry["aod"]),
@@ -104,8 +111,9 @@ def _build(entry: dict) -> list[C.Component]:
                             entry.get("align", "CENTER"))]
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
-                     "hr_balance, battery_needle, date_text, sheen, "
-                     "analog_hand, static_image, text_line, horizon_field")
+                     "tap_sequence, hr_balance, battery_needle, date_text, "
+                     "sheen, analog_hand, static_image, text_line, "
+                     "horizon_field")
 
 
 def load_spec(path: Path | str) -> FaceSpec:

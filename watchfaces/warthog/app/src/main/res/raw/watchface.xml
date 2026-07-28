@@ -24,43 +24,53 @@ GENERATED FILE - do not edit by hand.
     </BitmapFont>
   </BitmapFonts>
   <Scene backgroundColor="#FF000000">
-    <PartImage name="z00_nose" x="0" y="0" width="480" height="480" alpha="255">
+    <PartImage name="z00_plate" x="0" y="0" width="480" height="480" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Image resource="wh_dial" />
     </PartImage>
-    <PartImage name="z01_nose_aod" x="0" y="0" width="480" height="480" alpha="0">
+    <PartImage name="z01_plate_aod" x="0" y="0" width="480" height="480" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
       <Image resource="wh_dial_aod" />
     </PartImage>
-    <PartImage name="z10_ammo" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+    <PartImage name="z10_sweep" x="186" y="46" width="108" height="108" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
-      <Transform target="angle" value="328.0 + 64.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 90.0) % 360" />
+      <Image resource="wh_radar_sweep" />
+    </PartImage>
+    <PartImage name="z11_turbine" x="60" y="188" width="96" height="96" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="0 + 34 * sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * (clamp(([HEART_RATE] &lt; 30 ? 70 : [HEART_RATE]), 40, 200)) * 0.10472)" />
+      <Image resource="wh_rpm_needle" />
+    </PartImage>
+    <PartImage name="z12_drum" x="324" y="188" width="96" height="96" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
+      <Transform target="angle" value="235.0 + 250.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
       <Image resource="wh_ammo_needle" />
     </PartImage>
-    <PartText name="z20_rounds" x="200" y="124" width="80" height="22">
+    <PartText name="z20_steps" x="113" y="301" width="74" height="24">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="whg" size="15" color="#7EE28A"><Template>%d<Parameter expression="[BATTERY_PERCENT] * 1174 / 100" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="whg" size="16" color="#E0E6EC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_date" x="210" y="333" width="60" height="32">
+    <PartText name="z21_date" x="299" y="300" width="62" height="26">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="whg" size="24" color="#E2E7EC"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="whg" size="18" color="#E0E6EC"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z22_steps" x="70" y="228" width="80" height="26">
+    <PartText name="z22_bpm" x="68" y="245" width="80" height="22">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="whg" size="18" color="#E2E7EC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="whg" size="15" color="#FFB23E"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z23_hr" x="330" y="228" width="80" height="26">
+    <PartText name="z23_rounds" x="332" y="245" width="80" height="22">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="whg" size="18" color="#E2E7EC"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="whg" size="15" color="#56FA8C"><Template>%d<Parameter expression="[BATTERY_PERCENT] * 1174 / 100" /></Template></BitmapFont></Text>
     </PartText>
     <PartImage name="z30_gun" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
       <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
-      <Image resource="wh_barrels" />
+      <Image resource="wh_gun" />
     </PartImage>
     <PartImage name="z31_gun_aod" x="0" y="0" width="480" height="480" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
-      <Image resource="wh_barrels_aod" />
+      <Image resource="wh_gun_aod" />
     </PartImage>
     <PartImage name="z32_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
@@ -90,5 +100,23 @@ GENERATED FILE - do not edit by hand.
       <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
       <Image resource="wh_hub_aod" />
     </PartImage>
+    <PartAnimatedImage height="480" name="z50_brrrt" pivotX="0.5" pivotY="0.5" width="480" x="0" y="0">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <AnimationController afterPlaying="HIDE" beforePlaying="HIDE" loopCount="1" play="TAP" />
+      <SequenceImages frameRate="24" loopCount="1">
+        <Image resource="wh_flash_00" />
+        <Image resource="wh_flash_01" />
+        <Image resource="wh_flash_02" />
+        <Image resource="wh_flash_03" />
+        <Image resource="wh_flash_04" />
+        <Image resource="wh_flash_05" />
+        <Image resource="wh_flash_06" />
+        <Image resource="wh_flash_07" />
+        <Image resource="wh_flash_08" />
+        <Image resource="wh_flash_09" />
+        <Image resource="wh_flash_10" />
+        <Image resource="wh_flash_11" />
+      </SequenceImages>
+    </PartAnimatedImage>
   </Scene>
 </WatchFace>
