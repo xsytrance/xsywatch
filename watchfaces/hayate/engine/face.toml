@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hayate.dev"
-version_code = 2
-version_name = "0.2.0-dev"
+version_code = 3
+version_name = "1.0.0-dev"
 
 [[fonts]]
 name = "hyt"

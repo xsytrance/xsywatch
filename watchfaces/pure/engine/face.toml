@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.pure.dev"
-version_code = 1
-version_name = "0.1.0-dev"
+version_code = 2
+version_name = "1.0.0-dev"
 
 [[fonts]]
 name = "pur"
