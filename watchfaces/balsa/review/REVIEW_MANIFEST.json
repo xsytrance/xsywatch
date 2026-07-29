@@ -25,38 +25,38 @@
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
     "FACE_AOD.png": {
-      "bytes": 59587,
+      "bytes": 59619,
       "height": 480,
-      "sha256": "f71397122cd3519ee11026a21b1d2afd5d8a7409a64dfe0d093f79f391ef2797",
+      "sha256": "d80a148c3230e5a86efd1bd31114fd7f258c50b13dea53e82d03e1920f8ae566",
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 316963,
+      "bytes": 319339,
       "height": 398,
-      "sha256": "fca645743acf87150a13b5437f853a301f26adbee8c08ef9ba3d9da540782fc9",
+      "sha256": "e95752a8c758926e0e72e53d043f9919f5624a7941b25dc551a20db7d703b746",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 292414,
+      "bytes": 293294,
       "height": 764,
-      "sha256": "d2e1ac16815bfa16179ba1c2a65fe1ceccde0c312e0a83f0095391b7ee02d341",
+      "sha256": "7f9a1583202d560e96544fadfe498fe424ef8ce5a7cd79621ba0e0e8fd058d5a",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 326568,
+      "bytes": 327443,
       "height": 480,
-      "sha256": "52021cb487f9fe611eba1fbca613caf3dfce18c71db5619977c0e9b7b1ae964c",
+      "sha256": "b0c9aa928e19b3916b9814ece8064b7efefa2cb690bacf1915fbeeed64a19736",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 409242,
+      "bytes": 409873,
       "height": 576,
-      "sha256": "16b667be9ba285c30e2c40ac38bee9c1fe5a5e6a33d4823bb3267131ef86093e",
+      "sha256": "5c9bd3cdbba77393c27340c7ad5926b0312f6f7b7bd9982c259afaf69511b435",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "balsa",
-  "watchface_xml_sha256": "92455569d68ff060e0411124f7f8459b3487e8a1065e3576b84d9a14cef969c8"
+  "watchface_xml_sha256": "484a942caa01e73eedc47dc53ab870a56f0d5aa2ded6c5a61bed71af5a8b54d4"
 }

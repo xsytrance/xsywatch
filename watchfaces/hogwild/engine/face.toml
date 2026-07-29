@@ -28,8 +28,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hogwild.dev"
-version_code = 5
-version_name = "1.1.0-dev"
+version_code = 6
+version_name = "1.2.0-dev"
 
 [[fonts]]
 name = "hwg"
@@ -174,9 +174,9 @@ aod = {alpha = 120, duration = 0.4, offset = 0.2}
 [[components]]
 type = "text_line"
 name = "z21_steps"
-box = {x = 105, y = 341, width = 80, height = 16}
+box = {x = 105, y = 336, width = 80, height = 22}
 font = "hwg"
-size = 12
+size = 16
 color = "#E4E2DC"
 template = "%d"
 expressions = ["[STEP_COUNT]"]

@@ -97,9 +97,9 @@ GENERATED FILE - do not edit by hand.
       <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d:%02d<Parameter expression="[HOUR_0_11]" /><Parameter expression="[MINUTE]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_steps" x="105" y="341" width="80" height="16">
+    <PartText name="z21_steps" x="105" y="336" width="80" height="22">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="12" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hwg" size="16" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
     <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />

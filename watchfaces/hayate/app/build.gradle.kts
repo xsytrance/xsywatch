@@ -15,7 +15,7 @@ android {
         applicationId = "com.xsytrance.hayate.dev"
         minSdk = 34
         targetSdk = 36
-        versionCode = 12
-        versionName = "1.3.0-dev"
+        versionCode = 13
+        versionName = "1.4.0-dev"
     }
 }

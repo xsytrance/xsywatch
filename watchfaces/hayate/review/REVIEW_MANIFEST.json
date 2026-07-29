@@ -31,32 +31,32 @@
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 282684,
+      "bytes": 283811,
       "height": 398,
-      "sha256": "d96f64faa0c9680618fb8131d6a4dd05248b30d6ade0d63e1c1098c6160a197e",
+      "sha256": "a76d5afde0b7428c9eea8de59b555889d84477a5b07ef7460a83489322d1b7c9",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 288070,
+      "bytes": 288445,
       "height": 764,
-      "sha256": "487c490f44e1fa3e870075c351266cf6e1e55fe971e8c144d92cfa0d2afcfb5a",
+      "sha256": "e339782fdd64bf5a350193b57b0c9693626dd66c7a25533723e395f19bb7f3f2",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 324618,
+      "bytes": 325054,
       "height": 480,
-      "sha256": "555608dbdc40b1e0c1a6baa451e5f7616dca37835747d021d57bae5b46955bd6",
+      "sha256": "c8d8beee54a867f90dc2b99dc4e7a1b04da8014163b7de2ed9c02f5d733d72d5",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 380060,
+      "bytes": 380388,
       "height": 576,
-      "sha256": "208c0cafe65fab5aeeb134d025f0fdd5b1698fb2cec93cd6c57334175c274450",
+      "sha256": "e0dd3ac254f72fa8019138cd5150d71897592d6a99655b680c23937858491bac",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "hayate",
-  "watchface_xml_sha256": "4f58276320d76f59348fa9c48c736a9634dc7c2b13c0330e1e010c68227bd2fb"
+  "watchface_xml_sha256": "720630e47b458a9c8b74e990a10e9d3ec1903bb6c9fe4d79c5426b7892de0741"
 }

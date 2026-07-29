@@ -133,27 +133,35 @@ GENERATED FILE - do not edit by hand.
       <Transform target="angle" value="-46.0 + 92.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
       <Image resource="hy_reserve_needle" />
     </PartImage>
-    <PartImage name="z12_steps_needle" x="84" y="260" width="108" height="108" alpha="255" pivotX="0.5" pivotY="0.5">
+    <PartImage name="z12_gauge_steps" x="106" y="262" width="59" height="59" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="hy_gauge_steps" />
+    </PartImage>
+    <PartImage name="z13_gauge_bpm" x="298" y="266" width="63" height="63" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="hy_gauge_bpm" />
+    </PartImage>
+    <PartImage name="z14_steps_needle" x="106" y="262" width="59" height="59" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
-      <Image resource="hy_steps_needle" />
+      <Image resource="hy_ptr_steps" />
     </PartImage>
-    <PartImage name="z13_bpm_needle" x="288" y="260" width="108" height="108" alpha="255" pivotX="0.5" pivotY="0.5">
+    <PartImage name="z15_bpm_needle" x="298" y="266" width="63" height="63" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="235.0 + 250.0 * clamp([HEART_RATE], 0, 200) / 200" />
-      <Image resource="hy_bpm_needle" />
+      <Image resource="hy_ptr_bpm" />
     </PartImage>
     <PartText name="z20_reserve_pct" x="200" y="110" width="80" height="26">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="hyt" size="18" color="#E8E6DA"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_steps" x="98" y="320" width="80" height="24">
+    <PartText name="z21_steps" x="95" y="282" width="80" height="23">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hyt" size="16" color="#E8E6DA"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hyt" size="17" color="#E8E6DA"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z22_bpm" x="302" y="320" width="80" height="24">
+    <PartText name="z22_bpm" x="289" y="287" width="80" height="24">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hyt" size="16" color="#E8E6DA"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hyt" size="18" color="#E8E6DA"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
     </PartText>
     <PartText name="z23_date" x="324" y="228" width="60" height="26">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />

@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.balsa.dev"
-version_code = 11
-version_name = "1.2.0-dev"
+version_code = 12
+version_name = "1.3.0-dev"
 
 [[fonts]]
 name = "bal"
@@ -164,11 +164,40 @@ start_deg = -52.0
 sweep_deg = 104.0
 aod = {alpha = 0, duration = 0.4, offset = 0.1}
 
+# ---- SUB-DIAL FURNITURE ----------------------------------------------
+#
+# The hero concept put a labelled readout in each well — STEPS or BPM in small
+# caps above, the value large in the middle, no needle. What shipped had an
+# empty well, a full-length needle sweeping an unmarked rim, and the value
+# shrunk to 16px and pushed onto the bezel. So the number was hard to read and
+# the needle pointed at nothing, because there was no scale to point at.
+#
+# These two layers print the scale and the label. The value moves back into
+# the middle of the well below (z21/z22) and the needle becomes a short rim
+# pointer, so the two stop fighting for the same pixels.
+#
+# Drawn by tools/make_subdial_furniture.py. The tick geometry is tied to
+# start_deg/sweep_deg on the needles below — change one without the other and
+# the printed scale lies about where the pointer is.
+[[components]]
+type = "static_image"
+name = "z12_gauge_steps"
+resource = "ba_gauge_steps"
+box = {x = 98, y = 265, width = 84, height = 84}
+aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
+
+[[components]]
+type = "static_image"
+name = "z13_gauge_bpm"
+resource = "ba_gauge_bpm"
+box = {x = 298, y = 265, width = 84, height = 84}
+aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
+
 [[components]]
 type = "value_needle"
-name = "z12_steps_needle"
-resource = "ba_steps_needle"
-box = {x = 90, y = 268, width = 100, height = 100}
+name = "z14_steps_needle"
+resource = "ba_ptr_steps"
+box = {x = 98, y = 265, width = 84, height = 84}
 start_deg = 235.0
 sweep_deg = 250.0
 source = "[STEP_COUNT]"
@@ -178,9 +207,9 @@ aod = {alpha = 0, duration = 0.4, offset = 0.1}
 
 [[components]]
 type = "value_needle"
-name = "z13_bpm_needle"
-resource = "ba_bpm_needle"
-box = {x = 290, y = 268, width = 100, height = 100}
+name = "z15_bpm_needle"
+resource = "ba_ptr_bpm"
+box = {x = 298, y = 265, width = 84, height = 84}
 start_deg = 235.0
 sweep_deg = 250.0
 source = "[HEART_RATE]"
@@ -193,7 +222,7 @@ aod = {alpha = 0, duration = 0.4, offset = 0.1}
 [[components]]
 type = "text_line"
 name = "z20_reserve_pct"
-box = {x = 200, y = 116, width = 80, height = 26}
+box = {x = 200, y = 88, width = 80, height = 26}
 font = "bal"
 size = 18
 color = "#F0EAD4"
@@ -205,9 +234,9 @@ aod = {alpha = 130, duration = 0.4, offset = 0.2}
 [[components]]
 type = "text_line"
 name = "z21_steps"
-box = {x = 100, y = 324, width = 80, height = 24}
+box = {x = 100, y = 294, width = 80, height = 30}
 font = "bal"
-size = 16
+size = 24
 color = "#F0EAD4"
 template = "%d"
 expressions = ["[STEP_COUNT]"]
@@ -217,9 +246,9 @@ aod = {alpha = 0, duration = 0.4, offset = 0.2}
 [[components]]
 type = "text_line"
 name = "z22_bpm"
-box = {x = 300, y = 324, width = 80, height = 24}
+box = {x = 300, y = 294, width = 80, height = 30}
 font = "bal"
-size = 16
+size = 24
 color = "#F0EAD4"
 template = "%d"
 expressions = ["[HEART_RATE]"]

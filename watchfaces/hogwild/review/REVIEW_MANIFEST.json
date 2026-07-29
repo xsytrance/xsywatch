@@ -31,32 +31,32 @@
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 210527,
+      "bytes": 210630,
       "height": 398,
-      "sha256": "d46d9747257c50c7a6bf5a683ce24cf3d1480d082875f8743b973d78d6afcfde",
+      "sha256": "68a8d03653434627ce8efcf60294e13094f62dea290b2fd52285a3816b248ea6",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 309609,
+      "bytes": 309759,
       "height": 764,
-      "sha256": "225d879d6eca2b18fd8fde33c5309d17ad5e15827073835b55148727059bd326",
+      "sha256": "6025e06f09a665d30c337f67dbfa784558e0486184ecaacf39546421b0a48f90",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 353731,
+      "bytes": 353812,
       "height": 480,
-      "sha256": "5e94561a49ca66a28e39646aea64a6608d154f51cf97b89b2135aa6a21ff54e3",
+      "sha256": "93ca30a230a0659b20dce61faedccc2844e76a134cbc2bcdb019cd2da8458934",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 399906,
+      "bytes": 399969,
       "height": 576,
-      "sha256": "7295243e289065ce9bea9538d42e3d2d49e8b44074245736d6b9452a5f9727b0",
+      "sha256": "a7bd7fbd45a938c5a4622331f5666b11b9405180914f4c672794f05067e776ec",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "hogwild",
-  "watchface_xml_sha256": "0c98715b4a9b1e83871f11e3948b6ae4e96285b11f05f9f79f7019ebc46677ba"
+  "watchface_xml_sha256": "cb23024b0d08aa3e68d30580b35e3bf4994e37699c5239d1cf21529f70ab5847"
 }
