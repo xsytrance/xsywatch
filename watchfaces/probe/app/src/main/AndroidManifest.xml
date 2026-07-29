@@ -10,7 +10,7 @@
          deliberately displays no heart rate or step count. -->
 
     <application
-        android:label="MERIDIAN PROBE"
+        android:label="@string/probe_label"
         android:icon="@drawable/preview"
         android:hasCode="false">
 

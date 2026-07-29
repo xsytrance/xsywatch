@@ -214,47 +214,72 @@ def background(size: int = 480) -> Image.Image:
 # watchface.xml
 # ---------------------------------------------------------------------
 
-# One row = (column, label-index, format, expression). Column 0 is the
+# One row = (stage, column, label-index, format, expression). Column 0 is the
 # full-width centred row used for the one string readout.
 #
 # Every readout is %d over round(), deliberately. Mixing %d and %.1f across
 # sources whose runtime types are undocumented is a way to earn a format
 # exception on the wrist a week into a two-week wear; integers lose nothing
 # here that the decode needs.
+#
+# THE STAGE TAG EXISTS BECAUSE THE FIRST BUILD RENDERED AS A BLACK SCREEN.
+#
+# A watch face that fails to inflate shows nothing at all — there is no
+# partial render and no on-screen error. The first probe put a dozen unproven
+# sources and three never-used elements into one face, so any single one of
+# them being rejected killed the whole thing and told us nothing about which.
+# That is a bad instrument: the entire point is to isolate a variable.
+#
+# So the probe is now a ladder. Each stage adds ONE class of risk to the one
+# below it, and each builds as its own package, so they sit in the picker
+# together and the last one that renders names the culprit.
+#
+#   A  scaffold only — plate, sun compass, digital time. Every element here
+#      is already shipping in the MERIDIAN line; only the 43-glyph font is
+#      new, and a font that big has never been tried.
+#   B  + current weather, all sources proven in shipping faces, PLUS the
+#      string readout (%s through <Upper>), which is new.
+#   C  + the v4 doubled prefix WEATHER.WEATHER.UV_INDEX, and MOON_PHASE_
+#      POSITION. Both are declared by the schema and neither has ever run.
+#   D  + the forecast family. The biggest unknown: sixteen sources the
+#      schema declares and no provider is known to populate.
+#   E  + the complication slot. = the full probe as first built.
+STAGES = "ABCDE"
+
 ROWS = [
+    # -- stage B: current conditions, every source already shipping ------
     # WX — is there any weather data at all, and is the provider erroring
-    (1, 0, "%d", "[WEATHER.IS_AVAILABLE]"),
-    (2, 0, "ERR:%d", "[WEATHER.IS_ERROR]"),
+    ("B", 1, 0, "%d", "[WEATHER.IS_AVAILABLE]"),
+    ("B", 2, 0, "ERR:%d", "[WEATHER.IS_ERROR]"),
     # COND — the integer under decode, and whether it is a day or night value
-    (1, 1, "%d", "[WEATHER.CONDITION]"),
-    (2, 1, "DAY:%d", "[WEATHER.IS_DAY]"),
-    # the name, full width — the only string on the face
-    (0, 2, "%s", "[WEATHER.CONDITION_NAME]"),
+    ("B", 1, 1, "%d", "[WEATHER.CONDITION]"),
+    ("B", 2, 1, "DAY:%d", "[WEATHER.IS_DAY]"),
+    # the name, full width — the only string on the face, and the only
+    # <Upper> and %s anywhere in the collection
+    ("B", 0, 2, "%s", "[WEATHER.CONDITION_NAME]"),
     # temperature now, and today's declared range
-    (1, 3, "%d", "round([WEATHER.TEMPERATURE])"),
-    (2, 3, "HI:%d", "round([WEATHER.TEMPERATURE_HIGH])"),
-    (3, 3, "LO:%d", "round([WEATHER.TEMPERATURE_LOW])"),
-    (1, 4, "%d%%", "round([WEATHER.CHANCE_OF_PRECIPITATION])"),
-    # the two UV spellings, stacked so the comparison is a glance
-    (1, 5, "V4:%d", "round([WEATHER.WEATHER.UV_INDEX])"),
-    (2, 5, "H0:%d", "round([WEATHER.HOURS.0.UV_INDEX])"),
-    # forecast: does index n populate, and what does it say
-    (1, 6, "AV:%d", "[WEATHER.HOURS.0.IS_AVAILABLE]"),
-    (2, 6, "C:%d", "[WEATHER.HOURS.0.CONDITION]"),
-    (3, 6, "T:%d", "round([WEATHER.HOURS.0.TEMPERATURE])"),
-    (1, 7, "AV:%d", "[WEATHER.HOURS.3.IS_AVAILABLE]"),
-    (2, 7, "C:%d", "[WEATHER.HOURS.3.CONDITION]"),
-    (3, 7, "T:%d", "round([WEATHER.HOURS.3.TEMPERATURE])"),
-    (1, 8, "AV:%d", "[WEATHER.DAYS.1.IS_AVAILABLE]"),
-    (2, 8, "CD:%d", "[WEATHER.DAYS.1.CONDITION_DAY]"),
-    (3, 8, "CN:%d", "[WEATHER.DAYS.1.CONDITION_NIGHT]"),
-    (1, 9, "HI:%d", "round([WEATHER.DAYS.1.TEMPERATURE_HIGH])"),
-    (2, 9, "LO:%d", "round([WEATHER.DAYS.1.TEMPERATURE_LOW])"),
-    (3, 9, "P:%d", "round([WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION])"),
-    # moon phase, which nothing in the collection uses yet, and a seconds
-    # counter so any readout's update cadence can be timed off the face
-    (1, 10, "%d%%", "round([MOON_PHASE_POSITION] * 100)"),
-    (2, 10, "SEC:%d", "[SECOND]"),
+    ("B", 1, 3, "%d", "round([WEATHER.TEMPERATURE])"),
+    ("B", 2, 3, "HI:%d", "round([WEATHER.TEMPERATURE_HIGH])"),
+    ("B", 3, 3, "LO:%d", "round([WEATHER.TEMPERATURE_LOW])"),
+    ("B", 1, 4, "%d%%", "round([WEATHER.CHANCE_OF_PRECIPITATION])"),
+    # -- stage C: declared, never run -----------------------------------
+    ("C", 1, 5, "V4:%d", "round([WEATHER.WEATHER.UV_INDEX])"),
+    ("C", 1, 10, "%d%%", "round([MOON_PHASE_POSITION] * 100)"),
+    ("C", 2, 10, "SEC:%d", "[SECOND]"),
+    # -- stage D: the forecast family -----------------------------------
+    ("D", 2, 5, "H0:%d", "round([WEATHER.HOURS.0.UV_INDEX])"),
+    ("D", 1, 6, "AV:%d", "[WEATHER.HOURS.0.IS_AVAILABLE]"),
+    ("D", 2, 6, "C:%d", "[WEATHER.HOURS.0.CONDITION]"),
+    ("D", 3, 6, "T:%d", "round([WEATHER.HOURS.0.TEMPERATURE])"),
+    ("D", 1, 7, "AV:%d", "[WEATHER.HOURS.3.IS_AVAILABLE]"),
+    ("D", 2, 7, "C:%d", "[WEATHER.HOURS.3.CONDITION]"),
+    ("D", 3, 7, "T:%d", "round([WEATHER.HOURS.3.TEMPERATURE])"),
+    ("D", 1, 8, "AV:%d", "[WEATHER.DAYS.1.IS_AVAILABLE]"),
+    ("D", 2, 8, "CD:%d", "[WEATHER.DAYS.1.CONDITION_DAY]"),
+    ("D", 3, 8, "CN:%d", "[WEATHER.DAYS.1.CONDITION_NIGHT]"),
+    ("D", 1, 9, "HI:%d", "round([WEATHER.DAYS.1.TEMPERATURE_HIGH])"),
+    ("D", 2, 9, "LO:%d", "round([WEATHER.DAYS.1.TEMPERATURE_LOW])"),
+    ("D", 3, 9, "P:%d", "round([WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION])"),
 ]
 
 COL_X = {1: COL1, 2: COL2, 3: COL3}
@@ -287,7 +312,8 @@ def esc(s: str) -> str:
     return s.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
-def build_xml(widths: dict[str, int]) -> str:
+def build_xml(widths: dict[str, int], stage: str = "E") -> str:
+    keep = STAGES[:STAGES.index(stage) + 1]
     o = [HEADER, '<WatchFace width="480" height="480">',
          '  <Metadata key="CLOCK_TYPE" value="DIGITAL" />',
          '  <Metadata key="PREVIEW_TIME" value="10:09:32" />',
@@ -339,7 +365,9 @@ def build_xml(widths: dict[str, int]) -> str:
           '<Parameter expression="[MINUTE]" /></Template></BitmapFont></Text>',
           '    </PartText>']
 
-    for i, (col, row, fmt, expr) in enumerate(ROWS):
+    for i, (st, col, row, fmt, expr) in enumerate(ROWS):
+        if st not in keep:
+            continue
         y = ROW_0 + row * ROW_PITCH
         if col == 0:
             x, w, align = 60, 360, "CENTER"
@@ -362,18 +390,20 @@ def build_xml(widths: dict[str, int]) -> str:
     # before any provider is assigned, and an empty box cannot be mistaken
     # for a bound-but-silent one.
     sx, sy, sw, sh = SLOT
-    o += [f'    <ComplicationSlot name="probe_slot" x="{sx}" y="{sy}" '
-          f'width="{sw}" height="{sh}" slotId="1001" '
-          f'supportedTypes="RANGED_VALUE SHORT_TEXT">',
-          '      <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" '
-          'defaultSystemProviderType="RANGED_VALUE" />',
-          f'      <BoundingBox x="{sx}" y="{sy}" width="{sw}" '
-          f'height="{sh}" />',
-          '      <Complication type="RANGED_VALUE" />',
-          '      <Complication type="SHORT_TEXT" />',
-          '      <Variant mode="AMBIENT" target="alpha" value="0" '
-          'duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />',
-          '    </ComplicationSlot>']
+    if "E" in keep:
+        o += [f'    <ComplicationSlot name="probe_slot" x="{sx}" y="{sy}" '
+              f'width="{sw}" height="{sh}" slotId="1001" '
+              f'supportedTypes="RANGED_VALUE SHORT_TEXT">',
+              '      <DefaultProviderPolicy '
+              'defaultSystemProvider="WATCH_BATTERY" '
+              'defaultSystemProviderType="RANGED_VALUE" />',
+              f'      <BoundingBox x="{sx}" y="{sy}" width="{sw}" '
+              f'height="{sh}" />',
+              '      <Complication type="RANGED_VALUE" />',
+              '      <Complication type="SHORT_TEXT" />',
+              '      <Variant mode="AMBIENT" target="alpha" value="0" '
+              'duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />',
+              '    </ComplicationSlot>']
 
     o += ['  </Scene>', '</WatchFace>', '']
     return "\n".join(o)
@@ -383,12 +413,15 @@ def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true",
                     help="verify the tree matches this script; write nothing")
+    ap.add_argument("--stage", choices=list(STAGES), default="E",
+                    help="risk ladder rung to emit; see STAGES. Default E is "
+                         "the full probe.")
     a = ap.parse_args()
 
     f, top, bot = cell_metrics()
     glyphs = {ch: glyph(ch, f, top, bot) for ch in CHARS}
     widths = {ch: g.width for ch, g in glyphs.items()}
-    xml = build_xml(widths)
+    xml = build_xml(widths, a.stage)
 
     if a.check:
         if not XML.exists():

@@ -80,5 +80,5 @@
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "probe",
-  "watchface_xml_sha256": "8118f7a8f01c514fe81cd5fdced01da73bcbc7ab1df9e9cc8c8a8f2c035a6f2b"
+  "watchface_xml_sha256": "b5b00e19eaeacf4efacf7ee42b36ede9d23fdfc51041489be2411bda42d9ae69"
 }

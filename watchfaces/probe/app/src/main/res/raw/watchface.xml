@@ -125,65 +125,65 @@ is one of the things the probe is for.
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
       <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>V4:%d<Parameter expression="round([WEATHER.WEATHER.UV_INDEX])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z210_r5c2" x="250" y="296" width="92" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>H0:%d<Parameter expression="round([WEATHER.HOURS.0.UV_INDEX])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z211_r6c1" x="126" y="317" width="120" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.HOURS.0.IS_AVAILABLE]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z212_r6c2" x="250" y="317" width="92" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>C:%d<Parameter expression="[WEATHER.HOURS.0.CONDITION]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z213_r6c3" x="340" y="317" width="74" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>T:%d<Parameter expression="round([WEATHER.HOURS.0.TEMPERATURE])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z214_r7c1" x="126" y="338" width="120" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.HOURS.3.IS_AVAILABLE]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z215_r7c2" x="250" y="338" width="92" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>C:%d<Parameter expression="[WEATHER.HOURS.3.CONDITION]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z216_r7c3" x="340" y="338" width="74" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>T:%d<Parameter expression="round([WEATHER.HOURS.3.TEMPERATURE])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z217_r8c1" x="126" y="359" width="120" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.DAYS.1.IS_AVAILABLE]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z218_r8c2" x="250" y="359" width="92" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>CD:%d<Parameter expression="[WEATHER.DAYS.1.CONDITION_DAY]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z219_r8c3" x="340" y="359" width="74" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>CN:%d<Parameter expression="[WEATHER.DAYS.1.CONDITION_NIGHT]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z220_r9c1" x="126" y="380" width="120" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>HI:%d<Parameter expression="round([WEATHER.DAYS.1.TEMPERATURE_HIGH])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z221_r9c2" x="250" y="380" width="92" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>LO:%d<Parameter expression="round([WEATHER.DAYS.1.TEMPERATURE_LOW])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z222_r9c3" x="340" y="380" width="74" height="22">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>P:%d<Parameter expression="round([WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z223_r10c1" x="126" y="401" width="120" height="22">
+    <PartText name="z210_r10c1" x="126" y="401" width="120" height="22">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
       <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>%d%%<Parameter expression="round([MOON_PHASE_POSITION] * 100)" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z224_r10c2" x="250" y="401" width="92" height="22">
+    <PartText name="z211_r10c2" x="250" y="401" width="92" height="22">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
       <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>SEC:%d<Parameter expression="[SECOND]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z212_r5c2" x="250" y="296" width="92" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>H0:%d<Parameter expression="round([WEATHER.HOURS.0.UV_INDEX])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z213_r6c1" x="126" y="317" width="120" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.HOURS.0.IS_AVAILABLE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z214_r6c2" x="250" y="317" width="92" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>C:%d<Parameter expression="[WEATHER.HOURS.0.CONDITION]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z215_r6c3" x="340" y="317" width="74" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>T:%d<Parameter expression="round([WEATHER.HOURS.0.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z216_r7c1" x="126" y="338" width="120" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.HOURS.3.IS_AVAILABLE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z217_r7c2" x="250" y="338" width="92" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>C:%d<Parameter expression="[WEATHER.HOURS.3.CONDITION]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z218_r7c3" x="340" y="338" width="74" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>T:%d<Parameter expression="round([WEATHER.HOURS.3.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z219_r8c1" x="126" y="359" width="120" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>AV:%d<Parameter expression="[WEATHER.DAYS.1.IS_AVAILABLE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z220_r8c2" x="250" y="359" width="92" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>CD:%d<Parameter expression="[WEATHER.DAYS.1.CONDITION_DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z221_r8c3" x="340" y="359" width="74" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>CN:%d<Parameter expression="[WEATHER.DAYS.1.CONDITION_NIGHT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z222_r9c1" x="126" y="380" width="120" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>HI:%d<Parameter expression="round([WEATHER.DAYS.1.TEMPERATURE_HIGH])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z223_r9c2" x="250" y="380" width="92" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>LO:%d<Parameter expression="round([WEATHER.DAYS.1.TEMPERATURE_LOW])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z224_r9c3" x="340" y="380" width="74" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="pb" size="15" color="#E2E8EE"><Template>P:%d<Parameter expression="round([WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
     <ComplicationSlot name="probe_slot" x="185" y="424" width="110" height="30" slotId="1001" supportedTypes="RANGED_VALUE SHORT_TEXT">
       <DefaultProviderPolicy defaultSystemProvider="WATCH_BATTERY" defaultSystemProviderType="RANGED_VALUE" />
