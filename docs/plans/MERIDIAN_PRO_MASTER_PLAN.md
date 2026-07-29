@@ -26,11 +26,60 @@ reads. Even a perfect implementation could not recover heading. Section 7 is
 what we can do instead, and one of the options is a genuine navigational
 instrument rather than a decoration.
 
-**There is no weather forecast.** No `HOURS.<n>`, no `DAYS.<n>`, no forecast
-family. Only current conditions plus `TEMPERATURE_HIGH` / `TEMPERATURE_LOW`
-for today. *This corrects a claim in `roadmap/RESUME_HERE.md` and in the
-project memory, both of which state that hourly and daily forecasts exist.
-They do not.*
+**There IS a weather forecast, and this document previously said there was
+not.** An earlier revision of this section claimed no `HOURS.<n>` and no
+`DAYS.<n>` family, and "corrected" `roadmap/RESUME_HERE.md` and the project
+memory on that basis. **That correction was wrong and is withdrawn — the
+original memory was right.**
+
+The forecast sources are declared as `xs:pattern` entries, not
+`xs:enumeration` tokens, which is exactly why a token search missed them.
+`weatherSourceType` is a *union*:
+
+```xml
+<xs:simpleType name="weatherSourceType">
+  <xs:union memberTypes="_weatherSourceEnums _weatherSourcePatterns"/>
+</xs:simpleType>
+```
+
+`_weatherSourcePatterns` carries sixteen entries, present at **v4 and v5**
+(and absent at v1–v3):
+
+| Hourly — `WEATHER.HOURS.<n>.` | Daily — `WEATHER.DAYS.<n>.` |
+|---|---|
+| `IS_AVAILABLE` | `IS_AVAILABLE` |
+| `CONDITION` | `CONDITION_DAY` / `CONDITION_NIGHT` |
+| `CONDITION_NAME` | `CONDITION_DAY_NAME` / `CONDITION_NIGHT_NAME` |
+| `IS_DAY` | `TEMPERATURE_HIGH` / `TEMPERATURE_LOW` |
+| `TEMPERATURE` | `CHANCE_OF_PRECIPITATION` / `..._NIGHT` |
+| `UV_INDEX` | `UV_INDEX` |
+
+Three consequences, none of them small:
+
+- A **genuine forecast instrument** is possible — a strip or sub-dial reading
+  the next few hours, which is a far better use of a sub-dial than another
+  decorative counter.
+- The schema does not say **how many** indices are populated, nor what happens
+  when you ask for one that is not. `IS_AVAILABLE` exists per index, which
+  implies the answer is "ask it". Phase 0 measures this.
+- Every one of these carries the same undecoded `CONDITION` integer, so the
+  decode below pays for the forecast too.
+
+**Two lessons worth keeping.**
+
+*Grep the enumerations and the patterns.* A union type hides half of itself
+from either search alone.
+
+*A validator PASS is not evidence a source exists.* Tested directly: replacing
+`[WEATHER.HOURS.0.CONDITION]` with `[WEATHER.HOURS.0.NONSENSE]` still passes
+validation at v4. The validator schema-checks elements and attributes but does
+not resolve source names inside expressions — `arithmeticExpressionType` is an
+unconstrained string as far as expression *contents* go. So the probe's clean
+validation run says nothing about the forecast, and neither would any other
+face's. **The XSD declaring these sources tells us the format defines them; it
+does not tell us the provider on the Watch 7 populates them.** Only wearing
+the probe does. This is precisely why phase 0 is a wear task and not a
+desk task.
 
 **`WEATHER.CONDITION` is still undocumented at v5.** The source exists and
 returns an integer; the schema documents none of its values. Branching on it
@@ -43,9 +92,18 @@ is guessing. Section 3 says how we stop guessing.
 doubled prefix that looks like a schema typo and makes them awkward to trust.
 **v5 fixes both.** These are the only two sources v5 adds over v4.
 
-That alone is reason to author PRO at **watch face format v5**. UV index is
-the difference between "sunny" and "blazing", which is exactly the
-discrimination this brief needs.
+That is reason to author PRO at **watch face format v5** — but a weaker one
+than it first looked, for two reasons. `WEATHER.HOURS.<n>.UV_INDEX` is spelled
+*cleanly at v4*, so the doubled prefix afflicts only the current-conditions
+reading and there is already a sane way to get a UV number out of v4. And
+nothing in the collection has ever been built at v5, so **v5 is unproven on
+the Watch 7** while v4 is on the wrist and working.
+
+Ruling: **PROBE is authored at v4** — it has to run today, and it costs
+nothing, since every source it needs exists at v4. It reads *both* UV
+spellings side by side, so whether the doubled prefix actually resolves at
+runtime becomes a measurement rather than a worry. PRO moves to v5 in phase 1
+only once the probe has confirmed v5 installs and renders on the device.
 
 ---
 
@@ -88,7 +146,9 @@ they earn their place (section 6, "jolt").
 ### The discriminators we actually have
 
 `IS_DAY`, `CHANCE_OF_PRECIPITATION` (0–100), `TEMPERATURE`,
-`TEMPERATURE_HIGH`/`LOW`, `UV_INDEX` (v5), and `CONDITION` (undecoded).
+`TEMPERATURE_HIGH`/`LOW`, `UV_INDEX` (v5 spelling; v4 has it doubled), and
+`CONDITION` (undecoded) — **plus the whole hourly and daily forecast family
+at both v4 and v5**, which the previous revision of this plan wrongly denied.
 
 Precipitation *chance* is not intensity, and that is worth being honest about:
 a 95% chance of light drizzle reads the same to us as a 95% chance of a
@@ -97,10 +157,23 @@ downpour. Combining it with UV and temperature gets most of the way, and
 
 ### Phase 0 — decode `CONDITION` empirically
 
-Before any art, build a throwaway dev face, **WX PROBE**, that displays raw
-`CONDITION`, `CONDITION_NAME`, temperature, precipitation chance, UV and
+Before any art, build a throwaway dev face, **MERIDIAN PROBE**, that displays
+raw `CONDITION`, `CONDITION_NAME`, temperature, precipitation chance, UV and
 `IS_DAY` as plain text. Wear it. Note the integer that appears next to each
 name over a couple of weeks of varied weather.
+
+Because it is already an instrument, it answers three more questions for
+free — each of which would otherwise be discovered the expensive way, halfway
+through building a face on top of it:
+
+- **Does the forecast return anything?** `HOURS.0` and `HOURS.3` are shown
+  next to their `IS_AVAILABLE` flags, and `DAYS.1`'s day/night split beside
+  its own. If the provider populates one index and not the next, the probe
+  says so before a forecast dial is designed around it.
+- **Does the v4 doubled prefix resolve?** `WEATHER.WEATHER.UV_INDEX` sits
+  directly above `WEATHER.HOURS.0.UV_INDEX`. Two numbers, one glance.
+- **Can a complication feed a needle at all?** Almost certainly not — see
+  §7 — but the slot costs four lines, so the probe carries one and settles it.
 
 `CONDITION_NAME` is a *string* source, so it cannot be branched on — but it
 can be read off the wrist, which is precisely how we map the integers we
@@ -250,7 +323,33 @@ Everything the current line does, plus:
 ## 7. The compass — what is honestly possible
 
 A magnetic compass is impossible (section 1). Three genuine instruments are
-possible, and two of them are aviation-correct:
+possible, and two of them are aviation-correct.
+
+### First, the obvious workaround, and why it fails
+
+The tempting escape is "let a *compass complication provider* supply the
+heading". There is no magnetometer source, but there is `ComplicationSlot`,
+`RANGED_VALUE` is a supported type, and third-party compass providers exist.
+
+**It does not work, and the reason is structural: a face cannot read a
+complication's value.** The provider renders inside its own slot; the format
+exposes exactly two complication-derived expressions —
+`COMPLICATION.RANGED_VALUE_COLOR_INTERPOLATE` and
+`COMPLICATION.WEIGHTED_ELEMENTS_COLORS` — and both are *colour interpolation
+weights consumed by `extractColorFromWeightedColors`*, not numbers. There is
+no `COMPLICATION.RANGED_VALUE` to put in a `Transform target="angle"`. The
+normalised value can tint a needle; it cannot turn one.
+
+This is the same limitation already recorded in
+`~/Android/WATCHFACE-DEV-MANUAL.md` §9 — that a complication's text cannot be
+restyled into our own BitmapFont because the provider draws it. Same cause:
+the slot is opaque to the face.
+
+So a complication can put a heading *on the dial*, drawn in the system font in
+a box we do not control. It cannot drive our instrument. The probe carries a
+slot to confirm this on hardware, but the design should assume no.
+
+### The three that do work
 
 **A. Sun compass / solar azimuth dial.** A rotating card driven by solar hour
 angle from `HOUR_0_23` + `MINUTE`. At local solar noon the sun bears due south
@@ -319,8 +418,8 @@ On top of that:
 
 | Phase | Work | Gate |
 |---|---|---|
-| 0 | WX PROBE face; start the `CONDITION` decode | on the wrist, logging |
-| 1 | Move engine to v5; `UV_INDEX` usable; new `sky_stack` component | validator passes |
+| 0 | MERIDIAN PROBE (v4); start the `CONDITION` decode; measure forecast, both UV spellings, complication cadence | on the wrist, logging |
+| 1 | Move engine to v5 **if the probe shows v5 runs on the Watch 7**; `UV_INDEX` usable; new `sky_stack` component | validator passes + installs |
 | 2 | Procedural window generator — sky, sun/moon, cloud, terrain, glass | contact sheet reviewed |
 | 3 | The 17-state ladder + continuous tint | all states render |
 | 4 | Effects: mirage, fog, rain-on-glass, frost, flare | per-effect review |
@@ -346,3 +445,12 @@ only *adds* states when it lands.
    weather to be complete, and everything works without it.
 5. **HOG-WILD plate cleanup** — the painted sweep and blips need removing
    before the radar work is worth doing.
+6. **Does PRO get a forecast instrument?** New, and only open because the
+   forecast family turned out to exist. The natural form is a short strip —
+   next three or six hours, each hour a tick whose colour comes from its own
+   `CONDITION` and whose height comes from its temperature — which is
+   genuinely useful in a way a second decorative sub-dial is not. It costs one
+   more component and a sub-dial's worth of real estate on faces that are
+   already busy. **Recommendation: yes, on COMMODORE PRO only**, whose
+   navigational character suits it and which has the emptiest lower third.
+   Deferred until the probe confirms the provider actually populates it.

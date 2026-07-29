@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.type.watch"
+        android:required="true" />
+
+    <!-- No permissions. The probe reads weather, moon phase and the clock,
+         all of which the runtime supplies to the face without one, and it
+         deliberately displays no heart rate or step count. -->
+
+    <application
+        android:label="MERIDIAN PROBE"
+        android:icon="@drawable/preview"
+        android:hasCode="false">
+
+        <property
+            android:name="com.google.wear.watchface.format.version"
+            android:value="@integer/wff_version" />
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+    </application>
+</manifest>

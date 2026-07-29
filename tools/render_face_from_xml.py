@@ -64,6 +64,26 @@ FIXTURE_ENV = {
     "ACCELEROMETER_IS_SUPPORTED": 1,
     "WEATHER.IS_AVAILABLE": 1, "WEATHER.IS_ERROR": 0, "WEATHER.IS_DAY": 1,
     "WEATHER.TEMPERATURE": 14, "WEATHER.CHANCE_OF_PRECIPITATION": 0,
+    # Current conditions the probe reads. CONDITION's integer is undecoded —
+    # 3 is a placeholder for rendering, not a claim about what 3 means.
+    "WEATHER.CONDITION": 3, "WEATHER.CONDITION_NAME": "Partly Cloudy",
+    "WEATHER.TEMPERATURE_HIGH": 19, "WEATHER.TEMPERATURE_LOW": 8,
+    "WEATHER.WEATHER.UV_INDEX": 4, "WEATHER.WEATHER.LAST_UPDATED": 0,
+    "MOON_PHASE_POSITION": 0.42, "MOON_PHASE_TYPE": 3,
+    "HOUR_0_23": 10,
+    # Forecast. Declared by the schema at v4 and v5 as xs:pattern members of
+    # weatherSourceType; whether a provider actually populates them is what
+    # the probe is worn to find out. These values let the face be RENDERED,
+    # and are not evidence about the device.
+    "WEATHER.HOURS.0.IS_AVAILABLE": 1, "WEATHER.HOURS.0.CONDITION": 3,
+    "WEATHER.HOURS.0.TEMPERATURE": 15, "WEATHER.HOURS.0.UV_INDEX": 4,
+    "WEATHER.HOURS.3.IS_AVAILABLE": 1, "WEATHER.HOURS.3.CONDITION": 7,
+    "WEATHER.HOURS.3.TEMPERATURE": 17,
+    "WEATHER.DAYS.1.IS_AVAILABLE": 1, "WEATHER.DAYS.1.CONDITION_DAY": 5,
+    "WEATHER.DAYS.1.CONDITION_NIGHT": 2,
+    "WEATHER.DAYS.1.TEMPERATURE_HIGH": 21,
+    "WEATHER.DAYS.1.TEMPERATURE_LOW": 9,
+    "WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION": 30,
 }
 
 SAFE = {"clamp": lambda v, lo, hi: max(lo, min(hi, v)), "sin": math.sin,
@@ -131,8 +151,19 @@ def _deternary(py: str) -> str:
     return py
 
 
-def evaluate(expr: str, env: dict) -> float:
-    """Evaluate one WFF arithmetic expression under a data environment."""
+def evaluate(expr: str, env: dict):
+    """Evaluate one WFF arithmetic expression under a data environment.
+
+    Returns a float, except for a bare string source. WEATHER.CONDITION_NAME
+    and MOON_PHASE_TYPE_STRING are text, and text is the whole point of them —
+    a face cannot branch on a string, only print it. Such a source is only
+    ever legal on its own, so anything more complex still goes down the
+    arithmetic path and still fails loudly if it is not a number.
+    """
+    lone = re.fullmatch(r"\s*\[([A-Z_0-9.]+)\]\s*", expr)
+    if lone and isinstance(env.get(lone.group(1)), str):
+        return env[lone.group(1)]
+
     def sub(m):
         token = m.group(1)
         if token not in env:
@@ -298,8 +329,15 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
                                      center=(px, py))
         elif part.tag == "PartText":
             bf = part.find(".//BitmapFont")
-            tmpl = bf.find("Template")
+            # <Template> may be wrapped in <Upper>/<Lower>. A bitmap font only
+            # renders the glyphs it declares, so a face printing a provider's
+            # own casing folds it rather than dropping half the string.
+            tmpl = bf.find(".//Template")
             text = format_template(tmpl, env)
+            if bf.find("Upper") is not None:
+                text = text.upper()
+            elif bf.find("Lower") is not None:
+                text = text.lower()
             glyphs = font.render(bf.get("family"), text,
                                  int(bf.get("size")), bf.get("color"))
             layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
