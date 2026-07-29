@@ -743,7 +743,23 @@ way round. Every scroll period divides 3600.
       <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
       <Image resource="cm_ptr_steps" />
     </PartImage>
-    <PartText name="z21_steps_sh" x="97" y="276" width="96" height="28" alpha="165">
+    <PartText name="z21_steps_hn2_n2" x="94" y="273" width="96" height="28" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="19" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_h2_n2" x="98" y="273" width="96" height="28" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="19" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_hn2_2" x="94" y="277" width="96" height="28" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="19" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_h2_2" x="98" y="277" width="96" height="28" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="19" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_sh" x="96" y="278" width="96" height="28" alpha="205">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="19" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
@@ -760,7 +776,23 @@ way round. Every scroll period divides 3600.
       <Transform target="angle" value="235.0 + 250.0 * clamp([HEART_RATE], 0, 200) / 200" />
       <Image resource="cm_ptr_bpm" />
     </PartImage>
-    <PartText name="z21_bpm_sh" x="298" y="273" width="96" height="40" alpha="165">
+    <PartText name="z21_bpm_hn3_n3" x="293" y="268" width="96" height="40" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="27" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_bpm_h3_n3" x="299" y="268" width="96" height="40" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="27" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_bpm_hn3_3" x="293" y="274" width="96" height="40" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="27" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_bpm_h3_3" x="299" y="274" width="96" height="40" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="27" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_bpm_sh" x="296" y="276" width="96" height="40" alpha="205">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="27" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
     </PartText>
@@ -768,7 +800,23 @@ way round. Every scroll period divides 3600.
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="27" color="#EBC468"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_sh" x="198" y="82" width="88" height="34" alpha="165">
+    <PartText name="z20_reserve_hn2_n2" x="194" y="78" width="88" height="34" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_reserve_h2_n2" x="198" y="78" width="88" height="34" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_reserve_hn2_2" x="194" y="82" width="88" height="34" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_reserve_h2_2" x="198" y="82" width="88" height="34" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_reserve_sh" x="196" y="83" width="88" height="34" alpha="205">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
@@ -776,11 +824,27 @@ way round. Every scroll period divides 3600.
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="22" color="#D6AA47"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z23_date_sh" x="322" y="228" width="64" height="34" alpha="165">
+    <PartText name="z23_date_hn3_n3" x="321" y="213" width="65" height="33" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="24" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z23_date" x="320" y="226" width="64" height="34" alpha="255">
+    <PartText name="z23_date_h3_n3" x="327" y="213" width="65" height="33" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="24" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_date_hn3_3" x="321" y="219" width="65" height="33" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="24" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_date_h3_3" x="327" y="219" width="65" height="33" alpha="120">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="24" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_date_sh" x="324" y="221" width="65" height="33" alpha="205">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="pro" size="24" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_date" x="324" y="216" width="65" height="33" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="24" color="#D6AA47"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
     </PartText>

@@ -173,8 +173,19 @@ def readout(name: str, x: int, y: int, w: int, h: int, size: int,
                 f'<Parameter expression="[{src}]" /></Template>'
                 '</BitmapFont></Text>',
                 '    </PartText>']
-    d = max(1, round(size * 0.075))
-    return part("_sh", d, d, "#000000", 165) + part("", 0, 0, colour, 255)
+
+    # A DROP SHADOW ALONE WAS NOT ENOUGH. One offset copy gives an edge on
+    # two sides and leaves the other two sitting flat on whatever is behind,
+    # and on a busy plate that still reads as pasted on. What makes a bright
+    # numeral lift off a background is a CONTINUOUS DARK OUTLINE — so the
+    # number is drawn on all four diagonals to close the halo, then once more
+    # further down for the cast shadow, then the fill.
+    d = max(2, round(size * 0.11))
+    o = []
+    for dx, dy in ((-d, -d), (d, -d), (-d, d), (d, d)):
+        o += part(f"_h{dx}_{dy}".replace("-", "n"), dx, dy, "#000000", 120)
+    o += part("_sh", 0, int(d * 1.7), "#000000", 205)
+    return o + part("", 0, 0, colour, 255)
 
 
 def instruments(pre: str) -> list[str]:
@@ -218,7 +229,11 @@ def instruments(pre: str) -> list[str]:
     # reserve and date, also enlarged — "all of the important numbers"
     o += readout("z20_reserve", 196, 80, 88, 34, 22, "BATTERY_PERCENT",
                  fmt="%d%%", colour="#D6AA47", amb=130)
-    o += readout("z23_date", 320, 226, 64, 34, 24, "DAY",
+    # Aperture interior measured off the plate: x 327..386, y 212..251,
+    # so its centre is (356.5, 232.5). The base face centred its date on
+    # (352, 243) — four pixels left and ten low — and PRO inherited that
+    # until it was measured rather than copied.
+    o += readout("z23_date", 324, 216, 65, 33, 24, "DAY",
                  colour="#D6AA47", amb=150)
     return o
 

@@ -300,9 +300,15 @@ def finish(img, geom, size: int, counter: str | None, bezel: bool,
         cy = c * 0.72                      # above the hub, clear of it
         bb = d.textbbox((c, cy), slot, font=f_c, anchor="mm")
         pad = int(SS * 2.5)
-        d.rounded_rectangle([bb[0] - pad * 2, bb[1] - pad,
-                             bb[2] + pad * 2, bb[3] + pad],
-                            radius=pad, fill=(0, 0, 0, 185))
+        box = [bb[0] - pad * 2, bb[1] - pad, bb[2] + pad * 2, bb[3] + pad]
+        # A cut window, not a dark patch: the aperture is punched through the
+        # dial, so its top edge shadows inward and its bottom edge catches
+        # the light coming down the panel.
+        d.rounded_rectangle(box, radius=pad, fill=(0, 0, 0, 215))
+        d.line([(box[0] + pad, box[1]), (box[2] - pad, box[1])],
+               fill=(0, 0, 0, 235), width=max(1, int(SS * 1.6)))
+        d.line([(box[0] + pad, box[3]), (box[2] - pad, box[3])],
+               fill=(255, 255, 255, 40), width=max(1, int(SS * 1.1)))
         if counter is not None:
             engrave(d, (c, cy), counter, f_c, p["counter"], p, depth=1.4)
 
