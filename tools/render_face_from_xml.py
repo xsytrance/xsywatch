@@ -86,8 +86,14 @@ FIXTURE_ENV = {
     "WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION": 30,
 }
 
+# Exactly the functions arithmeticExpressionType declares, and no more.
+# min() and max() are NOT in the format — only clamp(,,) is — and they were
+# accepted here, so this renderer would have happily previewed an expression
+# the watch cannot evaluate. A review tool that is more permissive than the
+# device is the failure mode this repo keeps rediscovering, so the guard now
+# errs the other way: an undeclared function reads as an unresolved name.
 SAFE = {"clamp": lambda v, lo, hi: max(lo, min(hi, v)), "sin": math.sin,
-        "cos": math.cos, "round": round, "abs": abs, "min": min, "max": max,
+        "cos": math.cos, "round": round, "abs": abs,
         "tan": math.tan, "asin": math.asin, "acos": math.acos,
         "atan": math.atan, "sqrt": math.sqrt, "cbrt": lambda v: v ** (1 / 3),
         "log": math.log, "log2": math.log2, "log10": math.log10,

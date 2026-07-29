@@ -445,12 +445,77 @@ only *adds* states when it lands.
    weather to be complete, and everything works without it.
 5. **HOG-WILD plate cleanup** — the painted sweep and blips need removing
    before the radar work is worth doing.
-6. **Does PRO get a forecast instrument?** New, and only open because the
-   forecast family turned out to exist. The natural form is a short strip —
-   next three or six hours, each hour a tick whose colour comes from its own
-   `CONDITION` and whose height comes from its temperature — which is
-   genuinely useful in a way a second decorative sub-dial is not. It costs one
-   more component and a sub-dial's worth of real estate on faces that are
-   already busy. **Recommendation: yes, on COMMODORE PRO only**, whose
-   navigational character suits it and which has the emptiest lower third.
-   Deferred until the probe confirms the provider actually populates it.
+6. ~~**Does PRO get a forecast instrument?**~~ **DECIDED 2026-07-29 — yes, on
+   COMMODORE PRO only.** Owner approved the recommendation. Design in
+   section 12; it stays gated on the probe confirming the provider populates
+   `HOURS.<n>` at all, because if it does not there is nothing to draw.
+
+---
+
+## 12. COMMODORE PRO — the forecast strip
+
+Approved as decision 6. Six hours across the lower third, read left to right.
+Two facts about the schema shape it more than any aesthetic choice does, and
+both were checked rather than assumed.
+
+### The hourly forecast has no precipitation
+
+Per hour, the format gives exactly six things: `IS_AVAILABLE`, `CONDITION`,
+`CONDITION_NAME`, `IS_DAY`, `TEMPERATURE`, `UV_INDEX`. **There is no
+`CHANCE_OF_PRECIPITATION` per hour** — only the daily entries carry it, and
+they carry it twice (day and night).
+
+That is awkward, because precipitation chance is the discriminator the whole
+§3 ladder is built on. It means **an hourly strip cannot show rain until
+`CONDITION` is decoded**, and no amount of design gets around it. So the strip
+is built in two stages, and the first one is not a placeholder — it is useful
+on its own:
+
+**Stage A, buildable the moment the probe reports.** Six ticks. Height is
+temperature. Fill is day or night from `IS_DAY`. A small pip on any hour whose
+`UV_INDEX` crosses 7. That is a real forecast: it tells you when it gets cold,
+when the sun goes down, and when you will burn.
+
+**Stage B, after the decode.** Each tick takes a colour from its own
+`CONDITION` — the wet states blue, snow white-blue, storm amber. Nothing about
+stage A is thrown away; the colour is an added channel, not a redesign.
+
+The daily readout is the reverse case and is worth carrying beside the strip
+for exactly that reason: `DAYS.1` *does* have precipitation chance, day and
+night separately, plus a high and a low. **Tomorrow's rain is available today,
+with no decode at all.** One line under the strip.
+
+### There is no min() or max(), so the scale is fixed
+
+The format's function list is `clamp(,,)`, the trig set, the logs, `pow`,
+`sqrt`, `abs`, `round`/`floor`/`ceil`, `fract`, `rand`, and the text and
+colour helpers. **`min()` and `max()` are absent.** So the strip cannot
+normalise itself across the six values it is showing — there is no expression
+that finds the window's own high and low.
+
+This is a better constraint than it looks. A self-rescaling chart makes a flat
+day look dramatic and an extreme day look ordinary, which is precisely wrong
+for a glance. So the scale is **fixed and clamped**, -10 °C to +35 °C over the
+tick's full travel:
+
+```
+  clamp([WEATHER.HOURS.<n>.TEMPERATURE], -10, 35)
+```
+
+with the baked scale marked on the plate so the height means something without
+being counted. Out-of-range weather pins to the end of the track and reads as
+"off the scale", which is the honest rendering of it.
+
+`tools/render_face_from_xml.py` used to accept `min()`/`max()` and no longer
+does — it was more permissive than the device, which is the failure this
+repo keeps rediscovering.
+
+### Cost
+
+Six hours is six sets of parts; the format has no loop. That is the real
+price, and it is why six and not twelve. The generator emits them, so the
+repetition costs authoring effort once rather than per face.
+
+Each tick is guarded on its own `IS_AVAILABLE` — if the provider populates
+four hours and not six, the strip shows four and the plate's baked scale still
+reads correctly. **No tick renders a temperature it does not have.**
