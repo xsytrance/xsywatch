@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-feature
+        android:name="android.hardware.type.watch"
+        android:required="true" />
+
+    <!-- DELIBERATELY EMPTY permission set. Rung B displays STEP_COUNT,
+         STEP_GOAL, STEP_PERCENT, HEART_RATE and BATTERY_CHARGING_STATUS with
+         nothing declared — whether they flow anyway (the WFF runtime holds
+         the sensors; AURELIUS proved it for HR) is half of what this probe
+         exists to measure, and it decides the Play data-safety story. -->
+
+    <application
+        android:label="@string/probe_label"
+        android:icon="@drawable/preview"
+        android:hasCode="false">
+
+        <property
+            android:name="com.google.wear.watchface.format.version"
+            android:value="@integer/wff_version" />
+
+        <meta-data
+            android:name="com.google.android.wearable.standalone"
+            android:value="true" />
+    </application>
+</manifest>

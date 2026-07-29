@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+GENERATED FILE - do not edit by hand.
+  Authoritative source: tools/make_vector_probe.py
+  Rung B of the phase 0 device probes;
+  see docs/plans/MERIDIAN_PRO_SHIP_PLAN.md section 3.
+-->
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <BitmapFonts>
+    <BitmapFont name="vp">
+      <Character name="%" resource="vp_pct" width="50" height="44" />
+      <Character name="0" resource="vp_0" width="31" height="44" />
+      <Character name="1" resource="vp_1" width="20" height="44" />
+      <Character name="2" resource="vp_2" width="30" height="44" />
+      <Character name="3" resource="vp_3" width="30" height="44" />
+      <Character name="4" resource="vp_4" width="33" height="44" />
+      <Character name="5" resource="vp_5" width="30" height="44" />
+      <Character name="6" resource="vp_6" width="30" height="44" />
+      <Character name="7" resource="vp_7" width="28" height="44" />
+      <Character name="8" resource="vp_8" width="30" height="44" />
+      <Character name="9" resource="vp_9" width="30" height="44" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF000000">
+    <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Image resource="bg_b" />
+    </PartImage>
+    <PartDraw name="z10_zone" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Arc centerX="240" centerY="240" width="420" height="420" startAngle="-120" endAngle="120">
+        <WeightedStroke colors="#2F7A66 #C89A3C #B8402F" weights="5.0 3.0 2.0" thickness="16" cap="ROUND" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="z11_batt" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Arc centerX="240" centerY="240" width="360" height="360" startAngle="-120" endAngle="120">
+        <Stroke color="#22FFFFFF" thickness="10" cap="ROUND" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="360" height="360" startAngle="-120" endAngle="120">
+        <Stroke color="#EBC468" thickness="10" cap="ROUND" />
+        <Transform target="endAngle" value="-120 + 240 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="z12_sec" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Arc centerX="240" centerY="240" width="300" height="300" startAngle="0" endAngle="360">
+        <Stroke color="#14FFFFFF" thickness="6" cap="BUTT" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="300" height="300" startAngle="0" endAngle="0">
+        <Stroke color="#7ED0FF" thickness="6" cap="ROUND" />
+        <Transform target="endAngle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="z13_shapes" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Ellipse x="100" y="310" width="100" height="100">
+        <Fill color="#FFFFFFFF">
+          <SweepGradient centerX="150" centerY="360" startAngle="0" endAngle="360" colors="#B8402F #C89A3C #2F7A66 #B8402F" positions="0.0 0.33 0.66 1.0" />
+        </Fill>
+      </Ellipse>
+      <RoundRectangle x="290" y="318" width="96" height="84" cornerRadiusX="10" cornerRadiusY="10">
+        <Stroke color="#9CA8B6" thickness="4" />
+      </RoundRectangle>
+      <Line startX="300" startY="360" endX="376" endY="360">
+        <Stroke color="#EBC468" thickness="3" />
+      </Line>
+    </PartDraw>
+    <PartText name="z20_val" x="210" y="219" width="130" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="vp" size="26" color="#EBC468"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_val" x="210" y="259" width="130" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="vp" size="26" color="#EBC468"><Template>%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_val" x="210" y="299" width="130" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="vp" size="26" color="#EBC468"><Template>%d<Parameter expression="[STEP_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_val" x="210" y="339" width="130" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="vp" size="26" color="#EBC468"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_val" x="210" y="379" width="130" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Text align="START"><BitmapFont family="vp" size="26" color="#EBC468"><Template>%d<Parameter expression="[BATTERY_CHARGING_STATUS]" /></Template></BitmapFont></Text>
+    </PartText>
+  </Scene>
+</WatchFace>
