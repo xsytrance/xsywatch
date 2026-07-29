@@ -159,6 +159,24 @@ START_DEG, SWEEP_DEG = 235.0, 250.0
 COUNTER_CY = 0.36        # must match make_an_gauge.COUNTER_CY
 
 
+def readout(name: str, x: int, y: int, w: int, h: int, size: int,
+            src: str, fmt: str = "%d", colour: str = "#EBC468",
+            amb: int = 0) -> list[str]:
+    """One number, drawn as a shadow pass and a fill pass."""
+    def part(tag, dx, dy, col, alpha):
+        return [f'    <PartText name="{name}{tag}" x="{x + dx}" '
+                f'y="{y + dy}" width="{w}" height="{h}" alpha="{alpha}">',
+                f'      <Variant mode="AMBIENT" target="alpha" value="{amb}" '
+                'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
+                f'      <Text align="CENTER"><BitmapFont family="pro" '
+                f'size="{size}" color="{col}"><Template>{fmt}'
+                f'<Parameter expression="[{src}]" /></Template>'
+                '</BitmapFont></Text>',
+                '    </PartText>']
+    d = max(1, round(size * 0.075))
+    return part("_sh", d, d, "#000000", 165) + part("", 0, 0, colour, 255)
+
+
 def instruments(pre: str) -> list[str]:
     """The AN gauges, their needles, and the big live readouts.
 
@@ -187,36 +205,21 @@ def instruments(pre: str) -> list[str]:
               f'/ {c["hi"]}" />',
               f'      <Image resource="{pre}_ptr_{key}" />',
               '    </PartImage>']
-        # the live number, centred on the baked counter recess
+        # The live number, centred on the baked counter recess, and drawn
+        # TWICE. A BitmapFont glyph is tinted flat by the runtime, so a
+        # single PartText can only ever be a flat fill — which is exactly
+        # why the readouts looked pasted on. A dark pass offset down-right
+        # with the gold over it gives the digits an edge to sit on, using
+        # two ordinary parts and no construct the line has not shipped.
         h = int(c["digits"] * 1.5)
         ty = int(round(y + n * COUNTER_CY - h / 2))
-        o += [f'    <PartText name="z21_{key}_read" x="{x}" y="{ty}" '
-              f'width="{n}" height="{h}">',
-              '      <Variant mode="AMBIENT" target="alpha" value="0" '
-              'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
-              f'      <Text align="CENTER"><BitmapFont family="cmd" '
-              f'size="{c["digits"]}" color="#FFD66E"><Template>%d'
-              f'<Parameter expression="[{c["src"]}]" /></Template>'
-              f'</BitmapFont></Text>',
-              '    </PartText>']
+        o += readout(f"z21_{key}", x, ty, n, h, c["digits"], c["src"])
 
     # reserve and date, also enlarged — "all of the important numbers"
-    o += ['    <PartText name="z20_reserve_pct" x="196" y="80" width="88" '
-          'height="34">',
-          '      <Variant mode="AMBIENT" target="alpha" value="130" '
-          'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
-          '      <Text align="CENTER"><BitmapFont family="cmd" size="22" '
-          'color="#F2C65C"><Template>%d%%<Parameter '
-          'expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>',
-          '    </PartText>',
-          '    <PartText name="z23_date" x="320" y="226" width="64" '
-          'height="34">',
-          '      <Variant mode="AMBIENT" target="alpha" value="150" '
-          'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
-          '      <Text align="CENTER"><BitmapFont family="cmd" size="24" '
-          'color="#F2C65C"><Template>%d<Parameter expression="[DAY]" />'
-          '</Template></BitmapFont></Text>',
-          '    </PartText>']
+    o += readout("z20_reserve", 196, 80, 88, 34, 22, "BATTERY_PERCENT",
+                 fmt="%d%%", colour="#D6AA47", amb=130)
+    o += readout("z23_date", 320, 226, 64, 34, 24, "DAY",
+                 colour="#D6AA47", amb=150)
     return o
 
 
@@ -247,7 +250,18 @@ def build_xml(face: str) -> str:
 
     base = REPO / f"watchfaces/{face}/app/src/main/res/raw/watchface.xml"
     src = base.read_text()
-    a(src[src.index("  <BitmapFonts>"):src.index("</BitmapFonts>") + 15])
+    # The "pro" family replaces the carried-over "cmd": Barlow Condensed
+    # rather than DejaVu, because instrument lettering is a condensed
+    # grotesque and because the condensation buys digits in the counter
+    # window. Widths come from the glyphs that were actually rendered.
+    a('  <BitmapFonts>')
+    a('    <BitmapFont name="pro">')
+    for ch, w in sorted(FONT_WIDTHS.items()):
+        nm = "pct" if ch == "%" else ch
+        a(f'      <Character name="{ch}" resource="cp_{nm}" width="{w}" '
+          f'height="{GLYPH_H}" />')
+    a('    </BitmapFont>')
+    a('  </BitmapFonts>')
     a('  <Scene backgroundColor="#FF000000">')
 
     # plate
@@ -445,6 +459,10 @@ def build_xml(face: str) -> str:
     return "\n".join(o) + "\n"
 
 
+FONT_WIDTHS: dict = {}
+GLYPH_H = 44
+
+
 def an_gauges(face: str, dd: Path) -> None:
     """Draw the sub-dials as AN-standard aircraft instruments.
 
@@ -465,8 +483,12 @@ def an_gauges(face: str, dd: Path) -> None:
         pre = cfg(face)["prefix"]
         gimg.save(dd / f"{pre}_gauge_{key}.png", optimize=True)
         pimg.save(dd / f"{pre}_ptr_{key}.png", optimize=True)
+    global FONT_WIDTHS, GLYPH_H
+    FONT_WIDTHS = G.bitmap_glyphs(dd, prefix="cp")
+    GLYPH_H = G.GLYPH_H
     print("  sub-dials redrawn as AN aircraft instruments at "
           f"{DIALS['steps']['size']}px")
+    print(f"  {len(FONT_WIDTHS)} Barlow Condensed glyphs for the readouts")
 
 
 def main(argv: list[str]) -> int:
@@ -478,10 +500,11 @@ def main(argv: list[str]) -> int:
     dst = REPO / f"watchfaces/{face}-pro"
     draw = dst / "app/src/main/res/raw"
     draw.mkdir(parents=True, exist_ok=True)
-    xml = build_xml(face)
-    (draw / "watchface.xml").write_text(xml)
-
-    # carry over the instrument art the tail references
+    # ORDER MATTERS, and getting it wrong once cost a whole render: the
+    # base face is copied FIRST and the PRO instruments generated over the
+    # top. Generating first meant COMMODORE's own 61px cm_gauge_*.png
+    # overwrote the AN gauges on the way past, and the face came out with
+    # empty wells and floating numbers.
     sd = REPO / f"watchfaces/{face}/app/src/main/res/drawable"
     dd = dst / "app/src/main/res/drawable"
     dd.mkdir(parents=True, exist_ok=True)
@@ -493,6 +516,11 @@ def main(argv: list[str]) -> int:
                                       "_ov_")) or p.name == "preview.png":
             shutil.copy2(p, dd / p.name)
             n += 1
+    # now the PRO instruments, over the top of what was just copied, and
+    # the XML after them because it declares the glyph widths they produce
+    an_gauges(face, dd)
+    (draw / "watchface.xml").write_text(build_xml(face))
+
     # The launcher icon starts as the base face's, so the project builds
     # before it has ever been rendered. Once a render exists it is used
     # instead — a PRO face advertising COMMODORE's window in the picker is
@@ -504,8 +532,6 @@ def main(argv: list[str]) -> int:
             im.convert("RGB").resize((192, 192), Image.LANCZOS).save(
                 dd / "preview.png", optimize=True)
         print("  preview.png regenerated from the PRO render")
-
-    an_gauges(face, dd)
 
     print(f"  watchface.xml -> {(draw / 'watchface.xml').relative_to(REPO)}")
     print(f"  {n} instrument drawables carried over from {face}")

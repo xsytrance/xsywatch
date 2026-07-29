@@ -167,3 +167,61 @@ Per face, only `PALETTE` changes. HAYATE would go white-on-black with a red
 pointer; HOG-WILD wants the A-10's black-and-green. **The grammar does not
 change between faces — only the hues do.** That is what makes it a house
 method rather than one face's styling.
+
+---
+
+## 7. Typography and colour — matching the watch, not decorating it
+
+Added after the first pass looked, in the owner's words, like it did not
+belong and read too flat.
+
+### The colours are sampled, not chosen
+
+The first pass invented an amber (`#F2C65C`) and a neutral charcoal, and the
+result read as a different watch bolted onto this one. The palette is now
+**measured off `cm_dial.png` itself**:
+
+| Role | Value | Where it came from |
+|---|---|---|
+| ink / numerals | `#D6AA47` | the plate's wing emblem, exactly |
+| dial face | `#0D1620` | the plate's navy field, darkened for a well |
+| bezel | `#5C6874` | the plate's steel |
+| counter | `#EBC468` | one shade up from the ink, for the readout |
+
+**Sample the artwork.** A palette picked alongside a face will always be
+slightly wrong in a way that is hard to name and easy to see.
+
+### The font is condensed, and it pays twice
+
+**Barlow Condensed** replaces DejaVu Sans. Instrument lettering *is* a
+condensed grotesque, so it looks right — and the condensation buys horizontal
+room in the counter window, which was the single thing capping the steps
+readout. Form and function pulling the same way.
+
+### Depth: two different problems, two different fixes
+
+**Baked text** — the scale numerals and legends, drawn by us into the sprite.
+These get a true engrave: a dark pass offset down, a faint light pass offset
+up, the fill on top. Three draws, and it is most of the difference between a
+dial that looks etched and one that looks printed.
+
+**Live text** — the readouts, drawn by the runtime from the BitmapFont. These
+could not be fixed the same way, and the reason is worth recording:
+
+> A BitmapFont carries a `color` attribute and **the runtime tints every
+> glyph with it**, so any colour or shading baked into a glyph PNG is thrown
+> away. The existing `m_*.png` glyphs are pure white with an alpha channel
+> for exactly this reason. One flat fill is all a single `PartText` can
+> produce — which is precisely why the numbers looked pasted on.
+
+So the depth comes from the **face drawing each number twice**: a dark pass
+offset down-right at 165 alpha, the gold over it. Two ordinary `PartText`
+parts, no new construct, and it works under either tint mode.
+
+### One ordering bug, recorded because it cost a render
+
+Assets are copied from the base face **first**, then the PRO instruments
+generated over the top. Generating first meant COMMODORE's own 61px
+`cm_gauge_*.png` overwrote the AN gauges on the way past, and the face came
+out with empty wells and floating numbers — which looked like a layout bug
+and was a filesystem one.

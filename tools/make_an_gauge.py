@@ -65,32 +65,63 @@ from pathlib import Path
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 REPO = Path(__file__).resolve().parent.parent
-FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
-FONT_R = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
+# Barlow Condensed, not DejaVu. A condensed grotesque is what instrument
+# lettering actually is, and the condensation pays twice: it looks right, and
+# it fits more digits into the counter window, which is the one thing that
+# was capping the steps readout.
+import os
+_HOME = os.path.expanduser("~/.local/share/fonts")
+FONT = f"{_HOME}/BarlowCondensed-Bold.ttf"
+FONT_R = f"{_HOME}/BarlowCondensed-Medium.ttf"
+if not os.path.exists(FONT):                       # fall back, never fail
+    FONT = "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
+    FONT_R = "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf"
 SS = 4
 
 # COMMODORE's palette. Structure is the P-51's; the hues are the watch's.
+# SAMPLED OFF THE PLATE, not invented. cm_dial's wing emblem is #D6AA47 and
+# its field is #202F3E; the first pass guessed a lemon amber and a neutral
+# charcoal and read as a different watch bolted onto this one.
 PALETTE = {
-    "well":     (14, 18, 26, 255),
-    "face":     (10, 14, 22, 255),
-    "face_lo":  (5, 8, 13, 255),
-    "grad":     (232, 240, 248, 255),      # graduations, near white
-    "grad_dim": (150, 164, 182, 255),      # minors, quieter
-    "ink":      (242, 198, 92, 255),       # numerals and legend, amber
-    "counter":  (255, 214, 110, 255),      # the big readout
-    "lume":     (196, 232, 210, 255),      # the index triangle
-    "pointer":  (255, 92, 64, 255),        # hot, and unique on the dial
-    "arc_ok":   (46, 125, 107, 255),       # "green" moved onto the palette
-    "arc_warn": (224, 163, 60, 255),       # "yellow"
-    "arc_lim":  (200, 64, 46, 255),        # red stays red
-    "bezel":    (58, 66, 78, 255),
-    "screw":    (172, 182, 194, 255),
+    "well":     (18, 27, 37, 255),         # navy-tinted, like the plate
+    "face":     (13, 22, 32, 255),
+    "face_lo":  (7, 12, 18, 255),
+    "grad":     (200, 212, 224, 255),      # off-white, not stark
+    "grad_dim": (124, 140, 158, 255),
+    "ink":      (214, 170, 71, 255),       # the wing gold exactly
+    "counter":  (235, 196, 104, 255),      # a shade up, for the big readout
+    "lume":     (176, 214, 194, 255),
+    "pointer":  (232, 86, 60, 255),        # hot, and unique on the dial
+    "arc_ok":   (47, 122, 102, 255),
+    "arc_warn": (200, 154, 60, 255),       # the gold family, not "yellow"
+    "arc_lim":  (184, 64, 47, 255),        # red stays red
+    "bezel":    (92, 104, 116, 255),       # the plate's steel
+    "screw":    (156, 168, 182, 255),
+    "emboss_lo": (0, 0, 0, 150),           # text depth: cut below
+    "emboss_hi": (255, 255, 255, 46),      # and catch light above
 }
 
 # AN convention: the scale occupies a sweep with a gap at the bottom, so the
 # two ends never touch and the origin is unambiguous.
 START_DEG = 235.0
 SWEEP_DEG = 250.0
+
+
+def engrave(d, xy, text, font, fill, p, anchor="mm", depth=1.0):
+    """Text with depth, instead of text laid flat on the dial.
+
+    Real instrument lettering is either etched into the face or raised off
+    it; either way it catches light on one edge and casts into the other.
+    Flat fill is the single thing that most makes a drawn dial look drawn.
+    So: a dark pass offset down, a faint light pass offset up, the fill on
+    top. It is three draws and it is most of the difference.
+    """
+    x, y = xy
+    o = max(1.0, depth * SS * 0.9)
+    d.text((x, y + o), text, font=font, fill=p["emboss_lo"], anchor=anchor)
+    d.text((x, y - o * 0.7), text, font=font, fill=p["emboss_hi"],
+           anchor=anchor)
+    d.text((x, y), text, font=font, fill=fill, anchor=anchor)
 
 
 def _at(c, r, deg):
@@ -178,8 +209,7 @@ def gauge(size: int, label: str, unit: str, numerals: list[tuple[float, str]],
         f_num = f_leg = ImageFont.load_default()
     for f, txt in numerals:
         deg = START_DEG + SWEEP_DEG * f
-        d.text(_at(c, r_maj * 0.80, deg), txt, font=f_num, fill=p["ink"],
-               anchor="mm")
+        engrave(d, _at(c, r_maj * 0.80, deg), txt, f_num, p["ink"], p)
 
     # 7 INDEX MARK — luminous triangle at the origin
     deg = START_DEG
@@ -193,10 +223,10 @@ def gauge(size: int, label: str, unit: str, numerals: list[tuple[float, str]],
     # in it. That gap is the only part of the face with nothing competing
     # for it, so the legend goes there.
     if label:
-        d.text((c, c * 1.30), label, font=f_leg, fill=p["ink"], anchor="mm")
+        engrave(d, (c, c * 1.30), label, f_leg, p["ink"], p, depth=0.7)
     if unit:
-        d.text((c, c * 1.42), unit, font=f_leg, fill=p["grad_dim"],
-               anchor="mm")
+        engrave(d, (c, c * 1.42), unit, f_leg, p["grad_dim"], p,
+                depth=0.7)
     return img, (c, r_face, r_maj, p)
 
 
@@ -274,7 +304,7 @@ def finish(img, geom, size: int, counter: str | None, bezel: bool,
                              bb[2] + pad * 2, bb[3] + pad],
                             radius=pad, fill=(0, 0, 0, 185))
         if counter is not None:
-            d.text((c, cy), counter, font=f_c, fill=p["counter"], anchor="mm")
+            engrave(d, (c, cy), counter, f_c, p["counter"], p, depth=1.4)
 
     # 12 GLASS — one diagonal highlight, low alpha, clipped to the face
     gl = Image.new("RGBA", (S, S), (0, 0, 0, 0))
@@ -331,6 +361,46 @@ def build(key: str, size: int, counter: str | None = None,
 # face needs this to place its live text over the baked recess, and it must
 # come from the same constant the art was drawn with or the two drift.
 COUNTER_CY = 0.36       # c * 0.72 expressed against the full sprite
+
+
+GLYPH_H = 44           # native cell; the face scales it down per readout
+
+
+def bitmap_glyphs(out_dir, prefix="cp"):
+    """The live-readout font, as WFF BitmapFont characters.
+
+    WHY THESE ARE WHITE. A BitmapFont carries a `color` attribute and the
+    runtime tints every glyph with it, so any colour baked in here is thrown
+    away. That is also why the readouts look flat: one flat fill is all a
+    single PartText can produce. Depth comes from the FACE drawing the number
+    twice — a dark pass offset down, the gold on top — which is two ordinary
+    PartText parts and no new construct.
+
+    All glyphs share one measured vertical cell so digits sit on a common
+    baseline; cropping each to its own ink box and rescaling makes a "1"
+    as tall as an "8" and the readout wobbles as the value changes.
+    """
+    from PIL import Image, ImageDraw, ImageFont
+    chars = [str(i) for i in range(10)] + ["%"]
+    safe = {"%": "pct"}
+    f = ImageFont.truetype(FONT, GLYPH_H * SS)
+    boxes = [f.getbbox(c) for c in chars]
+    top, bot = min(b[1] for b in boxes), max(b[3] for b in boxes)
+    cell = bot - top
+    scale = GLYPH_H / cell
+    bear = round(SS * 1.1)
+    widths = {}
+    for ch in chars:
+        b = f.getbbox(ch)
+        w = max(1, b[2] - b[0])
+        img = Image.new("RGBA", (w + 2 * bear, cell), (0, 0, 0, 0))
+        ImageDraw.Draw(img).text((bear - b[0], -top), ch, font=f,
+                                 fill=(255, 255, 255, 255))
+        img = img.resize((max(1, round(img.width * scale)), GLYPH_H),
+                         Image.LANCZOS)
+        img.save(out_dir / f"{prefix}_{safe.get(ch, ch)}.png", optimize=True)
+        widths[ch] = img.width
+    return widths
 
 
 def demo(out: Path) -> None:
