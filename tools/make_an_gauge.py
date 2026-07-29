@@ -433,14 +433,19 @@ def fuel_arc(canvas: int, cx: float, cy: float, r: float, start: float,
 def fuel_needle(canvas: int, cx: float, cy: float, r_tip: float,
                 pal: dict | None = None, r_tail: float | None = None
                 ) -> Image.Image:
-    """The fuel pointer, drawn straight up so the face rotates it by value.
+    """A FUEL POINTER, which is not the same shape as a tachometer's.
 
-    It rides just inside the scale rather than reaching the hub. A sector
-    gauge's pointer does geometrically pivot at the arc's centre — which here
-    is the middle of the watch — but drawn full length it sweeps straight
-    across the MERIDIAN wordmark and the wing emblem. A short pointer beside
-    its own scale is commonplace on real arc instruments and is the only
-    version that does not vandalise the dial.
+    The spade this started as belongs on an instrument you read a precise
+    value off — altimeter, tach, manifold pressure — where the widened tip
+    brackets a graduation. A fuel pointer is the opposite: a slender blade,
+    WIDEST AT THE PIVOT AND TAPERING TO A SHARP POINT at the scale, with a
+    counterweight boss at its root. You are reading a rough quantity against
+    a coloured band, not a number, so the tip wants to be a point rather than
+    a bracket.
+
+    It rides just inside its own scale rather than reaching the hub. A sector
+    pointer does geometrically pivot at the arc's centre — the middle of the
+    watch here — but drawn full length it sweeps across the wordmark.
     """
     p = dict(PALETTE, **(pal or {}))
     S = canvas * SS
@@ -448,17 +453,51 @@ def fuel_needle(canvas: int, cx: float, cy: float, r_tip: float,
     d = ImageDraw.Draw(img)
     CX, CY = cx * SS, cy * SS
     tip = r_tip * SS
-    tail_r = (r_tail if r_tail is not None else r_tip * 0.74) * SS
-    spade = tip - (tip - tail_r) * 0.45
-    ws = max(1, int(SS * 1.7))
-    wsp = max(2, int(SS * 4.2))
-    o = SS * 1.5
-    d.polygon([(CX + o, CY - tip + o), (CX - wsp + o, CY - spade + o),
-               (CX + wsp + o, CY - spade + o)], fill=(0, 0, 0, 120))
-    d.line([(CX, CY - tail_r), (CX, CY - spade)], fill=p["pointer"],
-           width=ws)
-    d.polygon([(CX, CY - tip), (CX - wsp, CY - spade), (CX + wsp, CY - spade)],
+    root = (r_tail if r_tail is not None else r_tip * 0.74) * SS
+    half = max(2.0, SS * 3.1)          # half-width at the root
+    boss = max(2.5, SS * 4.0)
+
+    blade = [(CX, CY - tip),                    # the point
+             (CX - half, CY - root),
+             (CX + half, CY - root)]
+    o = SS * 1.6
+    d.polygon([(x + o, y + o) for x, y in blade], fill=(0, 0, 0, 125))
+    d.ellipse([CX - boss + o, CY - root - boss + o,
+               CX + boss + o, CY - root + boss + o], fill=(0, 0, 0, 110))
+    d.polygon(blade, fill=p["pointer"])
+    # counterweight boss, with a highlight so it reads as turned metal
+    d.ellipse([CX - boss, CY - root - boss, CX + boss, CY - root + boss],
               fill=p["pointer"])
+    d.ellipse([CX - boss * 0.42, CY - root - boss * 0.62,
+               CX + boss * 0.1, CY - root - boss * 0.05],
+              fill=(255, 255, 255, 90))
+    return img.resize((canvas, canvas), Image.LANCZOS)
+
+
+def power_bolt(canvas: int, cx: float, cy: float, h: float,
+               pal: dict | None = None) -> Image.Image:
+    """A lightning bolt, so the top instrument says WHAT it is measuring.
+
+    The plate already reads RESERVE, which is the aviation word for reserve
+    fuel and says nothing about a battery. The gauge is a fuel gauge by
+    design and a battery gauge by function, and one glyph resolves that
+    without a word of explanation in any language.
+    """
+    p = dict(PALETTE, **(pal or {}))
+    S = canvas * SS
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    X, Y, H = cx * SS, cy * SS, h * SS
+    w = H * 0.46
+    pts = [(X + w * 0.18, Y - H / 2),
+           (X - w * 0.52, Y + H * 0.10),
+           (X - w * 0.04, Y + H * 0.10),
+           (X - w * 0.22, Y + H / 2),
+           (X + w * 0.52, Y - H * 0.14),
+           (X + w * 0.02, Y - H * 0.14)]
+    o = SS * 1.2
+    d.polygon([(x + o, y + o) for x, y in pts], fill=(0, 0, 0, 150))
+    d.polygon(pts, fill=p["counter"])
     return img.resize((canvas, canvas), Image.LANCZOS)
 
 

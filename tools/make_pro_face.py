@@ -160,6 +160,11 @@ START_DEG, SWEEP_DEG = 235.0, 250.0
 # The fuel sweep, kept identical to the base face's reserve needle mapping so
 # the needle lands where the plate always expected it to.
 FUEL_START, FUEL_SWEEP, FUEL_R = -48.0, 96.0, 152.0
+# The readout sits BELOW the arc's apex (r=152 puts that at y=88) and above
+# the plate's RESERVE at y=116 — a 26px band, so the number is centred in it
+# rather than straddling the arc as it did at first.
+FUEL_TEXT_CY = 104.0
+BOLT_X = 221.0
 COUNTER_CY = 0.36        # must match make_an_gauge.COUNTER_CY
 
 
@@ -245,8 +250,13 @@ def instruments(pre: str) -> list[str]:
         o += readout(f"z21_{key}", x, ty, n, h, c["digits"], c["src"])
 
     # reserve and date, also enlarged — "all of the important numbers"
-    o += readout("z20_reserve", 196, 80, 88, 34, 22, "BATTERY_PERCENT",
-                 fmt="%d%%", colour="#D6AA47", amb=130)
+    # No percent sign: the owner asked for it gone, and a fuel gauge does
+    # not carry one — a real one reads in gallons or in fractions of a tank.
+    # The clear band is only 24px tall — the arc's inner edge is at y=92 and
+    # the plate's RESERVE starts at y=116 — so 22 is the largest size that
+    # clears both. At 24 the digits grazed the arc above and the label below.
+    o += readout("z20_reserve", 214, int(FUEL_TEXT_CY - 15), 74, 30, 22,
+                 "BATTERY_PERCENT", colour="#EBC468", amb=130)
     # Aperture interior measured off the plate: x 327..386, y 212..251,
     # so its centre is (356.5, 232.5). The base face centred its date on
     # (352, 243) — four pixels left and ten low — and PRO inherited that
@@ -521,8 +531,12 @@ def an_gauges(face: str, dd: Path) -> None:
     # band left on this plate is exactly this sweep — inside the hour
     # markers, above the wordmark, all of it dead navy at r=150.
     pre = cfg(face)["prefix"]
-    G.fuel_arc(480, 240, 240, FUEL_R, FUEL_START, FUEL_SWEEP).save(
-        dd / f"{pre}_fuel_arc.png", optimize=True)
+    arc = G.fuel_arc(480, 240, 240, FUEL_R, FUEL_START, FUEL_SWEEP)
+    # The bolt goes LEFT of the readout and the readout shifts right by half
+    # its width, so the pair reads as one group centred on the dial rather
+    # than a number with something stuck beside it.
+    arc.alpha_composite(G.power_bolt(480, BOLT_X, FUEL_TEXT_CY, 19))
+    arc.save(dd / f"{pre}_fuel_arc.png", optimize=True)
     G.fuel_needle(480, 240, 240, FUEL_R - 5,
                   r_tail=FUEL_R - 46).save(
         dd / f"{pre}_fuel_needle.png", optimize=True)

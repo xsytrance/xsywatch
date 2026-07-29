@@ -804,29 +804,29 @@ way round. Every scroll period divides 3600.
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="pro" size="27" color="#EBC468"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_hn2_n2" x="194" y="78" width="88" height="34" alpha="120">
+    <PartText name="z20_reserve_hn2_n2" x="212" y="87" width="74" height="30" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_h2_n2" x="198" y="78" width="88" height="34" alpha="120">
+    <PartText name="z20_reserve_h2_n2" x="216" y="87" width="74" height="30" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_hn2_2" x="194" y="82" width="88" height="34" alpha="120">
+    <PartText name="z20_reserve_hn2_2" x="212" y="91" width="74" height="30" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_h2_2" x="198" y="82" width="88" height="34" alpha="120">
+    <PartText name="z20_reserve_h2_2" x="216" y="91" width="74" height="30" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve_sh" x="196" y="83" width="88" height="34" alpha="205">
+    <PartText name="z20_reserve_sh" x="214" y="92" width="74" height="30" alpha="205">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z20_reserve" x="196" y="80" width="88" height="34" alpha="255">
+    <PartText name="z20_reserve" x="214" y="89" width="74" height="30" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#D6AA47"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="pro" size="22" color="#EBC468"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
     </PartText>
     <PartText name="z23_date_hn3_n3" x="321" y="213" width="65" height="33" alpha="120">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
