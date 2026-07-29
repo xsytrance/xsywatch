@@ -107,7 +107,24 @@ START_DEG = 235.0
 SWEEP_DEG = 250.0
 
 
-def engrave(d, xy, text, font, fill, p, anchor="mm", depth=1.0):
+def shade(img, fn):
+    """Composite semi-transparent work instead of stamping it.
+
+    ImageDraw REPLACES a pixel, alpha included — it does not blend. So a
+    "shadow" drawn at alpha 150 straight onto an opaque surface does not
+    darken it, it PUNCHES A HOLE to alpha 150 and the plate shows through.
+    That is exactly what happened to the fuel readout's window: its interior
+    measured alpha 245 with a band of 92 along the top where the inner shadow
+    was, and the plate's RESERVE wording read straight through it.
+
+    Anything translucent therefore goes onto its own layer and is composited.
+    """
+    layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
+    fn(ImageDraw.Draw(layer))
+    img.alpha_composite(layer)
+
+
+def engrave(d, xy, text, font, fill, p, anchor="mm", depth=1.0, img=None):
     """Text with depth, instead of text laid flat on the dial.
 
     Real instrument lettering is either etched into the face or raised off
@@ -118,9 +135,16 @@ def engrave(d, xy, text, font, fill, p, anchor="mm", depth=1.0):
     """
     x, y = xy
     o = max(1.0, depth * SS * 0.9)
-    d.text((x, y + o), text, font=font, fill=p["emboss_lo"], anchor=anchor)
-    d.text((x, y - o * 0.7), text, font=font, fill=p["emboss_hi"],
-           anchor=anchor)
+    if img is not None:
+        shade(img, lambda dd: (
+            dd.text((x, y + o), text, font=font, fill=p["emboss_lo"],
+                    anchor=anchor),
+            dd.text((x, y - o * 0.7), text, font=font, fill=p["emboss_hi"],
+                    anchor=anchor)))
+    else:
+        d.text((x, y + o), text, font=font, fill=p["emboss_lo"], anchor=anchor)
+        d.text((x, y - o * 0.7), text, font=font, fill=p["emboss_hi"],
+               anchor=anchor)
     d.text((x, y), text, font=font, fill=fill, anchor=anchor)
 
 
@@ -159,11 +183,14 @@ def gauge(size: int, label: str, unit: str, numerals: list[tuple[float, str]],
     # 1 WELL — dark disc, with the rim shadowing into the top of it
     if bezel:
         d.ellipse(_arc_box(c, r_out), fill=p["well"])
-        for i in range(10, 0, -1):
-            rr = r_face + (r_out - r_face) * i / 10.0
-            d.arc(_arc_box(c, rr), 190, 350,
-                  fill=(0, 0, 0, int(120 * i / 10.0)),
-                  width=max(1, int(SS * 1.2)))
+        def _well(dd):
+            for i in range(10, 0, -1):
+                rr = r_face + (r_out - r_face) * i / 10.0
+                dd.arc(_arc_box(c, rr), 190, 350,
+                       fill=(0, 0, 0, int(120 * i / 10.0)),
+                       width=max(1, int(SS * 1.2)))
+        shade(img, _well)
+        d = ImageDraw.Draw(img)
 
     # 2 DIAL FACE — matte, graded very slightly darker at the bottom
     d.ellipse(_arc_box(c, r_face), fill=p["face"])
@@ -304,11 +331,13 @@ def finish(img, geom, size: int, counter: str | None, bezel: bool,
         # A cut window, not a dark patch: the aperture is punched through the
         # dial, so its top edge shadows inward and its bottom edge catches
         # the light coming down the panel.
-        d.rounded_rectangle(box, radius=pad, fill=(0, 0, 0, 215))
-        d.line([(box[0] + pad, box[1]), (box[2] - pad, box[1])],
-               fill=(0, 0, 0, 235), width=max(1, int(SS * 1.6)))
-        d.line([(box[0] + pad, box[3]), (box[2] - pad, box[3])],
-               fill=(255, 255, 255, 40), width=max(1, int(SS * 1.1)))
+        shade(img, lambda dd: (
+            dd.rounded_rectangle(box, radius=pad, fill=(0, 0, 0, 215)),
+            dd.line([(box[0] + pad, box[1]), (box[2] - pad, box[1])],
+                    fill=(0, 0, 0, 235), width=max(1, int(SS * 1.6))),
+            dd.line([(box[0] + pad, box[3]), (box[2] - pad, box[3])],
+                    fill=(255, 255, 255, 40), width=max(1, int(SS * 1.1)))))
+        d = ImageDraw.Draw(img)
         if counter is not None:
             engrave(d, (c, cy), counter, f_c, p["counter"], p, depth=1.4)
 
@@ -471,6 +500,56 @@ def fuel_needle(canvas: int, cx: float, cy: float, r_tip: float,
     d.ellipse([CX - boss * 0.42, CY - root - boss * 0.62,
                CX + boss * 0.1, CY - root - boss * 0.05],
               fill=(255, 255, 255, 90))
+    return img.resize((canvas, canvas), Image.LANCZOS)
+
+
+def counter_window(canvas: int, cx: float, cy: float, w: float, h: float,
+                   pal: dict | None = None) -> Image.Image:
+    """A framed, recessed readout window, matching the plate's date aperture.
+
+    The battery number read as thrown on, and the reason was that it had no
+    container. Every other number on this face sits in something: the
+    sub-dial readouts in a recess cut into their own gauge face, the date in
+    a brass-framed aperture punched through the plate. The fuel readout was
+    floating on bare textured navy with only a drop shadow to hold it, and a
+    shadow says "above" without saying "in".
+
+    So it gets the plate's OWN window idiom, sampled from cm_dial's date
+    aperture: a warm grey frame around a brushed bronze interior, lighter
+    along the top edge where the bevel catches light and darker at the
+    bottom. Matching an idiom the face already owns is what makes an addition
+    look designed in rather than dropped on.
+    """
+    p = dict(PALETTE, **(pal or {}))
+    S = canvas * SS
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    X, Y = cx * SS, cy * SS
+    W, H = w * SS / 2.0, h * SS / 2.0
+    r = max(2, int(SS * 2.5))
+    fr = max(2, int(SS * 1.4))
+
+    box = [X - W, Y - H, X + W, Y + H]
+    # frame, then a lighter top edge and darker bottom so it reads as bevel
+    d.rounded_rectangle(box, radius=r, fill=(120, 113, 106, 255))
+    d.arc(box, 180, 360, fill=(146, 138, 133, 255), width=fr)
+    d.arc(box, 0, 180, fill=(88, 82, 76, 255), width=fr)
+    # brushed bronze interior, sampled off the plate's date window
+    inner = [X - W + fr * 1.6, Y - H + fr * 1.6, X + W - fr * 1.6,
+             Y + H - fr * 1.6]
+    d.rounded_rectangle(inner, radius=max(1, r - fr), fill=(73, 69, 64, 255))
+    def _inside(dd):
+        for i in range(int(inner[0]), int(inner[2]), max(1, SS)):
+            if (i // max(1, SS)) % 2:
+                dd.line([(i, inner[1]), (i, inner[3])],
+                        fill=(66, 62, 57, 120), width=1)
+        # the aperture is punched THROUGH, so its top edge casts inward
+        for i in range(6):
+            a = int(150 * (1 - i / 6.0))
+            dd.line([(inner[0] + r, inner[1] + i * SS * 0.6),
+                     (inner[2] - r, inner[1] + i * SS * 0.6)],
+                    fill=(0, 0, 0, a), width=max(1, int(SS * 0.7)))
+    shade(img, _inside)
     return img.resize((canvas, canvas), Image.LANCZOS)
 
 

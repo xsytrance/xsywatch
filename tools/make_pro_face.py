@@ -163,8 +163,15 @@ FUEL_START, FUEL_SWEEP, FUEL_R = -48.0, 96.0, 152.0
 # The readout sits BELOW the arc's apex (r=152 puts that at y=88) and above
 # the plate's RESERVE at y=116 — a 26px band, so the number is centred in it
 # rather than straddling the arc as it did at first.
-FUEL_TEXT_CY = 104.0
-BOLT_X = 221.0
+# The readout now sits in a framed window BELOW the arc rather than in the
+# 24px slot above the plate's RESERVE. That slot was never big enough for a
+# framed aperture, and the frame is what stops the number floating.
+# Cost, stated plainly: the window covers the plate's RESERVE wording and its
+# wing emblem. RESERVE is misleading for a battery anyway — it is the
+# aviation term for reserve FUEL — and the bolt now carries that meaning.
+FUEL_WIN = (240.0, 126.0, 86.0, 37.0)      # cx, cy, w, h
+FUEL_TEXT_CY = 126.0
+BOLT_X = 215.0
 COUNTER_CY = 0.36        # must match make_an_gauge.COUNTER_CY
 
 
@@ -252,10 +259,9 @@ def instruments(pre: str) -> list[str]:
     # reserve and date, also enlarged — "all of the important numbers"
     # No percent sign: the owner asked for it gone, and a fuel gauge does
     # not carry one — a real one reads in gallons or in fractions of a tank.
-    # The clear band is only 24px tall — the arc's inner edge is at y=92 and
-    # the plate's RESERVE starts at y=116 — so 22 is the largest size that
-    # clears both. At 24 the digits grazed the arc above and the label below.
-    o += readout("z20_reserve", 214, int(FUEL_TEXT_CY - 15), 74, 30, 22,
+    # Inside the window, so the digits have something to sit in. 24 fits the
+    # 29px interior with room either side.
+    o += readout("z20_reserve", 226, int(FUEL_TEXT_CY - 16), 68, 32, 24,
                  "BATTERY_PERCENT", colour="#EBC468", amb=130)
     # Aperture interior measured off the plate: x 327..386, y 212..251,
     # so its centre is (356.5, 232.5). The base face centred its date on
@@ -535,6 +541,7 @@ def an_gauges(face: str, dd: Path) -> None:
     # The bolt goes LEFT of the readout and the readout shifts right by half
     # its width, so the pair reads as one group centred on the dial rather
     # than a number with something stuck beside it.
+    arc.alpha_composite(G.counter_window(480, *FUEL_WIN))
     arc.alpha_composite(G.power_bolt(480, BOLT_X, FUEL_TEXT_CY, 19))
     arc.save(dd / f"{pre}_fuel_arc.png", optimize=True)
     G.fuel_needle(480, 240, 240, FUEL_R - 5,

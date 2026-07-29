@@ -21,7 +21,7 @@ android {
         applicationId = "com.xsytrance.commodorepro.dev"
         minSdk = 34
         targetSdk = 36
-        versionCode = 7
-        versionName = "0.7.0-dev"
+        versionCode = 8
+        versionName = "0.8.0-dev"
     }
 }
