@@ -418,8 +418,8 @@ On top of that:
 
 | Phase | Work | Gate |
 |---|---|---|
-| 0 | MERIDIAN PROBE (v4); start the `CONDITION` decode; measure forecast, both UV spellings, complication cadence | on the wrist, logging |
-| 1 | Move engine to v5 **if the probe shows v5 runs on the Watch 7**; `UV_INDEX` usable; new `sky_stack` component | validator passes + installs |
+| 0 | ~~MERIDIAN PROBE~~ — **SHELVED 2026-07-29, see §13** | — |
+| 1 | New `sky_stack` component at **v4**; v5 deferred with the probe | validator passes + installs |
 | 2 | Procedural window generator — sky, sun/moon, cloud, terrain, glass | contact sheet reviewed |
 | 3 | The 17-state ladder + continuous tint | all states render |
 | 4 | Effects: mirage, fog, rain-on-glass, frost, flare | per-effect review |
@@ -519,3 +519,76 @@ repetition costs authoring effort once rather than per face.
 Each tick is guarded on its own `IS_AVAILABLE` — if the provider populates
 four hours and not six, the strip shows four and the plate's baked scale still
 reads correctly. **No tick renders a temperature it does not have.**
+
+---
+
+## 13. Phase 0 shelved, and the compass with it — owner decision 2026-07-29
+
+Rod, on being shown the probe's black screen: *"is this just to get the
+compass working? if so, just document for now and let's move on without the
+compass. I want some more awesome watchfaces ASAP and I won't let that slow me
+down."*
+
+Decision taken and correct. What follows is the record of what was and was not
+given up, so that nobody later mistakes this for work that was finished.
+
+### The premise was wrong, and the decision survives it
+
+The probe was **not** mainly about the compass — that was the smallest thing
+on it. It was about decoding `CONDITION` and testing the forecast. But the
+decision holds anyway, because **nothing in this plan is blocked by either**:
+
+- The §3 state ladder was designed from the outset to work without the decode.
+  The decode only *adds* fog, mist, thunder, hail and sleet.
+- The forecast strip (§12) is one instrument on one face, and it is the only
+  thing that needs `HOURS.<n>`.
+- The sun compass needs **no probe data at all** — it is clock arithmetic, so
+  it either looks convincing or it does not, and wearing a table of integers
+  was never going to tell us which.
+
+So the cost of shelving is: no fog/thunder/hail states, and no forecast strip.
+Both are additions to a line that does not yet exist. Neither is a regression.
+
+### The compass
+
+Dropped from the near-term plan, not deleted. §7's analysis stands and cost
+nothing to keep: a magnetic compass is impossible, a complication cannot drive
+a needle, and the sun compass and bank-and-slip indicator both remain
+buildable from sources already in hand whenever they are wanted. **Building
+one is a small, self-contained job with no dependency on anything shelved
+here.**
+
+### The one thing not shelved
+
+**PROBE B**, which asks whether a bitmap font containing *letters* renders on
+the Watch 7. Every face in the collection so far draws digits only, because
+every readout so far was a number. If letters do not render, that is a
+standing constraint on every face built from here — no words on any dial,
+ever — and it is far cheaper to learn now than three faces in.
+
+That question has nothing to do with weather, forecasts or compasses. It
+survives the shelving because it constrains *everything else*.
+
+### What the black screen actually taught us
+
+Recorded because it is a platform fact, not a project detail:
+
+**A watch face that fails to inflate renders black, with no error and no
+partial draw.** There is no diagnostic on the device. Combined with the
+already-recorded fact that the validator does not resolve source names inside
+expressions, this means **an unproven source cannot be tested safely alongside
+proven ones** — it takes the whole face down with it, and says nothing about
+which one it was.
+
+The consequence for how anything is built here: **introduce one unproven
+construct per build, or build a ladder.** The five-rung PROBE A–E ladder
+(commit `44442a0`) is the pattern; the APKs remain in `collection/apk/` if the
+questions are ever picked up again.
+
+### Resuming
+
+Everything needed is committed and reproducible:
+`python3 tools/make_probe_assets.py --stage A..E`, then
+`tools/build_face.sh probe` with `-Pstage=`. The log to fill in is
+`watchfaces/probe/CONDITION_LOG.md`. Nothing about the shelving is
+destructive — it is a decision not to spend wear-time now.
