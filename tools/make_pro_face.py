@@ -146,6 +146,80 @@ AMB = ('<Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" '
        'startOffset="0.1" interpolation="EASE_OUT" />')
 
 
+# Sub-dial centres, taken from the base face's own well positions so the new
+# instruments land where the plate expects them, and the size measured
+# against the real aperture rather than its bounding box.
+DIALS = {
+    "steps": dict(centre=(144.5, 301.5), size=96, src="STEP_COUNT",
+                  lo=0, hi=20000, digits=19),
+    "bpm":   dict(centre=(343.5, 303.5), size=96, src="HEART_RATE",
+                  lo=0, hi=200, digits=27),
+}
+START_DEG, SWEEP_DEG = 235.0, 250.0
+COUNTER_CY = 0.36        # must match make_an_gauge.COUNTER_CY
+
+
+def instruments(pre: str) -> list[str]:
+    """The AN gauges, their needles, and the big live readouts.
+
+    THE NUMBERS ARE THE POINT. Heart rate goes from 18px to 27 and the date
+    from 19 to 24; steps only reaches 19 because five digits have to fit the
+    counter window, and a number that overflows its window is worse than a
+    smaller one. Two digits of pulse can be read at arm's length now, which
+    four digits of steps never will be at this dial size.
+    """
+    o = []
+    for key, c in DIALS.items():
+        cx, cy = c["centre"]
+        n = c["size"]
+        x, y = int(round(cx - n / 2)), int(round(cy - n / 2))
+        o += [f'    <PartImage name="z12_{key}_gauge" x="{x}" y="{y}" '
+              f'width="{n}" height="{n}" alpha="255">',
+              f'      {AMB}',
+              f'      <Image resource="{pre}_gauge_{key}" />',
+              '    </PartImage>']
+        o += [f'    <PartImage name="z14_{key}_needle" x="{x}" y="{y}" '
+              f'width="{n}" height="{n}" alpha="255" pivotX="0.5" '
+              f'pivotY="0.5">',
+              f'      {AMB}',
+              f'      <Transform target="angle" value="{START_DEG} + '
+              f'{SWEEP_DEG} * clamp([{c["src"]}], {c["lo"]}, {c["hi"]}) '
+              f'/ {c["hi"]}" />',
+              f'      <Image resource="{pre}_ptr_{key}" />',
+              '    </PartImage>']
+        # the live number, centred on the baked counter recess
+        h = int(c["digits"] * 1.5)
+        ty = int(round(y + n * COUNTER_CY - h / 2))
+        o += [f'    <PartText name="z21_{key}_read" x="{x}" y="{ty}" '
+              f'width="{n}" height="{h}">',
+              '      <Variant mode="AMBIENT" target="alpha" value="0" '
+              'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
+              f'      <Text align="CENTER"><BitmapFont family="cmd" '
+              f'size="{c["digits"]}" color="#FFD66E"><Template>%d'
+              f'<Parameter expression="[{c["src"]}]" /></Template>'
+              f'</BitmapFont></Text>',
+              '    </PartText>']
+
+    # reserve and date, also enlarged — "all of the important numbers"
+    o += ['    <PartText name="z20_reserve_pct" x="196" y="80" width="88" '
+          'height="34">',
+          '      <Variant mode="AMBIENT" target="alpha" value="130" '
+          'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
+          '      <Text align="CENTER"><BitmapFont family="cmd" size="22" '
+          'color="#F2C65C"><Template>%d%%<Parameter '
+          'expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>',
+          '    </PartText>',
+          '    <PartText name="z23_date" x="320" y="226" width="64" '
+          'height="34">',
+          '      <Variant mode="AMBIENT" target="alpha" value="150" '
+          'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
+          '      <Text align="CENTER"><BitmapFont family="cmd" size="24" '
+          'color="#F2C65C"><Template>%d<Parameter expression="[DAY]" />'
+          '</Template></BitmapFont></Text>',
+          '    </PartText>']
+    return o
+
+
 def build_xml(face: str) -> str:
     c = cfg(face)
     pre = c["prefix"]
@@ -342,54 +416,57 @@ def build_xml(face: str) -> str:
     a('      <Image resource="pw_furn" />')
     a('    </PartImage>')
 
-    # ---- everything else, carried over from the base face -------------
+    # ---- the instruments ----------------------------------------------
+    # The sub-dials are NOT carried over. They are redrawn as AN-standard
+    # aircraft instruments (tools/make_an_gauge.py) at 96px rather than the
+    # base face's 61/63, because the readouts were unreadable outdoors and
+    # the limit on their size was never the plate — it was a bounding box.
+    # The real aperture is an arch, and measuring it gave 60-66px of
+    # clearance from each sub-dial centre where the box implied about 25.
     tail = src[src.index('    <PartImage name="z10_airscrew"'):
                src.index('  </Scene>')]
-    a(tail.rstrip())
+    drop = ("z12_gauge_steps", "z13_gauge_bpm", "z14_steps_needle",
+            "z15_bpm_needle", "z20_reserve_pct", "z21_steps", "z22_bpm",
+            "z23_date")
+    kept, skip = [], False
+    for line in tail.splitlines():
+        st = line.strip()
+        if st.startswith("<Part") and any(f'name="{n}"' in st for n in drop):
+            skip = True
+        if not skip:
+            kept.append(line)
+        if skip and (st.startswith("</Part") or st.endswith("/>")
+                     and st.startswith("<Part")):
+            skip = False
+    a("\n".join(kept).rstrip())
+    o.extend(instruments(pre))
     a('  </Scene>')
     a('</WatchFace>')
     return "\n".join(o) + "\n"
 
 
-def punch_gauges(face: str, dd: Path) -> None:
-    """Redraw the sub-dial scales and needles with enough contrast to survive
-    a wrist in daylight.
+def an_gauges(face: str, dd: Path) -> None:
+    """Draw the sub-dials as AN-standard aircraft instruments.
 
-    Worn outdoors the two sub-dials read as empty wells with a number in
-    them. They are not broken and PRO did not change them — they are
-    pixel-identical to the base face — but they are dark-on-dark, and two
-    choices in particular were costing legibility:
+    The brief was to model a real aircraft's gauges as closely as possible
+    and recolour them to the face. The reference is the P-51D's AN engine
+    instruments, and the twelve-element grammar lives in
+    tools/make_an_gauge.py — that module IS the documentation.
 
-      The needle was THE SAME AMBER AS THE NUMERALS, so the one moving thing
-      in the well was camouflaged against the printed scale it is read
-      against. It is now a hot orange-red that appears nowhere else on the
-      dial.
-
-      The tick ring was a mid blue-grey on a dark navy plate — a contrast
-      ratio that is fine on a desk and gone in sunlight. It is now near
-      white.
-
-    This is a PRO-only override: the base faces keep their quieter treatment
-    until this has been looked at on a wrist and judged better.
+    Only the recess of the counter window is baked; the number itself is
+    live text the face draws over it, so it has to be drawn from the same
+    COUNTER_CY constant both ends use or the digits drift out of the hole.
     """
-    from make_subdial_furniture import (FACES as SD, GAUGES, sprite_size,
-                                        furniture, pointer)
-    if face not in SD:
-        return
-    c = dict(SD[face])
-    c["ink"] = (255, 208, 96, 255)          # brighter amber for the label
-    c["tick"] = (232, 240, 250, 255)        # near white: the big lift
-    c["point"] = (255, 92, 64, 255)         # hot, and unique on the dial
-    pre = c["prefix"]
-    for key in ("steps", "bpm"):
-        r_in = c[key][2]
-        n = sprite_size(r_in)
-        label, numerals = GAUGES[key]
-        furniture(n, label, numerals, c["ink"], c["tick"]).save(
-            dd / f"{pre}_gauge_{key}.png", optimize=True)
-        pointer(n, c["point"]).save(dd / f"{pre}_ptr_{key}.png",
-                                    optimize=True)
-    print("  sub-dial scales and needles redrawn for daylight contrast")
+    import make_an_gauge as G
+    slots = {"steps": "88888", "bpm": "888"}
+    for key, spec in DIALS.items():
+        gimg, pimg = G.build(key, spec["size"], counter=None,
+                             window=slots[key])
+        pre = cfg(face)["prefix"]
+        gimg.save(dd / f"{pre}_gauge_{key}.png", optimize=True)
+        pimg.save(dd / f"{pre}_ptr_{key}.png", optimize=True)
+    print("  sub-dials redrawn as AN aircraft instruments at "
+          f"{DIALS['steps']['size']}px")
 
 
 def main(argv: list[str]) -> int:
@@ -428,7 +505,7 @@ def main(argv: list[str]) -> int:
                 dd / "preview.png", optimize=True)
         print("  preview.png regenerated from the PRO render")
 
-    punch_gauges(face, dd)
+    an_gauges(face, dd)
 
     print(f"  watchface.xml -> {(draw / 'watchface.xml').relative_to(REPO)}")
     print(f"  {n} instrument drawables carried over from {face}")

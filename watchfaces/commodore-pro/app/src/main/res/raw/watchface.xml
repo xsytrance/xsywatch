@@ -711,40 +711,6 @@ way round. Every scroll period divides 3600.
       <Transform target="angle" value="-48.0 + 96.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
       <Image resource="cm_reserve_needle" />
     </PartImage>
-    <PartImage name="z12_gauge_steps" x="114" y="271" width="61" height="61" alpha="255">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Image resource="cm_gauge_steps" />
-    </PartImage>
-    <PartImage name="z13_gauge_bpm" x="312" y="272" width="63" height="63" alpha="255">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
-      <Image resource="cm_gauge_bpm" />
-    </PartImage>
-    <PartImage name="z14_steps_needle" x="114" y="271" width="61" height="61" alpha="255" pivotX="0.5" pivotY="0.5">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
-      <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
-      <Image resource="cm_ptr_steps" />
-    </PartImage>
-    <PartImage name="z15_bpm_needle" x="312" y="272" width="63" height="63" alpha="255" pivotX="0.5" pivotY="0.5">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
-      <Transform target="angle" value="235.0 + 250.0 * clamp([HEART_RATE], 0, 200) / 200" />
-      <Image resource="cm_ptr_bpm" />
-    </PartImage>
-    <PartText name="z20_reserve_pct" x="200" y="86" width="80" height="26">
-      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="cmd" size="18" color="#D6B056"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z21_steps" x="104" y="292" width="80" height="23">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="cmd" size="17" color="#D6B056"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z22_bpm" x="303" y="293" width="80" height="24">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="cmd" size="18" color="#D6B056"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
-    </PartText>
-    <PartText name="z23_date" x="322" y="230" width="60" height="26">
-      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="cmd" size="19" color="#D6B056"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
-    </PartText>
     <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
@@ -769,5 +735,39 @@ way round. Every scroll period divides 3600.
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Image resource="cm_hub" />
     </PartImage>
+    <PartImage name="z12_steps_gauge" x="96" y="254" width="96" height="96" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="cm_gauge_steps" />
+    </PartImage>
+    <PartImage name="z14_steps_needle" x="96" y="254" width="96" height="96" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
+      <Image resource="cm_ptr_steps" />
+    </PartImage>
+    <PartText name="z21_steps_read" x="96" y="275" width="96" height="28">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="cmd" size="19" color="#FFD66E"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z12_bpm_gauge" x="296" y="256" width="96" height="96" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="cm_gauge_bpm" />
+    </PartImage>
+    <PartImage name="z14_bpm_needle" x="296" y="256" width="96" height="96" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="angle" value="235.0 + 250.0 * clamp([HEART_RATE], 0, 200) / 200" />
+      <Image resource="cm_ptr_bpm" />
+    </PartImage>
+    <PartText name="z21_bpm_read" x="296" y="271" width="96" height="40">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="cmd" size="27" color="#FFD66E"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_reserve_pct" x="196" y="80" width="88" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="130" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="cmd" size="22" color="#F2C65C"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_date" x="320" y="226" width="64" height="34">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="cmd" size="24" color="#F2C65C"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
   </Scene>
 </WatchFace>
