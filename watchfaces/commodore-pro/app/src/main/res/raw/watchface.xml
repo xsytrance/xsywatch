@@ -705,11 +705,6 @@ way round. Every scroll period divides 3600.
       <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 280.0) % 360" />
       <Image resource="cm_disc" />
     </PartImage>
-    <PartImage name="z11_reserve" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
-      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
-      <Transform target="angle" value="-48.0 + 96.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
-      <Image resource="cm_reserve_needle" />
-    </PartImage>
     <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
@@ -733,6 +728,15 @@ way round. Every scroll period divides 3600.
     <PartImage name="z40_hub" x="0" y="0" width="480" height="480" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Image resource="cm_hub" />
+    </PartImage>
+    <PartImage name="z11_fuel_arc" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="cm_fuel_arc" />
+    </PartImage>
+    <PartImage name="z11_fuel_needle" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="angle" value="-48.0 + 96.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      <Image resource="cm_fuel_needle" />
     </PartImage>
     <PartImage name="z12_steps_gauge" x="96" y="254" width="96" height="96" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />

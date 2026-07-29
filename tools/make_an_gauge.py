@@ -369,6 +369,99 @@ def build(key: str, size: int, counter: str | None = None,
 COUNTER_CY = 0.36       # c * 0.72 expressed against the full sprite
 
 
+def fuel_arc(canvas: int, cx: float, cy: float, r: float, start: float,
+             sweep: float, pal: dict | None = None) -> Image.Image:
+    """A FUEL GAUGE, drawn as an arc across the top of the dial.
+
+    Not every aircraft instrument is a full circle. Fuel is very often a
+    sector sweeping E to F across the top of a panel, and that is lucky here:
+    the round sub-dial positions are taken, and the one clear band left on
+    this plate is exactly this arc — inside the hour markers, outside the
+    wordmark, all of it dead navy.
+
+    The grammar is the same twelve elements as a round instrument, minus the
+    ones a sector does not have (no well, no hub). What it keeps is the part
+    that matters: E to 1/8 is RED because that is reserve, 1/8 to 1/4 amber,
+    and the rest green. A fuel gauge that does not tell you when to worry is
+    just a bar chart.
+    """
+    p = dict(PALETTE, **(pal or {}))
+    S = canvas * SS
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    CX, CY, R = cx * SS, cy * SS, r * SS
+    w_arc = max(2, int(R * 0.055))
+
+    def at(frac, rad):
+        a = math.radians(start + sweep * frac - 90.0)
+        return (CX + math.cos(a) * rad, CY + math.sin(a) * rad)
+
+    box = [CX - R, CY - R, CX + R, CY + R]
+    for f0, f1, key in ((0.0, 0.125, "arc_lim"), (0.125, 0.25, "arc_warn"),
+                        (0.25, 1.0, "arc_ok")):
+        d.arc(box, start + sweep * f0 - 90, start + sweep * f1 - 90,
+              fill=p[key], width=w_arc)
+
+    # graduations: majors at E, 1/4, 1/2, 3/4, F with four minors between
+    for i in range(4 * 4 + 1):
+        f = i / 16.0
+        major = i % 4 == 0
+        r0 = R + w_arc * (0.6 if major else 0.6)
+        r1 = R + w_arc * (2.5 if major else 1.7)
+        d.line([at(f, r0), at(f, r1)],
+               fill=p["grad"] if major else p["grad_dim"],
+               width=max(1, int(SS * (1.8 if major else 1.0))))
+
+    # the reserve end gets the luminous index, because that is the end you
+    # need to find at a glance in the dark
+    tip = at(0.0, R - w_arc * 1.2)
+    b1 = at(0.0, R - w_arc * 0.1)
+    b2 = at(0.028, R - w_arc * 0.6)
+    d.polygon([tip, b1, b2], fill=p["lume"])
+
+    try:
+        f_lab = ImageFont.truetype(FONT, max(7, int(canvas * 0.036)) * SS)
+    except OSError:
+        f_lab = ImageFont.load_default()
+    # Inside the arc, not outside it: outboard of r=152 the ends of the
+    # sweep run straight into the 10 and 2 o'clock hour markers.
+    for f, txt in ((0.0, "E"), (1.0, "F")):
+        engrave(d, at(f, R - w_arc * 2.6), txt, f_lab, p["ink"], p, depth=0.9)
+    return img.resize((canvas, canvas), Image.LANCZOS)
+
+
+def fuel_needle(canvas: int, cx: float, cy: float, r_tip: float,
+                pal: dict | None = None, r_tail: float | None = None
+                ) -> Image.Image:
+    """The fuel pointer, drawn straight up so the face rotates it by value.
+
+    It rides just inside the scale rather than reaching the hub. A sector
+    gauge's pointer does geometrically pivot at the arc's centre — which here
+    is the middle of the watch — but drawn full length it sweeps straight
+    across the MERIDIAN wordmark and the wing emblem. A short pointer beside
+    its own scale is commonplace on real arc instruments and is the only
+    version that does not vandalise the dial.
+    """
+    p = dict(PALETTE, **(pal or {}))
+    S = canvas * SS
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    CX, CY = cx * SS, cy * SS
+    tip = r_tip * SS
+    tail_r = (r_tail if r_tail is not None else r_tip * 0.74) * SS
+    spade = tip - (tip - tail_r) * 0.45
+    ws = max(1, int(SS * 1.7))
+    wsp = max(2, int(SS * 4.2))
+    o = SS * 1.5
+    d.polygon([(CX + o, CY - tip + o), (CX - wsp + o, CY - spade + o),
+               (CX + wsp + o, CY - spade + o)], fill=(0, 0, 0, 120))
+    d.line([(CX, CY - tail_r), (CX, CY - spade)], fill=p["pointer"],
+           width=ws)
+    d.polygon([(CX, CY - tip), (CX - wsp, CY - spade), (CX + wsp, CY - spade)],
+              fill=p["pointer"])
+    return img.resize((canvas, canvas), Image.LANCZOS)
+
+
 GLYPH_H = 44           # native cell; the face scales it down per readout
 
 

@@ -156,6 +156,10 @@ DIALS = {
                   lo=0, hi=200, digits=27),
 }
 START_DEG, SWEEP_DEG = 235.0, 250.0
+
+# The fuel sweep, kept identical to the base face's reserve needle mapping so
+# the needle lands where the plate always expected it to.
+FUEL_START, FUEL_SWEEP, FUEL_R = -48.0, 96.0, 152.0
 COUNTER_CY = 0.36        # must match make_an_gauge.COUNTER_CY
 
 
@@ -198,6 +202,20 @@ def instruments(pre: str) -> list[str]:
     four digits of steps never will be at this dial size.
     """
     o = []
+    # --- fuel: the scale, then the needle over it ----------------------
+    o += [f'    <PartImage name="z11_fuel_arc" x="0" y="0" width="480" '
+          f'height="480" alpha="255">',
+          f'      {AMB}',
+          f'      <Image resource="{pre}_fuel_arc" />',
+          '    </PartImage>',
+          f'    <PartImage name="z11_fuel_needle" x="0" y="0" width="480" '
+          f'height="480" alpha="255" pivotX="0.5" pivotY="0.5">',
+          f'      {AMB}',
+          f'      <Transform target="angle" value="{FUEL_START} + '
+          f'{FUEL_SWEEP} * clamp([BATTERY_PERCENT], 0, 100) / 100" />',
+          f'      <Image resource="{pre}_fuel_needle" />',
+          '    </PartImage>']
+
     for key, c in DIALS.items():
         cx, cy = c["centre"]
         n = c["size"]
@@ -454,9 +472,9 @@ def build_xml(face: str) -> str:
     # clearance from each sub-dial centre where the box implied about 25.
     tail = src[src.index('    <PartImage name="z10_airscrew"'):
                src.index('  </Scene>')]
-    drop = ("z12_gauge_steps", "z13_gauge_bpm", "z14_steps_needle",
-            "z15_bpm_needle", "z20_reserve_pct", "z21_steps", "z22_bpm",
-            "z23_date")
+    drop = ("z11_reserve", "z12_gauge_steps", "z13_gauge_bpm",
+            "z14_steps_needle", "z15_bpm_needle", "z20_reserve_pct",
+            "z21_steps", "z22_bpm", "z23_date")
     kept, skip = [], False
     for line in tail.splitlines():
         st = line.strip()
@@ -498,6 +516,17 @@ def an_gauges(face: str, dd: Path) -> None:
         pre = cfg(face)["prefix"]
         gimg.save(dd / f"{pre}_gauge_{key}.png", optimize=True)
         pimg.save(dd / f"{pre}_ptr_{key}.png", optimize=True)
+    # The fuel gauge: an arc across the top of the dial rather than a third
+    # round well, because the round positions are taken and the one clear
+    # band left on this plate is exactly this sweep — inside the hour
+    # markers, above the wordmark, all of it dead navy at r=150.
+    pre = cfg(face)["prefix"]
+    G.fuel_arc(480, 240, 240, FUEL_R, FUEL_START, FUEL_SWEEP).save(
+        dd / f"{pre}_fuel_arc.png", optimize=True)
+    G.fuel_needle(480, 240, 240, FUEL_R - 5,
+                  r_tail=FUEL_R - 46).save(
+        dd / f"{pre}_fuel_needle.png", optimize=True)
+
     global FONT_WIDTHS, GLYPH_H
     FONT_WIDTHS = G.bitmap_glyphs(dd, prefix="cp")
     GLYPH_H = G.GLYPH_H
