@@ -13,9 +13,11 @@ Concept: `previews/MERIDIAN_PRO_CONCEPT.png`.
 
 ## 1. Why this face is the one that can be sold
 
-Every existing MERIDIAN face is blocked from sale by
-`docs/reports/AIRCRAFT_WATCH_DISCOVERY.md`: their plates and hands are
-AI-generated. The concept face contains **no photograph and nothing that
+*(2026-07-29, owner ruling: the every-pixel-original rule is rescinded —
+see the discovery report's final section. What follows stands on its own
+merits.)* The aviator faces' plates and hands are AI-generated, which for a
+*paid* product means derivative-work exposure to assess and no enforceable
+copyright. The concept face contains **no photograph and nothing that
 needs a model** — bezel, milled plate, arcs, type, shadow. Every pixel comes
 from `PartDraw` vectors or seeded procedural sprites, so it is **original by
 construction from the first commit**. Provenance is not a debt to pay down;
