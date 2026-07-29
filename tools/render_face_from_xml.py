@@ -264,7 +264,7 @@ def format_template(node, env) -> str:
     return "".join(out)
 
 
-def expand(container, branch: str | None):
+def expand(container, branch: str | None, env: dict | None = None):
     """Flatten <Condition> blocks into a plain part list.
 
     The renderer draws a flat sequence of parts, but weather, and anything
@@ -272,25 +272,52 @@ def expand(container, branch: str | None):
     this the Condition element itself reaches the part loop and dies looking
     for a width attribute it was never going to have.
 
-    `branch` names the Compare to take — the expression names are the
-    engine's own (wx_rain, wx_storm, wx_night ...). Anything unmatched falls
-    to Default, which is exactly what the watch does when weather is
-    unavailable, so None renders the fair-weather face.
+    THE BRANCH IS NOW CHOSEN THE WAY THE WATCH CHOOSES IT: each Compare's
+    named expression is evaluated against the data environment and the FIRST
+    TRUE one wins, exactly as the format specifies. This used to match branch
+    names literally and fall back to Default, which happened to work only
+    because every face so far declared a Default. `Default` is optional in
+    the schema (minOccurs="0"), and a face that omits it — because some of
+    its states legitimately draw nothing — rendered as an empty aperture
+    while being perfectly correct on the device.
+
+    `branch` remains an explicit override, used by the motion-state sheets to
+    force a particular state regardless of the fixture weather.
     """
     out = []
     for node in container:
         if node.tag != "Condition":
             out.append(node)
             continue
+        compares = node.findall("Compare")
         chosen = None
-        for cmp_ in node.findall("Compare"):
-            if branch is not None and cmp_.get("expression") == branch:
-                chosen = cmp_
-                break
+
+        if branch is not None:
+            for cmp_ in compares:
+                if cmp_.get("expression") == branch:
+                    chosen = cmp_
+                    break
+
+        if chosen is None and env is not None:
+            exprs = {e.get("name"): (e.text or "")
+                     for e in node.iter("Expression")}
+            for cmp_ in compares:
+                src = exprs.get(cmp_.get("expression"))
+                if src is None:
+                    continue
+                try:
+                    if evaluate(src, env):
+                        chosen = cmp_
+                        break
+                except (KeyError, ValueError, ZeroDivisionError):
+                    # An unresolvable source is not a render failure — the
+                    # watch simply would not match that branch either.
+                    continue
+
         if chosen is None:
             chosen = node.find("Default")
         if chosen is not None:
-            out.extend(expand(chosen, branch))
+            out.extend(expand(chosen, branch, env))
     return out
 
 
@@ -304,7 +331,7 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
     canvas = Image.new("RGBA", (int(root.get("width")), int(root.get("height"))),
                        (int(bg[3:5], 16), int(bg[5:7], 16), int(bg[7:9], 16),
                         255))
-    for part in expand(scene, branch):
+    for part in expand(scene, branch, env):
         if skip and part.get("name") in skip:
             continue
         variant = part.find("Variant")
@@ -333,6 +360,14 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
                 py = float(part.get("pivotY", 0.5)) * h
                 layer = layer.rotate(-angle, resample=Image.BICUBIC,
                                      center=(px, py))
+            tc = part.get("tintColor")
+            if tc and tc.startswith("#"):
+                # SRC_IN, matching Android's default tint mode: the colour is
+                # REPLACED and only the alpha survives. Sprites meant to be
+                # tinted must therefore carry their shading in alpha, not in
+                # RGB luminance — a gradient in RGB flattens to a solid block
+                # here, and would do the same on the watch.
+                layer = tint(layer, tc[:7] if len(tc) >= 7 else tc)
         elif part.tag == "PartText":
             bf = part.find(".//BitmapFont")
             # <Template> may be wrapped in <Upper>/<Lower>. A bitmap font only

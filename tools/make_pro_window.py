@@ -129,22 +129,45 @@ def sky(size: int) -> Image.Image:
 
 
 def ground(size: int) -> Image.Image:
-    """Lower half, white, with a bright horizon edge. The edge is what the
-    eye actually tracks when the world banks, so it is drawn explicitly
-    rather than left to the tint boundary."""
+    """Lower half, alpha-graded like the sky.
+
+    The bright horizon edge that used to live here is now its own sprite:
+    baked into the ground it would take the ground's tint under SRC_IN and
+    stop being bright, which is the opposite of what it is for.
+    """
     S = size * SS
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     px = img.load()
     horizon = S // 2
     for y in range(horizon, S):
         t = (y - horizon) / max(1, S - horizon - 1)
-        # darkest at the bottom: ground falls away from the light
-        v = int(255 * (1.0 - 0.62 * t))
+        # ground falls away from the light, so it thins toward the bottom.
+        # In alpha, for the same SRC_IN reason as the sky.
+        av = int(255 * (1.0 - 0.55 * t))
         for x in range(S):
-            px[x, y] = (v, v, v, 255)
+            px[x, y] = (255, 255, 255, av)
+    return img.resize((size, size), Image.LANCZOS)
+
+
+def horizon(size: int) -> Image.Image:
+    """The line the eye actually tracks when the world banks.
+
+    Its own layer, and its own constant tint, because it must stay brighter
+    than both the sky above it and the ground below whatever the weather —
+    and under SRC_IN anything sharing the ground sprite shares the ground
+    colour.
+    """
+    S = size * SS
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    d.rectangle([0, horizon - SS // 2, S, horizon + SS // 2],
-                fill=(255, 255, 255, 210))
+    h = S // 2
+    # Thin. It was drawn heavy at first and the amber aircraft symbol, which
+    # sits exactly on it in level flight, disappeared into it — so the line
+    # is now a wire with a faint bloom, and it is tinted PALE while the
+    # symbol stays amber. The two must never be the same colour: reading
+    # the symbol against the horizon is the entire instrument.
+    d.rectangle([0, h - SS // 2, S, h + SS // 2], fill=(255, 255, 255, 240))
+    d.rectangle([0, h - SS, S, h + SS], fill=(255, 255, 255, 55))
     return img.resize((size, size), Image.LANCZOS)
 
 
@@ -172,7 +195,7 @@ def disc(size: int, win: int, glow: bool) -> Image.Image:
     S = size * SS
     img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
-    c, r = S / 2.0, win * SS * 0.105
+    c, r = S / 2.0, win * SS * 0.085
     if glow:
         for i in range(14, 0, -1):
             rr = r * (1 + i * 0.16)
@@ -339,6 +362,7 @@ def surround(face: str) -> Image.Image:
 LAYERS = {
     "sky": lambda n, f: sky(n),
     "ground": lambda n, f: ground(n),
+    "horizon": lambda n, f: horizon(n),
     "stars": lambda n, f: stars(n),
     "sun": lambda n, f: disc(n, min(cfg(f)["box"]), True),
     "moon": lambda n, f: moon(n, min(cfg(f)["box"])),
