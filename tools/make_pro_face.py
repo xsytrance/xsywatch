@@ -66,12 +66,12 @@ T = "([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)"
 # the canopy rather than in the world.
 #             bank°   x    y
 GAIN = {
-    "world":   (18.0, 2.0, 3.0),
-    "sun":     (0.0, -4.0, -5.0),
-    "cloudf":  (0.0,  5.0,  6.0),
-    "cloudn":  (0.0,  9.0, 11.0),
+    "world":   (26.0, 3.0, 4.0),
+    "sun":     (0.0, -5.0, -7.0),
+    "cloudf":  (0.0,  8.0, 10.0),
+    "cloudn":  (0.0, 14.0, 17.0),
     "precip":  (0.0,  6.0,  8.0),
-    "glass":   (0.0, -6.0, -7.0),
+    "glass":   (0.0, -9.0, -11.0),
 }
 
 
@@ -105,7 +105,7 @@ STATES = [
      "#0F1725", "#14161C", 0.60, "#4A5260"),
     ("n_cloud", f"{NIGHT} &amp;&amp; {P} &gt;= 15",
      "#0E1626", "#0B0E15", 0.45, "#3E4654"),
-    ("n_clear", NIGHT, "#0C1420", "#080B12", 0.05, "#2A3140"),
+    ("n_clear", NIGHT, "#0C1420", "#080B12", 0.20, "#2A3140"),
     # --- day -----------------------------------------------------------
     ("d_freeze", f"{DAY} &amp;&amp; {TEMP} &lt;= -5",
      "#9FC4DE", "#D6E2EC", 0.45, "#EAF2F8"),
@@ -120,7 +120,7 @@ STATES = [
     ("d_rain_l", f"{DAY} &amp;&amp; {P} &gt;= 65",
      "#5A6470", "#3C3A34", 0.78, "#8B939D"),
     ("d_scorch", f"{DAY} &amp;&amp; {TEMP} &gt;= 32",
-     "#E4A445", "#8A6030", 0.05, "#F0D2A0"),
+     "#E4A445", "#8A6030", 0.18, "#F0D2A0"),
     ("d_over",   f"{DAY} &amp;&amp; {P} &gt;= 55",
      "#5E6A78", "#3E4038", 0.95, "#98A2AE"),
     ("d_vcloud", f"{DAY} &amp;&amp; {P} &gt;= 40",
@@ -128,8 +128,8 @@ STATES = [
     ("d_cloud",  f"{DAY} &amp;&amp; {P} &gt;= 25",
      "#4E8CC0", "#6A5A3C", 0.55, "#D2DAE2"),
     ("d_hazy",   f"{DAY} &amp;&amp; {P} &gt;= 12",
-     "#5E9AC8", "#74603C", 0.30, "#DCE4EC"),
-    ("d_sunny",  DAY, "#3E96DC", "#7A5C34", 0.12, "#E8EEF4"),
+     "#5E9AC8", "#74603C", 0.44, "#DCE4EC"),
+    ("d_sunny",  DAY, "#3E96DC", "#7A5C34", 0.30, "#E8EEF4"),
 ]
 
 # Precipitation is a separate, shorter ladder: several sky states share one
@@ -259,8 +259,8 @@ def build_xml(face: str) -> str:
     for k, e, skc, gdc, ca, ct in STATES:
         a(f'      <Compare expression="c_{k}">')
         for tag, res, per, gain, mul in (
-                ("far", "pw_cloud_far", 180.0, "cloudf", 0.72),
-                ("near", "pw_cloud_near", 90.0, "cloudn", 1.0)):
+                ("far", "pw_cloud_far", 120.0, "cloudf", 0.72),
+                ("near", "pw_cloud_near", 60.0, "cloudn", 1.0)):
             alpha = max(0, min(255, int(255 * ca * mul)))
             if alpha < 4:
                 continue
@@ -351,6 +351,47 @@ def build_xml(face: str) -> str:
     return "\n".join(o) + "\n"
 
 
+def punch_gauges(face: str, dd: Path) -> None:
+    """Redraw the sub-dial scales and needles with enough contrast to survive
+    a wrist in daylight.
+
+    Worn outdoors the two sub-dials read as empty wells with a number in
+    them. They are not broken and PRO did not change them — they are
+    pixel-identical to the base face — but they are dark-on-dark, and two
+    choices in particular were costing legibility:
+
+      The needle was THE SAME AMBER AS THE NUMERALS, so the one moving thing
+      in the well was camouflaged against the printed scale it is read
+      against. It is now a hot orange-red that appears nowhere else on the
+      dial.
+
+      The tick ring was a mid blue-grey on a dark navy plate — a contrast
+      ratio that is fine on a desk and gone in sunlight. It is now near
+      white.
+
+    This is a PRO-only override: the base faces keep their quieter treatment
+    until this has been looked at on a wrist and judged better.
+    """
+    from make_subdial_furniture import (FACES as SD, GAUGES, sprite_size,
+                                        furniture, pointer)
+    if face not in SD:
+        return
+    c = dict(SD[face])
+    c["ink"] = (255, 208, 96, 255)          # brighter amber for the label
+    c["tick"] = (232, 240, 250, 255)        # near white: the big lift
+    c["point"] = (255, 92, 64, 255)         # hot, and unique on the dial
+    pre = c["prefix"]
+    for key in ("steps", "bpm"):
+        r_in = c[key][2]
+        n = sprite_size(r_in)
+        label, numerals = GAUGES[key]
+        furniture(n, label, numerals, c["ink"], c["tick"]).save(
+            dd / f"{pre}_gauge_{key}.png", optimize=True)
+        pointer(n, c["point"]).save(dd / f"{pre}_ptr_{key}.png",
+                                    optimize=True)
+    print("  sub-dial scales and needles redrawn for daylight contrast")
+
+
 def main(argv: list[str]) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--face", default="commodore")
@@ -386,6 +427,8 @@ def main(argv: list[str]) -> int:
             im.convert("RGB").resize((192, 192), Image.LANCZOS).save(
                 dd / "preview.png", optimize=True)
         print("  preview.png regenerated from the PRO render")
+
+    punch_gauges(face, dd)
 
     print(f"  watchface.xml -> {(draw / 'watchface.xml').relative_to(REPO)}")
     print(f"  {n} instrument drawables carried over from {face}")

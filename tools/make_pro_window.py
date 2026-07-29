@@ -103,7 +103,7 @@ def world_size(face: str) -> int:
     return int(math.ceil(diag + travel + 8))
 
 
-PARALLAX_MAX = 14           # the largest per-layer parallax gain, in px
+PARALLAX_MAX = 18           # the largest per-layer parallax gain, in px
 
 
 # ---------------------------------------------------------------------

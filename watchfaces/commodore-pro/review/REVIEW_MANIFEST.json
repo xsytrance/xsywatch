@@ -53,32 +53,32 @@
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 307229,
+      "bytes": 309840,
       "height": 398,
-      "sha256": "71362f70b73cc045c6025c7b21590562ee335a67582333669bfaef689eb942c0",
+      "sha256": "b238b03f1abd2e5a58ec01e98fd1a6b7722408dde424c815a24577382a72af85",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 289392,
+      "bytes": 289317,
       "height": 764,
-      "sha256": "4f3f1d383c2f70dea16d4acb66cef6eabe61d48939cd5542496f68169f571be3",
+      "sha256": "8182e57f672ca90325c1a5a6a83bd20c2e8bfd7d8b4e17d7d848252a8cbe349b",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 317917,
+      "bytes": 318135,
       "height": 480,
-      "sha256": "99efc89050e6aa68c34637df9da86e1cb266d2594a1433bf0184918c385ccc70",
+      "sha256": "493807356111505db6f93fafbd54fc385643be6c9eac54cd713c93440453c11b",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 381023,
+      "bytes": 381228,
       "height": 576,
-      "sha256": "d4b4113c028e7fee8dbe9f33f72c76527057fbd77b3639f6195766eddacbf2b4",
+      "sha256": "84f53b3137c73deeb5edb61bd00eb47fc270219e6d1ca55010ae09b575827b2c",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "commodore-pro",
-  "watchface_xml_sha256": "d46954bef008991259778b2aaf13e1398e54cd5c11f9e871439c7b75c570330d"
+  "watchface_xml_sha256": "34ad5688b0a06b989bfbf1bd2cc071fbd6ec252ea4f66bb92bb233d31e05ceb3"
 }
