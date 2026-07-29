@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hayate.dev"
-version_code = 11
-version_name = "1.2.0-dev"
+version_code = 12
+version_name = "1.3.0-dev"
 
 [[fonts]]
 name = "hyt"
@@ -65,22 +65,42 @@ height = 40
 #
 # Roll gain is applied negated, so the horizon appears to stay level while
 # the instrument turns around it — what a real gyro does.
+#
+# THE WEATHER NOW MOVES. Each branch carries its own overlay scrolling over
+# the scene: rain and storm fall, snow drifts, cloud slides sideways, stars
+# wheel. The overlays are seamlessly tiling sprites translated by exactly
+# their tile period, drawn by tools/make_weather_overlays.py — arithmetic, not
+# generation, so unlike everything else on this dial they are original by
+# construction.
+#
+# No clip sprite is needed here and `aperture = true` says so: this face's
+# window is a real hole through the plate and everything in the field box is
+# cropped by it already.
+#
+# THE FIELD SPRITES WERE CARRYING A SECOND RETICLE. The scenes were generated
+# with the gunsight drawn into them, so hy_fld_*.png held a red reticle that
+# rolled with the wrist while the etched one on hy_sight_glass.png stayed put.
+# Level, they coincided and it looked right; tilted, the sight split in two.
+# tools/strip_baked_reticle.py has removed the baked copy.
 [[components]]
-type = "weather_scene"
+type = "animated_weather"
 name = "z00_viewfinder"
 box = {x = 140, y = 272, width = 200, height = 200}
-clear = "hy_fld_clear"
-overcast = "hy_fld_overcast"
-rain = "hy_fld_rain"
-snow = "hy_fld_snow"
-night = "hy_fld_night"
+tile = 100
+aperture = true
+scenes = {wx_clear = "hy_fld_clear", wx_dull = "hy_fld_overcast", wx_rain = "hy_fld_rain", wx_storm = "hy_fld_rain", wx_snow = "hy_fld_snow", wx_night = "hy_fld_night"}
+overlays = {wx_dull = "hy_ov_cloud", wx_rain = "hy_ov_rain", wx_storm = "hy_ov_storm", wx_snow = "hy_ov_snow", wx_night = "hy_ov_stars"}
+periods = {wx_dull = 30.0, wx_rain = 1.5, wx_storm = 1.2, wx_snow = 6.0, wx_night = 45.0}
+flash = "hy_ov_flash"
+flash_period_s = 24.0
 rain_pct = 50
 showers_pct = 20
+storm_pct = 75
 snow_temp = 2
 roll_gain_deg = 24.0
-pitch_gain_px = 20.0
+shift_y_px = 20.0
 roll_clamp_deg = 45
-pitch_clamp_deg = 40
+shift_clamp_deg = 40
 aod = {alpha = 0, duration = 0.4, offset = 0.0, interpolation = "EASE_OUT"}
 
 [[components]]

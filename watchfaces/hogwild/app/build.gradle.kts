@@ -16,7 +16,7 @@ android {
         applicationId = "com.xsytrance.hogwild.dev"
         minSdk = 34
         targetSdk = 36
-        versionCode = 4
-        versionName = "1.0.0-dev"
+        versionCode = 5
+        versionName = "1.1.0-dev"
     }
 }

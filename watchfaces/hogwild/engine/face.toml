@@ -28,8 +28,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hogwild.dev"
-version_code = 4
-version_name = "1.0.0-dev"
+version_code = 5
+version_name = "1.1.0-dev"
 
 [[fonts]]
 name = "hwg"
@@ -67,8 +67,48 @@ box = {x = 0, y = 0, width = 480, height = 480}
 alpha = 0
 aod = {alpha = 255, duration = 0.4, offset = 0.0, interpolation = "EASE_IN"}
 
+# ---- WEATHER, AS A RADAR ACTUALLY SHOWS IT ---------------------------
+#
+# Every other face in the collection reads its weather out of a window. This
+# one has no window, and giving it one would be giving it somebody else's
+# dial. What it has is a PPI scope, and showing where the precipitation is
+# happens to be exactly what a scope is for — so the returns are not a
+# substitute for a weather display, they are the weather display.
+#
+# The returns are drawn by tools/make_weather_overlays.py: cellular echoes,
+# brighter at the core, clipped to the glass, seeded so they are stable. Green
+# when it is merely wet, amber cores when it is heavy — the way a scope
+# colours rain rate. Original by construction, unlike this face's plate.
+#
+# They hold station and breathe on alpha rather than scrolling. Echoes that
+# slid across a scope would be reading out ground speed, and this aircraft is
+# not supplying any. The sweep below already provides the motion, and it now
+# passes over something.
+#
+# Dry weather paints nothing at all. A blank scope is the correct reading for
+# clear air, and it is also the only one the format allows: a Compare element
+# must have at least one child, so the dry branches are simply not declared
+# and the Condition falls through to nothing.
+[[components]]
+type = "radar_weather"
+name = "z09_returns"
+box = {x = 184, y = 305, width = 113, height = 113}
+light = "wh_rdr_light"
+heavy = "wh_rdr_heavy"
+rain_pct = 50
+showers_pct = 20
+storm_pct = 75
+snow_temp = 2
+breathe_period_s = 6.0
+roll_gain_deg = 5.0
+shift_x_px = 4.0
+shift_y_px = 6.0
+roll_clamp_deg = 45
+shift_clamp_deg = 40
+aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
+
 # Radar sweep, on its own sprite so the pivot lands on the scope centre.
-# 4 s per revolution.
+# 4 s per revolution. It now sweeps over live returns rather than empty glass.
 [[components]]
 type = "rotating_image"
 name = "z10_sweep"

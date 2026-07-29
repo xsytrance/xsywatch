@@ -23,6 +23,7 @@ questions on top.
 | `wh_sweep.png` | procedural | yes |
 | `m_*.png` glyphs | procedural | yes |
 | `watchface.xml` | generated from `engine/face.toml` | yes |
+| `wh_rdr_light.png`, `wh_rdr_heavy.png` | procedural — seeded drawing, `tools/make_weather_overlays.py` | **yes** |
 
 Only the plate is the problem. Everything that moves is already original.
 
@@ -48,3 +49,12 @@ described in the studio's `roadmap/DESIGN_LANGUAGE.md`.
 - Package stays `com.xsytrance.hogwild.dev`.
 - Debug signing only. No release config, no bundle, no store metadata.
 - Do not submit, publish or sell this build.
+
+## The animated weather layer is clean
+
+Everything added for animated weather is drawn from seeded arithmetic by
+`tools/make_weather_overlays.py` — no model, no prompt, no external image. It
+is original by construction and can ship as it stands. That does not unblock
+this face: the plate, the hands and the weather scenes behind the animation
+are unchanged and still generated. It does mean the motion work will not have
+to be redone when they are rebuilt.

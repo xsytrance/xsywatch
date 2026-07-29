@@ -29,8 +29,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.balsa.dev"
-version_code = 10
-version_name = "1.1.0-dev"
+version_code = 11
+version_name = "1.2.0-dev"
 
 [[fonts]]
 name = "bal"
@@ -92,6 +92,53 @@ night = "ba_wx_night"
 rain_pct = 50
 showers_pct = 20
 snow_temp = 2
+aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
+
+# ---- THE WEATHER MOVES ------------------------------------------------
+#
+# The scene above is the sky; this is the weather falling through it. Rain and
+# storm fall, snow drifts and sways, cloud slides sideways, stars wheel — each
+# one a seamlessly tiling sprite translated by exactly its tile period, so the
+# loop never shows a seam. Drawn by tools/make_weather_overlays.py from seeded
+# arithmetic: unlike the plate and the scene behind it, these are original by
+# construction and carry no provenance debt.
+#
+# WHY A CLIP AND NOT AN APERTURE. HAYATE's window is a hole through its plate,
+# so its plate crops the weather for free. This plate is opaque — RGB, no
+# alpha channel, the window painted black beneath a scene layer that sits on
+# top of it. Nothing here crops anything, so ba_wx_clip is a copy of the plate
+# with the window silhouette punched out, laid over the weather to trap it.
+# Its box is the overlay's whole swept travel, not the window: a scroller is a
+# tile longer than its box and then moves a tile, so a surround sized to the
+# window lets rain run across the dial.
+#
+# WHY THE VIEW ITSELF DOES NOT TILT. The aircraft symbol and pitch ladder are
+# generated into the same image as the sky and ground. On an attitude
+# indicator the symbol is fixed to the airframe and the horizon moves behind
+# it, so rolling that image as one layer would swing the aeroplane and leave
+# the world level — the instrument read backwards. The wrist response lives on
+# the weather over the glass until the scenes are rebuilt with the furniture
+# on its own layer.
+[[components]]
+type = "animated_weather"
+name = "z03_wx_motion"
+box = {x = 170, y = 297, width = 140, height = 140}
+tile = 40
+clip = "ba_wx_clip"
+clip_box = {x = 105, y = 232, width = 270, height = 248}
+overlays = {wx_dull = "ba_ov_cloud", wx_rain = "ba_ov_rain", wx_storm = "ba_ov_storm", wx_snow = "ba_ov_snow", wx_night = "ba_ov_stars"}
+periods = {wx_dull = 30.0, wx_rain = 1.5, wx_storm = 1.2, wx_snow = 6.0, wx_night = 45.0}
+flash = "ba_ov_flash"
+flash_period_s = 24.0
+rain_pct = 50
+showers_pct = 20
+storm_pct = 75
+snow_temp = 2
+roll_gain_deg = 7.0
+shift_x_px = 6.0
+shift_y_px = 8.0
+roll_clamp_deg = 45
+shift_clamp_deg = 40
 aod = {alpha = 0, duration = 0.4, offset = 0.1, interpolation = "EASE_OUT"}
 
 # ---- the signature: the airscrew never stops -------------------------

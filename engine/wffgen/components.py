@@ -31,15 +31,35 @@ class Component:
 
 
 def _part_image(name: str, box: dict, resource: str, alpha: int = 255,
-                pivot: bool = False) -> Elem:
+                pivot: bool | tuple[float, float] = False) -> Elem:
     attrs = {"name": name, "x": str(box["x"]), "y": str(box["y"]),
              "width": str(box["width"]), "height": str(box["height"]),
              "alpha": str(alpha)}
-    if pivot:
+    if pivot is True:
         attrs["pivotX"] = "0.5"
         attrs["pivotY"] = "0.5"
+    elif pivot:
+        # Six places, not four: a shared pivot is usually a repeating
+        # fraction, and rounding it early leaves layers that are meant to roll
+        # together a fraction of a pixel apart.
+        attrs["pivotX"] = f"{pivot[0]:.6f}".rstrip("0").rstrip(".")
+        attrs["pivotY"] = f"{pivot[1]:.6f}".rstrip("0").rstrip(".")
     p = Elem("PartImage", attrs)
     return p
+
+
+def _shared_pivot(part_box: dict, about_x: float, about_y: float
+                  ) -> tuple[float, float]:
+    """Pivot fractions that put a part's rotation centre on an absolute point.
+
+    Layers that roll together must roll about the SAME point. A scrolling
+    overlay is deliberately longer than the scene it covers and is drawn
+    offset from it, so its own centre is somewhere else entirely — pivoting
+    both at 0.5 swings them about centres up to a tile apart, and the weather
+    visibly slides across the view it is supposed to be falling through.
+    """
+    return ((about_x - part_box["x"]) / part_box["width"],
+            (about_y - part_box["y"]) / part_box["height"])
 
 
 def _finish(part: Elem, aod: AmbientPolicy, transforms: list[Elem],
@@ -250,6 +270,276 @@ def weather_scene(name: str, box: dict, aod: AmbientPolicy,
                      [clear, overcast, rain, snow, night],
                      f"live weather in the cockpit window ({how}); falls back "
                      "to clear when the source is unavailable")
+
+
+def _gyro(roll_deg: float, x_px: float, y_px: float,
+          roll_clamp: int = 45, shift_clamp: int = 40) -> Elem | None:
+    """A <Gyro>: wrist-driven adjustment of a part, in one element.
+
+    WHY THIS AND NOT MORE Transforms. The format carries a dedicated Gyro
+    element (common/transform/gyroElements.xsd) that takes x, y, scaleX,
+    scaleY, angle and alpha together, and its values are *relative* — the
+    schema's own example yields +/-5, which only makes sense as a delta. That
+    matters twice over: the expression carries no base term, so it cannot
+    fight the part's position, and it leaves the Transform targets free for
+    time-driven motion. Scrolling rain that also tilts needs both, and two
+    Transforms on the same target cannot deliver it.
+
+    Every axis is guarded by ACCELEROMETER_IS_SUPPORTED. A watch without the
+    sensor reports a constant, and a layer displaced by a constant is simply
+    in the wrong place for good.
+    """
+    attrs: dict[str, str] = {}
+    if roll_deg:
+        # Negated: the horizon should appear to stay level while the
+        # instrument turns around it, which is what the real one does.
+        attrs["angle"] = X.if_accelerometer(
+            X.tilt_shift(-roll_deg, "X", roll_clamp))
+    if x_px:
+        attrs["x"] = X.if_accelerometer(X.tilt_shift(x_px, "X", shift_clamp))
+    if y_px:
+        attrs["y"] = X.if_accelerometer(X.tilt_shift(y_px, "Y", shift_clamp))
+    return Elem("Gyro", attrs) if attrs else None
+
+
+# Condition tests, most specific first. WFF renders the FIRST Compare that
+# matches, so order is the logic.
+#
+# WHY THESE BRANCH ON NUMBERS AND NOT ON WEATHER.CONDITION: the schema
+# declares CONDITION as a source but documents none of its integer values.
+# Branching on an undocumented enum is guessing, and guessing wrong shows the
+# wearer snow in July. IS_DAY, CHANCE_OF_PRECIPITATION and TEMPERATURE are
+# numerically unambiguous.
+#
+# Night is tested first on purpose: a lit daytime sky at 3am is a worse error
+# than a rainy night rendered without its rain.
+def _weather_tests(rain_pct: int, showers_pct: int, storm_pct: int,
+                   snow_temp: int) -> list[tuple[str, str]]:
+    av = "[WEATHER.IS_AVAILABLE]"
+    return [
+        ("wx_night", f"{av} && ![WEATHER.IS_DAY]"),
+        ("wx_snow", f"{av} && [WEATHER.CHANCE_OF_PRECIPITATION] >= {rain_pct}"
+                    f" && [WEATHER.TEMPERATURE] <= {snow_temp}"),
+        ("wx_storm", f"{av} && [WEATHER.CHANCE_OF_PRECIPITATION] >= {storm_pct}"),
+        ("wx_rain", f"{av} && [WEATHER.CHANCE_OF_PRECIPITATION] >= {rain_pct}"),
+        ("wx_dull", f"{av} && [WEATHER.CHANCE_OF_PRECIPITATION] >= {showers_pct}"),
+    ]
+
+
+def animated_weather(name: str, box: dict, aod: AmbientPolicy,
+                     scenes: dict[str, str], overlays: dict[str, str],
+                     tile: int, periods: dict[str, float] | None = None,
+                     roll_gain_deg: float = 0.0, shift_x_px: float = 0.0,
+                     shift_y_px: float = 0.0, clip: str | None = None,
+                     clip_box: dict | None = None,
+                     rain_pct: int = 50, showers_pct: int = 20,
+                     storm_pct: int = 75, snow_temp: int = 2,
+                     roll_clamp_deg: int = 45, shift_clamp_deg: int = 40,
+                     flash: str | None = None, aperture: bool = False,
+                     flash_period_s: float = 12.0) -> Component:
+    """The cockpit window, showing live weather that actually moves.
+
+    Each branch is a scene, an overlay scrolling across it, and — in the
+    storm branch — a lightning wash driven on alpha.
+
+    HOW THE MOTION IS BUILT. Precipitation is one seamlessly tiling sprite
+    translated by exactly its tile period, not a frame sequence: a sequence
+    at this size would cost twenty-odd PNGs per condition per face, and it
+    would judder whenever the watch throttled its refresh. A translation is
+    smooth at any frame rate the device feels like giving it.
+
+    The scroll goes on a Transform and the wrist response on a Gyro, so the
+    two compose instead of contending for one target.
+
+    CLIPPING IS THE CALLER'S PROBLEM AND THIS CHECKS IT. WFF has no mask, so
+    an overlay is confined only by something opaque above it. A face whose
+    window is an aperture through the plate (HAYATE) needs nothing. A face
+    that draws its window over an opaque plate must pass `clip`, and this
+    refuses to build without one — an unclipped overlay does not fail subtly,
+    it rains across the whole dial.
+    """
+    periods = dict(periods or {})
+    tests = _weather_tests(rain_pct, showers_pct, storm_pct, snow_temp)
+    known = {t[0] for t in tests} | {"wx_clear"}
+
+    for key in set(scenes) | set(overlays):
+        if key not in known:
+            raise ValueError(f"{name}: unknown weather branch {key!r}; "
+                             f"expected any of {sorted(known)}")
+    if overlays and clip is None and not aperture:
+        raise ValueError(
+            f"{name}: animated overlays need either a plate aperture above "
+            f"them or a clip sprite. Pass clip=... (see "
+            f"tools/make_window_clips.py) or aperture=true if the plate "
+            f"already carries a hole. Without one the weather escapes "
+            f"across the dial.")
+    if clip is not None and clip_box is None:
+        raise ValueError(f"{name}: clip {clip!r} given without clip_box")
+
+    ox, oy = box["x"], box["y"]
+    bw, bh = box["width"], box["height"]
+    # Zero-padded: the face validator checks that z-prefixed names ascend in
+    # document order, and it compares them as strings, so an unpadded _10_
+    # sorts before _2_ and trips the check.
+    seq = [0]
+
+    def branch(key: str) -> list[Elem]:
+        """Scene, then weather over it, then the surround that traps it."""
+        out: list[Elem] = []
+        gy = _gyro(roll_gain_deg, shift_x_px, shift_y_px,
+                   roll_clamp_deg, shift_clamp_deg)
+
+        def emit(part: Elem, res: str, transforms: list[Elem]) -> None:
+            part.child(aod.variant())
+            if gy is not None:
+                part.child(Elem("Gyro", dict(gy.attrs)))
+            for t in transforms:
+                part.child(t)
+            part.child(Elem("Image", {"resource": res}))
+            out.append(part)
+
+        scene_res = scenes.get(key)
+        if scene_res:
+            emit(_part_image(f"{name}_{seq[0]:02d}_scene", box, scene_res,
+                             pivot=True), scene_res, [])
+            seq[0] += 1
+
+        ov = overlays.get(key)
+        if ov:
+            horizontal = key == "wx_dull"       # cloud drifts sideways
+            period = periods.get(key, 2.4)
+            if horizontal:
+                obox = {"x": ox - tile, "y": oy, "width": bw + tile,
+                        "height": bh}
+                tf = _transform("x", f"{X.num(ox - tile)} + "
+                                     f"{X.scroll_offset(tile, period)}")
+            else:
+                obox = {"x": ox, "y": oy - tile, "width": bw,
+                        "height": bh + tile}
+                tf = _transform("y", f"{X.num(oy - tile)} + "
+                                     f"{X.scroll_offset(tile, period)}")
+            # Roll about the window's centre, not the overlay sprite's own.
+            piv = _shared_pivot(obox, ox + bw / 2.0, oy + bh / 2.0)
+            emit(_part_image(f"{name}_{seq[0]:02d}_wx", obox, ov, pivot=piv),
+                 ov, [tf])
+            seq[0] += 1
+
+        if flash and key == "wx_storm":
+            emit(_part_image(f"{name}_{seq[0]:02d}_flash", box, flash, alpha=255,
+                             pivot=True), flash,
+                 [_transform("alpha", X.flash_alpha(255, 14.0, flash_period_s))])
+            seq[0] += 1
+
+        if clip is not None:
+            # Last in the branch, so it is above everything it must trap.
+            cp = _part_image(f"{name}_{seq[0]:02d}_clip", clip_box, clip)
+            cp.child(aod.variant())
+            cp.child(Elem("Image", {"resource": clip}))
+            out.append(cp)
+            seq[0] += 1
+        return out
+
+    cond = Elem("Condition", {})
+    exprs = Elem("Expressions", {})
+    for nm, val in tests:
+        e = Elem("Expression", {"name": nm})
+        e.text = val
+        exprs.child(e)
+    cond.child(exprs)
+
+    for nm, _val in tests:
+        cmp_ = Elem("Compare", {"expression": nm})
+        for el in branch(nm):
+            cmp_.child(el)
+        cond.child(cmp_)
+
+    default = Elem("Default", {})
+    for el in branch("wx_clear"):
+        default.child(el)
+    cond.child(default)
+
+    used = sorted({r for r in list(scenes.values()) + list(overlays.values())
+                   if r} | ({flash} if flash else set())
+                  | ({clip} if clip else set()))
+    moving = bool(roll_gain_deg or shift_x_px or shift_y_px)
+    how = (f"roll {roll_gain_deg:.0f}deg, shift {shift_x_px:.0f}/"
+           f"{shift_y_px:.0f}px" if moving else "no wrist response")
+    return Component(name, "animated-weather", MotionClass.AMBIENT_MOTION, aod,
+                     [cond], used,
+                     f"live weather, animated on a {tile}px scroll tile; "
+                     f"{how}; falls back to clear when the source is "
+                     f"unavailable")
+
+
+def radar_weather(name: str, box: dict, aod: AmbientPolicy,
+                  light: str, heavy: str, roll_gain_deg: float = 0.0,
+                  shift_x_px: float = 0.0, shift_y_px: float = 0.0,
+                  rain_pct: int = 50, showers_pct: int = 20,
+                  storm_pct: int = 75, snow_temp: int = 2,
+                  breathe_period_s: float = 6.0,
+                  roll_clamp_deg: int = 45,
+                  shift_clamp_deg: int = 40) -> Component:
+    """Precipitation drawn as a PPI radar paints it.
+
+    HOG-WILD has no window to look out of, and giving it one would be giving
+    it somebody else's dial. Its six o'clock is a radar scope, and a scope's
+    whole job is showing where the weather is — so its returns *are* its
+    weather display, not a substitute for one.
+
+    Returns hold station and breathe on alpha rather than scrolling; echoes
+    that slide across a scope would be reading out ground speed, which this
+    aircraft is not supplying.
+    """
+    # Dry branches paint nothing, and the schema will not accept that as an
+    # empty <Compare> (conditionElement.xsd requires at least one child) nor
+    # as an empty <Default>. So a branch that shows no returns is simply not
+    # declared: nothing matches, the Condition falls through, and the scope
+    # stays dark — which is the correct reading for clear air anyway.
+    #
+    # Dropping the night branch is what makes a wet night work. Night is
+    # tested first in the window faces so they never show a lit sky at 3am,
+    # but a radar scope has no sky to light, and leaving night out means a
+    # rainy night reaches the rain branch and paints its returns.
+    paint = {"wx_snow": (light, 170, 40), "wx_storm": (heavy, 225, 30),
+             "wx_rain": (heavy, 200, 45), "wx_dull": (light, 130, 45)}
+    tests = [(nm, val) for nm, val
+             in _weather_tests(rain_pct, showers_pct, storm_pct, snow_temp)
+             if nm in paint]
+
+    cond = Elem("Condition", {})
+    exprs = Elem("Expressions", {})
+    for nm, val in tests:
+        e = Elem("Expression", {"name": nm})
+        e.text = val
+        exprs.child(e)
+    cond.child(exprs)
+
+    gy = _gyro(roll_gain_deg, shift_x_px, shift_y_px, roll_clamp_deg,
+               shift_clamp_deg)
+    seq = [0]
+
+    def scope(res: str, base: int, amp: int) -> Elem:
+        part = _part_image(f"{name}_{seq[0]:02d}_rdr", box, res, pivot=True)
+        seq[0] += 1
+        part.child(aod.variant())
+        if gy is not None:
+            part.child(Elem("Gyro", dict(gy.attrs)))
+        part.child(_transform("alpha",
+                              X.breathing_alpha(base, amp,
+                                                6.2831853 / breathe_period_s)))
+        part.child(Elem("Image", {"resource": res}))
+        return part
+
+    for nm, _val in tests:
+        cmp_ = Elem("Compare", {"expression": nm})
+        res, base, amp = paint[nm]
+        cmp_.child(scope(res, base, amp))
+        cond.child(cmp_)
+
+    return Component(name, "radar-weather", MotionClass.AMBIENT_MOTION, aod,
+                     [cond], [light, heavy],
+                     f"precipitation as radar returns, breathing on a "
+                     f"{breathe_period_s}s cycle; blank when dry")
 
 
 def hr_balance(name: str, resource: str, box: dict, aod: AmbientPolicy,

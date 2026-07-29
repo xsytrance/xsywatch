@@ -74,6 +74,40 @@ def _build(entry: dict) -> list[C.Component]:
                                 float(entry.get("pitch_gain_px", 0.0)),
                                 int(entry.get("roll_clamp_deg", 45)),
                                 int(entry.get("pitch_clamp_deg", 40)))]
+    if kind == "animated_weather":
+        return [C.animated_weather(
+            entry["name"], _box(entry["box"]), _aod(entry["aod"]),
+            dict(entry.get("scenes", {})), dict(entry.get("overlays", {})),
+            int(entry["tile"]),
+            {k: float(v) for k, v in entry.get("periods", {}).items()},
+            float(entry.get("roll_gain_deg", 0.0)),
+            float(entry.get("shift_x_px", 0.0)),
+            float(entry.get("shift_y_px", 0.0)),
+            entry.get("clip"),
+            _box(entry["clip_box"]) if "clip_box" in entry else None,
+            int(entry.get("rain_pct", 50)),
+            int(entry.get("showers_pct", 20)),
+            int(entry.get("storm_pct", 75)),
+            int(entry.get("snow_temp", 2)),
+            int(entry.get("roll_clamp_deg", 45)),
+            int(entry.get("shift_clamp_deg", 40)),
+            entry.get("flash"),
+            bool(entry.get("aperture", False)),
+            float(entry.get("flash_period_s", 12.0)))]
+    if kind == "radar_weather":
+        return [C.radar_weather(
+            entry["name"], _box(entry["box"]), _aod(entry["aod"]),
+            entry["light"], entry["heavy"],
+            float(entry.get("roll_gain_deg", 0.0)),
+            float(entry.get("shift_x_px", 0.0)),
+            float(entry.get("shift_y_px", 0.0)),
+            int(entry.get("rain_pct", 50)),
+            int(entry.get("showers_pct", 20)),
+            int(entry.get("storm_pct", 75)),
+            int(entry.get("snow_temp", 2)),
+            float(entry.get("breathe_period_s", 6.0)),
+            int(entry.get("roll_clamp_deg", 45)),
+            int(entry.get("shift_clamp_deg", 40)))]
     if kind == "hr_balance":
         return [C.hr_balance(entry["name"], entry["resource"],
                              _box(entry["box"]), _aod(entry["aod"]),
@@ -129,7 +163,8 @@ def _build(entry: dict) -> list[C.Component]:
                             entry.get("align", "CENTER"))]
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
-                     "tap_sequence, weather_scene, hr_balance, battery_needle, "
+                     "tap_sequence, weather_scene, animated_weather, "
+                     "radar_weather, hr_balance, battery_needle, "
                      "value_needle, "
                      "date_text, "
                      "sheen, analog_hand, static_image, text_line, "

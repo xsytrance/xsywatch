@@ -28,7 +28,20 @@ KNOWN_SOURCES = frozenset({
     "MILLISECOND", "SECOND", "MINUTE", "HOUR_0_11", "HOUR_0_23",
     "DAY", "DAY_OF_WEEK_S", "MONTH_S", "AMPM_STRING",
     "BATTERY_PERCENT", "HEART_RATE", "STEP_COUNT", "STEP_PERCENT",
+    "SECONDS_SINCE_EPOCH", "MOON_PHASE_POSITION",
+    # Motion. The format names this family "gyro" (gyroElements.xsd,
+    # gyroArithmeticExpressionType) but there is no gyroscope behind it —
+    # common/simpleTypes/sourceType.xsd, sensorSourceType, declares exactly
+    # these eight and they are all accelerometer.
+    #
+    # ANGLE_* is orientation in degrees; the bare axes are raw linear
+    # acceleration, and are the only way to sense the watch being *moved*
+    # rather than merely tilted. IS_SUPPORTED exists so a face can degrade to
+    # a neutral pose instead of a constant offset on hardware without it.
+    "ACCELEROMETER_IS_SUPPORTED",
     "ACCELEROMETER_ANGLE_X", "ACCELEROMETER_ANGLE_Y",
+    "ACCELEROMETER_ANGLE_Z", "ACCELEROMETER_ANGLE_XY",
+    "ACCELEROMETER_X", "ACCELEROMETER_Y", "ACCELEROMETER_Z",
     # Weather. These are native WFF v4 sources — no complication provider and
     # no companion app is required, contrary to what this engine previously
     # implied by omitting them. See common/simpleTypes/sourceType.xsd,

@@ -33,6 +33,46 @@ GENERATED FILE - do not edit by hand.
       <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
       <Image resource="wh_dial_aod" />
     </PartImage>
+    <Condition>
+      <Expressions>
+        <Expression name="wx_snow">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50 &amp;&amp; [WEATHER.TEMPERATURE] &lt;= 2</Expression>
+        <Expression name="wx_storm">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 75</Expression>
+        <Expression name="wx_rain">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50</Expression>
+        <Expression name="wx_dull">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 20</Expression>
+      </Expressions>
+      <Compare expression="wx_snow">
+        <PartImage name="z09_returns_00_rdr" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 5.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (4.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="170 + 40*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*1.0471975500000001)" />
+          <Image resource="wh_rdr_light" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_storm">
+        <PartImage name="z09_returns_01_rdr" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 5.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (4.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="225 + 30*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*1.0471975500000001)" />
+          <Image resource="wh_rdr_heavy" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_rain">
+        <PartImage name="z09_returns_02_rdr" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 5.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (4.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="200 + 45*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*1.0471975500000001)" />
+          <Image resource="wh_rdr_heavy" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_dull">
+        <PartImage name="z09_returns_03_rdr" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 5.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (4.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="130 + 45*sin(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000)*1.0471975500000001)" />
+          <Image resource="wh_rdr_light" />
+        </PartImage>
+      </Compare>
+    </Condition>
     <PartImage name="z10_sweep" x="184" y="305" width="113" height="113" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 90.0) % 360" />

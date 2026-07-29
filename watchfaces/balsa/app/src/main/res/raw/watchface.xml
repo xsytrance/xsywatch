@@ -70,6 +70,87 @@ GENERATED FILE - do not edit by hand.
         </PartImage>
       </Default>
     </Condition>
+    <Condition>
+      <Expressions>
+        <Expression name="wx_night">[WEATHER.IS_AVAILABLE] &amp;&amp; ![WEATHER.IS_DAY]</Expression>
+        <Expression name="wx_snow">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50 &amp;&amp; [WEATHER.TEMPERATURE] &lt;= 2</Expression>
+        <Expression name="wx_storm">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 75</Expression>
+        <Expression name="wx_rain">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50</Expression>
+        <Expression name="wx_dull">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 20</Expression>
+      </Expressions>
+      <Compare expression="wx_night">
+        <PartImage name="z03_wx_motion_00_wx" x="170" y="257" width="140" height="180" alpha="255" pivotX="0.5" pivotY="0.611111">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="257 + 40.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 45.0)" />
+          <Image resource="ba_ov_stars" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_01_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_snow">
+        <PartImage name="z03_wx_motion_02_wx" x="170" y="257" width="140" height="180" alpha="255" pivotX="0.5" pivotY="0.611111">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="257 + 40.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 6.0)" />
+          <Image resource="ba_ov_snow" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_03_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_storm">
+        <PartImage name="z03_wx_motion_04_wx" x="170" y="257" width="140" height="180" alpha="255" pivotX="0.5" pivotY="0.611111">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="257 + 40.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 1.2)" />
+          <Image resource="ba_ov_storm" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_05_flash" x="170" y="297" width="140" height="140" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="255 * pow(1 - fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 24.0), 14.0)" />
+          <Image resource="ba_ov_flash" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_06_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_rain">
+        <PartImage name="z03_wx_motion_07_wx" x="170" y="257" width="140" height="180" alpha="255" pivotX="0.5" pivotY="0.611111">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="257 + 40.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 1.5)" />
+          <Image resource="ba_ov_rain" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_08_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_dull">
+        <PartImage name="z03_wx_motion_09_wx" x="130" y="297" width="180" height="140" alpha="255" pivotX="0.611111" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 7.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" x="([ACCELEROMETER_IS_SUPPORTED] ? (6.0 * clamp([ACCELEROMETER_ANGLE_X], -40, 40) / 40) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (8.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="x" value="130 + 40.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 30.0)" />
+          <Image resource="ba_ov_cloud" />
+        </PartImage>
+        <PartImage name="z03_wx_motion_10_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Compare>
+      <Default>
+        <PartImage name="z03_wx_motion_11_clip" x="105" y="232" width="270" height="248" alpha="255">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="ba_wx_clip" />
+        </PartImage>
+      </Default>
+    </Condition>
     <PartImage name="z10_airscrew" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="LINEAR" />
       <Transform target="angle" value="(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) * 280.0) % 360" />

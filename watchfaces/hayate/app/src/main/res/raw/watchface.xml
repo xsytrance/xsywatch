@@ -28,46 +28,85 @@ GENERATED FILE - do not edit by hand.
       <Expressions>
         <Expression name="wx_night">[WEATHER.IS_AVAILABLE] &amp;&amp; ![WEATHER.IS_DAY]</Expression>
         <Expression name="wx_snow">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50 &amp;&amp; [WEATHER.TEMPERATURE] &lt;= 2</Expression>
+        <Expression name="wx_storm">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 75</Expression>
         <Expression name="wx_rain">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 50</Expression>
         <Expression name="wx_dull">[WEATHER.IS_AVAILABLE] &amp;&amp; [WEATHER.CHANCE_OF_PRECIPITATION] &gt;= 20</Expression>
       </Expressions>
       <Compare expression="wx_night">
-        <PartImage name="z00_viewfinder_0_hy_fld_night" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+        <PartImage name="z00_viewfinder_00_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
           <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
-          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
           <Image resource="hy_fld_night" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_01_wx" x="140" y="172" width="200" height="300" alpha="255" pivotX="0.5" pivotY="0.666667">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="172 + 100.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 45.0)" />
+          <Image resource="hy_ov_stars" />
         </PartImage>
       </Compare>
       <Compare expression="wx_snow">
-        <PartImage name="z00_viewfinder_1_hy_fld_snow" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+        <PartImage name="z00_viewfinder_02_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
           <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
-          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
           <Image resource="hy_fld_snow" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_03_wx" x="140" y="172" width="200" height="300" alpha="255" pivotX="0.5" pivotY="0.666667">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="172 + 100.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 6.0)" />
+          <Image resource="hy_ov_snow" />
+        </PartImage>
+      </Compare>
+      <Compare expression="wx_storm">
+        <PartImage name="z00_viewfinder_04_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Image resource="hy_fld_rain" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_05_wx" x="140" y="172" width="200" height="300" alpha="255" pivotX="0.5" pivotY="0.666667">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="172 + 100.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 1.2)" />
+          <Image resource="hy_ov_storm" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_06_flash" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="alpha" value="255 * pow(1 - fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 24.0), 14.0)" />
+          <Image resource="hy_ov_flash" />
         </PartImage>
       </Compare>
       <Compare expression="wx_rain">
-        <PartImage name="z00_viewfinder_2_hy_fld_rain" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+        <PartImage name="z00_viewfinder_07_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
           <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
-          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
           <Image resource="hy_fld_rain" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_08_wx" x="140" y="172" width="200" height="300" alpha="255" pivotX="0.5" pivotY="0.666667">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="y" value="172 + 100.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 1.5)" />
+          <Image resource="hy_ov_rain" />
         </PartImage>
       </Compare>
       <Compare expression="wx_dull">
-        <PartImage name="z00_viewfinder_3_hy_fld_overcast" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+        <PartImage name="z00_viewfinder_09_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
           <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
-          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
           <Image resource="hy_fld_overcast" />
+        </PartImage>
+        <PartImage name="z00_viewfinder_10_wx" x="40" y="272" width="300" height="200" alpha="255" pivotX="0.666667" pivotY="0.5">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
+          <Transform target="x" value="40 + 100.0 * fract(([MINUTE] * 60 + [SECOND] + [MILLISECOND] / 1000) / 30.0)" />
+          <Image resource="hy_ov_cloud" />
         </PartImage>
       </Compare>
       <Default>
-        <PartImage name="z00_viewfinder_4_hy_fld_clear" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
+        <PartImage name="z00_viewfinder_11_scene" x="140" y="272" width="200" height="200" alpha="255" pivotX="0.5" pivotY="0.5">
           <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
-          <Transform target="angle" value="0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45" />
-          <Transform target="y" value="272 + 20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40" />
+          <Gyro angle="([ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp([ACCELEROMETER_ANGLE_X], -45, 45) / 45) : 0)" y="([ACCELEROMETER_IS_SUPPORTED] ? (20.0 * clamp([ACCELEROMETER_ANGLE_Y], -40, 40) / 40) : 0)" />
           <Image resource="hy_fld_clear" />
         </PartImage>
       </Default>

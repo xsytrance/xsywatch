@@ -59,10 +59,76 @@ FIXTURE_ENV = {
     "HOUR_0_11": 10, "MINUTE": 9, "SECOND": 30, "MILLISECOND": 0,
     "DAY": 27, "BATTERY_PERCENT": 78, "STEP_COUNT": 8420, "HEART_RATE": 72,
     "ACCELEROMETER_ANGLE_X": 0.0, "ACCELEROMETER_ANGLE_Y": 0.0,
+    "ACCELEROMETER_ANGLE_Z": 0.0, "ACCELEROMETER_ANGLE_XY": 0.0,
+    "ACCELEROMETER_X": 0.0, "ACCELEROMETER_Y": 0.0, "ACCELEROMETER_Z": 9.81,
+    "ACCELEROMETER_IS_SUPPORTED": 1,
+    "WEATHER.IS_AVAILABLE": 1, "WEATHER.IS_ERROR": 0, "WEATHER.IS_DAY": 1,
+    "WEATHER.TEMPERATURE": 14, "WEATHER.CHANCE_OF_PRECIPITATION": 0,
 }
 
 SAFE = {"clamp": lambda v, lo, hi: max(lo, min(hi, v)), "sin": math.sin,
-        "cos": math.cos, "round": round, "abs": abs, "min": min, "max": max}
+        "cos": math.cos, "round": round, "abs": abs, "min": min, "max": max,
+        "tan": math.tan, "asin": math.asin, "acos": math.acos,
+        "atan": math.atan, "sqrt": math.sqrt, "cbrt": lambda v: v ** (1 / 3),
+        "log": math.log, "log2": math.log2, "log10": math.log10,
+        "exp": math.exp, "expm1": math.expm1, "pow": pow,
+        "floor": math.floor, "ceil": math.ceil,
+        "deg": math.degrees, "rad": math.radians,
+        "fract": lambda v: v - math.floor(v)}
+
+# Every function the format defines, so the unresolved-name guard below can
+# tell a legitimate call from a data source nobody supplied a value for.
+_FUNCS = tuple(SAFE)
+
+
+def _deternary(py: str) -> str:
+    """Rewrite WFF's `cond ? a : b` into Python's `a if cond else b`.
+
+    Done by scanning rather than by regex: the branches contain parentheses of
+    their own — `[ACCELEROMETER_IS_SUPPORTED] ? (0 - 24.0 * clamp(...) / 45)
+    : 0` — and a pattern simple enough to be safe cannot see past them.
+
+    Innermost first, so nested conditionals collapse from the inside out.
+    """
+    while "?" in py:
+        i = py.rindex("?")
+        depth, colon = 0, -1
+        for j in range(i + 1, len(py)):
+            c = py[j]
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                if depth == 0:
+                    break
+                depth -= 1
+            elif c == ":" and depth == 0:
+                colon = j
+                break
+        if colon < 0:
+            raise ValueError(f"conditional with no ':' in {py!r}")
+        depth, start = 0, 0
+        for j in range(i - 1, -1, -1):
+            c = py[j]
+            if c == ")":
+                depth += 1
+            elif c == "(":
+                if depth == 0:
+                    start = j + 1
+                    break
+                depth -= 1
+        depth, end = 0, len(py)
+        for j in range(colon + 1, len(py)):
+            c = py[j]
+            if c == "(":
+                depth += 1
+            elif c == ")":
+                if depth == 0:
+                    end = j
+                    break
+                depth -= 1
+        cond, yes, no = py[start:i], py[i + 1:colon], py[colon + 1:end]
+        py = f"{py[:start]}({yes}) if ({cond}) else ({no}){py[end:]}"
+    return py
 
 
 def evaluate(expr: str, env: dict) -> float:
@@ -72,9 +138,14 @@ def evaluate(expr: str, env: dict) -> float:
         if token not in env:
             raise KeyError(f"no value supplied for [{token}]")
         return repr(env[token])
-    py = re.sub(r"\[([A-Z_0-9]+)\]", sub, expr)
-    if re.search(r"[A-Za-z_]+", py.replace("clamp", "").replace("sin", "")
-                 .replace("cos", "").replace("round", "")):
+    # Source tokens may carry a dot — the whole WEATHER.* family does.
+    py = re.sub(r"\[([A-Z_0-9.]+)\]", sub, expr)
+    py = py.replace("&&", " and ").replace("||", " or ").replace("!", " not ")
+    py = _deternary(py)
+    bare = py
+    for fn in _FUNCS + ("and", "or", "not", "if", "else", "True", "False"):
+        bare = bare.replace(fn, "")
+    if re.search(r"[A-Za-z_]+", bare):
         raise ValueError(f"unresolved name in expression {expr!r}")
     return float(eval(py, {"__builtins__": {}}, SAFE))  # noqa: S307
 
@@ -133,23 +204,61 @@ def format_template(node, env) -> str:
     out, vi, i = [], 0, 0
     while i < len(text):
         if text[i] == "%" and i + 1 < len(text):
-            nxt = text[i + 1]
-            if nxt == "%":
+            if text[i + 1] == "%":
                 out.append("%")
                 i += 2
                 continue
-            if nxt in "ds":
+            # Accept a width/zero-pad flag: HOG-WILD's clock is "%d:%02d", and
+            # skipping the flag left the "2" and the "d" to be drawn as text.
+            m = re.match(r"%(0?\d*)([ds])", text[i:])
+            if m:
+                flag, kind = m.group(1), m.group(2)
                 v = values[vi]
-                out.append(str(int(round(v))) if nxt == "d" else str(v))
+                s = str(int(round(v))) if kind == "d" else str(v)
+                if flag:
+                    width = int(flag.lstrip("0") or 0)
+                    s = s.rjust(width, "0" if flag.startswith("0") else " ")
+                out.append(s)
                 vi += 1
-                i += 2
+                i += m.end()
                 continue
         out.append(text[i])
         i += 1
     return "".join(out)
 
 
-def compose(root, font, env, ambient: bool, skip: set[str] | None = None):
+def expand(container, branch: str | None):
+    """Flatten <Condition> blocks into a plain part list.
+
+    The renderer draws a flat sequence of parts, but weather, and anything
+    else that varies, arrives wrapped in Condition/Compare/Default. Without
+    this the Condition element itself reaches the part loop and dies looking
+    for a width attribute it was never going to have.
+
+    `branch` names the Compare to take — the expression names are the
+    engine's own (wx_rain, wx_storm, wx_night ...). Anything unmatched falls
+    to Default, which is exactly what the watch does when weather is
+    unavailable, so None renders the fair-weather face.
+    """
+    out = []
+    for node in container:
+        if node.tag != "Condition":
+            out.append(node)
+            continue
+        chosen = None
+        for cmp_ in node.findall("Compare"):
+            if branch is not None and cmp_.get("expression") == branch:
+                chosen = cmp_
+                break
+        if chosen is None:
+            chosen = node.find("Default")
+        if chosen is not None:
+            out.extend(expand(chosen, branch))
+    return out
+
+
+def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
+            branch: str | None = None):
     """`skip` omits named parts — used by the coverage gate to look at the
     horizon and plate alone, without hands crossing the aperture."""
     from PIL import Image
@@ -158,7 +267,7 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None):
     canvas = Image.new("RGBA", (int(root.get("width")), int(root.get("height"))),
                        (int(bg[3:5], 16), int(bg[5:7], 16), int(bg[7:9], 16),
                         255))
-    for part in scene:
+    for part in expand(scene, branch):
         if skip and part.get("name") in skip:
             continue
         variant = part.find("Variant")
