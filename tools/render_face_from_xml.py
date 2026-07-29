@@ -348,14 +348,30 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
             else float(part.get("y", 0))
         w, h = int(part.get("width")), int(part.get("height"))
 
+        # <Gyro> — THE WRIST RESPONSE, WHICH THIS RENDERER USED TO IGNORE
+        # ENTIRELY. Every tilt sheet produced before this was therefore
+        # identical across its panels, and one was presented as evidence
+        # that a horizon banked. It contributes offsets that ADD to the
+        # part's own angle/x/y rather than replacing them, so a layer can
+        # scroll on a timer and lean with the wrist at the same time.
+        gy = part.find("Gyro")
+        g_ang = g_x = g_y = 0.0
+        if gy is not None:
+            g_ang = evaluate(gy.get("angle", "0"), env)
+            g_x = evaluate(gy.get("x", "0"), env)
+            g_y = evaluate(gy.get("y", "0"), env)
+            x += g_x
+            y += g_y
+
         if part.tag == "PartImage":
             res = part.find("Image").get("resource")
             with Image.open(resource(res)) as im:
                 layer = im.convert("RGBA")
             if layer.size != (w, h):
                 layer = layer.resize((w, h), Image.LANCZOS)
-            if "angle" in transforms:
-                angle = evaluate(transforms["angle"], env)
+            angle = (evaluate(transforms["angle"], env)
+                     if "angle" in transforms else 0.0) + g_ang
+            if angle:
                 px = float(part.get("pivotX", 0.5)) * w
                 py = float(part.get("pivotY", 0.5)) * h
                 layer = layer.rotate(-angle, resample=Image.BICUBIC,
