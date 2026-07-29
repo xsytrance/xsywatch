@@ -94,7 +94,7 @@ Wear Installer loop is proven). Gate: wrist photos.
 
 | # | Work | Gate |
 |---|---|---|
-| 0 | P0-A + P0-B probes | renders + sources flow on device |
+| 0 | ~~P0-A + P0-B probes~~ **PASSED on device 2026-07-29** — every PartDraw construct renders; endAngle sweep measured at exactly 6°/s; STEP_COUNT/STEP_GOAL/STEP_PERCENT/HEART_RATE/BATTERY_CHARGING_STATUS all flow with zero permissions (`review/P0A-device.png`, `P0B-device.png`) | ✅ |
 | 1 | `tools/meridian_pro/geometry.py` — every coordinate once; bezel ring, minute track, applied indices with lume | contact sheet |
 | 2 | Milled centre plate, wells, screws, layered shadow (all `shade()`-composited) | contact sheet |
 | 3 | Vector layer: power arc, steps ring, HR ring, live sweeps | validator + render |
