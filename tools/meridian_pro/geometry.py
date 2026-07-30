@@ -21,6 +21,8 @@ two framed readout windows at the bottom.
 
 from __future__ import annotations
 
+import os
+
 CANVAS = 480
 CX = CY = CANVAS / 2
 
@@ -196,7 +198,7 @@ PLATE = {
 # ------------------------------------------------------------- palette
 # COMMODORE navy family, sampled not invented; steel from the concept.
 # Themes swap this dict wholesale in phase 7.
-PALETTE = {
+PALETTE_BOLD = {
     # RE-SAMPLED FROM THE CONCEPT SHEET 2026-07-29 after the owner's call:
     # the build had drifted dark-and-gold; the concept is brighter
     # steel-blue. Navy anchors measured off the hero dial itself.
@@ -217,3 +219,28 @@ PALETTE = {
     "zone_lim":  (226, 84, 66),
     "second":    (236, 92, 70),
 }
+
+PALETTE_MUTED = {
+    # The concept's own temperament: softer saturation, dustier navy,
+    # gentler gold, matte zones. The owner: "the concept was a bit more
+    # muted." Bold stays available as PALETTE_BOLD (MP_VARIANT=bold).
+    "dial_hi":   (42, 62, 86),
+    "dial_lo":   (18, 30, 46),
+    "bezel_hi":  (52, 72, 94),
+    "bezel_lo":  (28, 42, 60),
+    "gold":      (206, 170, 110),
+    "gold_hi":   (224, 190, 130),
+    "steel_hi":  (214, 222, 230),
+    "steel":     (158, 168, 179),
+    "steel_lo":  (84, 94, 108),
+    "well":      (16, 26, 40),
+    "lume":      (196, 220, 202),
+    "ink":       (224, 230, 237),
+    "zone_ok":   (74, 160, 112),
+    "zone_warn": (216, 168, 84),
+    "zone_lim":  (206, 92, 78),
+    "second":    (224, 96, 76),
+}
+
+VARIANT = os.environ.get("MP_VARIANT", "muted")
+PALETTE = PALETTE_BOLD if VARIANT == "bold" else PALETTE_MUTED

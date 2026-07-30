@@ -35,6 +35,8 @@ BASE = "https://api.aimlapi.com/v1"
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 
+MUTED = __import__("os").environ.get("MP_VARIANT", "muted") != "bold"
+
 PROMPT = (
     "Turn this watch dial design into an ultra photorealistic macro "
     "photograph of a real luxury military aviator wristwatch dial. Keep "
