@@ -75,10 +75,13 @@ def dial_base():
     img = Image.new("RGBA", (S, S), (0, 0, 0, 255))
     d = ImageDraw.Draw(img)
     hi, lo = P["dial_hi"], P["dial_lo"]
+    # Nearly flat dusty slate — the concept has NO black rim vignette; its
+    # chapter ring is LIGHTER than this build's ever was. Gentle centre dip
+    # only.
     for i in range(120, 0, -1):
-        t = i / 120
-        r = (BEZEL["outer_r"] * SS) * t
-        col = tuple(int(lo[k] + (hi[k] - lo[k]) * (1 - t * t))
+        tt = i / 120
+        r = (BEZEL["outer_r"] * SS) * tt
+        col = tuple(int(hi[k] + (lo[k] - hi[k]) * (1 - tt) * 0.6)
                     for k in range(3))
         d.ellipse([CX * SS - r, CY * SS - r, CX * SS + r, CY * SS + r],
                   fill=(*col, 255))
@@ -122,7 +125,7 @@ def bezel(img):
     grad = Image.new("L", (S, S), 0)
     gd = ImageDraw.Draw(grad)
     for y in range(0, S, SS):
-        gd.rectangle([0, y, S, y + SS], fill=int(50 * y / S))
+        gd.rectangle([0, y, S, y + SS], fill=int(22 * y / S))
     dark = Image.new("RGBA", (S, S), (*P["bezel_lo"], 255))
     band = Image.composite(dark, band,
                            ImageChops.multiply(grad, band.getchannel("A")))
@@ -132,7 +135,7 @@ def bezel(img):
         dd.arc([cx - ro + SS, cy - ro + SS, cx + ro - SS, cy + ro - SS],
                160, 380, fill=(255, 255, 255, 46), width=2 * SS),
         dd.arc([cx - ri, cy - ri, cx + ri, cy + ri], -20, 200,
-               fill=(0, 0, 0, 120), width=2 * SS),
+               fill=(0, 0, 0, 70), width=2 * SS),
         dd.arc([cx - ri, cy - ri, cx + ri, cy + ri], 160, 380,
                fill=(255, 255, 255, 30), width=SS)))
 
@@ -329,7 +332,7 @@ def centre_plate(img):
 
     sh = Image.new("RGBA", (S, S), (0, 0, 0, 255))
     sh.putalpha(base_sil.filter(ImageFilter.GaussianBlur(3 * SS)).point(
-        lambda v: v * 140 // 255))
+        lambda v: v * 90 // 255))
     img.alpha_composite(sh)
     img.alpha_composite(_steel_level(base_sil, 0, True))
 
@@ -351,7 +354,7 @@ def centre_plate(img):
     # bridge shadow, then the raised bridge itself (item 6)
     bs = Image.new("RGBA", (S, S), (0, 0, 0, 255))
     bs.putalpha(bridge_sil.filter(ImageFilter.GaussianBlur(2.5 * SS)).point(
-        lambda v: v * 110 // 255))
+        lambda v: v * 75 // 255))
     img.alpha_composite(bs)
     img.alpha_composite(_steel_level(bridge_sil, 12, False))
 
@@ -416,7 +419,7 @@ def centre_plate(img):
         er = cut.filter(ImageFilter.FIND_EDGES).point(
             lambda v: 255 if v > 24 else 0)
         ring = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-        ring.paste(Image.new("RGBA", (S, S), (0, 0, 0, 220)), (0, -SS), er)
+        ring.paste(Image.new("RGBA", (S, S), (0, 0, 0, 150)), (0, -SS), er)
         ring.paste(Image.new("RGBA", (S, S), (*P["steel_hi"], 70)), (0, SS),
                    er)
         ring.putalpha(ImageChops.multiply(
@@ -426,11 +429,11 @@ def centre_plate(img):
         gd_ = ImageDraw.Draw(gsh)
         if rh is None:
             gd_.pieslice([x - rw * SS, y - rw * SS, x + rw * SS, y + rw * SS],
-                         180, 360, fill=(0, 0, 0, 95))
+                         180, 360, fill=(0, 0, 0, 60))
         else:
             gd_.rectangle([x - rw * SS / 2, y - rh * SS / 2,
                            x + rw * SS / 2, y - rh * SS / 2 + 5 * SS],
-                          fill=(0, 0, 0, 95))
+                          fill=(0, 0, 0, 60))
         gsh.putalpha(ImageChops.multiply(gsh.getchannel("A"), cut))
         img.alpha_composite(gsh.filter(ImageFilter.GaussianBlur(SS)))
         return cut
@@ -640,40 +643,55 @@ def hands(out_dir):
     from geometry import HANDS
     cx, cy = HANDS["c"][0] * SS, HANDS["c"][1] * SS
 
-    def dauphine(length, w_base):
+    def propeller(length, max_w):
+        """A propeller blade, as ordered: narrow at the hub, swelling wide
+        through the middle, rounded at the tip, with a short counter-blade
+        behind the boss. Navy lacquer in a gold edge, wide lume spine."""
         img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
         L = length * SS
-        wb = w_base * SS
-        tail = 16 * SS
-        body = [(cx, cy - L), (cx - wb, cy - L * 0.32),
-                (cx - wb * 0.75, cy + tail), (cx + wb * 0.75, cy + tail),
-                (cx + wb, cy - L * 0.32)]
+        W = max_w * SS
+        import math as _m
+        def profile(tt):          # width along the blade
+            return W * (_m.sin(_m.pi * (0.18 + 0.82 * tt) * 0.86) ** 1.2)
+        n = 26
+        left, right = [], []
+        for i in range(n + 1):
+            tt = i / n
+            y = cy - L * tt
+            w2 = profile(tt) / 2 if tt < 0.995 else 0.5
+            left.append((cx - w2, y)); right.append((cx + w2, y))
+        body = left + right[::-1]
         for off, a in ((3 * SS, 60), (1.5 * SS, 90)):
             shade(img, lambda dd, off=off, a=a: dd.polygon(
                 [(x + off, y + off) for x, y in body], fill=(0, 0, 0, a)))
+        # counter-blade
+        cb = 26 * SS
+        d.polygon([(cx - W * 0.28, cy), (cx, cy + cb), (cx + W * 0.28, cy)],
+                  fill=(*P["gold"], 255))
         d.polygon(body, fill=(*P["gold"], 255))
-        inset = 2.2 * SS
-        d.polygon([(cx, cy - L + inset * 2.2),
-                   (cx - wb + inset, cy - L * 0.32),
-                   (cx - wb * 0.75 + inset, cy + tail - inset),
-                   (cx + wb * 0.75 - inset, cy + tail - inset),
-                   (cx + wb - inset, cy - L * 0.32)],
-                  fill=(16, 26, 40, 255))
-        tip = 0.20
-        d.polygon([(cx, cy - L),
-                   (cx - wb * (1 - tip), cy - L * (0.32 + 0.68 * tip)),
-                   (cx + wb * (1 - tip), cy - L * (0.32 + 0.68 * tip))],
-                  fill=(*P["gold_hi"], 255))
-        d.rounded_rectangle([cx - 2.2 * SS, cy - L * 0.86, cx + 2.2 * SS,
-                             cy - L * 0.42], radius=2 * SS,
+        inner = []
+        for i in range(n + 1):
+            tt = i / n
+            y = cy - L * tt
+            w2 = max(0.5, profile(tt) / 2 - 3.6 * SS)
+            inner.append((cx - w2, y))
+        for i in range(n, -1, -1):
+            tt = i / n
+            y = cy - L * tt
+            w2 = max(0.5, profile(tt) / 2 - 3.6 * SS)
+            inner.append((cx + w2, y))
+        d.polygon(inner, fill=(38, 56, 82, 255))
+        # wide lume spine
+        d.rounded_rectangle([cx - 3.2 * SS, cy - L * 0.88, cx + 3.2 * SS,
+                             cy - L * 0.30], radius=3 * SS,
                             fill=(*P["lume"], 255))
-        d.line([(cx, cy - L * 0.30), (cx, cy + tail * 0.6)],
-               fill=(255, 255, 255, 60), width=SS)
+        d.line([(cx, cy - L * 0.28), (cx, cy + cb * 0.6)],
+               fill=(255, 255, 255, 55), width=SS)
         return img
 
-    h = dauphine(118, 10.5)
-    m = dauphine(168, 8.5)
+    h = propeller(114, 26)
+    m = propeller(164, 21)
     s_img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(s_img)
     L = 182 * SS

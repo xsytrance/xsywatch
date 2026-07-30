@@ -55,9 +55,12 @@ PROMPT = (
     "corner rivets. The dark circular wells, the navy windows with steel "
     "frames, the gold-framed date window with its black inner box, and "
     "the arch-shaped night-sky opening with stars must all stay empty and "
-    "dark inside - add nothing in any opening. Dramatic studio product "
-    "photography with strong ambient occlusion, mixed brushed and "
-    "polished finishes, extremely sharp, 8k."
+    "dark inside - add nothing in any opening. "
+    + ("Soft matte low-contrast product photography, gently and evenly "
+       "lit, dusty pastel slate-blue tones, satin metal, no deep blacks, "
+       "no harsh contrast, extremely sharp, 8k." if MUTED else
+       "Dramatic studio product photography with strong ambient occlusion, "
+       "mixed brushed and polished finishes, extremely sharp, 8k.")
 )
 
 
