@@ -1,15 +1,14 @@
-"""MERIDIAN PRO — the procedural dial: base, bezel, indices, milled plate.
+"""MERIDIAN PRO — the procedural layout, v2: the concept's structures.
 
-Every pixel here is drawn from geometry.py's numbers with seeded arithmetic.
-No model, no prompt, no reference pixels — original by construction, which
-is the property that makes this face sellable.
+v1 gave Kontext a bare simplified plate and the result read as a diagram.
+v2 draws every structure the concept actually has — the two-level bridge,
+rivet rows on every panel edge, the bezel's applied indices, the power
+arc's recessed channel, the wordmark's own inset plate, the arch starfield,
+framed icon windows, the day's black inset box — so the generator has real
+hardware to make real. Kontext glosses; it is not allowed to invent.
 
-House lessons applied throughout:
-  - translucent work is COMPOSITED, never stamped (ImageDraw replaces alpha;
-    a "shadow" drawn straight onto opaque steel punches a hole in it);
-  - anything meant to be tinted later carries its shading in ALPHA;
-  - text with depth is engraved (dark pass low, light pass high, fill on
-    top) because flat fill is what makes a drawn dial look drawn.
+House rules throughout: translucent work composited (never stamped), text
+engraved, every coordinate imported from geometry.py.
 """
 
 from __future__ import annotations
@@ -18,14 +17,15 @@ import math
 import os
 import random
 
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 from geometry import (BEZEL, CANVAS, CHAPTER, CX, CY, DATE, MILITARY, MOON,
-                      PALETTE as P, PLATE, SUBDIAL, WINDOWS, WORDMARK)
+                      PALETTE as P, PANEL, PLATE, POWER, SUBDIAL, WINDOWS,
+                      WORDMARK)
 
 SS = 4
 S = CANVAS * SS
-SEED = 0x4D5250       # "MRP"
+SEED = 0x4D5250
 
 _F = os.path.expanduser("~/.local/share/fonts")
 FONT_BOLD = f"{_F}/BarlowCondensed-Bold.ttf"
@@ -36,12 +36,11 @@ for _p in (FONT_BOLD, FONT_SEMI):
             "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"
 
 
-def font(px: int, bold: bool = True) -> ImageFont.FreeTypeFont:
+def font(px, bold=True):
     return ImageFont.truetype(FONT_BOLD if bold else FONT_SEMI, px * SS)
 
 
-def shade(img: Image.Image, fn) -> None:
-    """Composite translucent drawing instead of stamping it."""
+def shade(img, fn):
     layer = Image.new("RGBA", img.size, (0, 0, 0, 0))
     fn(ImageDraw.Draw(layer))
     img.alpha_composite(layer)
@@ -52,7 +51,7 @@ def engrave(img, xy, text, f, fill, anchor="mm", depth=1.0):
     x, y = xy
     o = max(1.0, depth * SS * 0.9)
     shade(img, lambda dd: (
-        dd.text((x, y + o), text, font=f, fill=(0, 0, 0, 160), anchor=anchor),
+        dd.text((x, y + o), text, font=f, fill=(0, 0, 0, 170), anchor=anchor),
         dd.text((x, y - o * 0.7), text, font=f, fill=(255, 255, 255, 42),
                 anchor=anchor)))
     d.text((x, y), text, font=f, fill=fill, anchor=anchor)
@@ -63,8 +62,7 @@ def _at(cx, cy, r, deg):
     return (cx + math.cos(a) * r, cy + math.sin(a) * r)
 
 
-def rotated_paste(canvas: Image.Image, sprite: Image.Image, centre, deg):
-    """Paste a sprite rotated about its own centre at a canvas point."""
+def rotated_paste(canvas, sprite, centre, deg):
     rot = sprite.rotate(-deg, resample=Image.BICUBIC, expand=True)
     canvas.alpha_composite(rot, (int(centre[0] - rot.width / 2),
                                  int(centre[1] - rot.height / 2)))
@@ -72,30 +70,25 @@ def rotated_paste(canvas: Image.Image, sprite: Image.Image, centre, deg):
 
 # ---------------------------------------------------------------- base
 
-def dial_base() -> Image.Image:
-    """The navy field under everything: radial falloff plus a whisper of
-    circular brushing. The brushing is what stops a flat fill reading as a
-    phone wallpaper — concentric strokes a couple of luminance points apart,
-    the way spun metal picks up light."""
+def dial_base():
     rng = random.Random(SEED)
     img = Image.new("RGBA", (S, S), (0, 0, 0, 255))
     d = ImageDraw.Draw(img)
     hi, lo = P["dial_hi"], P["dial_lo"]
-    steps = 120
-    for i in range(steps, 0, -1):
-        t = i / steps
+    for i in range(120, 0, -1):
+        t = i / 120
         r = (BEZEL["outer_r"] * SS) * t
-        col = tuple(int(lo[k] + (hi[k] - lo[k]) * (1 - t * t)) for k in range(3))
+        col = tuple(int(lo[k] + (hi[k] - lo[k]) * (1 - t * t))
+                    for k in range(3))
         d.ellipse([CX * SS - r, CY * SS - r, CX * SS + r, CY * SS + r],
                   fill=(*col, 255))
     def brush(dd):
         for _ in range(650):
             r = rng.uniform(30, BEZEL["inner_r"] - 4) * SS
             a0 = rng.uniform(0, 360)
-            span = rng.uniform(6, 40)
-            lum = rng.choice((255, 0))
             dd.arc([CX * SS - r, CY * SS - r, CX * SS + r, CY * SS + r],
-                   a0, a0 + span, fill=(lum, lum, lum, rng.randint(4, 10)),
+                   a0, a0 + rng.uniform(6, 40),
+                   fill=(rng.choice((255, 0)),) * 3 + (rng.randint(4, 10),),
                    width=SS)
     shade(img, brush)
     return img
@@ -103,84 +96,114 @@ def dial_base() -> Image.Image:
 
 # --------------------------------------------------------------- bezel
 
-def bezel(img: Image.Image) -> None:
-    """The minute bezel: darker navy band, engraved gold numerals every five
-    rotated tangentially, minor ticks between, lume triangle at zero."""
+def _rivet(img, x, y, rng, r=None):
+    r = (r or PLATE["rivet_r"]) * SS
     d = ImageDraw.Draw(img)
+    shade(img, lambda dd: dd.ellipse(
+        [x - r, y - r + SS, x + r, y + r + SS], fill=(0, 0, 0, 110)))
+    d.ellipse([x - r, y - r, x + r, y + r], fill=(*P["steel"], 255))
+    d.ellipse([x - r * 0.6, y - r, x + r * 0.2, y - r * 0.2],
+              fill=(255, 255, 255, 120))
+    d.arc([x - r, y - r, x + r, y + r], 20, 200,
+          fill=(*P["steel_lo"], 200), width=max(1, SS // 2))
+
+
+def bezel(img):
+    d = ImageDraw.Draw(img)
+    rng = random.Random(SEED ^ 0xBE)
     ro, ri = BEZEL["outer_r"] * SS, BEZEL["inner_r"] * SS
     cx, cy = CX * SS, CY * SS
 
-    # the band, graded top-lit like a real coin-edge bezel
     band = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     bd = ImageDraw.Draw(band)
-    bd.ellipse([cx - ro, cy - ro, cx + ro, cy + ro], fill=(*P["bezel_hi"], 255))
+    bd.ellipse([cx - ro, cy - ro, cx + ro, cy + ro],
+               fill=(*P["bezel_hi"], 255))
     bd.ellipse([cx - ri, cy - ri, cx + ri, cy + ri], fill=(0, 0, 0, 0))
     grad = Image.new("L", (S, S), 0)
     gd = ImageDraw.Draw(grad)
     for y in range(0, S, SS):
         gd.rectangle([0, y, S, y + SS], fill=int(50 * y / S))
     dark = Image.new("RGBA", (S, S), (*P["bezel_lo"], 255))
-    band = Image.composite(dark, band, ImageChops_multiply_mask(grad, band))
+    band = Image.composite(dark, band,
+                           ImageChops.multiply(grad, band.getchannel("A")))
     img.alpha_composite(band)
 
-    # rim highlights: a machined edge catches light on top, loses it below
     shade(img, lambda dd: (
         dd.arc([cx - ro + SS, cy - ro + SS, cx + ro - SS, cy + ro - SS],
                160, 380, fill=(255, 255, 255, 46), width=2 * SS),
-        dd.arc([cx - ri, cy - ri, cx + ri, cy + ri],
-               -20, 200, fill=(0, 0, 0, 120), width=2 * SS),
-        dd.arc([cx - ri, cy - ri, cx + ri, cy + ri],
-               160, 380, fill=(255, 255, 255, 30), width=SS)))
+        dd.arc([cx - ri, cy - ri, cx + ri, cy + ri], -20, 200,
+               fill=(0, 0, 0, 120), width=2 * SS),
+        dd.arc([cx - ri, cy - ri, cx + ri, cy + ri], 160, 380,
+               fill=(255, 255, 255, 30), width=SS)))
 
-    # ticks: minors every minute, majors every five (under the numerals)
     for m in range(60):
         deg = m * 6
         major = m % 5 == 0
         r1 = BEZEL["tick_outer_r"] * SS
         r0 = (BEZEL["tick_major_inner_r"] if major
               else BEZEL["tick_inner_r"]) * SS
-        col = (*P["gold"], 235) if major else (*P["ink"], 120)
         d.line([_at(cx, cy, r0, deg), _at(cx, cy, r1, deg)],
-               fill=col, width=(2 if major else 1) * SS)
+               fill=(*P["gold"], 235) if major else (*P["ink"], 120),
+               width=(2 if major else 1) * SS)
 
-    # numerals 05..55, engraved, each rotated to lie along the band
+    # numerals 05..55 plus the gold 12 at the top (gap item 2)
     f = font(BEZEL["numeral_px"])
-    for m in range(5, 60, 5):
-        deg = m * 6
-        txt = f"{m:02d}"
+    marks = [(m * 6, f"{m:02d}") for m in range(5, 60, 5)] + [(0, "12")]
+    for deg, txt in marks:
         pad = 6 * SS
         w = int(f.getlength(txt)) + pad * 2
         h = BEZEL["numeral_px"] * SS + pad * 2
         tile = Image.new("RGBA", (w, h), (0, 0, 0, 0))
-        engrave(tile, (w / 2, h / 2), txt, f, (*P["gold"], 255), depth=1.2)
-        # on the bottom half the tangential rotation turns glyphs on their
-        # heads; real bezels (and the concept) flip them to read outward
+        engrave(tile, (w / 2, h / 2), txt, f,
+                (*P["gold_hi"], 255) if txt == "12" else (*P["gold"], 255),
+                depth=1.2)
         show = deg + (180 if 90 < deg < 270 else 0)
         rotated_paste(img, tile, _at(cx, cy, BEZEL["numeral_r"] * SS, deg),
                       show)
 
-    # zero: the lume triangle, brightest thing on the bezel
-    tip = _at(cx, cy, (BEZEL["inner_r"] + 6) * SS, 0)
-    b1 = _at(cx, cy, BEZEL["numeral_r"] * SS + 9 * SS, -3.2)
-    b2 = _at(cx, cy, BEZEL["numeral_r"] * SS + 9 * SS, 3.2)
-    shade(img, lambda dd: dd.polygon(
-        [tip, b1, b2], fill=(0, 0, 0, 140)))
-    d.polygon([(tip[0], tip[1] - SS), (b1[0], b1[1] - SS),
-               (b2[0], b2[1] - SS)], fill=(*P["lume"], 255))
+    # applied trapezoid indices with lume, between the numerals (item 1)
+    aw = BEZEL["applique_w"] * SS
+    al = BEZEL["applique_l"] * SS
+    for k in range(12):
+        deg = 15 + k * 30
+        tile = Image.new("RGBA", (int(aw * 2.4), int(al * 1.8)), (0, 0, 0, 0))
+        td = ImageDraw.Draw(tile)
+        x0, y0 = aw * 0.7, al * 0.35
+        top_w, bot_w = aw * 0.72, aw
+        poly = [(x0 + (bot_w - top_w) / 2, y0),
+                (x0 + (bot_w + top_w) / 2, y0),
+                (x0 + bot_w, y0 + al), (x0, y0 + al)]
+        shade(tile, lambda dd, p=poly: dd.polygon(
+            [(px + SS, py + SS) for px, py in p], fill=(0, 0, 0, 120)))
+        td.polygon(poly, fill=(*P["steel"], 255))
+        td.line(poly[:2], fill=(*P["steel_hi"], 220), width=SS)
+        td.line(poly[2:4], fill=(*P["steel_lo"], 220), width=SS)
+        cxp = x0 + bot_w / 2
+        cyp = y0 + al / 2
+        td.rounded_rectangle([cxp - top_w * 0.28, y0 + 3 * SS,
+                              cxp + top_w * 0.28, y0 + al - 3 * SS],
+                             radius=SS, fill=(*P["lume"], 255))
+        rotated_paste(img, tile, _at(cx, cy, BEZEL["applique_r"] * SS, deg),
+                      deg)
 
-
-def ImageChops_multiply_mask(grad: Image.Image, band: Image.Image):
-    """Mask for the bezel's vertical grade, clipped to the band's alpha."""
-    from PIL import ImageChops
-    return ImageChops.multiply(grad, band.getchannel("A"))
+    # panel seams + rivets on the chapter ring (item 1)
+    for r_ in PANEL["seam_radii"]:
+        rr = r_ * SS
+        shade(img, lambda dd, rr=rr: (
+            dd.arc([cx - rr, cy - rr, cx + rr, cy + rr], 0, 360,
+                   fill=(0, 0, 0, 90), width=SS),
+            dd.arc([cx - rr - SS, cy - rr - SS, cx + rr + SS, cy + rr + SS],
+                   0, 360, fill=(255, 255, 255, 22), width=SS)))
+    deg = PANEL["rivet_offset_deg"]
+    while deg < 360:
+        x, y = _at(cx, cy, PANEL["rivet_r"] * SS, deg)
+        _rivet(img, x, y, rng)
+        deg += PANEL["rivet_every_deg"]
 
 
 # ------------------------------------------------------------- chapter
 
-def indices(img: Image.Image) -> None:
-    """Applied metal batons with a lume core at every hour, double at 12.
-    Applied means they cast: a soft shadow offset down-right sells the
-    couple of tenths of a millimetre they stand off the dial."""
+def indices(img):
     cx, cy = CX * SS, CY * SS
     for h in range(12):
         deg = h * 30
@@ -192,18 +215,13 @@ def indices(img: Image.Image) -> None:
             tile = Image.new("RGBA", (int(w * 3), int(l * 1.6)), (0, 0, 0, 0))
             td = ImageDraw.Draw(tile)
             x0, y0 = w, l * 0.3
-            # shadow first, composited
             shade(tile, lambda dd: dd.rounded_rectangle(
                 [x0 + SS, y0 + SS, x0 + w + SS, y0 + l + SS],
                 radius=2 * SS, fill=(0, 0, 0, 110)))
-            # steel body, top-lit
             td.rounded_rectangle([x0, y0, x0 + w, y0 + l], radius=2 * SS,
                                  fill=(*P["steel"], 255))
             td.rounded_rectangle([x0, y0, x0 + w, y0 + l * 0.45],
                                  radius=2 * SS, fill=(*P["steel_hi"], 90))
-            td.line([x0, y0 + l, x0 + w, y0 + l], fill=(*P["steel_lo"], 220),
-                    width=SS)
-            # lume core
             lw = CHAPTER["lume_w"] * SS
             td.rounded_rectangle(
                 [x0 + (w - lw) / 2, y0 + 2.5 * SS,
@@ -217,10 +235,10 @@ def indices(img: Image.Image) -> None:
 
 # ---------------------------------------------------------------- plate
 
-def _silhouette() -> Image.Image:
+def _mask_for(shapes):
     m = Image.new("L", (S, S), 0)
     d = ImageDraw.Draw(m)
-    for kind, p in PLATE["shapes"]:
+    for kind, p in shapes:
         if kind == "disc":
             c, r = p["c"], p["r"] * SS
             d.ellipse([c[0] * SS - r, c[1] * SS - r,
@@ -230,47 +248,57 @@ def _silhouette() -> Image.Image:
             d.rounded_rectangle([c[0] * SS - w / 2, c[1] * SS - h / 2,
                                  c[0] * SS + w / 2, c[1] * SS + h / 2],
                                 radius=rad, fill=255)
-    # Metaball smoothing: blur the union and re-threshold. Every internal
-    # corner where two shapes meet rounds into a fillet, which is what a
-    # milled part actually has — no CNC leaves a knife-edge inside corner.
-    m = m.filter(ImageFilter.GaussianBlur(6 * SS)).point(
+    return m.filter(ImageFilter.GaussianBlur(6 * SS)).point(
         lambda v: 255 if v >= 128 else 0)
-    return m
 
 
-def centre_plate(img: Image.Image) -> None:
-    """The milled steel plate, then its punched openings.
+def _perimeter_points(shapes, inset, spacing):
+    """Rivet positions sampled from the geometry itself, never traced off
+    pixels — the contour and the art cannot drift apart."""
+    pts = []
+    for kind, p in shapes:
+        if kind == "disc":
+            c, r = p["c"], p["r"] - inset
+            n = max(6, int(2 * math.pi * r / spacing))
+            for i in range(n):
+                a = 2 * math.pi * i / n
+                pts.append((c[0] + math.cos(a) * r, c[1] + math.sin(a) * r))
+        else:
+            c, w, h = p["c"], p["w"] / 2 - inset, p["h"] / 2 - inset
+            per = 4 * (w + h)
+            n = max(8, int(per / spacing))
+            for i in range(n):
+                t = per * i / n
+                if t < 2 * w:
+                    pts.append((c[0] - w + t, c[1] - h))
+                elif t < 2 * w + 2 * h:
+                    pts.append((c[0] + w, c[1] - h + (t - 2 * w)))
+                elif t < 4 * w + 2 * h:
+                    pts.append((c[0] + w - (t - 2 * w - 2 * h), c[1] + h))
+                else:
+                    pts.append((c[0] - w, c[1] + h - (t - 4 * w - 2 * h)))
+    return pts
 
-    Order matters and is the whole trick: steel body -> brushing -> bevel
-    (light above, dark below, from the silhouette's own edge) -> drop
-    shadow under the plate onto the dial -> screws -> THEN the wells and
-    windows are punched, each with its own inner shadow, so every opening
-    reads as a hole through metal rather than a dark sticker on it.
-    """
-    rng = random.Random(SEED ^ 0xB1)
-    sil = _silhouette()
 
-    # drop shadow onto the dial, from the silhouette, composited
-    sh = sil.filter(ImageFilter.GaussianBlur(3 * SS))
-    shadow = Image.new("RGBA", (S, S), (0, 0, 0, 255))
-    shadow.putalpha(sh.point(lambda v: v * 140 // 255))
-    img.alpha_composite(shadow)
-
-    # steel body with vertical brushing
-    steel = Image.new("RGBA", (S, S), (*P["steel"], 255))
+def _steel_level(sil, base_lum=0, brush_vertical=True):
+    rng = random.Random(SEED ^ (0xB1 + base_lum))
+    steel = Image.new(
+        "RGBA", (S, S),
+        tuple(min(255, v + base_lum) for v in P["steel"]) + (255,))
     sd = ImageDraw.Draw(steel)
-    for x in range(0, S, SS):
+    for i in range(0, S, SS):
         if rng.random() < 0.8:
             lum = rng.randint(-16, 16)
-            col = tuple(max(0, min(255, P["steel"][k] + lum)) for k in range(3))
-            sd.line([(x, 0), (x, S)], fill=(*col, 255), width=SS)
-    # gentle top-light, composited — stamped, these rows REPLACE the RGB
-    # and the plate comes out white, which is exactly the shade() lesson
+            col = tuple(max(0, min(255, P["steel"][k] + base_lum + lum))
+                        for k in range(3))
+            if brush_vertical:
+                sd.line([(i, 0), (i, S)], fill=(*col, 255), width=SS)
+            else:
+                sd.line([(0, i), (S, i)], fill=(*col, 255), width=SS)
     light = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     ld = ImageDraw.Draw(light)
     for y in range(0, S, SS):
-        t = y / S
-        a = int(24 - 38 * t)
+        a = int(24 - 38 * (y / S))
         if a > 0:
             ld.line([(0, y), (S, y)], fill=(255, 255, 255, a), width=SS)
         elif a < -6:
@@ -279,23 +307,84 @@ def centre_plate(img: Image.Image) -> None:
 
     body = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     body.paste(steel, (0, 0), sil)
-
-    # bevel from the silhouette's own edges: outline light shifted up-left,
-    # dark shifted down-right
-    edge = sil.filter(ImageFilter.FIND_EDGES).point(lambda v: 255 if v > 24 else 0)
+    edge = sil.filter(ImageFilter.FIND_EDGES).point(
+        lambda v: 255 if v > 24 else 0)
     b = int(PLATE["bevel_px"] * SS / 2)
-    hi = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-    hi.paste(Image.new("RGBA", (S, S), (*P["steel_hi"], 150)), (-b, -b), edge)
     lo = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     lo.paste(Image.new("RGBA", (S, S), (*P["steel_lo"], 190)), (b, b), edge)
+    hi = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    hi.paste(Image.new("RGBA", (S, S), (*P["steel_hi"], 150)), (-b, -b), edge)
     body.alpha_composite(lo)
     body.alpha_composite(hi)
     body.putalpha(sil)
+    return body
 
-    img.alpha_composite(body)
+
+def centre_plate(img):
+    rng = random.Random(SEED ^ 0xB1)
     d = ImageDraw.Draw(img)
 
-    # screws: slotted, each at a random angle, seeded
+    base_sil = _mask_for(PLATE["shapes"])
+    bridge_sil = _mask_for(PLATE["bridge"])
+
+    sh = Image.new("RGBA", (S, S), (0, 0, 0, 255))
+    sh.putalpha(base_sil.filter(ImageFilter.GaussianBlur(3 * SS)).point(
+        lambda v: v * 140 // 255))
+    img.alpha_composite(sh)
+    img.alpha_composite(_steel_level(base_sil, 0, True))
+
+    # the power arc's recessed channel, cut into the base (item 3)
+    ch_r, ch_w = POWER["channel_r"] * SS, POWER["channel_w"] * SS
+    cx, cy = CX * SS, CY * SS
+    a0, a1 = POWER["start_deg"] - 90, POWER["end_deg"] - 90
+    shade(img, lambda dd: dd.arc(
+        [cx - ch_r, cy - ch_r, cx + ch_r, cy + ch_r], a0, a1,
+        fill=(0, 0, 0, 150), width=int(ch_w)))
+    shade(img, lambda dd: (
+        dd.arc([cx - ch_r - ch_w / 2, cy - ch_r - ch_w / 2,
+                cx + ch_r + ch_w / 2, cy + ch_r + ch_w / 2], a0, a1,
+               fill=(255, 255, 255, 40), width=SS),
+        dd.arc([cx - ch_r + ch_w / 2, cy - ch_r + ch_w / 2,
+                cx + ch_r - ch_w / 2, cy + ch_r - ch_w / 2], a0, a1,
+               fill=(0, 0, 0, 160), width=SS)))
+
+    # bridge shadow, then the raised bridge itself (item 6)
+    bs = Image.new("RGBA", (S, S), (0, 0, 0, 255))
+    bs.putalpha(bridge_sil.filter(ImageFilter.GaussianBlur(2.5 * SS)).point(
+        lambda v: v * 110 // 255))
+    img.alpha_composite(bs)
+    img.alpha_composite(_steel_level(bridge_sil, 12, False))
+
+    # circular graining on the hub
+    hub_r = 64.0
+    grain_layer = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    gd = ImageDraw.Draw(grain_layer)
+    for _ in range(240):
+        r = rng.uniform(8, hub_r) * SS
+        a = rng.uniform(0, 360)
+        gd.arc([cx - r, cy - r, cx + r, cy + r], a, a + rng.uniform(20, 90),
+               fill=(rng.choice((255, 0)),) * 3 + (rng.randint(6, 14),),
+               width=SS)
+    hub_mask = Image.new("L", (S, S), 0)
+    ImageDraw.Draw(hub_mask).ellipse(
+        [cx - hub_r * SS, cy - hub_r * SS, cx + hub_r * SS, cy + hub_r * SS],
+        fill=255)
+    grain_layer.putalpha(ImageChops.multiply(
+        grain_layer.getchannel("A"), hub_mask))
+    img.alpha_composite(grain_layer)
+    shade(img, lambda dd: dd.ellipse(
+        [cx - hub_r * SS, cy - hub_r * SS, cx + hub_r * SS, cy + hub_r * SS],
+        outline=(0, 0, 0, 100), width=SS))
+
+    # rivets along both levels (item 6)
+    for shapes, inset in ((PLATE["shapes"], PLATE["rivet_inset"]),
+                          (PLATE["bridge"], PLATE["rivet_inset"] - 1)):
+        for x, y in _perimeter_points(shapes, inset, PLATE["rivet_spacing"]):
+            xs, ys = x * SS, y * SS
+            if 0 <= xs < S and 0 <= ys < S and \
+                    base_sil.getpixel((int(xs), int(ys))) == 255:
+                _rivet(img, xs, ys, rng)
+
     for sx, sy in PLATE["screws"]:
         r = PLATE["screw_r"] * SS
         x, y = sx * SS, sy * SS
@@ -306,16 +395,12 @@ def centre_plate(img: Image.Image) -> None:
         d.ellipse([x - r + SS, y - r + SS, x + r - SS, y + r - SS],
                   fill=(*P["steel"], 255))
         ang = rng.uniform(0, math.pi)
-        dx, dy = math.cos(ang) * (r - SS), math.sin(ang) * (r - SS)
-        d.line([x - dx, y - dy, x + dx, y + dy], fill=(30, 36, 44, 255),
+        dx_, dy_ = math.cos(ang) * (r - SS), math.sin(ang) * (r - SS)
+        d.line([x - dx_, y - dy_, x + dx_, y + dy_], fill=(30, 36, 44, 255),
                width=SS)
-        d.ellipse([x - r * 0.55, y - r, x + r * 0.15, y - r * 0.3],
-                  fill=(255, 255, 255, 60))
 
-    # ---- punched openings ----------------------------------------------
-    def punch(cx_, cy_, rw, rh=None, rad=None):
-        """Cut a well/window and give it the inward top shadow of a real
-        counterbore. rh=None -> circle of radius rw."""
+    # ---- punched openings ---------------------------------------------
+    def punch(cx_, cy_, rw, rh=None, rad=None, fill=None):
         x, y = cx_ * SS, cy_ * SS
         cut = Image.new("L", (S, S), 0)
         cd = ImageDraw.Draw(cut)
@@ -326,71 +411,124 @@ def centre_plate(img: Image.Image) -> None:
             cd.rounded_rectangle([x - rw * SS / 2, y - rh * SS / 2,
                                   x + rw * SS / 2, y + rh * SS / 2],
                                  radius=(rad or 8) * SS, fill=255)
-        well = Image.new("RGBA", (S, S), (*P["well"], 255))
-        img.paste(well, (0, 0), cut)
-        # counterbore edge + inward shadow, composited
+        img.paste(Image.new("RGBA", (S, S), fill or (*P["well"], 255)),
+                  (0, 0), cut)
         er = cut.filter(ImageFilter.FIND_EDGES).point(
             lambda v: 255 if v > 24 else 0)
         ring = Image.new("RGBA", (S, S), (0, 0, 0, 0))
         ring.paste(Image.new("RGBA", (S, S), (0, 0, 0, 220)), (0, -SS), er)
-        ring.paste(Image.new("RGBA", (S, S), (*P["steel_hi"], 70)), (0, SS), er)
-        ring.putalpha(Image.composite(ring.getchannel("A"),
-                                      Image.new("L", (S, S), 0),
-                                      er.filter(ImageFilter.MaxFilter(3))))
+        ring.paste(Image.new("RGBA", (S, S), (*P["steel_hi"], 70)), (0, SS),
+                   er)
+        ring.putalpha(ImageChops.multiply(
+            ring.getchannel("A"), er.filter(ImageFilter.MaxFilter(3))))
         img.alpha_composite(ring)
-        grad_sh = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-        gsd = ImageDraw.Draw(grad_sh)
+        gsh = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        gd_ = ImageDraw.Draw(gsh)
         if rh is None:
-            gsd.pieslice([x - rw * SS, y - rw * SS, x + rw * SS, y + rw * SS],
+            gd_.pieslice([x - rw * SS, y - rw * SS, x + rw * SS, y + rw * SS],
                          180, 360, fill=(0, 0, 0, 95))
         else:
-            gsd.rectangle([x - rw * SS / 2, y - rh * SS / 2,
+            gd_.rectangle([x - rw * SS / 2, y - rh * SS / 2,
                            x + rw * SS / 2, y - rh * SS / 2 + 5 * SS],
                           fill=(0, 0, 0, 95))
-        grad_sh.putalpha(Image.composite(
-            grad_sh.getchannel("A"), Image.new("L", (S, S), 0), cut))
-        img.alpha_composite(grad_sh.filter(ImageFilter.GaussianBlur(SS)))
+        gsh.putalpha(ImageChops.multiply(gsh.getchannel("A"), cut))
+        img.alpha_composite(gsh.filter(ImageFilter.GaussianBlur(SS)))
+        return cut
 
-    punch(*SUBDIAL["steps_c"], SUBDIAL["well_r"])
-    punch(*SUBDIAL["hr_c"], SUBDIAL["well_r"])
+    # sub-dial wells with riveted rims (item 7)
     for cc in (SUBDIAL["steps_c"], SUBDIAL["hr_c"]):
+        punch(*cc, SUBDIAL["well_r"])
         x, y = cc[0] * SS, cc[1] * SS
         r = SUBDIAL["well_r"] * SS
-        d.ellipse([x - r - 2.5 * SS, y - r - 2.5 * SS,
-                   x + r + 2.5 * SS, y + r + 2.5 * SS],
-                  outline=(*P["steel_lo"], 255), width=int(SS * 1.6))
+        d.ellipse([x - r - 3 * SS, y - r - 3 * SS, x + r + 3 * SS,
+                   y + r + 3 * SS], outline=(*P["steel_lo"], 255),
+                  width=int(SS * 1.8))
         shade(img, lambda dd, x=x, y=y, r=r: dd.arc(
-            [x - r - 2.5 * SS, y - r - 2.5 * SS,
-             x + r + 2.5 * SS, y + r + 2.5 * SS],
-            160, 380, fill=(255, 255, 255, 70), width=SS))
-    punch(*MOON["c"], MOON["well_r"])
-    punch(*WINDOWS["left_c"], WINDOWS["w"], WINDOWS["h"], 9)
-    punch(*WINDOWS["right_c"], WINDOWS["w"], WINDOWS["h"], 9)
-    punch(*DATE["c"], DATE["frame_w"], DATE["frame_h"], 12)
+            [x - r - 3 * SS, y - r - 3 * SS, x + r + 3 * SS, y + r + 3 * SS],
+            160, 380, fill=(255, 255, 255, 80), width=SS))
+        for i in range(22):
+            a = 2 * math.pi * i / 22
+            _rivet(img, x + math.cos(a) * (r + 7 * SS),
+                   y + math.sin(a) * (r + 7 * SS), rng, r=1.9)
 
-    # gold frame around the date window, the concept's balancing accent
-    x, y = DATE["c"][0] * SS, DATE["c"][1] * SS
-    w, h = DATE["frame_w"] * SS, DATE["frame_h"] * SS
-    d.rounded_rectangle([x - w / 2 - SS, y - h / 2 - SS,
-                         x + w / 2 + SS, y + h / 2 + SS],
-                        radius=13 * SS, outline=(*P["gold"], 230),
-                        width=int(SS * 1.4))
+    # arch moon scene with a baked starfield (item 9)
+    mx, my = MOON["c"]
+    aw, ah = MOON["arch_w"], MOON["arch_h"]
+    arch = punch(mx, my, aw, ah, rad=ah / 2.1, fill=(6, 10, 18, 255))
+    stars_layer = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    sd_ = ImageDraw.Draw(stars_layer)
+    for _ in range(70):
+        x = rng.uniform(mx - aw / 2, mx + aw / 2) * SS
+        y = rng.uniform(my - ah / 2, my + ah / 2) * SS
+        rr = rng.choice((1, 1, 2)) * SS * 0.5
+        sd_.ellipse([x - rr, y - rr, x + rr, y + rr],
+                    fill=(255, 255, 255, rng.randint(70, 220)))
+    for i in range(3):
+        yb = (my + ah / 2 - 8 - i * 5) * SS
+        sd_.ellipse([(mx - aw / 2 + 8 + i * 14) * SS, yb - 3 * SS,
+                     (mx - aw / 2 + 42 + i * 18) * SS, yb + 3 * SS],
+                    fill=(150, 160, 175, 60))
+    stars_layer.putalpha(ImageChops.multiply(
+        stars_layer.getchannel("A"), arch))
+    img.alpha_composite(stars_layer)
+
+    # framed readout windows (item 10)
+    for cc in (WINDOWS["left_c"], WINDOWS["right_c"]):
+        punch(*cc, WINDOWS["w"], WINDOWS["h"], 9, fill=(14, 22, 34, 255))
+        x, y = cc[0] * SS, cc[1] * SS
+        w_, h_ = WINDOWS["w"] * SS, WINDOWS["h"] * SS
+        d.rounded_rectangle([x - w_ / 2 - 2 * SS, y - h_ / 2 - 2 * SS,
+                             x + w_ / 2 + 2 * SS, y + h_ / 2 + 2 * SS],
+                            radius=11 * SS, outline=(*P["steel_lo"], 255),
+                            width=int(SS * 1.6))
+        shade(img, lambda dd, x=x, y=y, w_=w_, h_=h_: dd.rounded_rectangle(
+            [x - w_ / 2 - 2 * SS, y - h_ / 2 - 2 * SS,
+             x + w_ / 2 + 2 * SS, y + h_ / 2 + 2 * SS],
+            radius=11 * SS, outline=(255, 255, 255, 60), width=SS))
+
+    # date: navy window, gold frame, black inner day-box (item 13)
+    dx, dy = DATE["c"]
+    punch(dx, dy, DATE["frame_w"], DATE["frame_h"], 12,
+          fill=(16, 25, 38, 255))
+    x, y = dx * SS, dy * SS
+    w_, h_ = DATE["frame_w"] * SS, DATE["frame_h"] * SS
+    d.rounded_rectangle([x - w_ / 2 - SS, y - h_ / 2 - SS,
+                         x + w_ / 2 + SS, y + h_ / 2 + SS],
+                        radius=13 * SS, outline=(*P["gold"], 235),
+                        width=int(SS * 1.5))
+    bw, bh = DATE["day_box_w"] * SS, DATE["day_box_h"] * SS
+    d.rounded_rectangle([x - bw / 2, y - bh / 2, x + bw / 2, y + bh / 2],
+                        radius=4 * SS, fill=(4, 6, 10, 255),
+                        outline=(*P["gold"], 140), width=SS)
+
+    # the wordmark's own inset navy plate with corner rivets (item 5)
+    wx, wy = WORDMARK["plate_c"]
+    ww, wh = WORDMARK["plate_w"], WORDMARK["plate_h"]
+    punch(wx, wy, ww, wh, WORDMARK["plate_rad"], fill=(18, 28, 42, 255))
+    x, y = wx * SS, wy * SS
+    d.rounded_rectangle([x - ww * SS / 2 - SS, y - wh * SS / 2 - SS,
+                         x + ww * SS / 2 + SS, y + wh * SS / 2 + SS],
+                        radius=(WORDMARK["plate_rad"] + 1) * SS,
+                        outline=(*P["steel_hi"], 160), width=SS)
+    for sx_, sy_ in ((wx - ww / 2 + 8, wy - wh / 2 + 8),
+                     (wx + ww / 2 - 8, wy - wh / 2 + 8),
+                     (wx - ww / 2 + 8, wy + wh / 2 - 8),
+                     (wx + ww / 2 - 8, wy + wh / 2 - 8)):
+        _rivet(img, sx_ * SS, sy_ * SS, rng, r=2.2)
 
 
-# ------------------------------------------------------------ wordmark
-
-def wordmark(img: Image.Image) -> None:
+def wordmark(img):
     f1 = font(WORDMARK["meridian_px"])
     f2 = font(WORDMARK["sub_px"], bold=False)
     c = WORDMARK["meridian_c"]
     engrave(img, (c[0] * SS, c[1] * SS), "M E R I D I A N", f1,
-            (48, 56, 66, 255), depth=1.3)
+            (*P["ink"], 255), depth=1.1)
     c2 = WORDMARK["sub_c"]
     engrave(img, (c2[0] * SS, c2[1] * SS), "C O M M O D O R E", f2,
-            (*P["gold"], 255), depth=0.8)
+            (*P["gold"], 255), depth=0.7)
 
 
-def compose_phase12() -> Image.Image:
+def compose_phase12():
     img = dial_base()
     bezel(img)
     indices(img)
@@ -401,85 +539,124 @@ def compose_phase12() -> Image.Image:
 
 # ------------------------------------------------- post-Kontext dressing
 
-def dress_base(kontext_png, out_png) -> None:
-    """Baked labels and emblem onto the Kontext base. These never change, so
-    they are engraved into the art rather than spent as parts — and Kontext
-    is never allowed to typeset them, because it invents letterforms."""
-    from geometry import MILITARY, POWER, SUBDIAL, WINDOWS
+def dress_base(kontext_png, out_png):
+    """Captions inside the wells, icons inside the windows, the star, the
+    heart, the BATTERY legend — baked after generation so Kontext can never
+    typeset. It invents letterforms."""
     img = Image.open(kontext_png).convert("RGBA")
     up = img.resize((S, S), Image.LANCZOS)
     f_lab = font(12, bold=False)
     f_tiny = font(10, bold=False)
     gold = (*P["gold"], 255)
-    dim = (150, 162, 176, 255)
+    dim = (168, 178, 190, 255)
+    d = ImageDraw.Draw(up)
 
     engrave(up, (POWER["label_c"][0] * SS, POWER["label_c"][1] * SS),
             "B A T T E R Y", f_tiny, dim, depth=0.8)
+
     for cc, lab in ((SUBDIAL["steps_c"], "STEPS"), (SUBDIAL["hr_c"], "BPM")):
-        engrave(up, (cc[0] * SS, (cc[1] + SUBDIAL["well_r"] - 12) * SS),
-                lab, f_tiny, dim, depth=0.7)
-    engrave(up, (MILITARY["c"][0] * SS, (MILITARY["c"][1] + 24) * SS),
-            "24H", f_lab, gold, depth=0.8)
-    # the star emblem under the military time, from the concept
-    cx, cy = MILITARY["c"][0] * SS, (MILITARY["c"][1] + 46) * SS
-    r = 11 * SS
+        engrave(up, (cc[0] * SS, (cc[1] + SUBDIAL["caption_dy"]) * SS),
+                lab, f_tiny, dim, depth=0.6)
+
+    # the red heart under BPM (item 8)
+    hx_, hy_ = SUBDIAL["hr_c"]
+    hx_, hy_ = hx_ * SS, (hy_ + SUBDIAL["goal_dy"]) * SS
+    r = 5.5 * SS
+    heart = [(hx_, hy_ + r), (hx_ - r, hy_ - r * 0.2),
+             (hx_ - r * 0.5, hy_ - r), (hx_, hy_ - r * 0.35),
+             (hx_ + r * 0.5, hy_ - r), (hx_ + r, hy_ - r * 0.2)]
+    shade(up, lambda dd: dd.polygon(
+        [(x + SS, y + SS) for x, y in heart], fill=(0, 0, 0, 140)))
+    d.polygon(heart, fill=(226, 64, 64, 255))
+
+    # military caption + the bold star (item 12)
+    mx, my = MILITARY["c"]
+    engrave(up, (mx * SS, (my + 26) * SS), "24H", f_lab, gold, depth=0.8)
+    cx, cy = mx * SS, (my + MILITARY["star_dy"]) * SS
+    r = MILITARY["star_r"] * SS
     pts = []
     for i in range(10):
         rr = r if i % 2 == 0 else r * 0.42
         a = math.radians(i * 36 - 90)
         pts.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr))
     shade(up, lambda dd: dd.polygon(
-        [(x + SS, y + SS) for x, y in pts], fill=(0, 0, 0, 120)))
-    ImageDraw.Draw(up).polygon(pts, fill=(*P["ink"], 210))
-    for cc, lab in ((WINDOWS["left_c"], "TEMP"), (WINDOWS["right_c"], "RAIN")):
-        engrave(up, (cc[0] * SS, (cc[1] - WINDOWS["h"] / 2 - 8) * SS),
-                lab, f_tiny, dim, depth=0.6)
+        [(x + SS, y + SS) for x, y in pts], fill=(0, 0, 0, 130)))
+    d.polygon(pts, fill=(*P["ink"], 235))
+    d.line(pts + [pts[0]], fill=(90, 100, 112, 255), width=SS)
+
+    # gold icons inside the windows (item 10)
+    for cc, kind in ((WINDOWS["left_c"], "temp"),
+                     (WINDOWS["right_c"], "rain")):
+        ix = (cc[0] + WINDOWS["icon_dx"]) * SS
+        iy = cc[1] * SS
+        if kind == "temp":
+            d.rounded_rectangle([ix - 1.6 * SS, iy - 7 * SS, ix + 1.6 * SS,
+                                 iy + 3 * SS], radius=1.6 * SS, outline=gold,
+                                width=SS)
+            d.ellipse([ix - 3.4 * SS, iy + 1.5 * SS, ix + 3.4 * SS,
+                       iy + 8 * SS], fill=gold)
+        else:
+            d.polygon([(ix, iy - 7 * SS), (ix - 4.6 * SS, iy + 2 * SS),
+                       (ix + 4.6 * SS, iy + 2 * SS)], fill=gold)
+            d.ellipse([ix - 4.6 * SS, iy - 1 * SS, ix + 4.6 * SS,
+                       iy + 8 * SS], fill=gold)
     up.resize((CANVAS, CANVAS), Image.LANCZOS).save(out_png, optimize=True)
 
 
-def bg_aod(base_png, out_png) -> None:
-    """AOD base: the same art at 18%, wells to black. Burn-in budget stays
-    for the WO-P7 gate; this is the conservative start."""
+def bg_aod(base_png, out_png):
     img = Image.open(base_png).convert("RGBA")
     img = Image.eval(img, lambda v: v * 18 // 100)
     img.putalpha(255)
     img.save(out_png, optimize=True)
 
 
-def hands(out_dir) -> None:
-    """Hour, minute, second. Navy lacquered blades with steel edges and lume
-    stripes; the second hand is the concept's slim gold with a ring tail.
-    Drawn full-canvas with the pivot at centre so the spec rotates them."""
+# ---------------------------------------------------------------- hands
+
+def hands(out_dir):
+    """Dauphine: navy lacquer inside a gold rim, gold tip segment, white
+    lume core, two-stage shadow (item 11)."""
     from geometry import HANDS
     cx, cy = HANDS["c"][0] * SS, HANDS["c"][1] * SS
 
-    def blade(length, w_base, w_tip, lume_frac):
+    def dauphine(length, w_base):
         img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
         d = ImageDraw.Draw(img)
         L = length * SS
-        wb, wt = w_base * SS, w_tip * SS
-        poly = [(cx - wb, cy + 14 * SS), (cx - wt, cy - L),
-                (cx + wt, cy - L), (cx + wb, cy + 14 * SS)]
-        shade(img, lambda dd: dd.polygon(
-            [(x + 2 * SS, y + 2 * SS) for x, y in poly], fill=(0, 0, 0, 110)))
-        d.polygon(poly, fill=(16, 26, 40, 255))
-        d.line([(cx - wt, cy - L), (cx - wb, cy + 14 * SS)],
-               fill=(*P["steel_hi"], 200), width=SS)
-        d.line([(cx + wt, cy - L), (cx + wb, cy + 14 * SS)],
-               fill=(*P["steel_lo"], 220), width=SS)
-        lw = max(2 * SS, int((wb + wt) * 0.4))
-        d.rounded_rectangle(
-            [cx - lw / 2, cy - L * lume_frac, cx + lw / 2, cy - L * 0.30],
-            radius=lw / 2, fill=(*P["lume"], 255))
+        wb = w_base * SS
+        tail = 16 * SS
+        body = [(cx, cy - L), (cx - wb, cy - L * 0.32),
+                (cx - wb * 0.75, cy + tail), (cx + wb * 0.75, cy + tail),
+                (cx + wb, cy - L * 0.32)]
+        for off, a in ((3 * SS, 60), (1.5 * SS, 90)):
+            shade(img, lambda dd, off=off, a=a: dd.polygon(
+                [(x + off, y + off) for x, y in body], fill=(0, 0, 0, a)))
+        d.polygon(body, fill=(*P["gold"], 255))
+        inset = 2.2 * SS
+        d.polygon([(cx, cy - L + inset * 2.2),
+                   (cx - wb + inset, cy - L * 0.32),
+                   (cx - wb * 0.75 + inset, cy + tail - inset),
+                   (cx + wb * 0.75 - inset, cy + tail - inset),
+                   (cx + wb - inset, cy - L * 0.32)],
+                  fill=(16, 26, 40, 255))
+        tip = 0.20
+        d.polygon([(cx, cy - L),
+                   (cx - wb * (1 - tip), cy - L * (0.32 + 0.68 * tip)),
+                   (cx + wb * (1 - tip), cy - L * (0.32 + 0.68 * tip))],
+                  fill=(*P["gold_hi"], 255))
+        d.rounded_rectangle([cx - 2.2 * SS, cy - L * 0.86, cx + 2.2 * SS,
+                             cy - L * 0.42], radius=2 * SS,
+                            fill=(*P["lume"], 255))
+        d.line([(cx, cy - L * 0.30), (cx, cy + tail * 0.6)],
+               fill=(255, 255, 255, 60), width=SS)
         return img
 
-    h = blade(HANDS["hour_l"], 9, 5, 0.92)
-    m = blade(HANDS["minute_l"], 8, 4, 0.95)
+    h = dauphine(118, 10.5)
+    m = dauphine(168, 8.5)
     s_img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(s_img)
-    L = HANDS["second_l"] * SS
+    L = 182 * SS
     shade(s_img, lambda dd: dd.line(
-        [(cx + SS, cy + 34 * SS + SS), (cx + SS, cy - L + SS)],
+        [(cx + 2 * SS, cy + 34 * SS), (cx + 2 * SS, cy - L)],
         fill=(0, 0, 0, 110), width=2 * SS))
     d.line([(cx, cy + 34 * SS), (cx, cy - L)], fill=(*P["gold"], 255),
            width=2 * SS)
@@ -491,34 +668,34 @@ def hands(out_dir) -> None:
     boss = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     bd = ImageDraw.Draw(boss)
     br = 11 * SS
+    bd.ellipse([cx - br - 2 * SS, cy - br - 2 * SS, cx + br + 2 * SS,
+                cy + br + 2 * SS], fill=(*P["gold"], 255))
     bd.ellipse([cx - br, cy - br, cx + br, cy + br], fill=(*P["steel"], 255))
-    bd.ellipse([cx - br * 0.45, cy - br * 0.7, cx + br * 0.1, cy - br * 0.1],
-               fill=(255, 255, 255, 90))
-    bd.ellipse([cx - br * 0.35, cy - br * 0.35, cx + br * 0.35, cy + br * 0.35],
+    bd.ellipse([cx - br * 0.45, cy - br * 0.7, cx + br * 0.1,
+                cy - br * 0.1], fill=(255, 255, 255, 90))
+    bd.ellipse([cx - br * 0.4, cy - br * 0.4, cx + br * 0.4, cy + br * 0.4],
                fill=(16, 26, 40, 255))
-    for name, img in (("hour", h), ("minute", m), ("second", s_img),
-                      ("boss", boss)):
-        img.resize((CANVAS, CANVAS), Image.LANCZOS).save(
+    for name, im in (("hour", h), ("minute", m), ("second", s_img),
+                     ("boss", boss)):
+        im.resize((CANVAS, CANVAS), Image.LANCZOS).save(
             out_dir / f"mp_hand_{name}.png", optimize=True)
 
 
-def moon_sprite(out_dir) -> None:
-    """The moon disc for its well: cratered grey, phase shadow at runtime by
-    a rotating occluder later; v0.1 ships the full disc."""
-    from geometry import MOON
+def moon_sprite(out_dir):
     rng = random.Random(SEED ^ 0x40)
-    r = (MOON["well_r"] - 6) * SS
+    r = MOON["disc_r"] * SS
     Simg = int(r * 2 + 8 * SS)
     img = Image.new("RGBA", (Simg, Simg), (0, 0, 0, 0))
     d = ImageDraw.Draw(img)
     c = Simg / 2
     d.ellipse([c - r, c - r, c + r, c + r], fill=(206, 210, 216, 255))
-    for _ in range(26):
-        cr = rng.uniform(0.05, 0.16) * r
+    for _ in range(22):
+        cr = rng.uniform(0.06, 0.17) * r
         a = rng.uniform(0, math.tau)
         rr = rng.uniform(0, r * 0.8)
         x, y = c + math.cos(a) * rr, c + math.sin(a) * rr
-        d.ellipse([x - cr, y - cr, x + cr, y + cr], fill=(178, 183, 190, 255))
+        d.ellipse([x - cr, y - cr, x + cr, y + cr],
+                  fill=(178, 183, 190, 255))
         d.arc([x - cr, y - cr, x + cr, y + cr], 120, 320,
               fill=(150, 156, 164, 255), width=SS)
     shade(img, lambda dd: dd.pieslice(
