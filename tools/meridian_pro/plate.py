@@ -146,7 +146,7 @@ def bezel(img):
         r0 = (BEZEL["tick_major_inner_r"] if major
               else BEZEL["tick_inner_r"]) * SS
         d.line([_at(cx, cy, r0, deg), _at(cx, cy, r1, deg)],
-               fill=(*P["gold"], 235) if major else (*P["ink"], 120),
+               fill=(184, 156, 114, 150) if major else (*P["ink"], 90),
                width=(2 if major else 1) * SS)
 
     # numerals 05..55 plus the gold 12 at the top (gap item 2)
@@ -157,9 +157,10 @@ def bezel(img):
         w = int(f.getlength(txt)) + pad * 2
         h = BEZEL["numeral_px"] * SS + pad * 2
         tile = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        # muted like the concept: soft desaturated gold, gentler engrave
         engrave(tile, (w / 2, h / 2), txt, f,
-                (*P["gold_hi"], 255) if txt == "12" else (*P["gold"], 255),
-                depth=1.2)
+                (206, 176, 128, 235) if txt == "12" else (184, 156, 114, 215),
+                depth=0.7)
         show = deg + (180 if 90 < deg < 270 else 0)
         rotated_paste(img, tile, _at(cx, cy, BEZEL["numeral_r"] * SS, deg),
                       show)
@@ -379,6 +380,21 @@ def centre_plate(img):
         [cx - hub_r * SS, cy - hub_r * SS, cx + hub_r * SS, cy + hub_r * SS],
         outline=(0, 0, 0, 100), width=SS))
 
+    # the light polished centre disc and ring the concept has
+    cr = 44 * SS
+    d.ellipse([cx - cr - 8 * SS, cy - cr - 8 * SS,
+               cx + cr + 8 * SS, cy + cr + 8 * SS],
+              outline=(*P["steel_hi"], 220), width=int(2.2 * SS))
+    d.ellipse([cx - cr, cy - cr, cx + cr, cy + cr],
+              fill=(206, 214, 224, 255))
+    shade(img, lambda dd: (
+        dd.ellipse([cx - cr, cy - cr, cx + cr, cy + cr],
+                   outline=(0, 0, 0, 90), width=SS),
+        dd.pieslice([cx - cr, cy - cr, cx + cr, cy + cr], 200, 340,
+                    fill=(255, 255, 255, 40)),
+        dd.pieslice([cx - cr, cy - cr, cx + cr, cy + cr], 20, 160,
+                    fill=(0, 0, 0, 30))))
+
     # rivets along both levels (item 6)
     for shapes, inset in ((PLATE["shapes"], PLATE["rivet_inset"]),
                           (PLATE["bridge"], PLATE["rivet_inset"] - 1)):
@@ -554,6 +570,7 @@ def dress_base(kontext_png, out_png):
     dim = (168, 178, 190, 255)
     d = ImageDraw.Draw(up)
 
+    bezel_numerals_over(up)
     engrave(up, (POWER["label_c"][0] * SS, POWER["label_c"][1] * SS),
             "B A T T E R Y", f_tiny, dim, depth=0.8)
 
@@ -606,6 +623,29 @@ def dress_base(kontext_png, out_png):
     up.resize((CANVAS, CANVAS), Image.LANCZOS).save(out_png, optimize=True)
 
 
+def bezel_numerals_over(up):
+    """Redraw the minute numerals over the generated base in the concept's
+    light champagne. Kontext kept re-brightening whatever the layout held;
+    drawing them post-generation makes the colour a constant."""
+    cx, cy = CX * SS, CY * SS
+    f = font(BEZEL["numeral_px"])
+    marks = [(m * 6, f"{m:02d}") for m in range(5, 60, 5)] + [(0, "12")]
+    for deg, txt in marks:
+        pad = 6 * SS
+        w = int(f.getlength(txt)) + pad * 2
+        h = BEZEL["numeral_px"] * SS + pad * 2
+        tile = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+        td = ImageDraw.Draw(tile)
+        td.text((w / 2, h / 2 + SS), txt, font=f, fill=(0, 0, 0, 120),
+                anchor="mm")
+        td.text((w / 2, h / 2), txt, font=f,
+                fill=(228, 210, 172, 235) if txt == "12"
+                else (216, 198, 162, 220), anchor="mm")
+        show = deg + (180 if 90 < deg < 270 else 0)
+        rotated_paste(up, tile, _at(cx, cy, BEZEL["numeral_r"] * SS, deg),
+                      show)
+
+
 def bg_aod(base_png, out_png):
     """AOD base v2: SPARSE, not dimmed. A full-art dial at 18% still lights
     virtually every pixel, which fails the on-pixel-ratio burn-in gate a
@@ -653,7 +693,13 @@ def hands(out_dir):
         W = max_w * SS
         import math as _m
         def profile(tt):          # width along the blade
-            return W * (_m.sin(_m.pi * (0.18 + 0.82 * tt) * 0.86) ** 1.2)
+            # broad through the middle, tapering to a POINT at 0.86L —
+            # the concept's blade — with a thin gold needle beyond it
+            if tt < 0.45:
+                return W * (0.35 + 0.65 * (tt / 0.45) ** 0.8)
+            if tt < 0.86:
+                return W * (1.0 - 0.98 * ((tt - 0.45) / 0.41) ** 1.15)
+            return W * 0.02
         n = 26
         left, right = [], []
         for i in range(n + 1):
@@ -674,24 +720,29 @@ def hands(out_dir):
         for i in range(n + 1):
             tt = i / n
             y = cy - L * tt
-            w2 = max(0.5, profile(tt) / 2 - 3.6 * SS)
+            w2 = max(0.5, profile(tt) / 2 - 4.8 * SS)
             inner.append((cx - w2, y))
         for i in range(n, -1, -1):
             tt = i / n
             y = cy - L * tt
-            w2 = max(0.5, profile(tt) / 2 - 3.6 * SS)
+            w2 = max(0.5, profile(tt) / 2 - 4.8 * SS)
             inner.append((cx + w2, y))
         d.polygon(inner, fill=(38, 56, 82, 255))
+        # the gold needle tip beyond the blade point
+        d.line([(cx, cy - L * 0.84), (cx, cy - L * 1.06)],
+               fill=(*P["gold"], 255), width=int(3 * SS))
+        d.polygon([(cx, cy - L * 1.10), (cx - 2.5 * SS, cy - L * 1.04),
+                   (cx + 2.5 * SS, cy - L * 1.04)], fill=(*P["gold_hi"], 255))
         # wide lume spine
-        d.rounded_rectangle([cx - 3.2 * SS, cy - L * 0.88, cx + 3.2 * SS,
+        d.rounded_rectangle([cx - 4.4 * SS, cy - L * 0.80, cx + 4.4 * SS,
                              cy - L * 0.30], radius=3 * SS,
                             fill=(*P["lume"], 255))
         d.line([(cx, cy - L * 0.28), (cx, cy + cb * 0.6)],
                fill=(255, 255, 255, 55), width=SS)
         return img
 
-    h = propeller(114, 26)
-    m = propeller(164, 21)
+    h = propeller(102, 44)
+    m = propeller(148, 34)
     s_img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(s_img)
     L = 182 * SS

@@ -39,7 +39,9 @@ MUTED = __import__("os").environ.get("MP_VARIANT", "muted") != "bold"
 
 PROMPT = (
     "Turn this watch dial design into an ultra photorealistic macro "
-    "photograph of a real luxury military aviator wristwatch dial. Keep "
+    "photograph of a real luxury military aviator wristwatch dial that "
+    "FILLS THE ENTIRE FRAME edge to edge - no watch case, no strap, no "
+    "table, no background. Keep "
     "every element in exactly the same position, size and arrangement - do "
     "not move, add or remove anything, and do not add any text. The outer "
     "bezel is bright steel-blue anodized aluminium with engraved gold minute "

@@ -52,33 +52,33 @@
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
     "FACE_AOD.png": {
-      "bytes": 40047,
+      "bytes": 39517,
       "height": 480,
-      "sha256": "64e04dcb831ef1eda5416192679be9df30ebf8a6b0229c4a7f8af1dba4aff8f1",
+      "sha256": "078744e0897e3bf294b24370b2fe6414351853a6450894452a04102fa0a5a8bb",
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 237164,
+      "bytes": 236310,
       "height": 398,
-      "sha256": "bf4b75a7cfb86caee8c89632375cb4efa93f44b095cc825ded8b73af269ad62e",
+      "sha256": "39585c17504adfaa50f7fa70e2404713ea2b136fadc866c4e7cd29ae64470dd8",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 380814,
+      "bytes": 379958,
       "height": 764,
-      "sha256": "b166eeb25411da5f57eb6a054baed9346de0ab7fff9c4e5aa66c40e5c60a86b6",
+      "sha256": "e2f6a7d37d2afa3c57702201b7637a800924aac32ae53c19be167237381697e4",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 401570,
+      "bytes": 396675,
       "height": 480,
-      "sha256": "ce118a447f637a26680f453a53e9b392fddfaa81bbf7659a45cf1ad618284bf7",
+      "sha256": "67937c9ceee677b92968dfc88a02ecbb42f0f07dded1f00fa9c9588be29b7fe9",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 462085,
+      "bytes": 456486,
       "height": 576,
-      "sha256": "495c3e72af832f26e8dbde465f6bfc842e96cb062afc0275e0fcf543fd65466a",
+      "sha256": "880fadde51b47758e47f976364332c29d622be991ecd82e4d9dde645323ff8ad",
       "width": 1020
     }
   },
