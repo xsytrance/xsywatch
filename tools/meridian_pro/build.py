@@ -43,6 +43,20 @@ def hx(c):
     return "#{:02X}{:02X}{:02X}".format(*c[:3])
 
 
+def ramp(c0, c1, c2, n=18):
+    """red->amber->green as n interpolated stops: a WeightedStroke gradient."""
+    cols = []
+    for i in range(n):
+        t = i / (n - 1)
+        if t < 0.5:
+            a, b_, u = c0, c1, t * 2
+        else:
+            a, b_, u = c1, c2, (t - 0.5) * 2
+        cols.append(hx(tuple(int(a[k] + (b_[k] - a[k]) * u)
+                             for k in range(3))))
+    return " ".join(cols), " ".join(["1.0"] * n)
+
+
 def bolt_sprite() -> Image.Image:
     ss = 4
     h = int(POWER["bolt_h"] * ss)
@@ -59,36 +73,45 @@ def bolt_sprite() -> Image.Image:
 # ------------------------------------------------------------------ xml
 
 def power_xml() -> list[str]:
-    r, s0, s1 = POWER["r"], POWER["start_deg"], POWER["end_deg"]
+    r = POWER["channel_r"]
+    s0, s1 = POWER["start_deg"], POWER["end_deg"]
     box = r * 2
+    cols, wts = ramp(P["zone_lim"], P["zone_warn"], P["zone_ok"])
     o = [f'    <PartDraw name="z10_power" x="0" y="0" width="{CANVAS}" '
          f'height="{CANVAS}" alpha="255">', f'      {AMB0}',
-         # zone track: red reserve at the LEFT end, long green to the right
+         # soft glow bedding the ramp into its channel
          f'      <Arc centerX="240" centerY="240" width="{box}" '
          f'height="{box}" startAngle="{s0}" endAngle="{s1}">',
-         f'        <WeightedStroke colors="{hx(P["zone_lim"])} '
-         f'{hx(P["zone_warn"])} {hx(P["zone_ok"])}" weights="1.4 2.2 6.4" '
-         f'thickness="{POWER["track_w"]}" cap="ROUND" discreteGap="0.0" />',
+         '        <Stroke color="#28E8C08A" thickness="21" cap="ROUND" />',
          '      </Arc>',
-         # the battery sweep riding just inside the zones
-         f'      <Arc centerX="240" centerY="240" width="{box - 26}" '
-         f'height="{box - 26}" startAngle="{s0}" endAngle="{s1}">',
-         f'        <Stroke color="#26FFFFFF" thickness="{POWER["sweep_w"]}" '
-         'cap="ROUND" />', '      </Arc>',
-         f'      <Arc centerX="240" centerY="240" width="{box - 26}" '
-         f'height="{box - 26}" startAngle="{s0}" endAngle="{s0}">',
-         f'        <Stroke color="{hx(P["gold_hi"])}" '
-         f'thickness="{POWER["sweep_w"]}" cap="ROUND" />',
-         f'        <Transform target="endAngle" value="{s0} + '
+         # the ramp itself: a continuous red->amber->green gradient
+         f'      <Arc centerX="240" centerY="240" width="{box}" '
+         f'height="{box}" startAngle="{s0}" endAngle="{s1}">',
+         f'        <WeightedStroke colors="{cols}" weights="{wts}" '
+         'thickness="13" cap="ROUND" discreteGap="0.0" />',
+         '      </Arc>',
+         # dark unlit remainder drawn from the battery tip to F
+         f'      <Arc centerX="240" centerY="240" width="{box}" '
+         f'height="{box}" startAngle="{s0}" endAngle="{s1}">',
+         '        <Stroke color="#B4060A10" thickness="13" cap="BUTT" />',
+         f'        <Transform target="startAngle" value="{s0} + '
          f'{s1 - s0} * clamp([BATTERY_PERCENT], 0, 100) / 100" />',
+         '      </Arc>',
+         # bright tip marker at the battery position
+         f'      <Arc centerX="240" centerY="240" width="{box}" '
+         f'height="{box}" startAngle="{s0}" endAngle="{s0 + 2}">',
+         f'        <Stroke color="#FFFFFFFF" thickness="15" cap="ROUND" />',
+         f'        <Transform target="startAngle" value="{s0} + '
+         f'{s1 - s0} * clamp([BATTERY_PERCENT], 0, 100) / 100 - 1" />',
+         f'        <Transform target="endAngle" value="{s0} + '
+         f'{s1 - s0} * clamp([BATTERY_PERCENT], 0, 100) / 100 + 1" />',
          '      </Arc>', '    </PartDraw>']
-    # the bolt: dim always, gold when charging — the concept's indicator,
-    # and BATTERY_CHARGING_STATUS is proven live on this device
     bx, by = POWER["bolt_c"]
-    bw, bh = 14, int(POWER["bolt_h"])
+    bh = int(POWER["bolt_h"])
+    bw = int(bh * 0.62)
     o += [f'    <PartImage name="z11_bolt_dim" x="{bx - bw/2:.0f}" '
-          f'y="{by - bh/2:.0f}" width="{bw}" height="{bh}" alpha="80" '
-          f'tintColor="{hx(P["ink"])}">', f'      {AMB0}',
+          f'y="{by - bh/2:.0f}" width="{bw}" height="{bh}" alpha="200" '
+          f'tintColor="{hx(P["gold"])}">', f'      {AMB0}',
           '      <Image resource="mp_bolt" />', '    </PartImage>',
           '    <Condition>', '      <Expressions>',
           '        <Expression name="chg">[BATTERY_CHARGING_STATUS]'
@@ -96,7 +119,7 @@ def power_xml() -> list[str]:
           '      <Compare expression="chg">',
           f'        <PartImage name="z11_bolt_hot" x="{bx - bw/2:.0f}" '
           f'y="{by - bh/2:.0f}" width="{bw}" height="{bh}" alpha="255" '
-          f'tintColor="{hx(P["gold_hi"])}">', f'          {AMB0}',
+          f'tintColor="#FFE9A8">', f'          {AMB0}',
           '          <Image resource="mp_bolt" />', '        </PartImage>',
           '      </Compare>', '    </Condition>']
     return o
@@ -107,41 +130,46 @@ def subdial_xml() -> list[str]:
     r = SUBDIAL["ring_r"]
     w = SUBDIAL["ring_w"]
     a0, a1 = -150.0, 150.0
-    # STEPS: goal-progress ring, gold over a faint track
-    cx, cy = SUBDIAL["steps_c"]
     box = r * 2
+    cols, wts = ramp(P["zone_lim"], P["zone_warn"], P["zone_ok"])
+    cx, cy = SUBDIAL["steps_c"]
     o += [f'    <PartDraw name="z12_steps_ring" x="0" y="0" '
           f'width="{CANVAS}" height="{CANVAS}" alpha="255">', f'      {AMB0}',
           f'      <Arc centerX="{cx}" centerY="{cy}" width="{box}" '
           f'height="{box}" startAngle="{a0}" endAngle="{a1}">',
-          f'        <Stroke color="#22FFFFFF" thickness="{w}" cap="ROUND" />',
+          f'        <Stroke color="#30FFFFFF" thickness="{w}" cap="ROUND" />',
           '      </Arc>',
           f'      <Arc centerX="{cx}" centerY="{cy}" width="{box}" '
-          f'height="{box}" startAngle="{a0}" endAngle="{a0}">',
-          f'        <Stroke color="{hx(P["gold_hi"])}" thickness="{w}" '
-          'cap="ROUND" />',
-          f'        <Transform target="endAngle" value="{a0} + {a1 - a0} * '
-          'clamp([STEP_PERCENT], 0, 100) / 100" />',
+          f'height="{box}" startAngle="{a0}" endAngle="{a1}">',
+          f'        <WeightedStroke colors="{cols}" weights="{wts}" '
+          f'thickness="{w}" cap="ROUND" discreteGap="0.0" />',
+          '      </Arc>',
+          # unfilled remainder goes dark from the progress tip onward
+          f'      <Arc centerX="{cx}" centerY="{cy}" width="{box}" '
+          f'height="{box}" startAngle="{a0}" endAngle="{a1}">',
+          f'        <Stroke color="#C8080C12" thickness="{w + 1}" '
+          'cap="BUTT" />',
+          f'        <Transform target="startAngle" value="{a0} + '
+          f'{a1 - a0} * clamp([STEP_PERCENT], 0, 100) / 100" />',
           '      </Arc>', '    </PartDraw>']
-    # HR: the AN zone ring with a marker that rides the wearer's pulse
     cx, cy = SUBDIAL["hr_c"]
     o += [f'    <PartDraw name="z13_hr_ring" x="0" y="0" width="{CANVAS}" '
           f'height="{CANVAS}" alpha="255">', f'      {AMB0}',
           f'      <Arc centerX="{cx}" centerY="{cy}" width="{box}" '
           f'height="{box}" startAngle="{a0}" endAngle="{a1}">',
-          f'        <WeightedStroke colors="#22FFFFFF {hx(P["zone_ok"])} '
+          f'        <WeightedStroke colors="#30FFFFFF {hx(P["zone_ok"])} '
           f'{hx(P["zone_warn"])} {hx(P["zone_lim"])}" '
-          'weights="2.4 3.6 2.4 1.6" '
-          f'thickness="{w}" cap="ROUND" discreteGap="0.0" />',
+          f'weights="2.4 3.6 2.4 1.6" thickness="{w}" cap="ROUND" '
+          'discreteGap="0.0" />',
           '      </Arc>',
           f'      <Arc centerX="{cx}" centerY="{cy}" width="{box}" '
           f'height="{box}" startAngle="{a0}" endAngle="{a0 + 8}">',
-          f'        <Stroke color="{hx(P["second"])}" thickness="{w + 3}" '
+          f'        <Stroke color="#FFFFFFFF" thickness="{w + 4}" '
           'cap="ROUND" />',
           f'        <Transform target="startAngle" value="{a0} + '
-          f'{a1 - a0} * clamp([HEART_RATE], 0, 200) / 200 - 4" />',
+          f'{a1 - a0} * clamp([HEART_RATE], 0, 200) / 200 - 3" />',
           f'        <Transform target="endAngle" value="{a0} + '
-          f'{a1 - a0} * clamp([HEART_RATE], 0, 200) / 200 + 4" />',
+          f'{a1 - a0} * clamp([HEART_RATE], 0, 200) / 200 + 3" />',
           '      </Arc>', '    </PartDraw>']
     return o
 
@@ -152,33 +180,36 @@ def readouts_xml() -> list[str]:
     rx, ry = POWER["readout_c"]
     o += T.readout("z20_batt", int(rx - 60), int(ry - 19), 120, 38,
                    POWER["readout_px"], "%d%%", ["[BATTERY_PERCENT]"],
-                   colour=hx(P["gold_hi"]), amb=110)
+                   colour=hx(P["ink"]), amb=110)
     # steps: the big number and the wearer's own goal under it
     sx, sy = SUBDIAL["steps_c"]
-    o += T.readout("z21_steps", int(sx - 55), int(sy - 26), 110, 36,
+    o += T.readout("z21_steps", int(sx - 55),
+                   int(sy + SUBDIAL["value_dy"] - 18), 110, 38,
                    SUBDIAL["value_px"], "%d", ["[STEP_COUNT]"],
                    colour=hx(P["ink"]))
-    o += T.readout("z22_goal", int(sx - 55), int(sy + 8), 110, 22, 13,
+    o += T.readout("z22_goal", int(sx - 55),
+                   int(sy + SUBDIAL["goal_dy"] - 9), 110, 20, 12,
                    "/%d", ["[STEP_GOAL]"], colour=hx(P["gold"]))
     # heart rate
     hx_, hy = SUBDIAL["hr_c"]
-    o += T.readout("z23_hr", int(hx_ - 55), int(hy - 26), 110, 36,
+    o += T.readout("z23_hr", int(hx_ - 55),
+                   int(hy + SUBDIAL["value_dy"] - 18), 110, 38,
                    SUBDIAL["value_px"], "%d", ["[HEART_RATE]"],
                    colour=hx(P["ink"]))
     # military time
     mx, my = MILITARY["c"]
-    o += T.readout("z24_mil", int(mx - 45), int(my - 21), 90, 42,
+    o += T.readout("z24_mil", int(mx - 45), int(my - 23), 90, 46,
                    MILITARY["big_px"], "%02d", ["[HOUR_0_23]"],
                    colour=hx(P["ink"]), amb=150)
     # the three-field date
     dx, dy = DATE["c"]
-    o += T.readout("z25_dow", int(dx - 33), int(dy - 34), 66, 20,
+    o += T.readout("z25_dow", int(dx - 33), int(dy - 36), 66, 20,
                    DATE["dow_px"], "%s", ["[DAY_OF_WEEK_S]"],
-                   colour=hx(P["gold"]), upper=True)
-    o += T.readout("z26_day", int(dx - 33), int(dy - 16), 66, 34,
-                   DATE["day_px"], "%d", ["[DAY]"], colour=hx(P["ink"]),
-                   amb=140)
-    o += T.readout("z27_mon", int(dx - 33), int(dy + 17), 66, 20,
+                   colour=hx(P["ink"]), upper=True)
+    o += T.readout("z26_day", int(dx - 33), int(dy - 17), 66, 36,
+                   DATE["day_px"], "%d", ["[DAY]"],
+                   colour=hx(P["gold_hi"]), amb=140)
+    o += T.readout("z27_mon", int(dx - 33), int(dy + 20), 66, 20,
                    DATE["mon_px"], "%s", ["[MONTH_S]"],
                    colour=hx(P["gold"]), upper=True)
     # weather windows; plain 0 when unavailable is acceptable at 0.1.0
@@ -187,9 +218,10 @@ def readouts_xml() -> list[str]:
              ["round([WEATHER.TEMPERATURE])"]),
             ("z29_rain", WINDOWS["right_c"], "%d%%",
              ["round([WEATHER.CHANCE_OF_PRECIPITATION])"])):
-        o += T.readout(name, int(wx - WINDOWS["w"] / 2), int(wy - 13),
-                       int(WINDOWS["w"]), 26, WINDOWS["value_px"], tmpl,
-                       params, colour=hx(P["ink"]))
+        o += T.readout(name, int(wx - WINDOWS["w"] / 2 + 14),
+                       int(wy - 13), int(WINDOWS["w"]), 26,
+                       WINDOWS["value_px"], tmpl, params,
+                       colour=hx(P["ink"]))
     return o
 
 
@@ -245,8 +277,8 @@ def build_xml(widths) -> str:
     o += power_xml()
     o += subdial_xml()
     o += readouts_xml()
-    mx, my = MOON["c"]
-    mr = MOON["well_r"] - 6
+    mx, my = MOON["disc_c"]
+    mr = MOON["disc_r"]
     o += [f'    <PartImage name="z30_moon" x="{mx - mr:.0f}" '
           f'y="{my - mr:.0f}" width="{mr * 2:.0f}" height="{mr * 2:.0f}" '
           f'alpha="255">', f'      {AMB0}',

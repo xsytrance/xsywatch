@@ -37,21 +37,25 @@ UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
 
 PROMPT = (
     "Turn this watch dial design into an ultra photorealistic macro "
-    "photograph of a real luxury aviator wristwatch dial. Keep every "
-    "element in exactly the same position, size and arrangement - do not "
-    "move, add or remove anything. The outer bezel is deep navy anodized "
-    "metal with engraved gold minute numerals and a luminous triangle at "
-    "the top. The applied hour markers are polished steel batons filled "
-    "with pale luminous paint, standing slightly off the dial and casting "
-    "tiny soft shadows. The large centre plate is real machined brushed "
-    "steel with fine metal grain, bevelled edges, real slotted screws and "
-    "faint tooling marks. The dark circular and rectangular openings are "
-    "empty recessed instrument wells with machined counterbores - keep "
-    "them empty and dark, add nothing inside them. The MERIDIAN "
-    "COMMODORE lettering is engraved into the metal. The dial base is "
-    "deep navy blue with subtle circular brushing. No watch hands, no "
-    "extra text, no glare. Studio product photography, even lighting, "
-    "extremely sharp, 8k."
+    "photograph of a real luxury military aviator wristwatch dial. Keep "
+    "every element in exactly the same position, size and arrangement - do "
+    "not move, add or remove anything, and do not add any text. The outer "
+    "bezel is deep navy anodized aluminium with engraved gold minute "
+    "numerals and applied polished-steel trapezoid indices filled with "
+    "pale green luminous paint. The navy ring inside it is riveted "
+    "aircraft skin with panel seams. The centre plates are two levels of "
+    "real machined brushed steel - a raised bridge over a base plate - "
+    "with fine metal grain, chamfered polished edges, rows of tiny dome "
+    "rivets, slotted screws and faint tooling marks; the round hub has "
+    "circular graining. The dark curved band near the top is a recessed "
+    "channel milled into the metal with polished lips - keep it empty and "
+    "dark. MERIDIAN COMMODORE is stamped on its own inset navy plate with "
+    "corner rivets. The dark circular wells, the navy windows with steel "
+    "frames, the gold-framed date window with its black inner box, and "
+    "the arch-shaped night-sky opening with stars must all stay empty and "
+    "dark inside - add nothing in any opening. Dramatic studio product "
+    "photography with strong ambient occlusion, mixed brushed and "
+    "polished finishes, extremely sharp, 8k."
 )
 
 
@@ -119,7 +123,7 @@ def verify(dst: Path) -> None:
     are checked, not believed. Wells must still be dark at their centres,
     the plate still steel at its heart, the bezel still navy."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from geometry import DATE, MOON, PALETTE, SUBDIAL, WINDOWS
+    from geometry import DATE, MOON, SUBDIAL, WINDOWS
     from PIL import Image
     img = Image.open(dst).convert("RGB")
     if img.size != (480, 480):
@@ -134,6 +138,7 @@ def verify(dst: Path) -> None:
         ("left window", WINDOWS["left_c"], "dark"),
         ("right window", WINDOWS["right_c"], "dark"),
         ("plate heart", (240, 240), "steel"),
+        ("wordmark plate", (240, 181), "dark"),
     ]
     bad = 0
     for name, (x, y), want in checks:
