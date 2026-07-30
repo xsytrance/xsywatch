@@ -52,38 +52,38 @@
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
     "FACE_AOD.png": {
-      "bytes": 36678,
+      "bytes": 36669,
       "height": 480,
-      "sha256": "b43433fde7e5906d0a9291a1e18b0bc9f7a1d89bbe22403e1f0b48f9d9fdcc98",
+      "sha256": "92c135721b1f58a70a1068e01c9f59b4828f5aeb88a2e17f4d7fc185b5966daa",
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 214457,
+      "bytes": 224936,
       "height": 398,
-      "sha256": "76b9968782b2498702acac38f930542586dd8e8969aa6e52890af306a1761e19",
+      "sha256": "79d36c30add555e1a63decc6d8fe9d6d2ee365e38c41410d281d32191c1b90df",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 344913,
+      "bytes": 363800,
       "height": 764,
-      "sha256": "d20b620d78076a69eafd87d67b107ddf3bd0c1ee6370276233f7c40841c0868d",
+      "sha256": "502046701e2a734074ae6cf656674f917978cb6eeba99247e1f08f70c508dd92",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 351859,
+      "bytes": 379870,
       "height": 480,
-      "sha256": "077273269d36061917e4b35c0ef96ae3a4f0456c9e4ad2fc9b9373837e49b93f",
+      "sha256": "82ef9fb34293ca3432c2938dde6253bb5998dd38329ab96366ef70e31e380f3e",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 407299,
+      "bytes": 435291,
       "height": 576,
-      "sha256": "5e94ef909ca684afa479f67c0f842fe7c3040f3f045ce2daaf4cc6c88b933c0d",
+      "sha256": "6bc9bdb09aa9d0dada230708f4ec62ab8c339b6a4a83c4e0701e601296725ed9",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "meridian-pro",
-  "watchface_xml_sha256": "7056602810256bbbdcb9b74a66119cb8f9d0f0dfd2900d4b68e1281df9cbd9c1"
+  "watchface_xml_sha256": "a532734a4c51e57edfdf4172e6c86c1c70ac2ba16533a69944db58d09a766f79"
 }

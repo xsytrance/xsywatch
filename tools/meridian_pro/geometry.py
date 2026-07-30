@@ -197,20 +197,23 @@ PLATE = {
 # COMMODORE navy family, sampled not invented; steel from the concept.
 # Themes swap this dict wholesale in phase 7.
 PALETTE = {
-    "dial_hi":   (30, 42, 58),
-    "dial_lo":   (12, 19, 30),
-    "bezel_hi":  (24, 33, 46),
-    "bezel_lo":  (10, 16, 25),
-    "gold":      (214, 170, 71),
-    "gold_hi":   (235, 196, 104),
-    "steel_hi":  (232, 236, 240),
-    "steel":     (154, 163, 173),
-    "steel_lo":  (58, 66, 76),
-    "well":      (12, 20, 31),
-    "lume":      (201, 232, 212),
-    "ink":       (226, 232, 238),
-    "zone_ok":   (47, 122, 102),
-    "zone_warn": (200, 154, 60),
-    "zone_lim":  (184, 64, 47),
-    "second":    (232, 86, 60),
+    # RE-SAMPLED FROM THE CONCEPT SHEET 2026-07-29 after the owner's call:
+    # the build had drifted dark-and-gold; the concept is brighter
+    # steel-blue. Navy anchors measured off the hero dial itself.
+    "dial_hi":   (48, 72, 100),
+    "dial_lo":   (16, 28, 44),
+    "bezel_hi":  (59, 81, 105),
+    "bezel_lo":  (26, 40, 58),
+    "gold":      (222, 178, 105),
+    "gold_hi":   (240, 200, 124),
+    "steel_hi":  (226, 234, 242),
+    "steel":     (170, 178, 188),
+    "steel_lo":  (86, 96, 110),
+    "well":      (14, 24, 38),
+    "lume":      (208, 232, 214),
+    "ink":       (236, 241, 246),
+    "zone_ok":   (54, 180, 116),
+    "zone_warn": (238, 178, 64),
+    "zone_lim":  (226, 84, 66),
+    "second":    (236, 92, 70),
 }
