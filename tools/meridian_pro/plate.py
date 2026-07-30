@@ -397,3 +397,131 @@ def compose_phase12() -> Image.Image:
     centre_plate(img)
     wordmark(img)
     return img.resize((CANVAS, CANVAS), Image.LANCZOS)
+
+
+# ------------------------------------------------- post-Kontext dressing
+
+def dress_base(kontext_png, out_png) -> None:
+    """Baked labels and emblem onto the Kontext base. These never change, so
+    they are engraved into the art rather than spent as parts — and Kontext
+    is never allowed to typeset them, because it invents letterforms."""
+    from geometry import MILITARY, POWER, SUBDIAL, WINDOWS
+    img = Image.open(kontext_png).convert("RGBA")
+    up = img.resize((S, S), Image.LANCZOS)
+    f_lab = font(12, bold=False)
+    f_tiny = font(10, bold=False)
+    gold = (*P["gold"], 255)
+    dim = (150, 162, 176, 255)
+
+    engrave(up, (POWER["label_c"][0] * SS, POWER["label_c"][1] * SS),
+            "B A T T E R Y", f_tiny, dim, depth=0.8)
+    for cc, lab in ((SUBDIAL["steps_c"], "STEPS"), (SUBDIAL["hr_c"], "BPM")):
+        engrave(up, (cc[0] * SS, (cc[1] + SUBDIAL["well_r"] - 12) * SS),
+                lab, f_tiny, dim, depth=0.7)
+    engrave(up, (MILITARY["c"][0] * SS, (MILITARY["c"][1] + 24) * SS),
+            "24H", f_lab, gold, depth=0.8)
+    # the star emblem under the military time, from the concept
+    cx, cy = MILITARY["c"][0] * SS, (MILITARY["c"][1] + 46) * SS
+    r = 11 * SS
+    pts = []
+    for i in range(10):
+        rr = r if i % 2 == 0 else r * 0.42
+        a = math.radians(i * 36 - 90)
+        pts.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr))
+    shade(up, lambda dd: dd.polygon(
+        [(x + SS, y + SS) for x, y in pts], fill=(0, 0, 0, 120)))
+    ImageDraw.Draw(up).polygon(pts, fill=(*P["ink"], 210))
+    for cc, lab in ((WINDOWS["left_c"], "TEMP"), (WINDOWS["right_c"], "RAIN")):
+        engrave(up, (cc[0] * SS, (cc[1] - WINDOWS["h"] / 2 - 8) * SS),
+                lab, f_tiny, dim, depth=0.6)
+    up.resize((CANVAS, CANVAS), Image.LANCZOS).save(out_png, optimize=True)
+
+
+def bg_aod(base_png, out_png) -> None:
+    """AOD base: the same art at 18%, wells to black. Burn-in budget stays
+    for the WO-P7 gate; this is the conservative start."""
+    img = Image.open(base_png).convert("RGBA")
+    img = Image.eval(img, lambda v: v * 18 // 100)
+    img.putalpha(255)
+    img.save(out_png, optimize=True)
+
+
+def hands(out_dir) -> None:
+    """Hour, minute, second. Navy lacquered blades with steel edges and lume
+    stripes; the second hand is the concept's slim gold with a ring tail.
+    Drawn full-canvas with the pivot at centre so the spec rotates them."""
+    from geometry import HANDS
+    cx, cy = HANDS["c"][0] * SS, HANDS["c"][1] * SS
+
+    def blade(length, w_base, w_tip, lume_frac):
+        img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+        d = ImageDraw.Draw(img)
+        L = length * SS
+        wb, wt = w_base * SS, w_tip * SS
+        poly = [(cx - wb, cy + 14 * SS), (cx - wt, cy - L),
+                (cx + wt, cy - L), (cx + wb, cy + 14 * SS)]
+        shade(img, lambda dd: dd.polygon(
+            [(x + 2 * SS, y + 2 * SS) for x, y in poly], fill=(0, 0, 0, 110)))
+        d.polygon(poly, fill=(16, 26, 40, 255))
+        d.line([(cx - wt, cy - L), (cx - wb, cy + 14 * SS)],
+               fill=(*P["steel_hi"], 200), width=SS)
+        d.line([(cx + wt, cy - L), (cx + wb, cy + 14 * SS)],
+               fill=(*P["steel_lo"], 220), width=SS)
+        lw = max(2 * SS, int((wb + wt) * 0.4))
+        d.rounded_rectangle(
+            [cx - lw / 2, cy - L * lume_frac, cx + lw / 2, cy - L * 0.30],
+            radius=lw / 2, fill=(*P["lume"], 255))
+        return img
+
+    h = blade(HANDS["hour_l"], 9, 5, 0.92)
+    m = blade(HANDS["minute_l"], 8, 4, 0.95)
+    s_img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    d = ImageDraw.Draw(s_img)
+    L = HANDS["second_l"] * SS
+    shade(s_img, lambda dd: dd.line(
+        [(cx + SS, cy + 34 * SS + SS), (cx + SS, cy - L + SS)],
+        fill=(0, 0, 0, 110), width=2 * SS))
+    d.line([(cx, cy + 34 * SS), (cx, cy - L)], fill=(*P["gold"], 255),
+           width=2 * SS)
+    d.polygon([(cx, cy - L), (cx - 3 * SS, cy - L + 16 * SS),
+               (cx + 3 * SS, cy - L + 16 * SS)], fill=(*P["gold_hi"], 255))
+    rr = 6 * SS
+    d.ellipse([cx - rr, cy + 22 * SS, cx + rr, cy + 22 * SS + 2 * rr],
+              outline=(*P["gold"], 255), width=2 * SS)
+    boss = Image.new("RGBA", (S, S), (0, 0, 0, 0))
+    bd = ImageDraw.Draw(boss)
+    br = 11 * SS
+    bd.ellipse([cx - br, cy - br, cx + br, cy + br], fill=(*P["steel"], 255))
+    bd.ellipse([cx - br * 0.45, cy - br * 0.7, cx + br * 0.1, cy - br * 0.1],
+               fill=(255, 255, 255, 90))
+    bd.ellipse([cx - br * 0.35, cy - br * 0.35, cx + br * 0.35, cy + br * 0.35],
+               fill=(16, 26, 40, 255))
+    for name, img in (("hour", h), ("minute", m), ("second", s_img),
+                      ("boss", boss)):
+        img.resize((CANVAS, CANVAS), Image.LANCZOS).save(
+            out_dir / f"mp_hand_{name}.png", optimize=True)
+
+
+def moon_sprite(out_dir) -> None:
+    """The moon disc for its well: cratered grey, phase shadow at runtime by
+    a rotating occluder later; v0.1 ships the full disc."""
+    from geometry import MOON
+    rng = random.Random(SEED ^ 0x40)
+    r = (MOON["well_r"] - 6) * SS
+    Simg = int(r * 2 + 8 * SS)
+    img = Image.new("RGBA", (Simg, Simg), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    c = Simg / 2
+    d.ellipse([c - r, c - r, c + r, c + r], fill=(206, 210, 216, 255))
+    for _ in range(26):
+        cr = rng.uniform(0.05, 0.16) * r
+        a = rng.uniform(0, math.tau)
+        rr = rng.uniform(0, r * 0.8)
+        x, y = c + math.cos(a) * rr, c + math.sin(a) * rr
+        d.ellipse([x - cr, y - cr, x + cr, y + cr], fill=(178, 183, 190, 255))
+        d.arc([x - cr, y - cr, x + cr, y + cr], 120, 320,
+              fill=(150, 156, 164, 255), width=SS)
+    shade(img, lambda dd: dd.pieslice(
+        [c - r, c - r, c + r, c + r], 110, 250, fill=(0, 0, 0, 60)))
+    img.resize((Simg // SS, Simg // SS), Image.LANCZOS).save(
+        out_dir / "mp_moon.png", optimize=True)
