@@ -84,6 +84,9 @@ FIXTURE_ENV = {
     "WEATHER.DAYS.1.TEMPERATURE_HIGH": 21,
     "WEATHER.DAYS.1.TEMPERATURE_LOW": 9,
     "WEATHER.DAYS.1.CHANCE_OF_PRECIPITATION": 30,
+    # meridian-pro sources, all device-proven by the vector probes
+    "STEP_PERCENT": 78, "STEP_GOAL": 6000, "BATTERY_CHARGING_STATUS": 0,
+    "DAY_OF_WEEK_S": "Wed", "MONTH_S": "May",
 }
 
 # Exactly the functions arithmeticExpressionType declares, and no more.
@@ -185,6 +188,20 @@ def evaluate(expr: str, env: dict):
     if re.search(r"[A-Za-z_]+", bare):
         raise ValueError(f"unresolved name in expression {expr!r}")
     return float(eval(py, {"__builtins__": {}}, SAFE))  # noqa: S307
+
+
+def _col(c: str):
+    """#RRGGBB or #AARRGGBB -> RGBA tuple."""
+    c = c.strip()
+    if len(c) == 9:
+        return (int(c[3:5], 16), int(c[5:7], 16), int(c[7:9], 16),
+                int(c[1:3], 16))
+    return (int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16), 255)
+
+
+def ImageDraw_lazy(layer):
+    from PIL import ImageDraw
+    return ImageDraw.Draw(layer)
 
 
 def tint(img, color: str):
@@ -384,6 +401,70 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
                 # RGB luminance — a gradient in RGB flattens to a solid block
                 # here, and would do the same on the watch.
                 layer = tint(layer, tc[:7] if len(tc) >= 7 else tc)
+        elif part.tag == "PartDraw":
+            # Vector drawing, added when meridian-pro made it load-bearing.
+            # An approximation: BUTT/ROUND caps not distinguished, gradients
+            # flattened to their mid colour — enough to review geometry.
+            layer = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+            ld = ImageDraw_lazy(layer)
+            for sh in part:
+                if sh.tag not in ("Arc", "Line", "Ellipse", "Rectangle",
+                                  "RoundRectangle"):
+                    continue
+                tr = {t.get("target"): t.get("value")
+                      for t in sh.findall("Transform")}
+                stroke = sh.find("Stroke")
+                wstroke = sh.find("WeightedStroke")
+                fill = sh.find("Fill")
+                if sh.tag == "Arc":
+                    cx_, cy_ = float(sh.get("centerX")), float(sh.get("centerY"))
+                    aw, ah = float(sh.get("width")), float(sh.get("height"))
+                    a0 = evaluate(tr["startAngle"], env) if "startAngle" in tr \
+                        else float(sh.get("startAngle"))
+                    a1 = evaluate(tr["endAngle"], env) if "endAngle" in tr \
+                        else float(sh.get("endAngle"))
+                    bbox = [cx_ - aw / 2, cy_ - ah / 2,
+                            cx_ + aw / 2, cy_ + ah / 2]
+                    if wstroke is not None:
+                        cols = wstroke.get("colors").split()
+                        wts = [float(v) for v in
+                               (wstroke.get("weights") or "1").split()]
+                        th = int(float(wstroke.get("thickness", 4)))
+                        total = sum(wts)
+                        acc = a0
+                        for col, wt in zip(cols, wts):
+                            seg = (a1 - a0) * wt / total
+                            ld.arc(bbox, acc - 90, acc + seg - 90,
+                                   fill=_col(col), width=th)
+                            acc += seg
+                    elif stroke is not None:
+                        th = int(float(stroke.get("thickness", 4)))
+                        if a1 > a0:
+                            ld.arc(bbox, a0 - 90, a1 - 90,
+                                   fill=_col(stroke.get("color")), width=th)
+                elif sh.tag == "Line" and stroke is not None:
+                    ld.line([float(sh.get("startX")), float(sh.get("startY")),
+                             float(sh.get("endX")), float(sh.get("endY"))],
+                            fill=_col(stroke.get("color")),
+                            width=int(float(stroke.get("thickness", 2))))
+                elif sh.tag == "Ellipse":
+                    bx = [float(sh.get("x")), float(sh.get("y")),
+                          float(sh.get("x")) + float(sh.get("width")),
+                          float(sh.get("y")) + float(sh.get("height"))]
+                    if fill is not None:
+                        ld.ellipse(bx, fill=_col(fill.get("color")))
+                    if stroke is not None:
+                        ld.ellipse(bx, outline=_col(stroke.get("color")),
+                                   width=int(float(stroke.get("thickness", 2))))
+                elif sh.tag in ("Rectangle", "RoundRectangle"):
+                    bx = [float(sh.get("x")), float(sh.get("y")),
+                          float(sh.get("x")) + float(sh.get("width")),
+                          float(sh.get("y")) + float(sh.get("height"))]
+                    rad = float(sh.get("cornerRadiusX", 0) or 0)
+                    if stroke is not None:
+                        ld.rounded_rectangle(
+                            bx, radius=rad, outline=_col(stroke.get("color")),
+                            width=int(float(stroke.get("thickness", 2))))
         elif part.tag == "PartText":
             bf = part.find(".//BitmapFont")
             # <Template> may be wrapped in <Upper>/<Lower>. A bitmap font only
