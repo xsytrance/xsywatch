@@ -52,9 +52,9 @@
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
     "FACE_AOD.png": {
-      "bytes": 188068,
+      "bytes": 36678,
       "height": 480,
-      "sha256": "21d3c174a7fd0f246cf9a82c7da591106702e67dc6e1de9d032dcbb12f18a385",
+      "sha256": "b43433fde7e5906d0a9291a1e18b0bc9f7a1d89bbe22403e1f0b48f9d9fdcc98",
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
@@ -76,9 +76,9 @@
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 560474,
+      "bytes": 407299,
       "height": 576,
-      "sha256": "1d4153fba2d0cd8dc4fb3a896eba2643e2cd242e0d3871e139faf5987244e262",
+      "sha256": "5e94ef909ca684afa479f67c0f842fe7c3040f3f045ce2daaf4cc6c88b933c0d",
       "width": 1020
     }
   },

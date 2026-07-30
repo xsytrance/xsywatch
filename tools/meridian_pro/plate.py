@@ -604,10 +604,32 @@ def dress_base(kontext_png, out_png):
 
 
 def bg_aod(base_png, out_png):
-    img = Image.open(base_png).convert("RGBA")
-    img = Image.eval(img, lambda v: v * 18 // 100)
-    img.putalpha(255)
-    img.save(out_png, optimize=True)
+    """AOD base v2: SPARSE, not dimmed. A full-art dial at 18% still lights
+    virtually every pixel, which fails the on-pixel-ratio burn-in gate a
+    commercial release must pass (AURELIUS ran at 4% of the 15% budget). So
+    ambient is black with only the orientation skeleton: the lume of the
+    twelve indices, a hairline chapter circle, and the lume triangle. The
+    dim hands, 24H, day and battery readouts stay live on top and the total
+    stays far inside budget."""
+    img = Image.new("RGBA", (S, S), (0, 0, 0, 255))
+    d = ImageDraw.Draw(img)
+    cx, cy = CX * SS, CY * SS
+    rr = CHAPTER["ring_r"] * SS
+    d.ellipse([cx - rr, cy - rr, cx + rr, cy + rr],
+              outline=(70, 78, 88, 255), width=SS)
+    lume = tuple(int(v * 0.55) for v in P["lume"]) + (255,)
+    for h in range(12):
+        deg = h * 30
+        w = CHAPTER["lume_w"] * SS
+        l = CHAPTER["baton_l"] * SS * 0.8
+        tile = Image.new("RGBA", (int(w * 4), int(l * 1.5)), (0, 0, 0, 0))
+        ImageDraw.Draw(tile).rounded_rectangle(
+            [w * 1.5, l * 0.25, w * 2.5, l * 0.25 + l], radius=SS, fill=lume)
+        rotated_paste(img, tile, _at(cx, cy, rr, deg), deg)
+    tip = _at(cx, cy, (BEZEL["numeral_r"] - 6) * SS, 0)
+    d.polygon([tip, (tip[0] - 5 * SS, tip[1] - 12 * SS),
+               (tip[0] + 5 * SS, tip[1] - 12 * SS)], fill=lume)
+    img.resize((CANVAS, CANVAS), Image.LANCZOS).save(out_png, optimize=True)
 
 
 # ---------------------------------------------------------------- hands
