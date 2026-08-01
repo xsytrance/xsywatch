@@ -190,9 +190,22 @@ def evaluate(expr: str, env: dict):
     return float(eval(py, {"__builtins__": {}}, SAFE))  # noqa: S307
 
 
+CONFIG_COLORS = {}
+
+
+def _resolve_color(c: str) -> str:
+    m = re.fullmatch(r"\[CONFIGURATION\.([A-Za-z0-9_]+)(?:\.(\d+))?\]", c)
+    if not m:
+        return c
+    colors = CONFIG_COLORS.get(m.group(1))
+    if not colors:
+        raise KeyError(f"no default color configured for {c}")
+    return colors[int(m.group(2) or 0)]
+
+
 def _col(c: str):
     """#RRGGBB or #AARRGGBB -> RGBA tuple."""
-    c = c.strip()
+    c = _resolve_color(c.strip())
     if len(c) == 9:
         return (int(c[3:5], 16), int(c[5:7], 16), int(c[7:9], 16),
                 int(c[1:3], 16))
@@ -206,6 +219,9 @@ def ImageDraw_lazy(layer):
 
 def tint(img, color: str):
     from PIL import Image
+    color = _resolve_color(color)
+    if len(color) == 9:
+        color = "#" + color[3:]
     r, g, b = (int(color[i:i + 2], 16) for i in (1, 3, 5))
     solid = Image.new("RGBA", img.size, (r, g, b, 255))
     solid.putalpha(img.getchannel("A"))
@@ -394,13 +410,13 @@ def compose(root, font, env, ambient: bool, skip: set[str] | None = None,
                 layer = layer.rotate(-angle, resample=Image.BICUBIC,
                                      center=(px, py))
             tc = part.get("tintColor")
-            if tc and tc.startswith("#"):
+            if tc:
                 # SRC_IN, matching Android's default tint mode: the colour is
                 # REPLACED and only the alpha survives. Sprites meant to be
                 # tinted must therefore carry their shading in alpha, not in
                 # RGB luminance — a gradient in RGB flattens to a solid block
                 # here, and would do the same on the watch.
-                layer = tint(layer, tc[:7] if len(tc) >= 7 else tc)
+                layer = tint(layer, tc)
         elif part.tag == "PartDraw":
             # Vector drawing, added when meridian-pro made it load-bearing.
             # An approximation: BUTT/ROUND caps not distinguished, gradients
@@ -576,11 +592,18 @@ def sha256(p: Path) -> str:
 
 
 def build_for(slug, check):
-    global SLUG_LABEL
+    global SLUG_LABEL, CONFIG_COLORS
     select(slug)
     SLUG_LABEL = slug.replace("squadron-", "MERIDIAN ").replace(
         "attitude-meridian", "ATTITUDE MERIDIAN").upper()
     root = ET.fromstring(XML.read_text())
+    CONFIG_COLORS = {}
+    for cfg in root.findall("./UserConfigurations/ColorConfiguration"):
+        chosen = cfg.get("defaultValue")
+        option = next((o for o in cfg.findall("ColorOption")
+                       if o.get("id") == chosen), None)
+        if option is not None:
+            CONFIG_COLORS[cfg.get("id")] = option.get("colors").split()
     images = build(root, Font(root))
     REVIEW.mkdir(parents=True, exist_ok=True)
     mp = REVIEW / "REVIEW_MANIFEST.json"

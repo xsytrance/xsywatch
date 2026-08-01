@@ -16,12 +16,17 @@ from __future__ import annotations
 import math
 import os
 import random
+import sys
+from pathlib import Path
 
 from PIL import Image, ImageChops, ImageDraw, ImageFilter, ImageFont
 
 from geometry import (BEZEL, CANVAS, CHAPTER, CX, CY, DATE, MILITARY, MOON,
                       PALETTE as P, PANEL, PLATE, POWER, SUBDIAL, WINDOWS,
                       WORDMARK)
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+import propeller as PROP
 
 SS = 4
 S = CANVAS * SS
@@ -493,7 +498,8 @@ def centre_plate(img):
 
     # framed readout windows (item 10)
     for cc in (WINDOWS["left_c"], WINDOWS["right_c"]):
-        punch(*cc, WINDOWS["w"], WINDOWS["h"], 9, fill=(14, 22, 34, 255))
+        punch(*cc, WINDOWS["w"], WINDOWS["h"], 9,
+              fill=(*P.get("inset", (14, 22, 34)), 255))
         x, y = cc[0] * SS, cc[1] * SS
         w_, h_ = WINDOWS["w"] * SS, WINDOWS["h"] * SS
         d.rounded_rectangle([x - w_ / 2 - 2 * SS, y - h_ / 2 - 2 * SS,
@@ -508,7 +514,7 @@ def centre_plate(img):
     # date: navy window, gold frame, black inner day-box (item 13)
     dx, dy = DATE["c"]
     punch(dx, dy, DATE["frame_w"], DATE["frame_h"], 12,
-          fill=(16, 25, 38, 255))
+          fill=(*P.get("inset", (16, 25, 38)), 255))
     x, y = dx * SS, dy * SS
     w_, h_ = DATE["frame_w"] * SS, DATE["frame_h"] * SS
     d.rounded_rectangle([x - w_ / 2 - SS, y - h_ / 2 - SS,
@@ -520,10 +526,19 @@ def centre_plate(img):
                         radius=4 * SS, fill=(4, 6, 10, 255),
                         outline=(*P["gold"], 140), width=SS)
 
+    # the battery gauge window, punched into the plate's turret — the
+    # readout sits INSIDE the steel, not on it (owner, 2026-07-30; the
+    # turret itself is a baron PLATE shape so the silhouette carries it)
+    hcfg = POWER.get("housing")
+    if hcfg:
+        punch(hcfg["c"][0], hcfg["c"][1], hcfg["w"], hcfg["h"],
+              hcfg["rad"])
+
     # the wordmark's own inset navy plate with corner rivets (item 5)
     wx, wy = WORDMARK["plate_c"]
     ww, wh = WORDMARK["plate_w"], WORDMARK["plate_h"]
-    punch(wx, wy, ww, wh, WORDMARK["plate_rad"], fill=(18, 28, 42, 255))
+    punch(wx, wy, ww, wh, WORDMARK["plate_rad"],
+          fill=(*P.get("inset", (18, 28, 42)), 255))
     x, y = wx * SS, wy * SS
     d.rounded_rectangle([x - ww * SS / 2 - SS, y - wh * SS / 2 - SS,
                          x + ww * SS / 2 + SS, y + wh * SS / 2 + SS],
@@ -542,8 +557,9 @@ def wordmark(img):
     c = WORDMARK["meridian_c"]
     engrave(img, (c[0] * SS, c[1] * SS), "M E R I D I A N", f1,
             (*P["ink"], 255), depth=1.1)
+    from geometry import IDENT
     c2 = WORDMARK["sub_c"]
-    engrave(img, (c2[0] * SS, c2[1] * SS), "C O M M O D O R E", f2,
+    engrave(img, (c2[0] * SS, c2[1] * SS), " ".join(IDENT["sub"]), f2,
             (*P["gold"], 255), depth=0.7)
 
 
@@ -572,7 +588,8 @@ def dress_base(kontext_png, out_png):
 
     bezel_numerals_over(up)
     engrave(up, (POWER["label_c"][0] * SS, POWER["label_c"][1] * SS),
-            "B A T T E R Y", f_tiny, dim, depth=0.8)
+            "B A T T E R Y", font(POWER.get("label_px", 10), bold=False),
+            dim, depth=0.8)
 
     for cc, lab in ((SUBDIAL["steps_c"], "STEPS"), (SUBDIAL["hr_c"], "BPM")):
         engrave(up, (cc[0] * SS, (cc[1] + SUBDIAL["caption_dy"]) * SS),
@@ -589,20 +606,21 @@ def dress_base(kontext_png, out_png):
         [(x + SS, y + SS) for x, y in heart], fill=(0, 0, 0, 140)))
     d.polygon(heart, fill=(226, 64, 64, 255))
 
-    # military caption + the bold star (item 12)
+    # military caption + the bold star (item 12; star_r 0 = no star)
     mx, my = MILITARY["c"]
     engrave(up, (mx * SS, (my + 26) * SS), "24H", f_lab, gold, depth=0.8)
-    cx, cy = mx * SS, (my + MILITARY["star_dy"]) * SS
-    r = MILITARY["star_r"] * SS
-    pts = []
-    for i in range(10):
-        rr = r if i % 2 == 0 else r * 0.42
-        a = math.radians(i * 36 - 90)
-        pts.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr))
-    shade(up, lambda dd: dd.polygon(
-        [(x + SS, y + SS) for x, y in pts], fill=(0, 0, 0, 130)))
-    d.polygon(pts, fill=(*P["ink"], 235))
-    d.line(pts + [pts[0]], fill=(90, 100, 112, 255), width=SS)
+    if MILITARY["star_r"]:
+        cx, cy = mx * SS, (my + MILITARY["star_dy"]) * SS
+        r = MILITARY["star_r"] * SS
+        pts = []
+        for i in range(10):
+            rr = r if i % 2 == 0 else r * 0.42
+            a = math.radians(i * 36 - 90)
+            pts.append((cx + math.cos(a) * rr, cy + math.sin(a) * rr))
+        shade(up, lambda dd: dd.polygon(
+            [(x + SS, y + SS) for x, y in pts], fill=(0, 0, 0, 130)))
+        d.polygon(pts, fill=(*P["ink"], 235))
+        d.line(pts + [pts[0]], fill=(90, 100, 112, 255), width=SS)
 
     # gold icons inside the windows (item 10)
     for cc, kind in ((WINDOWS["left_c"], "temp"),
@@ -684,65 +702,27 @@ def hands(out_dir):
     cx, cy = HANDS["c"][0] * SS, HANDS["c"][1] * SS
 
     def propeller(length, max_w):
-        """A propeller blade, as ordered: narrow at the hub, swelling wide
-        through the middle, rounded at the tip, with a short counter-blade
-        behind the boss. Navy lacquer in a gold edge, wide lume spine."""
+        """One blade from the shared generator (tools/propeller.py); the
+        family and its trim come from HANDS + palette, never from here."""
         img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
-        d = ImageDraw.Draw(img)
-        L = length * SS
-        W = max_w * SS
-        import math as _m
-        def profile(tt):          # width along the blade
-            # broad through the middle, tapering to a POINT at 0.86L —
-            # the concept's blade — with a thin gold needle beyond it
-            if tt < 0.45:
-                return W * (0.35 + 0.65 * (tt / 0.45) ** 0.8)
-            if tt < 0.86:
-                return W * (1.0 - 0.98 * ((tt - 0.45) / 0.41) ** 1.15)
-            return W * 0.02
-        n = 26
-        left, right = [], []
-        for i in range(n + 1):
-            tt = i / n
-            y = cy - L * tt
-            w2 = profile(tt) / 2 if tt < 0.995 else 0.5
-            left.append((cx - w2, y)); right.append((cx + w2, y))
-        body = left + right[::-1]
-        for off, a in ((3 * SS, 60), (1.5 * SS, 90)):
-            shade(img, lambda dd, off=off, a=a: dd.polygon(
-                [(x + off, y + off) for x, y in body], fill=(0, 0, 0, a)))
-        # counter-blade
-        cb = 26 * SS
-        d.polygon([(cx - W * 0.28, cy), (cx, cy + cb), (cx + W * 0.28, cy)],
-                  fill=(*P["gold"], 255))
-        d.polygon(body, fill=(*P["gold"], 255))
-        inner = []
-        for i in range(n + 1):
-            tt = i / n
-            y = cy - L * tt
-            w2 = max(0.5, profile(tt) / 2 - 4.8 * SS)
-            inner.append((cx - w2, y))
-        for i in range(n, -1, -1):
-            tt = i / n
-            y = cy - L * tt
-            w2 = max(0.5, profile(tt) / 2 - 4.8 * SS)
-            inner.append((cx + w2, y))
-        d.polygon(inner, fill=(38, 56, 82, 255))
-        # the gold needle tip beyond the blade point
-        d.line([(cx, cy - L * 0.84), (cx, cy - L * 1.06)],
-               fill=(*P["gold"], 255), width=int(3 * SS))
-        d.polygon([(cx, cy - L * 1.10), (cx - 2.5 * SS, cy - L * 1.04),
-                   (cx + 2.5 * SS, cy - L * 1.04)], fill=(*P["gold_hi"], 255))
-        # wide lume spine
-        d.rounded_rectangle([cx - 4.4 * SS, cy - L * 0.80, cx + 4.4 * SS,
-                             cy - L * 0.30], radius=3 * SS,
-                            fill=(*P["lume"], 255))
-        d.line([(cx, cy - L * 0.28), (cx, cy + cb * 0.6)],
-               fill=(255, 255, 255, 55), width=SS)
+        cols = dict(gold=P["gold"], gold_hi=P["gold_hi"], lume=P["lume"],
+                    fill=P.get("hand_fill", (38, 56, 82)),
+                    stripe=P.get("second", (226, 92, 70)))
+        if HANDS.get("blade_style") == "turboprop":
+            PROP.turboprop_blade(img, (cx, cy), length, max_w, SS, cols,
+                                 counter_l=HANDS["counter_l"],
+                                 spine_w=HANDS.get("lume_w", 3.2))
+        else:
+            PROP.point_blade(img, (cx, cy), length, max_w, SS, cols,
+                             counter_l=HANDS["counter_l"],
+                             lume_w=HANDS.get("lume_w", 3.8))
         return img
 
-    h = propeller(102, 44)
-    m = propeller(148, 34)
+    # Wrist test: the prototype blades masked entire complications around
+    # 06:35. PRO keeps the compromise blade; BARON overrides the family
+    # and dimensions in geometry.HANDS — the propellers are its face.
+    h = propeller(*HANDS["hour_blade"])
+    m = propeller(*HANDS["minute_blade"])
     s_img = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     d = ImageDraw.Draw(s_img)
     L = 182 * SS
@@ -758,14 +738,14 @@ def hands(out_dir):
               outline=(*P["gold"], 255), width=2 * SS)
     boss = Image.new("RGBA", (S, S), (0, 0, 0, 0))
     bd = ImageDraw.Draw(boss)
-    br = 11 * SS
+    br = HANDS["boss_r"] * SS
     bd.ellipse([cx - br - 2 * SS, cy - br - 2 * SS, cx + br + 2 * SS,
                 cy + br + 2 * SS], fill=(*P["gold"], 255))
     bd.ellipse([cx - br, cy - br, cx + br, cy + br], fill=(*P["steel"], 255))
     bd.ellipse([cx - br * 0.45, cy - br * 0.7, cx + br * 0.1,
                 cy - br * 0.1], fill=(255, 255, 255, 90))
     bd.ellipse([cx - br * 0.4, cy - br * 0.4, cx + br * 0.4, cy + br * 0.4],
-               fill=(16, 26, 40, 255))
+               fill=(*P.get("boss_dark", (16, 26, 40)), 255))
     for name, im in (("hour", h), ("minute", m), ("second", s_img),
                      ("boss", boss)):
         im.resize((CANVAS, CANVAS), Image.LANCZOS).save(

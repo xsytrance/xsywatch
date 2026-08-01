@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <UserConfigurations>
+    <ColorConfiguration id="glow" displayName="Night lighting" defaultValue="sapphire">
+      <ColorOption id="sapphire" displayName="Sapphire" colors="#FF59E8E6 #FFE8FFFF #FFCA944E" />
+      <ColorOption id="radar" displayName="Radar" colors="#FF7BE082 #FFE9FFE8 #FFD9B45C" />
+      <ColorOption id="amber" displayName="Amber" colors="#FFF0A34D #FFFFE7C1 #FF62D8D4" />
+      <ColorOption id="ice" displayName="Ice" colors="#FF88CFFF #FFF2FAFF #FFC6A86A" />
+      <ColorOption id="stealth" displayName="Stealth" colors="#FF9AA8AB #FFF1F4F4 #FFCF8D52" />
+    </ColorConfiguration>
+    <Flavors defaultValue="sapphire">
+      <Flavor id="sapphire" displayName="Sapphire"><Configuration id="glow" optionId="sapphire" /></Flavor>
+      <Flavor id="radar" displayName="Radar"><Configuration id="glow" optionId="radar" /></Flavor>
+      <Flavor id="amber" displayName="Amber"><Configuration id="glow" optionId="amber" /></Flavor>
+      <Flavor id="ice" displayName="Ice"><Configuration id="glow" optionId="ice" /></Flavor>
+      <Flavor id="stealth" displayName="Stealth"><Configuration id="glow" optionId="stealth" /></Flavor>
+    </Flavors>
+  </UserConfigurations>
+  <BitmapFonts>
+    <BitmapFont name="ng">
+      <Character name="%" resource="ng_pct" width="46" height="46" />
+      <Character name="-" resource="ng_dash" width="21" height="46" />
+      <Character name="/" resource="ng_slash" width="26" height="46" />
+      <Character name="0" resource="ng_0" width="28" height="46" />
+      <Character name="1" resource="ng_1" width="19" height="46" />
+      <Character name="2" resource="ng_2" width="28" height="46" />
+      <Character name="3" resource="ng_3" width="27" height="46" />
+      <Character name="4" resource="ng_4" width="30" height="46" />
+      <Character name="5" resource="ng_5" width="28" height="46" />
+      <Character name="6" resource="ng_6" width="28" height="46" />
+      <Character name="7" resource="ng_7" width="26" height="46" />
+      <Character name="8" resource="ng_8" width="28" height="46" />
+      <Character name="9" resource="ng_9" width="27" height="46" />
+      <Character name="A" resource="ng_a" width="30" height="46" />
+      <Character name="B" resource="ng_b" width="29" height="46" />
+      <Character name="C" resource="ng_c" width="29" height="46" />
+      <Character name="D" resource="ng_d" width="30" height="46" />
+      <Character name="E" resource="ng_e" width="28" height="46" />
+      <Character name="F" resource="ng_f" width="26" height="46" />
+      <Character name="G" resource="ng_g" width="29" height="46" />
+      <Character name="H" resource="ng_h" width="30" height="46" />
+      <Character name="I" resource="ng_i" width="16" height="46" />
+      <Character name="J" resource="ng_j" width="28" height="46" />
+      <Character name="K" resource="ng_k" width="30" height="46" />
+      <Character name="L" resource="ng_l" width="27" height="46" />
+      <Character name="M" resource="ng_m" width="34" height="46" />
+      <Character name="N" resource="ng_n" width="32" height="46" />
+      <Character name="O" resource="ng_o" width="30" height="46" />
+      <Character name="P" resource="ng_p" width="29" height="46" />
+      <Character name="Q" resource="ng_q" width="29" height="46" />
+      <Character name="R" resource="ng_r" width="30" height="46" />
+      <Character name="S" resource="ng_s" width="28" height="46" />
+      <Character name="T" resource="ng_t" width="29" height="46" />
+      <Character name="U" resource="ng_u" width="30" height="46" />
+      <Character name="V" resource="ng_v" width="30" height="46" />
+      <Character name="W" resource="ng_w" width="42" height="46" />
+      <Character name="X" resource="ng_x" width="30" height="46" />
+      <Character name="Y" resource="ng_y" width="30" height="46" />
+      <Character name="Z" resource="ng_z" width="26" height="46" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF000000">
+    <PartImage name="base" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.3" />
+      <Image resource="ng_bg" />
+    </PartImage>
+    <PartImage name="aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.3" />
+      <Image resource="ng_aod" />
+    </PartImage>
+    <PartDraw name="battery_arc" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.2" />
+      <Launch target="BATTERY_STATUS" />
+      <Arc centerX="240" centerY="240" width="336" height="336" startAngle="-62" endAngle="62">
+        <Stroke color="#33152B31" thickness="10" cap="ROUND" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="336" height="336" startAngle="-62" endAngle="62">
+        <Stroke color="[CONFIGURATION.glow.0]" thickness="7" cap="ROUND" />
+        <Transform target="endAngle" value="-62 + 124 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="steps_arc" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.2" />
+      <Arc centerX="151" centerY="348" width="82" height="82" startAngle="-135" endAngle="135">
+        <Stroke color="[CONFIGURATION.glow.0]" thickness="6" cap="ROUND" />
+        <Transform target="endAngle" value="-135 + 270 * clamp([STEP_PERCENT], 0, 100) / 100" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="hr_arc" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.2" />
+      <Launch target="HEALTH_HEART_RATE" />
+      <Arc centerX="329" centerY="348" width="82" height="82" startAngle="-135" endAngle="135">
+        <Stroke color="[CONFIGURATION.glow.2]" thickness="6" cap="ROUND" />
+        <Transform target="endAngle" value="-135 + 270 * clamp([HEART_RATE], 0, 200) / 200" />
+      </Arc>
+    </PartDraw>
+    <PartText name="fuel_hn2_n2" x="194" y="111" width="88" height="32" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="fuel_h2_n2" x="198" y="111" width="88" height="32" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="fuel_hn2_2" x="194" y="115" width="88" height="32" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="fuel_h2_2" x="198" y="115" width="88" height="32" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="fuel_sh" x="196" y="116" width="88" height="32" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="#000000"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="fuel" x="196" y="113" width="88" height="32" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="100" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="25" color="[CONFIGURATION.glow.1]"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Launch target="BATTERY_STATUS" />
+    </PartText>
+    <PartText name="zulu_hn3_n3" x="93" y="208" width="51" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="zulu_h3_n3" x="99" y="208" width="51" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="zulu_hn3_3" x="93" y="214" width="51" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="zulu_h3_3" x="99" y="214" width="51" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="zulu_sh" x="96" y="215" width="51" height="38" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="zulu" x="96" y="211" width="51" height="38" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="[CONFIGURATION.glow.1]"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow_hn2_n2" x="329" y="196" width="55" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow_h2_n2" x="333" y="196" width="55" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow_hn2_2" x="329" y="200" width="55" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow_h2_2" x="333" y="200" width="55" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow_sh" x="331" y="201" width="55" height="18" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="dow" x="331" y="198" width="55" height="18" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="[CONFIGURATION.glow.0]"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="day_hn3_n3" x="330" y="215" width="51" height="34" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="day_h3_n3" x="336" y="215" width="51" height="34" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="day_hn3_3" x="330" y="221" width="51" height="34" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="day_h3_3" x="336" y="221" width="51" height="34" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="day_sh" x="333" y="222" width="51" height="34" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="day" x="333" y="218" width="51" height="34" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="28" color="[CONFIGURATION.glow.1]"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="mon_hn2_n2" x="330" y="251" width="54" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="mon_h2_n2" x="334" y="251" width="54" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="mon_hn2_2" x="330" y="255" width="54" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="mon_h2_2" x="334" y="255" width="54" height="18" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="mon_sh" x="332" y="256" width="54" height="18" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="mon" x="332" y="253" width="54" height="18" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="12" color="[CONFIGURATION.glow.2]"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="steps_hn3_n3" x="108" y="323" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="steps_h3_n3" x="114" y="323" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="steps_hn3_3" x="108" y="329" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="steps_h3_3" x="114" y="329" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="steps_sh" x="111" y="330" width="80" height="37" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="steps" x="111" y="326" width="80" height="37" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="[CONFIGURATION.glow.1]"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal_hn2_n2" x="115" y="377" width="68" height="17" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal_h2_n2" x="119" y="377" width="68" height="17" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal_hn2_2" x="115" y="381" width="68" height="17" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal_h2_2" x="119" y="381" width="68" height="17" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal_sh" x="117" y="382" width="68" height="17" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="goal" x="117" y="379" width="68" height="17" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="10" color="[CONFIGURATION.glow.0]"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr_hn3_n3" x="286" y="323" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr_h3_n3" x="292" y="323" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr_hn3_3" x="286" y="329" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr_h3_3" x="292" y="329" width="80" height="37" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr_sh" x="289" y="330" width="80" height="37" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="hr" x="289" y="326" width="80" height="37" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="30" color="[CONFIGURATION.glow.1]"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Launch target="HEALTH_HEART_RATE" />
+    </PartText>
+    <PartText name="temp_hn2_n2" x="196" y="411" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="temp_h2_n2" x="200" y="411" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="temp_hn2_2" x="196" y="415" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="temp_h2_2" x="200" y="415" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="temp_sh" x="198" y="416" width="38" height="24" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="temp" x="198" y="413" width="38" height="24" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="[CONFIGURATION.glow.1]"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain_hn2_n2" x="257" y="411" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain_h2_n2" x="261" y="411" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain_hn2_2" x="257" y="415" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain_h2_2" x="261" y="415" width="38" height="24" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain_sh" x="259" y="416" width="38" height="24" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="rain" x="259" y="413" width="38" height="24" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="ng" size="15" color="[CONFIGURATION.glow.1]"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="hour_hand" x="0" y="0" width="480" height="480" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="170" duration="0.2" />
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="ng_hour" />
+    </PartImage>
+    <PartImage name="minute_hand" x="0" y="0" width="480" height="480" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="170" duration="0.2" />
+      <Transform target="angle" value="([MINUTE] + [SECOND] / 60) * 6" />
+      <Image resource="ng_minute" />
+    </PartImage>
+    <PartImage name="second_hand" x="0" y="0" width="480" height="480" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.2" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      <Image resource="ng_second" />
+    </PartImage>
+    <PartImage name="boss" x="0" y="0" width="480" height="480">
+      <Variant mode="AMBIENT" target="alpha" value="160" duration="0.2" />
+      <Image resource="ng_boss" />
+    </PartImage>
+  </Scene>
+</WatchFace>

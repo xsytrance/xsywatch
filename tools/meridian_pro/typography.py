@@ -73,7 +73,8 @@ def font_xml(widths: dict[str, int], family: str = "mp",
 
 
 def readout(name, x, y, w, h, size, template, params, colour="#EBC468",
-            amb=0, align="CENTER", family="mp", upper=False) -> list[str]:
+            amb=0, align="CENTER", family="mp", upper=False,
+            launch=None) -> list[str]:
     """A live number with a closed halo: four diagonal passes, a cast
     shadow, then the fill. Six PartTexts, no new construct."""
     inner = "".join(f'<Parameter expression="{p}" />' for p in params)
@@ -81,18 +82,21 @@ def readout(name, x, y, w, h, size, template, params, colour="#EBC468",
     if upper:
         body = f'<Upper>{body}</Upper>'
 
-    def part(tag, dx, dy, col, alpha):
-        return [f'    <PartText name="{name}{tag}" x="{x+dx}" y="{y+dy}" '
-                f'width="{w}" height="{h}" alpha="{alpha}">',
+    def part(tag, dx, dy, col, alpha, action=False):
+        lines = [f'    <PartText name="{name}{tag}" x="{x+dx}" y="{y+dy}" '
+                 f'width="{w}" height="{h}" alpha="{alpha}">',
                 f'      <Variant mode="AMBIENT" target="alpha" value="{amb}" '
                 'duration="0.4" startOffset="0.2" interpolation="LINEAR" />',
                 f'      <Text align="{align}"><BitmapFont family="{family}" '
-                f'size="{size}" color="{col}">{body}</BitmapFont></Text>',
-                '    </PartText>']
+                 f'size="{size}" color="{col}">{body}</BitmapFont></Text>']
+        if action and launch:
+            lines.append(f'      <Launch target="{launch}" />')
+        lines.append('    </PartText>')
+        return lines
     d = max(2, round(size * 0.10))
     o = []
     for dx, dy in ((-d, -d), (d, -d), (-d, d), (d, d)):
         o += part(f"_h{dx}_{dy}".replace("-", "n"), dx, dy, "#000000", 110)
     o += part("_sh", 0, int(d * 1.6), "#000000", 195)
-    o += part("", 0, 0, colour, 255)
+    o += part("", 0, 0, colour, 255, action=True)
     return o

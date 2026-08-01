@@ -8,6 +8,22 @@ GENERATED FILE - do not edit by hand.
 <WatchFace width="480" height="480">
   <Metadata key="CLOCK_TYPE" value="ANALOG" />
   <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <UserConfigurations>
+    <ColorConfiguration id="theme" displayName="Accent theme" defaultValue="meridian">
+      <ColorOption id="meridian" displayName="Meridian" colors="#FFDEB269 #FFFFFFFF #FF36B474" />
+      <ColorOption id="tactical" displayName="Tactical" colors="#FF9AD96B #FFE8FFD8 #FF5FD68F" />
+      <ColorOption id="ember" displayName="Ember" colors="#FFF08A42 #FFFFE2C4 #FFE45B42" />
+      <ColorOption id="violet" displayName="Violet" colors="#FFD889F2 #FFFFE8FF #FFB867DE" />
+      <ColorOption id="arctic" displayName="Arctic" colors="#FF66D6E8 #FFE8FCFF #FF42C6D9" />
+    </ColorConfiguration>
+    <Flavors defaultValue="meridian">
+      <Flavor id="meridian" displayName="Meridian"><Configuration id="theme" optionId="meridian" /></Flavor>
+      <Flavor id="tactical" displayName="Tactical"><Configuration id="theme" optionId="tactical" /></Flavor>
+      <Flavor id="ember" displayName="Ember"><Configuration id="theme" optionId="ember" /></Flavor>
+      <Flavor id="violet" displayName="Violet"><Configuration id="theme" optionId="violet" /></Flavor>
+      <Flavor id="arctic" displayName="Arctic"><Configuration id="theme" optionId="arctic" /></Flavor>
+    </Flavors>
+  </UserConfigurations>
   <BitmapFonts>
     <BitmapFont name="mp">
       <Character name="%" resource="mp_pct" width="46" height="46" />
@@ -62,6 +78,7 @@ GENERATED FILE - do not edit by hand.
     </PartImage>
     <PartDraw name="z10_power" x="0" y="0" width="480" height="480" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Launch target="BATTERY_STATUS" />
       <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="62.0">
         <Stroke color="#28E8C08A" thickness="21" cap="ROUND" />
       </Arc>
@@ -73,12 +90,12 @@ GENERATED FILE - do not edit by hand.
         <Transform target="startAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
       </Arc>
       <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="-60.0">
-        <Stroke color="#FFFFFFFF" thickness="15" cap="ROUND" />
+        <Stroke color="[CONFIGURATION.theme.1]" thickness="15" cap="ROUND" />
         <Transform target="startAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100 - 1" />
         <Transform target="endAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100 + 1" />
       </Arc>
     </PartDraw>
-    <PartImage name="z11_bolt_dim" x="199" y="108" width="16" height="26" alpha="200" tintColor="#C4A474">
+    <PartImage name="z11_bolt_dim" x="199" y="108" width="16" height="26" alpha="200" tintColor="[CONFIGURATION.theme.0]">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
       <Image resource="mp_bolt" />
     </PartImage>
@@ -139,7 +156,8 @@ GENERATED FILE - do not edit by hand.
     </PartText>
     <PartText name="z20_batt" x="180" y="102" width="120" height="38" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="34" color="#E0E6ED"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="34" color="[CONFIGURATION.theme.1]"><Template>%d%%<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Launch target="BATTERY_STATUS" />
     </PartText>
     <PartText name="z21_steps_hn3_n3" x="94" y="291" width="110" height="38" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
@@ -211,7 +229,8 @@ GENERATED FILE - do not edit by hand.
     </PartText>
     <PartText name="z23_hr" x="273" y="294" width="110" height="38" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="34" color="#E0E6ED"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="34" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Launch target="HEALTH_HEART_RATE" />
     </PartText>
     <PartText name="z24_mil_hn4_n4" x="79" y="209" width="90" height="46" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
@@ -260,6 +279,7 @@ GENERATED FILE - do not edit by hand.
     <PartText name="z25_dow" x="311" y="200" width="66" height="20" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
       <Text align="CENTER"><BitmapFont family="mp" size="15" color="#E0E6ED"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
     </PartText>
     <PartText name="z26_day_hn3_n3" x="308" y="216" width="66" height="36" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
@@ -283,7 +303,8 @@ GENERATED FILE - do not edit by hand.
     </PartText>
     <PartText name="z26_day" x="311" y="219" width="66" height="36" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#E0BE82"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="[CONFIGURATION.theme.0]"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Launch target="CALENDAR" />
     </PartText>
     <PartText name="z27_mon_hn2_n2" x="309" y="254" width="66" height="20" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
@@ -307,57 +328,58 @@ GENERATED FILE - do not edit by hand.
     </PartText>
     <PartText name="z27_mon" x="311" y="256" width="66" height="20" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="15" color="#C4A474"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="15" color="[CONFIGURATION.theme.0]"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
     </PartText>
-    <PartText name="z28_temp_hn2_n2" x="155" y="381" width="88" height="26" alpha="110">
+    <PartText name="z28_temp_hn2_n2" x="168" y="392" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z28_temp_h2_n2" x="159" y="381" width="88" height="26" alpha="110">
+    <PartText name="z28_temp_h2_n2" x="172" y="392" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z28_temp_hn2_2" x="155" y="385" width="88" height="26" alpha="110">
+    <PartText name="z28_temp_hn2_2" x="168" y="396" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z28_temp_h2_2" x="159" y="385" width="88" height="26" alpha="110">
+    <PartText name="z28_temp_h2_2" x="172" y="396" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z28_temp_sh" x="157" y="386" width="88" height="26" alpha="195">
+    <PartText name="z28_temp_sh" x="170" y="397" width="76" height="26" alpha="195">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z28_temp" x="157" y="383" width="88" height="26" alpha="255">
+    <PartText name="z28_temp" x="170" y="394" width="76" height="26" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#E0E6ED"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#E0E6ED"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain_hn2_n2" x="261" y="381" width="88" height="26" alpha="110">
+    <PartText name="z29_rain_hn2_n2" x="260" y="392" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain_h2_n2" x="265" y="381" width="88" height="26" alpha="110">
+    <PartText name="z29_rain_h2_n2" x="264" y="392" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain_hn2_2" x="261" y="385" width="88" height="26" alpha="110">
+    <PartText name="z29_rain_hn2_2" x="260" y="396" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain_h2_2" x="265" y="385" width="88" height="26" alpha="110">
+    <PartText name="z29_rain_h2_2" x="264" y="396" width="76" height="26" alpha="110">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain_sh" x="263" y="386" width="88" height="26" alpha="195">
+    <PartText name="z29_rain_sh" x="262" y="397" width="76" height="26" alpha="195">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z29_rain" x="263" y="383" width="88" height="26" alpha="255">
+    <PartText name="z29_rain" x="262" y="394" width="76" height="26" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="mp" size="19" color="#E0E6ED"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#E0E6ED"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartImage name="z30_moon" x="219" y="305" width="42" height="42" alpha="255">
+    <PartImage name="z30_moon" x="222" y="323" width="36" height="36" alpha="255">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
       <Image resource="mp_moon" />
     </PartImage>

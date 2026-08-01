@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+GENERATED FILE - do not edit by hand.
+  Authoritative source: tools/meridian_pro/build.py
+  Geometry: tools/meridian_pro/geometry.py (single source of truth)
+  Base art: procedural layout, Kontext Pro finish, anchors verified.
+-->
+<WatchFace width="480" height="480">
+  <Metadata key="CLOCK_TYPE" value="ANALOG" />
+  <Metadata key="PREVIEW_TIME" value="10:09:32" />
+  <UserConfigurations>
+    <ColorConfiguration id="theme" displayName="Accent theme" defaultValue="meridian">
+      <ColorOption id="meridian" displayName="Meridian" colors="#FFDEB269 #FFFFFFFF #FF36B474" />
+      <ColorOption id="tactical" displayName="Tactical" colors="#FF9AD96B #FFE8FFD8 #FF5FD68F" />
+      <ColorOption id="ember" displayName="Ember" colors="#FFF08A42 #FFFFE2C4 #FFE45B42" />
+      <ColorOption id="violet" displayName="Violet" colors="#FFD889F2 #FFFFE8FF #FFB867DE" />
+      <ColorOption id="arctic" displayName="Arctic" colors="#FF66D6E8 #FFE8FCFF #FF42C6D9" />
+    </ColorConfiguration>
+    <Flavors defaultValue="meridian">
+      <Flavor id="meridian" displayName="Meridian"><Configuration id="theme" optionId="meridian" /></Flavor>
+      <Flavor id="tactical" displayName="Tactical"><Configuration id="theme" optionId="tactical" /></Flavor>
+      <Flavor id="ember" displayName="Ember"><Configuration id="theme" optionId="ember" /></Flavor>
+      <Flavor id="violet" displayName="Violet"><Configuration id="theme" optionId="violet" /></Flavor>
+      <Flavor id="arctic" displayName="Arctic"><Configuration id="theme" optionId="arctic" /></Flavor>
+    </Flavors>
+  </UserConfigurations>
+  <BitmapFonts>
+    <BitmapFont name="mp">
+      <Character name="%" resource="mp_pct" width="46" height="46" />
+      <Character name="-" resource="mp_dash" width="21" height="46" />
+      <Character name="/" resource="mp_slash" width="26" height="46" />
+      <Character name="0" resource="mp_0" width="28" height="46" />
+      <Character name="1" resource="mp_1" width="19" height="46" />
+      <Character name="2" resource="mp_2" width="28" height="46" />
+      <Character name="3" resource="mp_3" width="27" height="46" />
+      <Character name="4" resource="mp_4" width="30" height="46" />
+      <Character name="5" resource="mp_5" width="28" height="46" />
+      <Character name="6" resource="mp_6" width="28" height="46" />
+      <Character name="7" resource="mp_7" width="26" height="46" />
+      <Character name="8" resource="mp_8" width="28" height="46" />
+      <Character name="9" resource="mp_9" width="27" height="46" />
+      <Character name="A" resource="mp_a" width="30" height="46" />
+      <Character name="B" resource="mp_b" width="29" height="46" />
+      <Character name="C" resource="mp_c" width="29" height="46" />
+      <Character name="D" resource="mp_d" width="30" height="46" />
+      <Character name="E" resource="mp_e" width="28" height="46" />
+      <Character name="F" resource="mp_f" width="26" height="46" />
+      <Character name="G" resource="mp_g" width="29" height="46" />
+      <Character name="H" resource="mp_h" width="30" height="46" />
+      <Character name="I" resource="mp_i" width="16" height="46" />
+      <Character name="J" resource="mp_j" width="28" height="46" />
+      <Character name="K" resource="mp_k" width="30" height="46" />
+      <Character name="L" resource="mp_l" width="27" height="46" />
+      <Character name="M" resource="mp_m" width="34" height="46" />
+      <Character name="N" resource="mp_n" width="32" height="46" />
+      <Character name="O" resource="mp_o" width="30" height="46" />
+      <Character name="P" resource="mp_p" width="29" height="46" />
+      <Character name="Q" resource="mp_q" width="29" height="46" />
+      <Character name="R" resource="mp_r" width="30" height="46" />
+      <Character name="S" resource="mp_s" width="28" height="46" />
+      <Character name="T" resource="mp_t" width="29" height="46" />
+      <Character name="U" resource="mp_u" width="30" height="46" />
+      <Character name="V" resource="mp_v" width="30" height="46" />
+      <Character name="W" resource="mp_w" width="42" height="46" />
+      <Character name="X" resource="mp_x" width="30" height="46" />
+      <Character name="Y" resource="mp_y" width="30" height="46" />
+      <Character name="Z" resource="mp_z" width="26" height="46" />
+    </BitmapFont>
+  </BitmapFonts>
+  <Scene backgroundColor="#FF000000">
+    <PartImage name="z00_bg" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
+      <Image resource="mp_bg" />
+    </PartImage>
+    <PartImage name="z01_bg_aod" x="0" y="0" width="480" height="480" alpha="0">
+      <Variant mode="AMBIENT" target="alpha" value="255" duration="0.4" startOffset="0.0" interpolation="EASE_IN" />
+      <Image resource="mp_bg_aod" />
+    </PartImage>
+    <PartDraw name="z10_power" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Launch target="BATTERY_STATUS" />
+      <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="62.0">
+        <Stroke color="#28E8C08A" thickness="21" cap="ROUND" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="62.0">
+        <WeightedStroke colors="#E44236 #E34E38 #E35A3B #E2673E #E27341 #E18044 #E18C46 #E09949 #E0A54C #D7AB4F #C7AB52 #B7AA56 #A7AA59 #96A95C #86A960 #76A863 #66A866 #56A86A" weights="1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0" thickness="13" cap="ROUND" discreteGap="0.0" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="62.0">
+        <Stroke color="#B4060A10" thickness="13" cap="BUTT" />
+        <Transform target="startAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100" />
+      </Arc>
+      <Arc centerX="240" centerY="240" width="336.0" height="336.0" startAngle="-62.0" endAngle="-60.0">
+        <Stroke color="[CONFIGURATION.theme.1]" thickness="15" cap="ROUND" />
+        <Transform target="startAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100 - 1" />
+        <Transform target="endAngle" value="-62.0 + 124.0 * clamp([BATTERY_PERCENT], 0, 100) / 100 + 1" />
+      </Arc>
+    </PartDraw>
+    <PartImage name="z11_bolt_dim" x="203" y="115" width="12" height="20" alpha="200" tintColor="[CONFIGURATION.theme.0]">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="mp_bolt" />
+    </PartImage>
+    <Condition>
+      <Expressions>
+        <Expression name="chg">[BATTERY_CHARGING_STATUS]</Expression>
+      </Expressions>
+      <Compare expression="chg">
+        <PartImage name="z11_bolt_hot" x="203" y="115" width="12" height="20" alpha="255" tintColor="#FFE9A8">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+          <Image resource="mp_bolt" />
+        </PartImage>
+      </Compare>
+    </Condition>
+    <PartDraw name="z12_steps_ring" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Arc centerX="152.0" centerY="322.0" width="78.0" height="78.0" startAngle="-150.0" endAngle="150.0">
+        <Stroke color="#30FFFFFF" thickness="9.0" cap="ROUND" />
+      </Arc>
+      <Arc centerX="152.0" centerY="322.0" width="78.0" height="78.0" startAngle="-150.0" endAngle="150.0">
+        <WeightedStroke colors="#E44236 #E34E38 #E35A3B #E2673E #E27341 #E18044 #E18C46 #E09949 #E0A54C #D7AB4F #C7AB52 #B7AA56 #A7AA59 #96A95C #86A960 #76A863 #66A866 #56A86A" weights="1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0" thickness="9.0" cap="ROUND" discreteGap="0.0" />
+      </Arc>
+      <Arc centerX="152.0" centerY="322.0" width="78.0" height="78.0" startAngle="-150.0" endAngle="150.0">
+        <Stroke color="#C8080C12" thickness="10.0" cap="BUTT" />
+        <Transform target="startAngle" value="-150.0 + 300.0 * clamp([STEP_PERCENT], 0, 100) / 100" />
+      </Arc>
+    </PartDraw>
+    <PartDraw name="z13_hr_ring" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Arc centerX="328.0" centerY="322.0" width="78.0" height="78.0" startAngle="-150.0" endAngle="150.0">
+        <WeightedStroke colors="#30FFFFFF #56A86A #E0AC4E #E44236" weights="2.4 3.6 2.4 1.6" thickness="9.0" cap="ROUND" discreteGap="0.0" />
+      </Arc>
+      <Arc centerX="328.0" centerY="322.0" width="78.0" height="78.0" startAngle="-150.0" endAngle="-142.0">
+        <Stroke color="#FFFFFFFF" thickness="13.0" cap="ROUND" />
+        <Transform target="startAngle" value="-150.0 + 300.0 * clamp([HEART_RATE], 0, 200) / 200 - 3" />
+        <Transform target="endAngle" value="-150.0 + 300.0 * clamp([HEART_RATE], 0, 200) / 200 + 3" />
+      </Arc>
+    </PartDraw>
+    <PartText name="z20_batt_hn3_n3" x="177" y="103" width="120" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_batt_h3_n3" x="183" y="103" width="120" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_batt_hn3_3" x="177" y="109" width="120" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_batt_h3_3" x="183" y="109" width="120" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_batt_sh" x="180" y="110" width="120" height="38" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="#000000"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_batt" x="180" y="106" width="120" height="38" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="110" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="26" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="[BATTERY_PERCENT]" /></Template></BitmapFont></Text>
+      <Launch target="BATTERY_STATUS" />
+    </PartText>
+    <PartText name="z21_steps_hn2_n2" x="95" y="294" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_h2_n2" x="99" y="294" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_hn2_2" x="95" y="298" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_h2_2" x="99" y="298" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps_sh" x="97" y="299" width="110" height="38" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z21_steps" x="97" y="296" width="110" height="38" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#F2EFEA"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal_hn2_n2" x="95" y="341" width="110" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal_h2_n2" x="99" y="341" width="110" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal_hn2_2" x="95" y="345" width="110" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal_h2_2" x="99" y="345" width="110" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal_sh" x="97" y="346" width="110" height="20" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#000000"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z22_goal" x="97" y="343" width="110" height="20" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="12" color="#D6AA62"><Template>/%d<Parameter expression="[STEP_GOAL]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr_hn2_n2" x="271" y="294" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr_h2_n2" x="275" y="294" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr_hn2_2" x="271" y="298" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr_h2_2" x="275" y="298" width="110" height="38" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr_sh" x="273" y="299" width="110" height="38" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="#000000"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z23_hr" x="273" y="296" width="110" height="38" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="25" color="[CONFIGURATION.theme.1]"><Template>%d<Parameter expression="[HEART_RATE]" /></Template></BitmapFont></Text>
+      <Launch target="HEALTH_HEART_RATE" />
+    </PartText>
+    <PartText name="z24_mil_hn4_n4" x="79" y="209" width="90" height="46" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_mil_h4_n4" x="87" y="209" width="90" height="46" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_mil_hn4_4" x="79" y="217" width="90" height="46" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_mil_h4_4" x="87" y="217" width="90" height="46" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_mil_sh" x="83" y="219" width="90" height="46" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#000000"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z24_mil" x="83" y="213" width="90" height="46" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="150" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="36" color="#F2EFEA"><Template>%02d<Parameter expression="[HOUR_0_23]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow_hn2_n2" x="309" y="193" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow_h2_n2" x="313" y="193" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow_hn2_2" x="309" y="197" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow_h2_2" x="313" y="197" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow_sh" x="311" y="198" width="66" height="20" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z25_dow" x="311" y="195" width="66" height="20" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#F2EFEA"><Upper><Template>%s<Parameter expression="[DAY_OF_WEEK_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="z26_day_hn3_n3" x="308" y="216" width="66" height="36" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z26_day_h3_n3" x="314" y="216" width="66" height="36" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z26_day_hn3_3" x="308" y="222" width="66" height="36" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z26_day_h3_3" x="314" y="222" width="66" height="36" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z26_day_sh" x="311" y="223" width="66" height="36" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="#000000"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z26_day" x="311" y="219" width="66" height="36" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="140" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="30" color="[CONFIGURATION.theme.0]"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="z27_mon_hn2_n2" x="309" y="255" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z27_mon_h2_n2" x="313" y="255" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z27_mon_hn2_2" x="309" y="259" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z27_mon_h2_2" x="313" y="259" width="66" height="20" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z27_mon_sh" x="311" y="260" width="66" height="20" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="#000000"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+    </PartText>
+    <PartText name="z27_mon" x="311" y="257" width="66" height="20" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="14" color="[CONFIGURATION.theme.0]"><Upper><Template>%s<Parameter expression="[MONTH_S]" /></Template></Upper></BitmapFont></Text>
+      <Launch target="CALENDAR" />
+    </PartText>
+    <PartText name="z28_temp_hn2_n2" x="168" y="392" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z28_temp_h2_n2" x="172" y="392" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z28_temp_hn2_2" x="168" y="396" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z28_temp_h2_2" x="172" y="396" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z28_temp_sh" x="170" y="397" width="76" height="26" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z28_temp" x="170" y="394" width="76" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#F2EFEA"><Template>%d<Parameter expression="round([WEATHER.TEMPERATURE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain_hn2_n2" x="260" y="392" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain_h2_n2" x="264" y="392" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain_hn2_2" x="260" y="396" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain_h2_2" x="264" y="396" width="76" height="26" alpha="110">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain_sh" x="262" y="397" width="76" height="26" alpha="195">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#000000"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z29_rain" x="262" y="394" width="76" height="26" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="mp" size="17" color="#F2EFEA"><Template>%d%%<Parameter expression="round([WEATHER.CHANCE_OF_PRECIPITATION])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartImage name="z30_moon" x="222" y="323" width="36" height="36" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Image resource="mp_moon" />
+    </PartImage>
+    <PartImage name="z40_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="170" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />
+      <Image resource="mp_hand_hour" />
+    </PartImage>
+    <PartImage name="z40_minute" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="170" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Transform target="angle" value="([MINUTE] + [SECOND] / 60) * 6" />
+      <Image resource="mp_hand_minute" />
+    </PartImage>
+    <PartImage name="z41_second" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.1" interpolation="EASE_OUT" />
+      <Transform target="angle" value="([SECOND] + [MILLISECOND] / 1000) * 6" />
+      <Image resource="mp_hand_second" />
+    </PartImage>
+    <PartImage name="z42_boss" x="0" y="0" width="480" height="480" alpha="255">
+      <Variant mode="AMBIENT" target="alpha" value="170" duration="0.4" startOffset="0.0" interpolation="LINEAR" />
+      <Image resource="mp_hand_boss" />
+    </PartImage>
+  </Scene>
+</WatchFace>

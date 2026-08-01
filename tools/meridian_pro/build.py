@@ -25,13 +25,13 @@ from pathlib import Path
 from PIL import Image, ImageDraw
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from geometry import (CANVAS, DATE, HANDS, MILITARY, MOON, PALETTE as P,
-                      POWER, SUBDIAL, WINDOWS)
+from geometry import (CANVAS, DATE, HANDS, IDENT, MILITARY, MOON,
+                      PALETTE as P, POWER, SUBDIAL, WINDOWS)
 import plate
 import typography as T
 
 REPO = Path(__file__).resolve().parents[2]
-FACE = REPO / "watchfaces/meridian-pro"
+FACE = REPO / "watchfaces" / IDENT["face_dir"]
 DRAW = FACE / "app/src/main/res/drawable"
 RAW = FACE / "app/src/main/res/raw"
 
@@ -79,6 +79,7 @@ def power_xml() -> list[str]:
     cols, wts = ramp(P["zone_lim"], P["zone_warn"], P["zone_ok"])
     o = [f'    <PartDraw name="z10_power" x="0" y="0" width="{CANVAS}" '
          f'height="{CANVAS}" alpha="255">', f'      {AMB0}',
+         '      <Launch target="BATTERY_STATUS" />',
          # soft glow bedding the ramp into its channel
          f'      <Arc centerX="240" centerY="240" width="{box}" '
          f'height="{box}" startAngle="{s0}" endAngle="{s1}">',
@@ -100,7 +101,8 @@ def power_xml() -> list[str]:
          # bright tip marker at the battery position
          f'      <Arc centerX="240" centerY="240" width="{box}" '
          f'height="{box}" startAngle="{s0}" endAngle="{s0 + 2}">',
-         f'        <Stroke color="#FFFFFFFF" thickness="15" cap="ROUND" />',
+         '        <Stroke color="[CONFIGURATION.theme.1]" '
+         'thickness="15" cap="ROUND" />',
          f'        <Transform target="startAngle" value="{s0} + '
          f'{s1 - s0} * clamp([BATTERY_PERCENT], 0, 100) / 100 - 1" />',
          f'        <Transform target="endAngle" value="{s0} + '
@@ -111,7 +113,7 @@ def power_xml() -> list[str]:
     bw = int(bh * 0.62)
     o += [f'    <PartImage name="z11_bolt_dim" x="{bx - bw/2:.0f}" '
           f'y="{by - bh/2:.0f}" width="{bw}" height="{bh}" alpha="200" '
-          f'tintColor="{hx(P["gold"])}">', f'      {AMB0}',
+          'tintColor="[CONFIGURATION.theme.0]">', f'      {AMB0}',
           '      <Image resource="mp_bolt" />', '    </PartImage>',
           '    <Condition>', '      <Expressions>',
           '        <Expression name="chg">[BATTERY_CHARGING_STATUS]'
@@ -179,8 +181,10 @@ def readouts_xml() -> list[str]:
     # battery %
     rx, ry = POWER["readout_c"]
     o += T.readout("z20_batt", int(rx - 60), int(ry - 19), 120, 38,
-                   POWER["readout_px"], "%d%%", ["[BATTERY_PERCENT]"],
-                   colour=hx(P["ink"]), amb=110)
+                   POWER["readout_px"], POWER.get("fmt", "%d%%"),
+                   ["[BATTERY_PERCENT]"],
+                   colour="[CONFIGURATION.theme.1]", amb=110,
+                   launch="BATTERY_STATUS")
     # steps: the big number and the wearer's own goal under it
     sx, sy = SUBDIAL["steps_c"]
     o += T.readout("z21_steps", int(sx - 55),
@@ -195,7 +199,8 @@ def readouts_xml() -> list[str]:
     o += T.readout("z23_hr", int(hx_ - 55),
                    int(hy + SUBDIAL["value_dy"] - 18), 110, 38,
                    SUBDIAL["value_px"], "%d", ["[HEART_RATE]"],
-                   colour=hx(P["ink"]))
+                   colour="[CONFIGURATION.theme.1]",
+                   launch="HEALTH_HEART_RATE")
     # military time
     mx, my = MILITARY["c"]
     o += T.readout("z24_mil", int(mx - 45), int(my - 23), 90, 46,
@@ -203,15 +208,17 @@ def readouts_xml() -> list[str]:
                    colour=hx(P["ink"]), amb=150)
     # the three-field date
     dx, dy = DATE["c"]
-    o += T.readout("z25_dow", int(dx - 33), int(dy - 36), 66, 20,
+    o += T.readout("z25_dow", int(dx - 33), int(dy + DATE["dow_dy"]), 66, 20,
                    DATE["dow_px"], "%s", ["[DAY_OF_WEEK_S]"],
-                   colour=hx(P["ink"]), upper=True)
+                   colour=hx(P["ink"]), upper=True, launch="CALENDAR")
     o += T.readout("z26_day", int(dx - 33), int(dy - 17), 66, 36,
                    DATE["day_px"], "%d", ["[DAY]"],
-                   colour=hx(P["gold_hi"]), amb=140)
-    o += T.readout("z27_mon", int(dx - 33), int(dy + 20), 66, 20,
+                   colour="[CONFIGURATION.theme.0]", amb=140,
+                   launch="CALENDAR")
+    o += T.readout("z27_mon", int(dx - 33), int(dy + DATE["mon_dy"]), 66, 20,
                    DATE["mon_px"], "%s", ["[MONTH_S]"],
-                   colour=hx(P["gold"]), upper=True)
+                   colour="[CONFIGURATION.theme.0]", upper=True,
+                   launch="CALENDAR")
     # weather windows; plain 0 when unavailable is acceptable at 0.1.0
     for name, (wx, wy), tmpl, params in (
             ("z28_temp", WINDOWS["left_c"], "%d",
@@ -261,7 +268,34 @@ def build_xml(widths) -> str:
          '-->',
          f'<WatchFace width="{CANVAS}" height="{CANVAS}">',
          '  <Metadata key="CLOCK_TYPE" value="ANALOG" />',
-         '  <Metadata key="PREVIEW_TIME" value="10:09:32" />']
+         '  <Metadata key="PREVIEW_TIME" value="10:09:32" />',
+         '  <UserConfigurations>',
+         '    <ColorConfiguration id="theme" displayName="Accent theme" '
+         'defaultValue="meridian">',
+         '      <ColorOption id="meridian" displayName="Meridian" '
+         'colors="#FFDEB269 #FFFFFFFF #FF36B474" />',
+         '      <ColorOption id="tactical" displayName="Tactical" '
+         'colors="#FF9AD96B #FFE8FFD8 #FF5FD68F" />',
+         '      <ColorOption id="ember" displayName="Ember" '
+         'colors="#FFF08A42 #FFFFE2C4 #FFE45B42" />',
+         '      <ColorOption id="violet" displayName="Violet" '
+         'colors="#FFD889F2 #FFFFE8FF #FFB867DE" />',
+         '      <ColorOption id="arctic" displayName="Arctic" '
+         'colors="#FF66D6E8 #FFE8FCFF #FF42C6D9" />',
+         '    </ColorConfiguration>',
+         '    <Flavors defaultValue="meridian">',
+         '      <Flavor id="meridian" displayName="Meridian">'
+         '<Configuration id="theme" optionId="meridian" /></Flavor>',
+         '      <Flavor id="tactical" displayName="Tactical">'
+         '<Configuration id="theme" optionId="tactical" /></Flavor>',
+         '      <Flavor id="ember" displayName="Ember">'
+         '<Configuration id="theme" optionId="ember" /></Flavor>',
+         '      <Flavor id="violet" displayName="Violet">'
+         '<Configuration id="theme" optionId="violet" /></Flavor>',
+         '      <Flavor id="arctic" displayName="Arctic">'
+         '<Configuration id="theme" optionId="arctic" /></Flavor>',
+         '    </Flavors>',
+         '  </UserConfigurations>']
     o += T.font_xml(widths)
     o += ['  <Scene backgroundColor="#FF000000">',
           f'    <PartImage name="z00_bg" x="0" y="0" width="{CANVAS}" '
@@ -344,7 +378,7 @@ def main() -> int:
     DRAW.mkdir(parents=True, exist_ok=True)
     RAW.mkdir(parents=True, exist_ok=True)
 
-    base = FACE / "review/PRO2-kontext.png"
+    base = FACE / "review" / IDENT["kontext_base"]
     plate.dress_base(base, DRAW / "mp_bg.png")
     plate.bg_aod(DRAW / "mp_bg.png", DRAW / "mp_bg_aod.png")
     plate.hands(DRAW)
@@ -371,9 +405,19 @@ def main() -> int:
     (FACE / "gradlew").chmod(0o755)
     (FACE / "settings.gradle.kts").write_text(
         (probe / "settings.gradle.kts").read_text().replace(
-            "VectorProbe", "MeridianPro"))
-    (FACE / "app/build.gradle.kts").write_text(GRADLE_APP)
-    (FACE / "app/src/main/AndroidManifest.xml").write_text(MANIFEST)
+            "VectorProbe", IDENT["project"]))
+    (FACE / "app/build.gradle.kts").write_text(GRADLE_APP.replace(
+        "com.xsytrance.meridianpro.dev", IDENT["app_id"]))
+    (FACE / "app/src/main/AndroidManifest.xml").write_text(MANIFEST.replace(
+        'label="MERIDIAN PRO"', f'label="{IDENT["label"]}"'))
+    (FACE / "app/src/main/res/xml/watch_face_info.xml").write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n'
+        '<WatchFaceInfo>\n'
+        '    <Preview value="@drawable/preview" />\n'
+        '    <Editable value="true" />\n'
+        '    <MultipleInstancesAllowed value="true" />\n'
+        '    <FlavorsSupported value="true" />\n'
+        '</WatchFaceInfo>\n')
     n = len(list(DRAW.glob("*.png")))
     print(f"  {n} drawables, watchface.xml, project -> {FACE.relative_to(REPO)}")
     return 0

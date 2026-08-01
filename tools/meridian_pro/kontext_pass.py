@@ -35,7 +35,40 @@ BASE = "https://api.aimlapi.com/v1"
 UA = ("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 
-MUTED = __import__("os").environ.get("MP_VARIANT", "muted") != "bold"
+VARIANT = __import__("os").environ.get("MP_VARIANT", "muted")
+MUTED = VARIANT != "bold"
+
+PROMPT_BARON = (
+    "Turn this watch dial design into an ultra photorealistic macro "
+    "photograph of a real luxury military aviator wristwatch dial that "
+    "FILLS THE ENTIRE FRAME edge to edge - no watch case, no strap, no "
+    "table, no background. Keep "
+    "every element in exactly the same position, size and arrangement - do "
+    "not move, add or remove anything, and do not add any text. The outer "
+    "bezel is black anodized aluminium with engraved gold minute "
+    "numerals and applied polished-steel trapezoid indices filled with "
+    "warm ivory luminous paint. The crimson red ring inside it is riveted "
+    "aircraft skin, glossy lacquered warbird fuselage red, with panel "
+    "seams. The centre plates are two levels of polished silver steel: a "
+    "radial raised bridge over a slightly darker satin base plate. Keep "
+    "broad surfaces calm and low-contrast "
+    "so live information remains dominant. Use fine metal grain, restrained "
+    "chamfered highlights, sparse dome rivets, slotted screws and faint "
+    "tooling marks; the round hub has circular graining. "
+    "The dark curved band near the top is a recessed "
+    "channel milled into the metal with polished lips - keep it empty and "
+    "dark. Below it the plate rises into a rounded riveted turret holding "
+    "a dark recessed rectangular gauge window - keep its interior empty "
+    "and dark. "
+    "MERIDIAN BARON is stamped on its own inset black plate with "
+    "corner rivets. The dark circular wells, the dark windows with steel "
+    "frames, the gold-framed date window with its black inner box, and "
+    "the small arch-shaped night-sky opening must all stay empty and "
+    "dark inside - add nothing in any opening. "
+    "Dramatic studio product photography, glossy black lacquer and "
+    "crimson enamel, polished silver steel, warm gold accents, controlled "
+    "highlights, no stone or table texture, extremely sharp, 8k."
+)
 
 PROMPT = (
     "Turn this watch dial design into an ultra photorealistic macro "
@@ -48,22 +81,27 @@ PROMPT = (
     "numerals and applied polished-steel trapezoid indices filled with "
     "pale green luminous paint. The navy ring inside it is riveted "
     "aircraft skin with panel seams. The centre plates are two levels of "
-    "bright silvery brushed steel with a cool blue cast - a raised bridge over a base plate - "
-    "with fine metal grain, chamfered polished edges, rows of tiny dome "
-    "rivets, slotted screws and faint tooling marks; the round hub has "
-    "circular graining. Keep the overall palette bright steel-blue and silver, not dark. The dark curved band near the top is a recessed "
+    "satin slate titanium with a cool blue cast: a radial raised bridge "
+    "over a darker base plate. Keep broad surfaces calm and low-contrast "
+    "so live information remains dominant. Use fine metal grain, restrained "
+    "chamfered highlights, sparse dome rivets, slotted screws and faint "
+    "tooling marks; the round hub has circular graining. Do not turn the "
+    "centre into bright white silver. The dark curved band near the top is a recessed "
     "channel milled into the metal with polished lips - keep it empty and "
     "dark. MERIDIAN COMMODORE is stamped on its own inset navy plate with "
     "corner rivets. The dark circular wells, the navy windows with steel "
     "frames, the gold-framed date window with its black inner box, and "
-    "the arch-shaped night-sky opening with stars must all stay empty and "
+    "the small arch-shaped night-sky opening must all stay empty and "
     "dark inside - add nothing in any opening. "
     + ("Soft matte low-contrast product photography, gently and evenly "
-       "lit, dusty pastel slate-blue tones, satin metal, no deep blacks, "
-       "no harsh contrast, extremely sharp, 8k." if MUTED else
+       "lit, dusty slate-blue tones, satin titanium, controlled highlights, "
+       "no harsh contrast, no stone or table texture, extremely sharp, 8k."
+       if MUTED else
        "Dramatic studio product photography with strong ambient occlusion, "
        "mixed brushed and polished finishes, extremely sharp, 8k.")
 )
+if VARIANT == "baron":
+    PROMPT = PROMPT_BARON
 
 
 def post(path, payload):
@@ -130,7 +168,7 @@ def verify(dst: Path) -> None:
     are checked, not believed. Wells must still be dark at their centres,
     the plate still steel at its heart, the bezel still navy."""
     sys.path.insert(0, str(Path(__file__).resolve().parent))
-    from geometry import DATE, MOON, SUBDIAL, WINDOWS
+    from geometry import DATE, MOON, POWER, SUBDIAL, WINDOWS
     from PIL import Image
     img = Image.open(dst).convert("RGB")
     if img.size != (480, 480):
@@ -147,6 +185,8 @@ def verify(dst: Path) -> None:
         ("plate heart", (240, 240), "steel"),
         ("wordmark plate", (240, 181), "dark"),
     ]
+    if POWER.get("housing"):
+        checks.append(("battery housing", POWER["housing"]["c"], "dark"))
     bad = 0
     for name, (x, y), want in checks:
         px = img.getpixel((int(x), int(y)))
