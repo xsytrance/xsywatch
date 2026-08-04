@@ -95,12 +95,27 @@ GENERATED FILE - do not edit by hand.
     </PartImage>
     <PartText name="z20_lcd" x="320" y="229" width="80" height="24">
       <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d:%02d<Parameter expression="[HOUR_0_11]" /><Parameter expression="[MINUTE]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hwg" size="22" color="#A8F0A0"><Template>%d<Parameter expression="([HEART_RATE] &lt; 30 ? 0 : [HEART_RATE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_steps" x="105" y="336" width="80" height="22">
+    <PartText name="z21_steps" x="82" y="235" width="80" height="26">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="16" color="#E4E2DC"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
+    <PartText name="z22_date" x="98" y="329" width="70" height="22">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="hwg" size="16" color="#A8F0A0"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+    </PartText>
+    <Condition>
+      <Expressions>
+        <Expression name="z23_precip_gate">[WEATHER.IS_AVAILABLE]</Expression>
+      </Expressions>
+      <Compare expression="z23_precip_gate">
+        <PartText name="z23_precip" x="200" y="384" width="81" height="16">
+          <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+          <Text align="CENTER"><BitmapFont family="hwg" size="14" color="#7ECF8E"><Template>%d%%<Parameter expression="clamp([WEATHER.CHANCE_OF_PRECIPITATION], 0, 100)" /></Template></BitmapFont></Text>
+        </PartText>
+      </Compare>
+    </Condition>
     <PartImage name="z30_hour" x="0" y="0" width="480" height="480" alpha="255" pivotX="0.5" pivotY="0.5">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.0" interpolation="EASE_OUT" />
       <Transform target="angle" value="([HOUR_0_11] + [MINUTE] / 60) * 30" />

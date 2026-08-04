@@ -694,9 +694,18 @@ def horizon_field(name: str, resource: str, box: dict, aod: AmbientPolicy,
 
 def text_line(name: str, box: dict, aod: AmbientPolicy, font_family: str,
               size: int, color: str, template: str,
-              expressions_: list[str], align: str = "CENTER") -> Component:
+              expressions_: list[str], align: str = "CENTER",
+              gate: str | None = None) -> Component:
     """Generic bitmap-font text line with N parameters (digital time, data
-    readouts). Non-Aurelius generalization of date_text, used by fixtures."""
+    readouts). Non-Aurelius generalization of date_text, used by fixtures.
+
+    `gate` is an optional boolean expression; when given, the text is wrapped
+    in a Condition so it only paints while the expression holds. A readout
+    whose source can be absent ([WEATHER.*], [HEART_RATE]) must gate on the
+    availability flag, because the template renders an absent source as a
+    plausible-looking zero — and a scope legend reading "0%" in weather the
+    provider never measured is a lie with confident typography.
+    """
     part = Elem("PartText", {"name": name, "x": str(box["x"]),
                              "y": str(box["y"]), "width": str(box["width"]),
                              "height": str(box["height"])})
@@ -710,5 +719,17 @@ def text_line(name: str, box: dict, aod: AmbientPolicy, font_family: str,
     txt = Elem("Text", {"align": align})
     txt.child(bf)
     part.child(inline(txt))
+    if gate is None:
+        return Component(name, "text-line", MotionClass.TIME_CRITICAL, aod,
+                         [part], [], f"template {template!r}")
+    cond = Elem("Condition", {})
+    exprs = Elem("Expressions", {})
+    e = Elem("Expression", {"name": f"{name}_gate"})
+    e.text = gate
+    exprs.child(e)
+    cond.child(exprs)
+    cmp_ = Elem("Compare", {"expression": f"{name}_gate"})
+    cmp_.child(part)
+    cond.child(cmp_)
     return Component(name, "text-line", MotionClass.TIME_CRITICAL, aod,
-                     [part], [], f"template {template!r}")
+                     [cond], [], f"template {template!r} gated on {gate!r}")

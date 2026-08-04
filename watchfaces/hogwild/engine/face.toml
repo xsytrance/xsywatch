@@ -28,8 +28,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hogwild.dev"
-version_code = 6
-version_name = "1.2.0-dev"
+version_code = 7
+version_name = "1.3.0-dev"
 
 [[fonts]]
 name = "hwg"
@@ -157,30 +157,69 @@ aod = {alpha = 0, duration = 0.4, offset = 0.1}
 
 # ---- live data over the painted instruments --------------------------
 
-# Digital time in the LCD aperture.
+# Heart rate in the LCD aperture. This window used to repeat the time in
+# digits, which an analog dial already states twice with its hands; the
+# wearer's pulse was meanwhile only implied by the RPM needle's shiver.
+# Now the needle carries the rhythm and the LCD carries the number. Below
+# 30 the sensor is reporting an absent wrist, not a heartbeat, so the
+# readout shows 0 rather than dressing a non-reading up as one.
 [[components]]
 type = "text_line"
 name = "z20_lcd"
 box = {x = 320, y = 229, width = 80, height = 24}
 font = "hwg"
-size = 20
+size = 22
 color = "#A8F0A0"
-template = "%d:%02d"
-expressions = ["[HOUR_0_11]", "[MINUTE]"]
+template = "%d"
+expressions = ["([HEART_RATE] < 30 ? 0 : [HEART_RATE])"]
 align = "CENTER"
 aod = {alpha = 120, duration = 0.4, offset = 0.2}
 
-# Step total in the odometer aperture.
+# Step total, full size, in the nine-o'clock aperture. The sub-dial was
+# concept furniture — a painted needle bound to nothing — and the step
+# total was 16px of squint in the odometer barrel. The readability pass
+# (tools/hogwild_readability.py) gave the sub-dial a real LCD aperture;
+# five digits at size 20 is the reading the barrel never had room for.
 [[components]]
 type = "text_line"
 name = "z21_steps"
-box = {x = 105, y = 336, width = 80, height = 22}
+box = {x = 82, y = 235, width = 80, height = 26}
 font = "hwg"
-size = 16
-color = "#E4E2DC"
+size = 20
+color = "#A8F0A0"
 template = "%d"
 expressions = ["[STEP_COUNT]"]
 align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+# Day of month in the old odometer barrel — two digits is exactly what
+# that window has room for, and a segmented wheel window is how a date
+# has been worn since 1945 anyway.
+[[components]]
+type = "date_text"
+name = "z22_date"
+box = {x = 98, y = 329, width = 70, height = 22}
+font = "hwg"
+size = 16
+color = "#A8F0A0"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+# Chance of precipitation, printed on the scope glass under the sweep.
+# The returns say where the weather is; this says how likely. Gated on
+# availability: an ungated readout renders a missing provider as "0%",
+# which is a forecast nobody made. 0% from a live provider stays visible
+# — a scope legend reading clear air is a reading, not an absence.
+[[components]]
+type = "text_line"
+name = "z23_precip"
+box = {x = 200, y = 384, width = 81, height = 16}
+font = "hwg"
+size = 14
+color = "#7ECF8E"
+template = "%d%%"
+expressions = ["clamp([WEATHER.CHANCE_OF_PRECIPITATION], 0, 100)"]
+align = "CENTER"
+gate = "[WEATHER.IS_AVAILABLE]"
 aod = {alpha = 0, duration = 0.4, offset = 0.2}
 
 # ---- hands -----------------------------------------------------------

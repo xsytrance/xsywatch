@@ -28,8 +28,10 @@ moving part became its own layer:
 | **Fuel gauge needle** | `[BATTERY_PERCENT]`, sweeping E→F across the gauge's 250° |
 | **RPM needle** | `[HEART_RATE]`, oscillating |
 | **Radar sweep** | elapsed time, four seconds per revolution |
-| LCD aperture | live digital time |
-| Odometer aperture | `[STEP_COUNT]` |
+| **Radar returns** | `[WEATHER.CHANCE_OF_PRECIPITATION]` painted as PPI echoes, plus a printed percentage on the glass, gated on `[WEATHER.IS_AVAILABLE]` |
+| LCD aperture (3h) | `[HEART_RATE]` — the RPM needle carries the rhythm, this carries the number |
+| LCD aperture (9h) | `[STEP_COUNT]` at size 20, in the sub-dial that used to be painted furniture |
+| Date aperture | `[DAY]`, in the old odometer barrel — two digits, which is what the window has room for |
 
 Each needle sits on a sprite sized to its own sub-dial, so WFF pivots it about
 that gauge's centre rather than the dial centre. That is why the boxes in
@@ -43,8 +45,8 @@ does not dim the plate, it **replaces** it — the dial goes black and only
 engraved outlines and lume survive. On theme, too: night flying by instrument
 light.
 
-Steps, radar, the needles and the second hand all go dark. Hour, minute and
-the digital time remain.
+Steps, date, radar, the needles and the second hand all go dark. Hour,
+minute and the heart-rate LCD remain.
 
 ## Design rules this face follows
 
@@ -66,5 +68,25 @@ bash tools/wff_validate.sh 4 watchfaces/hogwild/app/src/main/res/raw/watchface.x
 bash tools/build_face.sh hogwild
 ```
 
-Verified: WFF v4 validator PASSED, APK 3,238,009 bytes,
-`sha256 8c59c1323747dda46c2b369f93a6dc0e4c9a1459d81ab239c8bd1985c045b19d`.
+Verified: WFF v4 validator PASSED (1.3.0-dev).
+
+## 1.3.0 — the readability pass
+
+Three findings from wearing 1.2.0, fixed together
+(`tools/hogwild_readability.py` reworks the plates; `engine/face.toml`
+rebinds the data):
+
+- **The scope shipped with a painted sweep.** The "hands-free" plate kept a
+  frozen sweep wedge and frozen return blips baked into both the day and
+  ambient plates, so the live sweep rotated over its own ghost — the HAYATE
+  reticle incident, wearing green. The glass is now rebuilt procedurally
+  (gradient, range rings, crosshair, seeded grain), and the wedge's spill
+  onto the bezel is colour-keyed out and blur-filled, per
+  `strip_baked_reticle.py`.
+- **The step count was 16px of squint.** The nine-o'clock sub-dial — concept
+  furniture with a painted needle bound to nothing — now carries the dial's
+  own LCD aperture art and a size-20 step total. The odometer barrel it
+  replaced becomes a date window: two digits, which is what it had room for.
+- **Heart rate had motion but no number.** The three-o'clock LCD used to
+  repeat the time in digits, which the hands already state; it now reads the
+  pulse. The RPM needle still shivers at the same rate.

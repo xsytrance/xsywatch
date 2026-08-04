@@ -160,7 +160,8 @@ def _build(entry: dict) -> list[C.Component]:
                             _aod(entry["aod"]), entry["font"],
                             int(entry["size"]), entry["color"],
                             entry["template"], list(entry["expressions"]),
-                            entry.get("align", "CENTER"))]
+                            entry.get("align", "CENTER"),
+                            entry.get("gate"))]
     raise ValueError(f"unknown component type {kind!r} — registry: "
                      "background_pair, rotating_image, seconds_rotor, "
                      "tap_sequence, weather_scene, animated_weather, "
