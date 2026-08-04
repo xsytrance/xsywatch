@@ -29,9 +29,9 @@ moving part became its own layer:
 | **RPM needle** | `[HEART_RATE]`, oscillating |
 | **Radar sweep** | elapsed time, four seconds per revolution |
 | **Radar returns** | `[WEATHER.CHANCE_OF_PRECIPITATION]` painted as PPI echoes, plus a printed percentage on the glass, gated on `[WEATHER.IS_AVAILABLE]` |
-| LCD aperture (3h) | `[HEART_RATE]` — the RPM needle carries the rhythm, this carries the number |
-| LCD aperture (9h) | `[STEP_COUNT]` at size 20, in the sub-dial that used to be painted furniture |
-| Date aperture | `[DAY]`, in the old odometer barrel — two digits, which is what the window has room for |
+| Wheel bank (3h) | `[HEART_RATE]` — the RPM needle carries the rhythm, the wheels carry the number; a green lume twin takes over in ambient |
+| Wheel bank (9h) | `[STEP_COUNT]`, in the sub-dial that used to be painted furniture |
+| Wheel bank (date) | `[DAY]`, in the old odometer barrel — two wheels, which is what the window has room for |
 
 Each needle sits on a sprite sized to its own sub-dial, so WFF pivots it about
 that gauge's centre rather than the dial centre. That is why the boxes in
@@ -90,3 +90,18 @@ rebinds the data):
 - **Heart rate had motion but no number.** The three-o'clock LCD used to
   repeat the time in digits, which the hands already state; it now reads the
   pulse. The RPM needle still shivers at the same rate.
+
+## 1.3.1 — wheels, not phosphor
+
+The 1.3.0 readouts arrived as LCD phosphor: a screen, on a dial whose
+design language says instrumentation, never a widget. 1.3.1 replaces the
+digits with the `wheel` bitmap font (`tools/make_wheel_font.py`): every
+glyph is one wheel of a combination lock — knurled flanks, a
+cylindrically-lit drum face, an engraved numeral — so a reading composes
+into a wheel bank, per the odometer drum the design language always
+specified. Bitmap fonts are alpha masks, so the wheel ships as relief in
+the glyph's alpha channel and the steel is the component colour. The scope
+percentage stays phosphor: it is printed on a CRT, not machined into one.
+WFF cannot roll a drum on a text element — the rotation is a look, not an
+animation. In ambient the steel goes dark with the plate and a green lume
+twin carries the heart rate.

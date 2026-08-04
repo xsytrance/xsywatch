@@ -28,8 +28,8 @@ background_color = "#FF000000"
 
 [identity]
 package = "com.xsytrance.hogwild.dev"
-version_code = 7
-version_name = "1.3.0-dev"
+version_code = 8
+version_name = "1.3.1-dev"
 
 [[fonts]]
 name = "hwg"
@@ -47,6 +47,27 @@ height = 40
 "7" = ["m_7", 28]
 "8" = ["m_8", 28]
 "9" = ["m_9", 28]
+
+# Combination-lock wheel digits (tools/make_wheel_font.py): each glyph is a
+# full wheel cell — knurled flanks, cylindrically-lit drum face, engraved
+# numeral — so flush cells compose into a wheel bank. Bitmap fonts are
+# ALPHA MASKS (the pipeline discards glyph colour and fills with the
+# BitmapFont colour), so the wheel ships as relief in the alpha channel
+# and the component's colour is the steel.
+[[fonts]]
+name = "wheel"
+height = 46
+[fonts.characters]
+"0" = ["w_0", 34]
+"1" = ["w_1", 34]
+"2" = ["w_2", 34]
+"3" = ["w_3", 34]
+"4" = ["w_4", 34]
+"5" = ["w_5", 34]
+"6" = ["w_6", 34]
+"7" = ["w_7", 34]
+"8" = ["w_8", 34]
+"9" = ["w_9", 34]
 
 # ---- scene, document order = z-order ---------------------------------
 
@@ -157,22 +178,40 @@ aod = {alpha = 0, duration = 0.4, offset = 0.1}
 
 # ---- live data over the painted instruments --------------------------
 
-# Heart rate in the LCD aperture. This window used to repeat the time in
-# digits, which an analog dial already states twice with its hands; the
-# wearer's pulse was meanwhile only implied by the RPM needle's shiver.
-# Now the needle carries the rhythm and the LCD carries the number. Below
+# Heart rate in the three-o'clock aperture. This window used to repeat the
+# time in digits, which an analog dial already states twice with its hands;
+# the wearer's pulse was meanwhile only implied by the RPM needle's shiver.
+# Now the needle carries the rhythm and the wheels carry the number. Below
 # 30 the sensor is reporting an absent wrist, not a heartbeat, so the
 # readout shows 0 rather than dressing a non-reading up as one.
+#
+# Wheel digits, not phosphor: a screen is a widget, a drum is an
+# instrument. In ambient the metal goes dark with the plate and the lume
+# twin below takes over — photoreal steel has no business glowing at 3am.
 [[components]]
 type = "text_line"
 name = "z20_lcd"
+box = {x = 320, y = 227, width = 80, height = 28}
+font = "wheel"
+size = 24
+color = "#E8EAEE"
+template = "%d"
+expressions = ["([HEART_RATE] < 30 ? 0 : [HEART_RATE])"]
+align = "CENTER"
+aod = {alpha = 0, duration = 0.4, offset = 0.2}
+
+# The lume twin: invisible in normal mode, carries the pulse into AOD.
+[[components]]
+type = "text_line"
+name = "z20_lcd_aod"
 box = {x = 320, y = 229, width = 80, height = 24}
 font = "hwg"
-size = 22
+size = 20
 color = "#A8F0A0"
 template = "%d"
 expressions = ["([HEART_RATE] < 30 ? 0 : [HEART_RATE])"]
 align = "CENTER"
+alpha = 0
 aod = {alpha = 120, duration = 0.4, offset = 0.2}
 
 # Step total, full size, in the nine-o'clock aperture. The sub-dial was
@@ -183,10 +222,10 @@ aod = {alpha = 120, duration = 0.4, offset = 0.2}
 [[components]]
 type = "text_line"
 name = "z21_steps"
-box = {x = 82, y = 235, width = 80, height = 26}
-font = "hwg"
+box = {x = 82, y = 234, width = 80, height = 28}
+font = "wheel"
 size = 20
-color = "#A8F0A0"
+color = "#E8EAEE"
 template = "%d"
 expressions = ["[STEP_COUNT]"]
 align = "CENTER"
@@ -198,10 +237,10 @@ aod = {alpha = 0, duration = 0.4, offset = 0.2}
 [[components]]
 type = "date_text"
 name = "z22_date"
-box = {x = 98, y = 329, width = 70, height = 22}
-font = "hwg"
-size = 16
-color = "#A8F0A0"
+box = {x = 98, y = 328, width = 70, height = 24}
+font = "wheel"
+size = 18
+color = "#E8EAEE"
 aod = {alpha = 0, duration = 0.4, offset = 0.2}
 
 # Chance of precipitation, printed on the scope glass under the sweep.

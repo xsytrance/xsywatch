@@ -52,38 +52,38 @@
   "fixture_note": "sample data for these images only; the face binds live WFF sources and compiles no constants",
   "images": {
     "FACE_AOD.png": {
-      "bytes": 23693,
+      "bytes": 23481,
       "height": 480,
-      "sha256": "24129ed87e604cf24256dfeb7f115c18d8059d6ae64273d628cb9bc2fb04ef90",
+      "sha256": "d0d98a0cab7822a66552ff6cbb3b6d673d747322c8cdf42c8b7cf9e1ab27c5a3",
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 203999,
+      "bytes": 204316,
       "height": 398,
-      "sha256": "b877a01396838fc1e6b85b26b828aaed52f601504e1d89567e62e9bf3d0ac77a",
+      "sha256": "f612dbf4447ea1362dedb94689ec6e9fe85b4941cd4d591bac3b853e8e3c28ab",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 304088,
+      "bytes": 304454,
       "height": 764,
-      "sha256": "83ae41fd363b877f8abda36ed1afc1bf7048352ecce3a15dbe6e35078dce28a2",
+      "sha256": "d72a4b577d7ec3c9b275a5497e22c31c592629eb311667edf816ec954ab349c7",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 339486,
+      "bytes": 340132,
       "height": 480,
-      "sha256": "1d192eb6abbacb3b920d4be174577ccfb31d55b59a041696ac2b802c507ee464",
+      "sha256": "2c04aaf15c8d926c531322235426227a1c1e30e4d56e727e80ded85434b9733d",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 387032,
+      "bytes": 387360,
       "height": 576,
-      "sha256": "ace51f48711e14a9dbd6b4cbccfe6208105926369cf6a23e273b67c9f6d9ef68",
+      "sha256": "132f5e3932433e2481f15273ffeecf2770a80ee44571d615b8694aec30715458",
       "width": 1020
     }
   },
   "rendered_from": "app/src/main/res/raw/watchface.xml and res/drawable",
   "schema": "agenor.face-review-render/1",
   "slug": "hogwild",
-  "watchface_xml_sha256": "9d399b35bae2ff17a2dd3b82a718d4494d3fbef6f426f32d7e6c2535967767df"
+  "watchface_xml_sha256": "20802fb41d3281a37505c4f6e37238b21175e6452d4018bc01fa115ef49a77c5"
 }

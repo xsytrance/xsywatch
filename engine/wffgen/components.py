@@ -695,9 +695,13 @@ def horizon_field(name: str, resource: str, box: dict, aod: AmbientPolicy,
 def text_line(name: str, box: dict, aod: AmbientPolicy, font_family: str,
               size: int, color: str, template: str,
               expressions_: list[str], align: str = "CENTER",
-              gate: str | None = None) -> Component:
+              gate: str | None = None, alpha: int = 255) -> Component:
     """Generic bitmap-font text line with N parameters (digital time, data
     readouts). Non-Aurelius generalization of date_text, used by fixtures.
+
+    `alpha` is the NORMAL-mode alpha: 0 with an ambient policy of 255
+    gives an AOD-only readout, the textual twin of static_image's swap
+    mechanism — how a face trades photoreal digits for lume ones at night.
 
     `gate` is an optional boolean expression; when given, the text is wrapped
     in a Condition so it only paints while the expression holds. A readout
@@ -706,9 +710,11 @@ def text_line(name: str, box: dict, aod: AmbientPolicy, font_family: str,
     plausible-looking zero — and a scope legend reading "0%" in weather the
     provider never measured is a lie with confident typography.
     """
-    part = Elem("PartText", {"name": name, "x": str(box["x"]),
-                             "y": str(box["y"]), "width": str(box["width"]),
-                             "height": str(box["height"])})
+    attrs = {"name": name, "x": str(box["x"]), "y": str(box["y"]),
+             "width": str(box["width"]), "height": str(box["height"])}
+    if alpha != 255:          # emitted only when it departs from the
+        attrs["alpha"] = str(alpha)   # default, so existing faces don't drift
+    part = Elem("PartText", attrs)
     part.child(aod.variant())
     tmpl = Elem("Template", text=template)
     for e in expressions_:

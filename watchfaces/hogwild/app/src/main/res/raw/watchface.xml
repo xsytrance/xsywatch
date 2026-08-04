@@ -23,6 +23,18 @@ GENERATED FILE - do not edit by hand.
       <Character name="8" resource="m_8" width="28" height="40" />
       <Character name="9" resource="m_9" width="28" height="40" />
     </BitmapFont>
+    <BitmapFont name="wheel">
+      <Character name="0" resource="w_0" width="34" height="46" />
+      <Character name="1" resource="w_1" width="34" height="46" />
+      <Character name="2" resource="w_2" width="34" height="46" />
+      <Character name="3" resource="w_3" width="34" height="46" />
+      <Character name="4" resource="w_4" width="34" height="46" />
+      <Character name="5" resource="w_5" width="34" height="46" />
+      <Character name="6" resource="w_6" width="34" height="46" />
+      <Character name="7" resource="w_7" width="34" height="46" />
+      <Character name="8" resource="w_8" width="34" height="46" />
+      <Character name="9" resource="w_9" width="34" height="46" />
+    </BitmapFont>
   </BitmapFonts>
   <Scene backgroundColor="#FF000000">
     <PartImage name="z00_plate" x="0" y="0" width="480" height="480" alpha="255">
@@ -93,17 +105,21 @@ GENERATED FILE - do not edit by hand.
       <Transform target="angle" value="235.0 + 250.0 * clamp([STEP_COUNT], 0, 20000) / 20000" />
       <Image resource="wh_steps_needle" />
     </PartImage>
-    <PartText name="z20_lcd" x="320" y="229" width="80" height="24">
+    <PartText name="z20_lcd" x="320" y="227" width="80" height="28">
+      <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
+      <Text align="CENTER"><BitmapFont family="wheel" size="24" color="#E8EAEE"><Template>%d<Parameter expression="([HEART_RATE] &lt; 30 ? 0 : [HEART_RATE])" /></Template></BitmapFont></Text>
+    </PartText>
+    <PartText name="z20_lcd_aod" x="320" y="229" width="80" height="24" alpha="0">
       <Variant mode="AMBIENT" target="alpha" value="120" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="22" color="#A8F0A0"><Template>%d<Parameter expression="([HEART_RATE] &lt; 30 ? 0 : [HEART_RATE])" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d<Parameter expression="([HEART_RATE] &lt; 30 ? 0 : [HEART_RATE])" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z21_steps" x="82" y="235" width="80" height="26">
+    <PartText name="z21_steps" x="82" y="234" width="80" height="28">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="20" color="#A8F0A0"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="wheel" size="20" color="#E8EAEE"><Template>%d<Parameter expression="[STEP_COUNT]" /></Template></BitmapFont></Text>
     </PartText>
-    <PartText name="z22_date" x="98" y="329" width="70" height="22">
+    <PartText name="z22_date" x="98" y="328" width="70" height="24">
       <Variant mode="AMBIENT" target="alpha" value="0" duration="0.4" startOffset="0.2" interpolation="LINEAR" />
-      <Text align="CENTER"><BitmapFont family="hwg" size="16" color="#A8F0A0"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
+      <Text align="CENTER"><BitmapFont family="wheel" size="18" color="#E8EAEE"><Template>%d<Parameter expression="[DAY]" /></Template></BitmapFont></Text>
     </PartText>
     <Condition>
       <Expressions>
