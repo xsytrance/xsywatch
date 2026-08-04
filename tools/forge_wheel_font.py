@@ -82,67 +82,14 @@ def blender_main() -> None:
             ridge.rotation_euler = (a, 0, 0)
             rims.append(ridge)
 
-    # ---- numerals: engraved clean through the band surface ----
-    cutters = []
-    font = bpy.data.fonts.load(str(FONT_TTF))
-    for i, ch in enumerate("0123456789"):
-        a = 2 * math.pi * i / 10
-        bpy.ops.object.text_add()
-        txt = bpy.context.object
-        txt.data.body = ch
-        txt.data.font = font
-        txt.data.size = 0.84
-        # NO outline offset: fattening the text curves makes them
-        # self-intersect, and the exact boolean then flips inside out and
-        # skins the whole band instead of cutting ten numerals. Stroke
-        # weight for the shipping size comes from the ink stamp, not the
-        # cutter.
-        txt.data.extrude = 0.025      # shallow: engraved-and-inked, not milled
-        txt.data.align_x = "CENTER"
-        txt.data.align_y = "CENTER"
-        bpy.ops.object.convert(target="MESH")
-        # face outward at angle phi: text starts facing +Z, upright in
-        # XY; phi=pi/2 puts digit 0 on the -Y face, dead in front of the
-        # camera, and location must use the SAME angle as the facing
-        phi = a + math.pi / 2
-        txt.rotation_euler = (phi, 0, 0)
-        txt.location = (0, -math.sin(phi) * 1.0, math.cos(phi) * 1.0)
-        cutters.append(txt)
-
-    for c in cutters[1:]:
-        c.select_set(True)
-    bpy.context.view_layer.objects.active = cutters[0]
-    cutters[0].select_set(True)
-    bpy.ops.object.join()
-    cutter = bpy.context.object
-
-    mod = drum.modifiers.new("engrave", "BOOLEAN")
-    mod.operation = "DIFFERENCE"
-    mod.object = cutter
-    bpy.context.view_layer.objects.active = drum
-    bpy.ops.object.modifier_apply(modifier="engrave")
-    cutter.hide_render = True
-    cutter.hide_viewport = True
-
-    # ink the engraving: every face of the band that sits below the turned
-    # surface (recess floors and walls) takes the second material slot,
-    # the way a real counter drum is engraved and then paint-filled —
-    # otherwise the flat recess floor faces the camera square-on, catches
-    # the key light, and the digit reads embossed instead of cut
-    # NB mesh data is LOCAL: the 90-degree turn that lays the drum on its
-    # side is an object transform, so in these coordinates the spindle is
-    # the Z axis — axis distance is sqrt(x^2+y^2) and |z| walks the band,
-    # with the end caps excluded by the z bound
-    import bmesh
-    bm = bmesh.new()
-    bm.from_mesh(drum.data)
-    for f in bm.faces:
-        c = f.calc_center_median()
-        if (c.x ** 2 + c.y ** 2) ** 0.5 < 0.9925 and abs(c.z) < 0.329:
-            f.material_index = 1
-    bm.to_mesh(drum.data)
-    bm.free()
-
+    # ---- no engraving in the scene ----
+    # 1.3.2 cut the numerals into the drum and stamped ink over them; at
+    # the 15-20px the face ships at, the stamp/recess misregistration and
+    # the neighbouring rows read as damage, not depth. The drum renders
+    # CLEAN and rotationally uniform — one render serves all ten digits —
+    # and the numeral, its recess shadow and its lit lip are all applied
+    # in post at target scale, where their weights can be chosen for
+    # legibility instead of physics.
     # ---- materials: lathe-brushed steel band, rougher rims ----
     def steel(name, rough, lathe=False):
         m = bpy.data.materials.new(name)
@@ -170,17 +117,7 @@ def blender_main() -> None:
 
     band_mat = steel("band", 0.30, lathe=True)
     rim_mat = steel("rims", 0.45)
-    ink = bpy.data.materials.new("ink")
-    ink.use_nodes = True
-    ink_bsdf = ink.node_tree.nodes["Principled BSDF"]
-    import os
-    _dbg = os.environ.get("FORGE_DEBUG")
-    ink_bsdf.inputs["Base Color"].default_value = (
-        (1.0, 0.0, 0.0, 1) if _dbg else (0.01, 0.01, 0.011, 1))
-    ink_bsdf.inputs["Metallic"].default_value = 0.0
-    ink_bsdf.inputs["Roughness"].default_value = 0.9
     drum.data.materials.append(band_mat)
-    drum.data.materials.append(ink)
     for r in rims:
         r.data.materials.append(rim_mat)
 
@@ -197,7 +134,10 @@ def blender_main() -> None:
     cam = bpy.context.object
     cam.data.type = "ORTHO"
     cam.data.sensor_fit = "VERTICAL"
-    cam.data.ortho_scale = 1.28
+    cam.data.ortho_scale = 1.38   # full wheel width — band plus both
+    # knurled rims — which the cell aspect turns into a vertical span of
+    # +/-0.69: harmless now the drum carries no engraving to leak into
+    # the frame, just clean rolled-away metal
     scene.camera = cam
 
     # ---- studio: key, fill, and a hot equator strip ----
@@ -242,32 +182,20 @@ def blender_main() -> None:
     scene.view_settings.view_transform = "Filmic"
 
     RENDER_DIR.mkdir(parents=True, exist_ok=True)
-    import os
-    count = 1 if os.environ.get("FORGE_DEBUG") else 10
-    for i in range(count):
-        spindle.rotation_euler = (-2 * math.pi * i / 10, 0, 0)
-        scene.render.filepath = str(RENDER_DIR / f"digit_{i}.png")
-        bpy.ops.render.render(write_still=True)
-        print(f"forged digit {i}")
+    scene.render.filepath = str(RENDER_DIR / "base.png")
+    bpy.ops.render.render(write_still=True)
+    print("forged base drum")
 
 
 # ======================================================================
 # DRIVER SIDE
 # ======================================================================
 def digit_mask(ch: str) -> "Image":
-    """The numeral, drawn at 4x in exact registration with the render.
-
-    Blender centres the glyph bbox on the drum's front meridian; this
-    centres the same glyph's bbox on the cell. The em size falls out of the
-    camera maths — text_size * (CELL_H / ortho_scale) px per em — so the
-    stamp lands on the engraving without measured constants. The engraving
-    was cut with a fattened outline (+0.012 em per side), deliberately: the
-    render's dark recess pokes out around this crisp core as a shadow ring,
-    which is what sells the depth after the ink goes in.
-    """
+    """The numeral at 4x, sized for legibility at the shipping 15-20px:
+    cap height ~55% of the cell, centred on the drum's equator."""
     from PIL import Image, ImageDraw, ImageFont
     ss = 4
-    em = round(ss * 0.84 * (CELL_H / 1.28))
+    em = round(ss * 35)          # Barlow Condensed cap ~0.72em -> ~25px cap
     fnt = ImageFont.truetype(str(FONT_TTF), em)
     m = Image.new("L", (CELL_W * ss, CELL_H * ss), 0)
     d = ImageDraw.Draw(m)
@@ -279,39 +207,46 @@ def digit_mask(ch: str) -> "Image":
 
 
 def install_glyphs(write: bool) -> None:
-    """Hybrid finish: Blender makes the metal, the stamp makes it legible.
+    """Finish: Blender supplies the metal, post supplies the numeral.
 
-    A pure render dies at 16px — denoise softness, neighbour slivers and
-    specular noise eat the numeral. So the render supplies everything that
-    should be physical (knurl, drum falloff, engraving shadow) and the ink
-    is re-applied here at full contrast, in registration, with a lit lower
-    lip — engraved-and-paint-filled, finished for the size it ships at.
+    The render is a clean lit drum (knurl, cylindrical falloff, brushing) —
+    rotationally uniform, so one render serves all ten cells. Each numeral
+    is applied here as engraved-and-ink-filled at target scale: a soft
+    recess shadow a pixel above the cut, near-black ink in the cut, a lit
+    lip a pixel below it. Weights chosen at 15-20px, where this ships.
     """
     import math as _m
     from PIL import Image, ImageChops, ImageFilter
+    base = Image.open(RENDER_DIR / "base.png").convert("L").resize(
+        (CELL_W, CELL_H), Image.LANCZOS)
+    base = base.filter(ImageFilter.UnsharpMask(radius=2, percent=90,
+                                               threshold=2))
+    lum0 = base.point(lambda v: min(255, int((v / 255) ** 0.95 * 400)))
+    # gentle aperture shading only — harsh vignettes turn to speckle
+    # when the runtime scales the cell down
+    px = lum0.load()
+    for y in range(CELL_H):
+        t = abs(y - (CELL_H - 1) / 2) / (CELL_H / 2)
+        k = 0.55 + 0.45 * max(0.0, _m.cos(min(1.0, t) * 0.95))
+        for x in range(CELL_W):
+            px[x, y] = int(px[x, y] * k)
+
     for i in range(10):
-        src = RENDER_DIR / f"digit_{i}.png"
-        img = Image.open(src).convert("L").resize(
-            (CELL_W, CELL_H), Image.LANCZOS)
-        img = img.filter(ImageFilter.UnsharpMask(radius=2, percent=110,
-                                                 threshold=2))
-        lum = img.point(lambda v: min(255, int((v / 255) ** 0.9 * 430)))
-        # ink the numeral: multiply the steel down to paint-black
-        mask = digit_mask("0123456789"[i])
-        ink = mask.point(lambda v: 255 - (v * 235) // 255)
-        lum = ImageChops.multiply(lum, ink)
-        # lit lower lip under the cut
+        lum = lum0.copy()
+        mask = digit_mask(str(i))
+        # recess shadow: blurred mask, shifted up, darkens the metal
+        shadow = mask.filter(ImageFilter.GaussianBlur(1.2)).transform(
+            mask.size, Image.AFFINE, (1, 0, 0, 0, 1, 1))
+        lum = ImageChops.multiply(
+            lum, shadow.point(lambda v: 255 - (v * 90) // 255))
+        # the ink fill
+        lum = ImageChops.multiply(
+            lum, mask.point(lambda v: 255 - (v * 240) // 255))
+        # lit lower lip
         lip = ImageChops.subtract(
             mask.transform(mask.size, Image.AFFINE, (1, 0, 0, 0, 1, -1)),
             mask)
-        lum = ImageChops.add(lum, lip.point(lambda v: (v * 70) // 255))
-        # aperture shading toward the slot edges: neighbours stay slivers
-        px = lum.load()
-        for y in range(CELL_H):
-            t = abs(y - (CELL_H - 1) / 2) / (CELL_H / 2)
-            k = 0.30 + 0.70 * max(0.0, _m.cos(min(1.0, t) * 1.15))
-            for x in range(CELL_W):
-                px[x, y] = int(px[x, y] * k)
+        lum = ImageChops.add(lum, lip.point(lambda v: (v * 80) // 255))
         out = Image.new("RGBA", (CELL_W, CELL_H), (255, 255, 255, 0))
         out.putalpha(lum)
         dest = DRAWABLE / f"w_{i}.png"
@@ -329,10 +264,8 @@ def driver_main() -> int:
     if blender.returncode != 0:
         sys.stderr.write(blender.stdout[-2000:] + blender.stderr[-2000:])
         return 1
-    missing = [i for i in range(10)
-               if not (RENDER_DIR / f"digit_{i}.png").exists()]
-    if missing:
-        sys.stderr.write(f"blender produced no renders for {missing}\n")
+    if not (RENDER_DIR / "base.png").exists():
+        sys.stderr.write("blender produced no base render\n")
         sys.stderr.write(blender.stdout[-2000:])
         return 1
     install_glyphs(write)

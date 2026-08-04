@@ -91,6 +91,19 @@ rebinds the data):
   repeat the time in digits, which the hands already state; it now reads the
   pulse. The RPM needle still shivers at the same rate.
 
+## 1.3.3 — the wheels stop being clever
+
+1.3.2 was owner-reviewed as "horrendous and broken", and the diagnosis
+held up: at the 15-20px a wheel actually ships, the engraved neighbours,
+the stamp/recess misregistration and the hard vignette all decayed into
+speckle. The forge now renders the drum CLEAN — full wheel width, knurled
+rims in frame, no engraving in the scene, one render serving all ten
+digits — and the numeral is applied entirely at target scale: recess
+shadow above the cut, near-black ink in it, lit lip below it, weights
+chosen by eye at 20px against a simulated aperture (the at-scale proof is
+part of the workflow now, before any face render). Blender still makes
+every photon of the metal; it no longer tries to set the type.
+
 ## 1.3.2 — the wheels go through the forge
 
 1.3.1 painted its wheels; 1.3.2 renders them. `tools/forge_wheel_font.py`
