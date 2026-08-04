@@ -91,6 +91,25 @@ rebinds the data):
   repeat the time in digits, which the hands already state; it now reads the
   pulse. The RPM needle still shivers at the same rate.
 
+## 1.3.2 — the wheels go through the forge
+
+1.3.1 painted its wheels; 1.3.2 renders them. `tools/forge_wheel_font.py`
+models one combination-lock wheel in Blender — a drum with all ten numerals
+boolean-engraved around its circumference, paint-filled via a second
+material on the recess faces, and two knurled rims built from seventy-two
+real ridge blocks each — then detents it 36° per digit and renders it
+head-on with Cycles. Every shading cue on the shipped glyphs is physical:
+the drum's falloff, the knurl's serration shadows, the neighbouring
+numerals curving away at the slot edges.
+
+A pure render dies at the 16px the face actually ships, so the finish is
+hybrid: the render supplies the metal, and the numeral is re-inked in
+registration at install time (same typeface, same em maths as the cutter)
+with a lit lower lip. Two traps documented in the tool: mesh data is LOCAL
+(the drum's 90° object rotation does not move it), and outline-offset
+fattening makes text curves self-intersect, which flips the exact boolean
+inside out and skins the band.
+
 ## 1.3.1 — wheels, not phosphor
 
 The 1.3.0 readouts arrived as LCD phosphor: a screen, on a dial whose

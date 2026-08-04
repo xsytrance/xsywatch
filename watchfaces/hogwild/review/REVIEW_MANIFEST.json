@@ -58,27 +58,27 @@
       "width": 480
     },
     "FACE_HAND_POSITIONS.png": {
-      "bytes": 204316,
+      "bytes": 205395,
       "height": 398,
-      "sha256": "f612dbf4447ea1362dedb94689ec6e9fe85b4941cd4d591bac3b853e8e3c28ab",
+      "sha256": "c29f2999b3fd51e76d179be1e81eb23d96a2801364bf44b14fab1325e3d5d88b",
       "width": 1584
     },
     "FACE_MOTION_STATES.png": {
-      "bytes": 304454,
+      "bytes": 305995,
       "height": 764,
-      "sha256": "d72a4b577d7ec3c9b275a5497e22c31c592629eb311667edf816ec954ab349c7",
+      "sha256": "126f391d26e565e6c52a4bc62e396aac1080d28583cbc297a0b7ebb9ed1dd8ba",
       "width": 956
     },
     "FACE_NORMAL.png": {
-      "bytes": 340132,
+      "bytes": 342210,
       "height": 480,
-      "sha256": "2c04aaf15c8d926c531322235426227a1c1e30e4d56e727e80ded85434b9733d",
+      "sha256": "f82110ab4721b382441a81ff2a0fc8e23b68e13821b79da0f159c1cb85191ced",
       "width": 480
     },
     "FACE_PRESENTATION.png": {
-      "bytes": 387360,
+      "bytes": 389189,
       "height": 576,
-      "sha256": "132f5e3932433e2481f15273ffeecf2770a80ee44571d615b8694aec30715458",
+      "sha256": "a926dd151c712ae861f27461ef1bfa5cf209ff676e00181ffc5ba16e8e4540e7",
       "width": 1020
     }
   },
