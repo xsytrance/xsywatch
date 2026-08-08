@@ -207,29 +207,46 @@ def digit_mask(ch: str) -> "Image":
 
 
 def install_glyphs(write: bool) -> None:
-    """Finish: Blender supplies the metal, post supplies the numeral.
+    """Finish: Blender supplies the light, post supplies everything else.
 
-    The render is a clean lit drum (knurl, cylindrical falloff, brushing) —
-    rotationally uniform, so one render serves all ten cells. Each numeral
-    is applied here as engraved-and-ink-filled at target scale: a soft
-    recess shadow a pixel above the cut, near-black ink in the cut, a lit
-    lip a pixel below it. Weights chosen at 15-20px, where this ships.
+    THE EYE OF THUNDERA VERDICT ON THE PREVIOUS FINISH: at 1:1 device
+    pixels the wheels smeared into striped blobs. Any vertical texture —
+    brushing, knurl spill, seam gradients — aliases into stripes across a
+    15px cell and reads as damage. So the render is no longer sampled as
+    an image at all: it is sampled as PROFILES. The band's vertical
+    luminance profile (real Cycles falloff on a real cylinder) is taken
+    from the drum's centre columns and swept perfectly smooth across the
+    cell; the knurl serration profile is taken from a rim column and used
+    only in narrow flank strips; a near-black gutter separates the cells
+    so a reading composes into visibly separate wheels. Steel is capped
+    below white — a wheel is metal, not paper.
     """
     import math as _m
     from PIL import Image, ImageChops, ImageFilter
-    base = Image.open(RENDER_DIR / "base.png").convert("L").resize(
-        (CELL_W, CELL_H), Image.LANCZOS)
-    base = base.filter(ImageFilter.UnsharpMask(radius=2, percent=90,
-                                               threshold=2))
-    lum0 = base.point(lambda v: min(255, int((v / 255) ** 0.95 * 400)))
-    # gentle aperture shading only — harsh vignettes turn to speckle
-    # when the runtime scales the cell down
+    hi = Image.open(RENDER_DIR / "base.png").convert("L")
+    W, H = hi.size
+
+    # band profile: median of the central 20% of columns, at cell height
+    cols = range(int(W * 0.40), int(W * 0.60))
+    prof = []
+    for y in range(CELL_H):
+        ys = int(y * H / CELL_H)
+        vals = sorted(hi.getpixel((x, ys)) for x in cols)
+        prof.append(vals[len(vals) // 2])
+    pk = max(prof) or 1
+    # normalise so the equator sits at steel (215), not paper (255)
+    prof = [min(215, int(v * 215 / pk)) for v in prof]
+
+    # No per-cell furniture. Gutters and knurled flanks framed every
+    # digit in its own little rectangle — owner-rejected on sight. Cells
+    # tile flush, so a horizontally-uniform band composes into ONE
+    # continuous run of drum across a whole reading; the only structure
+    # is the real vertical light falloff and the numerals themselves.
+    lum0 = Image.new("L", (CELL_W, CELL_H), 0)
     px = lum0.load()
     for y in range(CELL_H):
-        t = abs(y - (CELL_H - 1) / 2) / (CELL_H / 2)
-        k = 0.55 + 0.45 * max(0.0, _m.cos(min(1.0, t) * 0.95))
         for x in range(CELL_W):
-            px[x, y] = int(px[x, y] * k)
+            px[x, y] = prof[y]
 
     for i in range(10):
         lum = lum0.copy()
